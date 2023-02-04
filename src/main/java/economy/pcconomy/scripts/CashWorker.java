@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class CashWorker {
 
-    public static void GiveCash(double amount, Player player) {
+    public static void GiveCash(double amount, Player player) { // Town -> Create cash -> Player
         BalanceWorker balanceWorker = new BalanceWorker();
         if (!balanceWorker.isSolvent(amount, player)) return;
 
@@ -31,7 +31,7 @@ public class CashWorker {
         return moneys;
     }
 
-    public void TakeCash(Player player) {
+    public void TakeCash(Player player) { // Player -> Town
         ItemStack money = player.getInventory().getItemInMainHand();
         int amount = 0;
         if (ItemWorker.GetName(money).equals("Доллар США")) {
