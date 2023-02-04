@@ -7,15 +7,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ChangeWorker {
-    private static final List<Integer> Denomination = Arrays.asList(1,5,10,50,100,500,1000,5000);
+    private static final List<Integer> Denomination = Arrays.asList(5000, 2000, 1000, 500, 200, 100, 50, 10, 1);
 
     public static List<Integer> getChange(double amount) {
-        List<Integer> change = new ArrayList<>();
+        List<Integer> change = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-        for (int sum:Denomination) {
-            while (amount - sum > 0) {
-                amount -= sum;
-                change.add(sum);
+        for (int i = 0; i < Denomination.size(); i++) {
+            while (amount - Denomination.get(i) >= 0) {
+                amount -= Denomination.get(i);
+                change.set(i, change.get(i) + 1);
             }
         }
 
@@ -24,10 +24,10 @@ public class ChangeWorker {
 
     public static List<ItemStack> getChangeInCash(double amount) {
         List<ItemStack> moneyStack = new ArrayList<>();
+        List<Integer> change = getChange(amount);
 
-        for (int money:
-             getChange(amount)) {
-            moneyStack.add(CashWorker.CreateCashObject(money));
+        for (int i = 0; i < Denomination.size(); i++) {
+            moneyStack.add(CashWorker.CreateCashObject(Denomination.get(i), change.get(i)));
         }
 
         return moneyStack;

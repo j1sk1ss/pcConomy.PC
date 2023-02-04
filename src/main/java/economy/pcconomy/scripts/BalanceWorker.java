@@ -11,7 +11,7 @@ public class BalanceWorker {
     private final XConomyAPI xConomyAPI = PcConomy.xConomyAPI;
 
     public boolean isSolvent(double price, Player player) {
-        return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(price)) > 0;
+        return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(price)) >= 0;
     }
 
     public void GiveMoney(double amount, Player player) {

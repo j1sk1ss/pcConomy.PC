@@ -15,11 +15,16 @@ public class CashWorker {
         balanceWorker.TakeMoney(amount, player);
         //город.TakeMoney(amount);
 
-        player.getInventory().addItem(CreateCashObject(amount));
+        ExtraditionWorker.giveItems(CreateCashObject(amount), player);
     }
 
     public static ItemStack CreateCashObject(double amount) {
         return ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER, 1),
+                "" + amount + "$"), "Доллар США");
+    }
+
+    public static ItemStack CreateCashObject(double amount, int count) {
+        return ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER, count),
                 "" + amount + "$"), "Доллар США");
     }
 
@@ -30,10 +35,10 @@ public class CashWorker {
         player.getInventory().setItemInMainHand(null);
     }
 
-    public int GetAmountFromCash(ItemStack money) {
+    public double GetAmountFromCash(ItemStack money) {
         if (ItemWorker.GetName(money).equals("Доллар США")) {
             if (!Objects.equals(ItemWorker.GetLore(money).get(0), "")) {
-                return Integer.parseInt(ItemWorker.GetLore(money).get(0)) * money.getAmount();
+                return Double.parseDouble(ItemWorker.GetLore(money).get(0).replace("$","")) * money.getAmount();
             } else System.out.println("Подделка.");
         } else System.out.println("Это не деньги.");
 

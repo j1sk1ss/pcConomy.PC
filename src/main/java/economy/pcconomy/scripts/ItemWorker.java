@@ -29,6 +29,6 @@ public class ItemWorker {
     }
 
     public static String GetName(ItemStack item){
-        return item.getI18NDisplayName();
+        return item.getItemMeta().getDisplayName();
     }
 }
