@@ -1,6 +1,7 @@
 package economy.pcconomy.town.objects;
 
 import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.economy.BankAccount;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Dictionary;
@@ -59,23 +60,23 @@ public class TownObject {
     public void PrintMoneys(double amount) { // Только для НПС города
         if (!isNPC) return;
 
-        Town.setDebtBalance(Town.getDebtBalance() + amount);
+        setBudget(getBudget() + amount);
     }
 
     public void GenerateLocalPrices() { // Только для НПС города
         var keys = Storage.keys();
 
         for (var i = 0; i < Storage.size(); i++) {
-            Prices.put(keys.nextElement(), Storage.get(keys.nextElement()) / Town.getDebtBalance());
+            Prices.put(keys.nextElement(), Storage.get(keys.nextElement()) / getBudget());
         }
     }
 
     public double getInflation() {
-        return ((double)getAmountOfStorage() / StartStorageAmount) - (Town.getDebtBalance() / StartBudget);
+        return ((double)getAmountOfStorage() / StartStorageAmount) - (getBudget() / StartBudget);
     }
 
     public double GetUsefulAmountOfBudget() {
-        return Town.getDebtBalance() * UsefulBudgetPercent;
+        return getBudget() * UsefulBudgetPercent;
     }
 
     public void setAmountOfResource(ItemStack itemStack, int amount) {
@@ -95,5 +96,17 @@ public class TownObject {
 
     public int getAmountOfResource(ItemStack itemStack) {
         return Storage.get(itemStack);
+    }
+
+    public void setBudget(double amount) {
+        getBankAccount().setBalance(amount, "Economic action");
+    }
+
+    public double getBudget() {
+        return getBankAccount().getHoldingBalance();
+    }
+
+    public BankAccount getBankAccount() {
+        return new BankAccount(Town.getBankAccountPrefix(), Town.getWorld(), Town.getBankCap());
     }
 }

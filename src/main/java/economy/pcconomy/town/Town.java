@@ -24,7 +24,6 @@ public class Town {
         var townObject = GetTownObject(town);
         townObject.isNPC = isNPC;
         SetTownObject(townObject);
-
     }
 
     public void WithdrawCash(int amount, Player player, com.palmergames.bukkit.towny.object.Town town) {
@@ -38,7 +37,7 @@ public class Town {
         if (!townObject.isNPC) return;
 
         balanceWorker.TakeMoney(amount, player);
-        townObject.Town.setDebtBalance(townObject.Town.getDebtBalance() - amount);
+        townObject.setBudget(townObject.getBudget() - amount);
         cash.GiveCashToPlayer(amount, player);
     }
 
@@ -51,7 +50,7 @@ public class Town {
         var amount = new CashWorker().GetAmountFromCash(money);
         ItemWorker.TakeItems(money, player);
         new BalanceWorker().GiveMoney(amount, player);
-        townObject.Town.setDebtBalance(townObject.Town.getDebtBalance() + amount);
+        townObject.setBudget(townObject.getBudget() + amount);
     }
 
     public TownObject GetTownObject(com.palmergames.bukkit.towny.object.Town town) {
