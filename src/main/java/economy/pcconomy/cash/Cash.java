@@ -18,7 +18,7 @@ public class Cash {
     }
 
     public void GetSpecialCashToPlayer(double amount, Player player) { // Выдача любой суммы купюрами
-        List<ItemStack> change = ChangeWorker.getChangeInCash(amount);
+        List<ItemStack> change = CashWorker.getChangeInCash(ChangeWorker.getChange(amount));
         ItemWorker.giveItems(change, player);
     }
 
@@ -34,9 +34,14 @@ public class Cash {
         return amount;
     }
 
+    public double AmountOfCashInInventory(Player player) { // Колличество денег у игрока в инвенторе
+        var playerCash = new CashWorker().GetCashFromInventory(player.getInventory());
+        return new CashWorker().GetAmountFromCash(playerCash);
+    }
+
     public void TakeCashFromInventory(double amount, Player player) { // Забрать необходимую сумму из инвентаря со сдачей
         var playerCash = new CashWorker().GetCashFromInventory(player.getInventory());
-        var playerCashAmount = new CashWorker().GetAmountFromCash(playerCash);
+        var playerCashAmount = AmountOfCashInInventory(player);
         if (playerCashAmount < amount) return;
 
         ItemWorker.TakeItems(playerCash, player);

@@ -12,18 +12,6 @@ public class Manager implements CommandExecutor { // Тестовый класс
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
 
-        if (command.getName().equals("withdraw")) {
-            var amount = Double.parseDouble(args[0]);
-            new Cash().GiveCashToPlayer(amount, (Player) sender);
-        }
-        if (command.getName().equals("change")) {
-            var amount = Double.parseDouble(args[0]);
-            new Cash().GetSpecialCashToPlayer(amount, (Player) sender);
-        }
-        if (command.getName().equals("put")) {
-            new Cash().AmountOfCashInHand((Player) sender);
-        }
-
         return true;
     }
 }

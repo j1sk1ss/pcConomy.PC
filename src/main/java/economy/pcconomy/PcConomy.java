@@ -8,12 +8,8 @@ public final class PcConomy extends JavaPlugin {
     public static XConomyAPI xConomyAPI;
     @Override
     public void onEnable() {
-        xConomyAPI = new XConomyAPI();
-
-        var manager = new Manager(); // Команды для теста валюты
-        getCommand("withdraw").setExecutor(manager);
-        getCommand("change").setExecutor(manager);
-        getCommand("put").setExecutor(manager);
+        xConomyAPI = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
+        var manager = new Manager(); // Обработчик тестовых комманд
     }
 
     @Override

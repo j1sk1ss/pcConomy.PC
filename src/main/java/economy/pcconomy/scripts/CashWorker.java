@@ -1,6 +1,5 @@
 package economy.pcconomy.scripts;
 
-import economy.pcconomy.cash.Cash;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -11,8 +10,8 @@ import java.util.Objects;
 
 public class CashWorker {
 
-    final static String currencyName = "Доллар США";
-    final static String currencySigh = "$";
+    final static String currencyName = "Доллар США"; // Название валюты. Оно будет названием банкнот
+    final static String currencySigh = "$"; // Значок валюты. Он будет стоять после номинала в лоре
 
     public static ItemStack CreateCashObject(double amount) { // Создаёт обьект банкноты в одном эксземпляре
         return ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER, 1),
@@ -28,7 +27,6 @@ public class CashWorker {
         if (isCash(money))
             return Double.parseDouble(ItemWorker.GetLore(money).get(0)
                     .replace(currencySigh,"")) * money.getAmount();
-        else System.out.println("Подделка.");
 
         return 0;
     }
@@ -41,13 +39,12 @@ public class CashWorker {
             if (isCash(item))
                 amount += Double.parseDouble(ItemWorker.GetLore(item).get(0)
                         .replace(currencySigh,"")) * item.getAmount();
-            else System.out.println("Подделка.");
         }
 
         return amount;
     }
 
-    public List<ItemStack> GetCashFromInventory(PlayerInventory inventory) { // Выдаёт отсартированный лист всех купюр
+    public List<ItemStack> GetCashFromInventory(PlayerInventory inventory) { // Выдаёт лист всех купюр из инвентаря
         List<ItemStack> moneys = new ArrayList<>();
 
         for (var item: // Формируем лист купюр
@@ -56,6 +53,16 @@ public class CashWorker {
         }
 
         return moneys;
+    }
+
+    public static List<ItemStack> getChangeInCash(List<Integer> change) { // Получение листа обьектов из сдачи
+        List<ItemStack> moneyStack = new ArrayList<>();
+
+        for (int i = 0; i < ChangeWorker.Denomination.size(); i++) {
+            moneyStack.add(CashWorker.CreateCashObject(ChangeWorker.Denomination.get(i), change.get(i)));
+        }
+
+        return moneyStack;
     }
 
     public static boolean isCash(ItemStack item) { // Проверка обьекта на то, что это банкнота
