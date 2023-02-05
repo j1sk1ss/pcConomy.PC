@@ -1,14 +1,16 @@
 package economy.pcconomy;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.link.Manager;
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PcConomy extends JavaPlugin {
     public static XConomyAPI xConomyAPI;
+    public static TownyAPI TownyAPI;
     @Override
     public void onEnable() {
-        xConomyAPI = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
+        xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
     }
 
