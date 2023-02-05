@@ -13,14 +13,17 @@ import static economy.pcconomy.scripts.CashWorker.CreateCashObject;
 public class Cash {
 
     public void GiveCashToPlayer(double amount, Player player) { // Дать игроку купюру существующим номиналом
-        if (!ChangeWorker.Denomination.contains(amount)) return; // Номинал существует
+        if (!ChangeWorker.Denomination.contains(amount)) { // Номинал не существует
+            GiveSpecialAmountOfCashToPlayer(amount, player); // Выдача другими номиналами
+            return;
+        }
         if (ItemWorker.getEmptySlots(player) < 1) return; // Есть место под банкноту
 
         ItemWorker.giveItems(CreateCashObject(amount), player);
     }
 
-    public void GetSpecialCashToPlayer(double amount, Player player) { // Выдача любой суммы купюрами
-        var changeNumeric = ChangeWorker.getChange(amount);
+    public void GiveSpecialAmountOfCashToPlayer(double amount, Player player) { // Выдача любой суммы купюрами
+        var changeNumeric = ChangeWorker.getChange(amount); // Лист из кол-ва необходимых номиналов
         if (ItemWorker.getEmptySlots(player) < changeNumeric.size()) return; // Если нет места для сдачи
 
         List<ItemStack> change = CashWorker.getChangeInCash(changeNumeric);
@@ -52,6 +55,6 @@ public class Cash {
         if (ItemWorker.getEmptySlots(player) < ChangeWorker.getChange(amount).size()) return; // Если нет места для сдачи
 
         ItemWorker.TakeItems(playerCash, player);
-        GetSpecialCashToPlayer(playerCashAmount - amount, player);
+        GiveSpecialAmountOfCashToPlayer(playerCashAmount - amount, player);
     }
 }
