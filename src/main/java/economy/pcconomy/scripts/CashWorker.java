@@ -21,9 +21,10 @@ public class CashWorker {
     }
 
     public double GetAmountFromCash(ItemStack money) { // Получает итоговую сумму обьекта банкнот
-        if (ItemWorker.GetName(money).equals("Доллар США")) {
+        if (ItemWorker.GetName(money).equals(currencyName)) {
             if (!Objects.equals(ItemWorker.GetLore(money).get(0), "")) {
-                return Double.parseDouble(ItemWorker.GetLore(money).get(0).replace("$","")) * money.getAmount();
+                return Double.parseDouble(ItemWorker.GetLore(money).get(0)
+                        .replace(currencySigh,"")) * money.getAmount();
             } else System.out.println("Подделка.");
         } else System.out.println("Это не деньги.");
 
