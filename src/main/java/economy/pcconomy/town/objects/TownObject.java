@@ -21,7 +21,7 @@ public class TownObject {
 
     public Dictionary<ItemStack, Double> Prices;
 
-    private final double StartBudget = 100;
+    private final double StartBudget = getBudget();
 
     private final int StartStorageAmount = 100;
 
