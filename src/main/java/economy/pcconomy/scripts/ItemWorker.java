@@ -38,7 +38,7 @@ public class ItemWorker {
     public static void giveItems(List<ItemStack> itemStacks, Player player) { // Выдаёт лист предметов игроку
         if (getEmptySlots(player) < itemStacks.size()) return;
 
-        for (ItemStack item:
+        for (var item:
                 itemStacks) {
             player.getInventory().addItem(item);
         }
@@ -49,11 +49,28 @@ public class ItemWorker {
         player.getInventory().addItem(itemStack);
     }
 
+    public static void TakeItems(List<ItemStack> itemStacks, Player player) {
+        for (var item:
+             itemStacks) {
+            for (var playerItem:
+                 player.getInventory()) {
+                if (playerItem.equals(item)) player.getInventory().removeItem(playerItem);
+            }
+        }
+    }
+
+    public static void TakeItems(ItemStack itemStack, Player player) {
+        for (var playerItem:
+                player.getInventory()) {
+            if (playerItem.equals(itemStack)) player.getInventory().removeItem(playerItem);
+        }
+    }
+
     public static int getEmptySlots(Player player) { // Получает кол-во пустых слотов у игрока
-        PlayerInventory inventory = player.getInventory();
-        ItemStack[] cont = inventory.getContents();
+        var inventory = player.getInventory();
+        var cont = inventory.getContents();
         int i = 0;
-        for (ItemStack item : cont)
+        for (var item : cont)
             if (item != null && item.getType() != Material.AIR) {
                 i++;
             }

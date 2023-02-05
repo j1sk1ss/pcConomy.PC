@@ -26,11 +26,20 @@ public class Cash {
         return new CashWorker().GetAmountFromCash(player.getInventory().getItemInMainHand());
     }
 
-    public double TakeCashFromPlayer(Player player) { // Забрать деньги из рук игрока и получить их кол-во
+    public double TakeCashFromHand(Player player) { // Забрать деньги из рук игрока и получить их кол-во
         double amount = AmountOfCashInHand(player);
         if (amount == 0) return 0;
 
         player.getInventory().setItemInMainHand(null);
         return amount;
+    }
+
+    public void TakeCashFromInventory(double amount, Player player) { // Забрать необходимую сумму из инвентаря со сдачей
+        var playerCash = new CashWorker().GetCashFromInventory(player.getInventory());
+        var playerCashAmount = new CashWorker().GetAmountFromCash(playerCash);
+        if (playerCashAmount < amount) return;
+
+        ItemWorker.TakeItems(playerCash, player);
+        GetSpecialCashToPlayer(playerCashAmount - amount, player);
     }
 }

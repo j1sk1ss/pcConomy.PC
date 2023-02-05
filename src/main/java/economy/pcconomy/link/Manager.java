@@ -13,11 +13,11 @@ public class Manager implements CommandExecutor { // Тестовый класс
                              @NotNull String label, @NotNull String[] args) {
 
         if (command.getName().equals("withdraw")) {
-            double amount = Integer.parseInt(args[0]);
+            var amount = Double.parseDouble(args[0]);
             new Cash().GiveCashToPlayer(amount, (Player) sender);
         }
         if (command.getName().equals("change")) {
-            double amount = Integer.parseInt(args[0]);
+            var amount = Double.parseDouble(args[0]);
             new Cash().GetSpecialCashToPlayer(amount, (Player) sender);
         }
         if (command.getName().equals("put")) {

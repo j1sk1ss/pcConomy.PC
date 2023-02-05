@@ -10,7 +10,7 @@ public final class PcConomy extends JavaPlugin {
     public void onEnable() {
         xConomyAPI = new XConomyAPI();
 
-        Manager manager = new Manager(); // Команды для теста валюты
+        var manager = new Manager(); // Команды для теста валюты
         getCommand("withdraw").setExecutor(manager);
         getCommand("change").setExecutor(manager);
         getCommand("put").setExecutor(manager);
