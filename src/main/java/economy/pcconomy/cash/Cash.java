@@ -13,12 +13,17 @@ import static economy.pcconomy.scripts.CashWorker.CreateCashObject;
 public class Cash {
 
     public void GiveCashToPlayer(double amount, Player player) { // Дать игроку купюру существующим номиналом
-        if (!ChangeWorker.Denomination.contains((int)amount)) return;
+        if (!ChangeWorker.Denomination.contains(amount)) return; // Номинал существует
+        if (ItemWorker.getEmptySlots(player) < 1) return; // Есть место под банкноту
+
         ItemWorker.giveItems(CreateCashObject(amount), player);
     }
 
     public void GetSpecialCashToPlayer(double amount, Player player) { // Выдача любой суммы купюрами
-        List<ItemStack> change = CashWorker.getChangeInCash(ChangeWorker.getChange(amount));
+        var changeNumeric = ChangeWorker.getChange(amount);
+        if (ItemWorker.getEmptySlots(player) < changeNumeric.size()) return; // Если нет места для сдачи
+
+        List<ItemStack> change = CashWorker.getChangeInCash(changeNumeric);
         ItemWorker.giveItems(change, player);
     }
 
@@ -42,7 +47,9 @@ public class Cash {
     public void TakeCashFromInventory(double amount, Player player) { // Забрать необходимую сумму из инвентаря со сдачей
         var playerCash = new CashWorker().GetCashFromInventory(player.getInventory());
         var playerCashAmount = AmountOfCashInInventory(player);
-        if (playerCashAmount < amount) return;
+
+        if (playerCashAmount < amount) return; // Если у игрока ет таких денег
+        if (ItemWorker.getEmptySlots(player) < ChangeWorker.getChange(amount).size()) return; // Если нет места для сдачи
 
         ItemWorker.TakeItems(playerCash, player);
         GetSpecialCashToPlayer(playerCashAmount - amount, player);
