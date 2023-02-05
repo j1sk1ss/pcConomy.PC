@@ -1,41 +1,26 @@
 package economy.pcconomy.scripts;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
 public class CashWorker {
-    public static void WithdrawCash(double amount, Player player) { // Town -> Create cash -> Player
-        BalanceWorker balanceWorker = new BalanceWorker();
-        if (!balanceWorker.isSolvent(amount, player)) return;
-        //if (!город может выдать эту сумму) return;
 
-        balanceWorker.TakeMoney(amount, player);
-        //город.TakeMoney(amount);
+    final static String currencyName = "Доллар США";
+    final static String currencySigh = "$";
 
-        ExtraditionWorker.giveItems(CreateCashObject(amount), player);
-    }
-
-    public static ItemStack CreateCashObject(double amount) {
+    public static ItemStack CreateCashObject(double amount) { // Создаёт обьект банкноты в одном эксземпляре
         return ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER, 1),
-                "" + amount + "$"), "Доллар США");
+                "" + amount + currencySigh), currencyName);
     }
 
-    public static ItemStack CreateCashObject(double amount, int count) {
+    public static ItemStack CreateCashObject(double amount, int count) { // Создаёт обьекты банкнот
         return ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER, count),
-                "" + amount + "$"), "Доллар США");
+                "" + amount + currencySigh), currencyName);
     }
 
-    public void TakeCash(Player player) { // Player -> Town
-        ItemStack moneyObject = player.getInventory().getItemInMainHand();
-
-        new BalanceWorker().GiveMoney(GetAmountFromCash(moneyObject), player);
-        player.getInventory().setItemInMainHand(null);
-    }
-
-    public double GetAmountFromCash(ItemStack money) {
+    public double GetAmountFromCash(ItemStack money) { // Получает итоговую сумму обьекта банкнот
         if (ItemWorker.GetName(money).equals("Доллар США")) {
             if (!Objects.equals(ItemWorker.GetLore(money).get(0), "")) {
                 return Double.parseDouble(ItemWorker.GetLore(money).get(0).replace("$","")) * money.getAmount();

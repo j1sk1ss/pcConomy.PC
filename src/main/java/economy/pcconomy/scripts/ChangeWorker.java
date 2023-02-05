@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ChangeWorker {
-    private static final List<Integer> Denomination = Arrays.asList(5000, 2000, 1000, 500, 200, 100, 50, 10, 1);
+    public static final List<Integer> Denomination = Arrays.asList(5000, 2000, 1000, 500, 200, 100, 50, 10, 1);
 
-    public static List<Integer> getChange(double amount) {
+    public static List<Integer> getChange(double amount) { // Получение кол-ва каждой из всех банкнот для сдачи
         List<Integer> change = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0);
 
         for (int i = 0; i < Denomination.size(); i++) {
@@ -22,7 +22,7 @@ public class ChangeWorker {
         return change;
     }
 
-    public static List<ItemStack> getChangeInCash(double amount) {
+    public static List<ItemStack> getChangeInCash(double amount) { // Получение листа обьектов из сдачи
         List<ItemStack> moneyStack = new ArrayList<>();
         List<Integer> change = getChange(amount);
 
