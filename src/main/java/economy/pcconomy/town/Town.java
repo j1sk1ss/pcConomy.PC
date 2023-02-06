@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Town {
-    public List<TownObject> townObjects = new ArrayList<>(); // все города сервера
+    public static List<TownObject> townObjects = new ArrayList<>(); // все города сервера
 
-    public void CreateTown(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
+    public static void CreateTown(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
         // метод который должен быть вызван вместе с созданием города игроком
         townObjects.add(new TownObject(town, isNPC));
     }
@@ -76,7 +76,7 @@ public class Town {
         }
     }
 
-    public void DestroyTownObject(com.palmergames.bukkit.towny.object.Town town) {
+    public static void DestroyTownObject(com.palmergames.bukkit.towny.object.Town town) {
         // метод который должен быть вызван вместе с удалением
         for (TownObject townObject:
                 townObjects) {
