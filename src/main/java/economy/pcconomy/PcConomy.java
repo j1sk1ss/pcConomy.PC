@@ -16,6 +16,7 @@ package economy.pcconomy;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.link.Manager;
 import economy.pcconomy.listener.TownyListener;
+import economy.pcconomy.town.objects.BankObject;
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,8 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
     public static XConomyAPI xConomyAPI;
     public static TownyAPI TownyAPI;
+    public static BankObject GlobalBank = new BankObject(); // Глобальный банк
+
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);

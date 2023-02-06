@@ -1,13 +1,7 @@
 package economy.pcconomy.town;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.cash.Cash;
-import economy.pcconomy.scripts.BalanceWorker;
-import economy.pcconomy.scripts.CashWorker;
-import economy.pcconomy.scripts.ItemWorker;
 import economy.pcconomy.town.objects.TownObject;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,42 +32,14 @@ public class Town {
         }
     }
 
-    public void ChangeNPCStatus(String townName, boolean isNPC) {
+    public static void ChangeNPCStatus(String townName, boolean isNPC) {
         // Метод изменяющий город игрока на город NPC
         var townObject = GetTownObject(townName);
         townObject.isNPC = isNPC;
         SetTownObject(townObject);
     }
 
-    public void WithdrawCash(double amount, Player player, String townName) {
-        // Метод снятия денег из города игроком (если в городе есть на это бюджет)
-        var townObject = GetTownObject(townName);
-        var balanceWorker = new BalanceWorker();
-        var cash = new Cash();
-
-        if (amount > townObject.GetUsefulAmountOfBudget()) return;
-        if (balanceWorker.isSolvent(amount, player)) return;
-        if (!townObject.isNPC) return;
-
-        balanceWorker.TakeMoney(amount, player);
-        townObject.setBudget(townObject.getBudget() - amount);
-        cash.GiveCashToPlayer(amount, player);
-    }
-
-    public void PutCash(ItemStack money, Player player, String townName) {
-        // Метод внесения денег городу игроком (идут на счёт и городу и игроку)
-        var townObject = GetTownObject(townName);
-
-        if (!CashWorker.isCash(money)) return;
-        if (!townObject.isNPC) return;
-
-        var amount = new CashWorker().GetAmountFromCash(money);
-        ItemWorker.TakeItems(money, player);
-        new BalanceWorker().GiveMoney(amount, player);
-        townObject.setBudget(townObject.getBudget() + amount);
-    }
-
-    public TownObject GetTownObject(String townName) {
+    public static TownObject GetTownObject(String townName) {
         // Получение обьекта города
         for (TownObject townObject:
                 townObjects) {
@@ -85,7 +51,7 @@ public class Town {
         return null;
     }
 
-    public void SetTownObject(TownObject town) {
+    public static void SetTownObject(TownObject town) {
         // Обновление обьекта города
         for (TownObject townObject:
                 townObjects) {

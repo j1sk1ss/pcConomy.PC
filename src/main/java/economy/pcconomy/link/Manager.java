@@ -1,5 +1,6 @@
 package economy.pcconomy.link;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.cash.Cash;
 import economy.pcconomy.town.Town;
 import org.bukkit.command.Command;
@@ -27,13 +28,13 @@ public class Manager implements CommandExecutor { // Тестовый класс
             var townName = args[0];
             var amount = Double.parseDouble(args[1]);
 
-            new Town().WithdrawCash(amount, (Player) sender, townName);
+            PcConomy.GlobalBank.WithdrawCash(amount, (Player) sender, townName);
         }
 
         if (command.getName().equals("put")) {
             var townName = args[0];
 
-            new Town().PutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender, townName);
+            PcConomy.GlobalBank.PutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender, townName);
         }
         return true;
     }
