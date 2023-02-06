@@ -51,8 +51,12 @@ public class ItemWorker {
     public static void TakeItems(List<ItemStack> itemStacks, Player player) {
         for (var item:
              itemStacks) {
+            if (item == null) continue;
+
             for (var playerItem:
                  player.getInventory()) {
+                if (playerItem == null) continue;
+
                 if (playerItem.equals(item)) player.getInventory().removeItem(playerItem);
             }
         }
@@ -61,7 +65,9 @@ public class ItemWorker {
     public static void TakeItems(ItemStack itemStack, Player player) {
         for (var playerItem:
                 player.getInventory()) {
+            if (playerItem == null) continue;
             if (playerItem.equals(itemStack)) player.getInventory().removeItem(playerItem);
+            break;
         }
     }
 

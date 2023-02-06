@@ -1,5 +1,6 @@
 package economy.pcconomy.town;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.cash.Cash;
 import economy.pcconomy.scripts.BalanceWorker;
 import economy.pcconomy.scripts.CashWorker;
@@ -14,32 +15,39 @@ import java.util.List;
 public class Town {
     public static List<TownObject> townObjects = new ArrayList<>(); // все города сервера
 
+    public static void AddOldTowns() {
+        for (com.palmergames.bukkit.towny.object.Town town:
+                PcConomy.TownyAPI.getTowns()) {
+            CreateTownObject(town, false);
+        }
+    }
+
     public static void CreateTownObject(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
         // метод который должен быть вызван вместе с созданием города игроком
         townObjects.add(new TownObject(town, isNPC));
     }
 
-    public static void DestroyTownObject(com.palmergames.bukkit.towny.object.Town town) {
+    public static void DestroyTownObject(String townName) {
         // метод который должен быть вызван вместе с удалением города игрока
         for (TownObject townObject:
                 townObjects) {
-            if (townObject.Town.equals(town)) {
+            if (townObject.Town.getName().equals(townName)) {
                 townObjects.remove(townObject);
                 break;
             }
         }
     }
 
-    public void ChangeNPCStatus(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
+    public void ChangeNPCStatus(String townName, boolean isNPC) {
         // Метод изменяющий город игрока на город NPC
-        var townObject = GetTownObject(town);
+        var townObject = GetTownObject(townName);
         townObject.isNPC = isNPC;
         SetTownObject(townObject);
     }
 
-    public void WithdrawCash(int amount, Player player, com.palmergames.bukkit.towny.object.Town town) {
+    public void WithdrawCash(double amount, Player player, String townName) {
         // Метод снятия денег из города игроком (если в городе есть на это бюджет)
-        var townObject = GetTownObject(town);
+        var townObject = GetTownObject(townName);
         var balanceWorker = new BalanceWorker();
         var cash = new Cash();
 
@@ -52,9 +60,10 @@ public class Town {
         cash.GiveCashToPlayer(amount, player);
     }
 
-    public void PutCash(ItemStack money, Player player, com.palmergames.bukkit.towny.object.Town town) {
+    public void PutCash(ItemStack money, Player player, String townName) {
         // Метод внесения денег городу игроком (идут на счёт и городу и игроку)
-        var townObject = GetTownObject(town);
+        var townObject = GetTownObject(townName);
+
         if (!CashWorker.isCash(money)) return;
         if (!townObject.isNPC) return;
 
@@ -64,11 +73,11 @@ public class Town {
         townObject.setBudget(townObject.getBudget() + amount);
     }
 
-    public TownObject GetTownObject(com.palmergames.bukkit.towny.object.Town town) {
+    public TownObject GetTownObject(String townName) {
         // Получение обьекта города
         for (TownObject townObject:
                 townObjects) {
-            if (townObject.Town.equals(town)) {
+            if (townObject.Town.getName().equals(townName)) {
                 return townObject;
             }
         }

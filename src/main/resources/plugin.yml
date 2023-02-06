@@ -5,3 +5,12 @@ api-version: 1.16
 authors: [ PC_Java_Team ]
 description: Main economy plugin for Potolot Craft
 website: https://potolotcraft.net
+commands:
+  create:
+    usage: /create
+  take:
+    usage: /take
+  withdraw:
+    usage: /withdraw
+  put:
+    usage: /put

@@ -21,7 +21,7 @@ public class TownObject {
 
     public Dictionary<ItemStack, Double> Prices;
 
-    private final double StartBudget = getBudget();
+    private final double StartBudget = 100;
 
     private final int StartStorageAmount = 100;
 
@@ -107,6 +107,6 @@ public class TownObject {
     }
 
     public BankAccount getBankAccount() {
-        return new BankAccount(Town.getBankAccountPrefix(), Town.getWorld(), Town.getBankCap());
+        return Town.getAccount();
     }
 }

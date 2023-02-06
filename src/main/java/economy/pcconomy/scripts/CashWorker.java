@@ -66,6 +66,7 @@ public class CashWorker {
     }
 
     public static boolean isCash(ItemStack item) { // Проверка обьекта на то, что это банкнота
+        if (item == null) return false;
         if (ItemWorker.GetName(item).equals(currencyName))
             if (!Objects.equals(ItemWorker.GetLore(item).get(0), ""))
                 return true;
