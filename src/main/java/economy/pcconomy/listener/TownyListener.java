@@ -15,7 +15,7 @@ public class TownyListener implements Listener {
         var mayor = event.getPlayer();
         var town = ((Resident) mayor).getTown();
 
-        Town.CreateTown(town, false);
+        Town.CreateTownObject(town, false);
     }
 
     @EventHandler

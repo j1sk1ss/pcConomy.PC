@@ -14,9 +14,20 @@ import java.util.List;
 public class Town {
     public static List<TownObject> townObjects = new ArrayList<>(); // все города сервера
 
-    public static void CreateTown(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
+    public static void CreateTownObject(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
         // метод который должен быть вызван вместе с созданием города игроком
         townObjects.add(new TownObject(town, isNPC));
+    }
+
+    public static void DestroyTownObject(com.palmergames.bukkit.towny.object.Town town) {
+        // метод который должен быть вызван вместе с удалением города игрока
+        for (TownObject townObject:
+                townObjects) {
+            if (townObject.Town.equals(town)) {
+                townObjects.remove(townObject);
+                break;
+            }
+        }
     }
 
     public void ChangeNPCStatus(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
@@ -72,17 +83,6 @@ public class Town {
             if (townObject.Town.equals(town.Town)) {
                 townObjects.remove(townObject);
                 townObjects.add(town);
-            }
-        }
-    }
-
-    public static void DestroyTownObject(com.palmergames.bukkit.towny.object.Town town) {
-        // метод который должен быть вызван вместе с удалением
-        for (TownObject townObject:
-                townObjects) {
-            if (townObject.Town.equals(town)) {
-                townObjects.remove(townObject);
-                break;
             }
         }
     }
