@@ -14,14 +14,4 @@ public class BorrowerObject {
 
     public Player Borrower;
     public List<LoanObject> CreditHistory;
-
-    public double getSafetyFactor(double amount) {
-        var expired = 0;
-        for (LoanObject loan:
-             CreditHistory) {
-            expired += loan.expired;
-        }
-
-        return expired + (amount / 100d) / CreditHistory.size();
-    }
 }

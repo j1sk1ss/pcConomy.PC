@@ -1,4 +1,4 @@
-package economy.pcconomy.scripts;
+package economy.pcconomy.cash.scripts;
 
 import java.util.Arrays;
 import java.util.List;

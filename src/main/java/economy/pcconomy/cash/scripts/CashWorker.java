@@ -1,5 +1,6 @@
-package economy.pcconomy.scripts;
+package economy.pcconomy.cash.scripts;
 
+import economy.pcconomy.scripts.ItemWorker;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;

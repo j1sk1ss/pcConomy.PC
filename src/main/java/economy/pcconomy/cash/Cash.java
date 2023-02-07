@@ -1,14 +1,14 @@
 package economy.pcconomy.cash;
 
-import economy.pcconomy.scripts.CashWorker;
-import economy.pcconomy.scripts.ChangeWorker;
+import economy.pcconomy.cash.scripts.CashWorker;
+import economy.pcconomy.cash.scripts.ChangeWorker;
 import economy.pcconomy.scripts.ItemWorker;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-import static economy.pcconomy.scripts.CashWorker.CreateCashObject;
+import static economy.pcconomy.cash.scripts.CashWorker.CreateCashObject;
 
 public class Cash {
 

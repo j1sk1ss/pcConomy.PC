@@ -3,16 +3,15 @@ package economy.pcconomy.bank;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.bank.objects.BorrowerObject;
 import economy.pcconomy.bank.objects.LoanObject;
+import economy.pcconomy.bank.scripts.LoanWorker;
 import economy.pcconomy.cash.Cash;
 import economy.pcconomy.scripts.BalanceWorker;
-import economy.pcconomy.scripts.CashWorker;
+import economy.pcconomy.cash.scripts.CashWorker;
 import economy.pcconomy.scripts.ItemWorker;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -20,8 +19,9 @@ public class Bank {
     public double BankBudget = .0d;
     public double UsefulBudgetPercent = .2d;
     public Dictionary<Player, LoanObject> Credit;
-    public List<BorrowerObject> borrowerObjects = new ArrayList<>();
-    public void WithdrawCash(double amount, Player player) {
+    public List<BorrowerObject> borrowerObjects = new ArrayList<>(); // заёмщики
+
+    public void PlayerWithdrawCash(double amount, Player player) {
         // Метод снятия денег в городе из банка игроком (если в городе есть на это бюджет)
         var balanceWorker = new BalanceWorker();
         var cash = new Cash();
@@ -34,7 +34,7 @@ public class Bank {
         cash.GiveCashToPlayer(amount, player);
     }
 
-    public void PutCash(ItemStack money, Player player) { // Метод внесения денег в городе в банк
+    public void PlayerPutCash(ItemStack money, Player player) { // Метод внесения денег в городе в банк
         if (!CashWorker.isCash(money)) return;
 
         var amount = new CashWorker().GetAmountFromCash(money);
@@ -43,20 +43,16 @@ public class Bank {
         PcConomy.GlobalBank.BankBudget += amount;
     }
 
-    private final double trustCoefficient = 1.5d;
-
     public void CreateLoan(double amount, int duration, Player player) {
         // Создание кредита на игрока
-        if (getBorrowerObject(player) != null) // есть кредитная история
-            if (getBorrowerObject(player).getSafetyFactor(amount) > trustCoefficient)
-                return; // коэффициент надёжности
+        if (!LoanWorker.isSafeLoan(amount, player)) return; // Одобрение кредита по кредит. истории
 
         if (GetUsefulAmountOfBudget() *
-                (1 / getBorrowerObject(player).getSafetyFactor(amount)) < amount)
+                (1 / LoanWorker.getSafetyFactor(amount, getBorrowerObject(player))) < amount)
             return; // предел кредитования
 
-        var percentage = getPercent(amount, duration); // процент по кредиту
-        var dailyPayment = getDailyPayment(amount, duration, percentage); // дневной платёж
+        var percentage = LoanWorker.getPercent(amount, duration); // процент по кредиту
+        var dailyPayment = LoanWorker.getDailyPayment(amount, duration, percentage); // дневной платёж
 
         Credit.put(player, new LoanObject(amount, percentage, duration, dailyPayment));
 
@@ -64,17 +60,7 @@ public class Bank {
         new BalanceWorker().GiveMoney(amount, player);
     }
 
-    public double getPercent(double amount, double duration) {
-        // Выдать процент под параметры
-        return (amount / duration) / 100d;
-    }
-
-    public double getDailyPayment(double amount, double duration, double percent) {
-        // Выдать дневной платёж по параметрам
-        return (amount + amount * percent) / duration;
-    }
-
-    public void LoanTakePercent() {
+    public void TakePercentFromBorrowers() {
         // Взятие процента со счёта игрока
         var keys = Credit.keys();
 
@@ -117,7 +103,7 @@ public class Bank {
         Credit.remove(player);
     }
 
-    private BorrowerObject getBorrowerObject(Player player) {
+    public BorrowerObject getBorrowerObject(Player player) {
         for (BorrowerObject borrower:
              borrowerObjects) {
             if (borrower.Borrower.equals(player)) return borrower;
