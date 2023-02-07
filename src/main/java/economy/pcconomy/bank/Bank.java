@@ -43,12 +43,17 @@ public class Bank {
         PcConomy.GlobalBank.BankBudget += amount;
     }
 
+    private final double trustCoefficient = 1.5d;
+
     public void CreateLoan(double amount, int duration, Player player) {
         // Создание кредита на игрока
-        if (GetUsefulAmountOfBudget() * 2 < amount) return; // предел кредитования
-
         if (getBorrowerObject(player) != null) // есть кредитная история
-            if (getBorrowerObject(player).getSafetyFactor(amount) > 1) return; // коэффициент надёжности
+            if (getBorrowerObject(player).getSafetyFactor(amount) > trustCoefficient)
+                return; // коэффициент надёжности
+
+        if (GetUsefulAmountOfBudget() *
+                (1 / getBorrowerObject(player).getSafetyFactor(amount)) < amount)
+            return; // предел кредитования
 
         var percentage = getPercent(amount, duration); // процент по кредиту
         var dailyPayment = getDailyPayment(amount, duration, percentage); // дневной платёж
