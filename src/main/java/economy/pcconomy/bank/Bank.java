@@ -1,6 +1,7 @@
 package economy.pcconomy.bank;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.bank.objects.BorrowerObject;
 import economy.pcconomy.bank.objects.LoanObject;
 import economy.pcconomy.cash.Cash;
 import economy.pcconomy.scripts.BalanceWorker;
@@ -10,14 +11,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.nio.Buffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
+import java.util.List;
 
 public class Bank {
     public double BankBudget = .0d;
     public double UsefulBudgetPercent = .2d;
     public Dictionary<Player, LoanObject> Credit;
-
+    public List<BorrowerObject> borrowerObjects = new ArrayList<>();
     public void WithdrawCash(double amount, Player player) {
         // Метод снятия денег в городе из банка игроком (если в городе есть на это бюджет)
         var balanceWorker = new BalanceWorker();
@@ -44,8 +47,11 @@ public class Bank {
         // Создание кредита на игрока
         if (GetUsefulAmountOfBudget() * 2 < amount) return; // предел кредитования
 
-        var percentage = getPercent(amount, duration);
-        var dailyPayment = getDailyPayment(amount, duration, percentage);
+        if (getBorrowerObject(player) != null) // есть кредитная история
+            if (getBorrowerObject(player).getSafetyFactor(amount) > 1) return; // коэффициент надёжности
+
+        var percentage = getPercent(amount, duration); // процент по кредиту
+        var dailyPayment = getDailyPayment(amount, duration, percentage); // дневной платёж
 
         Credit.put(player, new LoanObject(amount, percentage, duration, dailyPayment));
 
@@ -55,7 +61,7 @@ public class Bank {
 
     public double getPercent(double amount, double duration) {
         // Выдать процент под параметры
-        return (amount / duration) / 10000d;
+        return (amount / duration) / 100d;
     }
 
     public double getDailyPayment(double amount, double duration, double percent) {
@@ -78,6 +84,11 @@ public class Bank {
                 return;
             }
 
+            if (!balanceWorker.isSolvent(loan.dailyPayment, player)) {
+                loan.expired += 1;
+                return;
+            }
+
             balanceWorker.TakeMoney(loan.dailyPayment, player);
             loan.amount -= balanceWorker.getBalance(player);
 
@@ -90,7 +101,33 @@ public class Bank {
         var loan = Credit.get(player);
         if (loan.amount > 0) return;
 
+        var borrower = getBorrowerObject(player);
+        if (borrower != null) {
+            borrower.CreditHistory.add(loan);
+            setBorrowerObject(borrower);
+        } else {
+            borrowerObjects.add(new BorrowerObject(player, loan));
+        }
+
         Credit.remove(player);
+    }
+
+    private BorrowerObject getBorrowerObject(Player player) {
+        for (BorrowerObject borrower:
+             borrowerObjects) {
+            if (borrower.Borrower.equals(player)) return borrower;
+        }
+        return null;
+    }
+
+    private void setBorrowerObject(BorrowerObject borrowerObject) {
+        for (BorrowerObject borrower:
+                borrowerObjects) {
+            if (borrower.Borrower.equals(borrowerObject.Borrower)) {
+                borrowerObjects.remove(borrower);
+                borrowerObjects.add(borrowerObject);
+            }
+        }
     }
 
     public void PrintMoneys(double amount) {

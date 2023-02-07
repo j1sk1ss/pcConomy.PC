@@ -11,4 +11,6 @@ public class LoanObject {
     public double percentage;
     public int duration;
     public double dailyPayment;
+
+    public int expired;
 }
