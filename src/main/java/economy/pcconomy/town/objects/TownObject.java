@@ -3,9 +3,11 @@ package economy.pcconomy.town.objects;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 import economy.pcconomy.PcConomy;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Dictionary;
+import java.util.List;
 import java.util.Random;
 
 public class TownObject {
@@ -16,8 +18,9 @@ public class TownObject {
 
     public Town Town;
     public boolean isNPC;
+    public double Margin;
     public economy.pcconomy.bank.Bank Bank = PcConomy.GlobalBank;
-    public Dictionary<ItemStack, Integer> Storage;
+    public List<ItemStack> Storage;
     public Dictionary<ItemStack, Double> Prices;
     private final double StartBudget = 100;
     private final int StartStorageAmount = 100;
@@ -33,30 +36,26 @@ public class TownObject {
 
     public void CreateResources(int maxAmount) { // Только для НПС города
         if (!isNPC) return;
-        var keys = Storage.keys();
 
-        for (var i = 0; i < Storage.size(); i++) {
-            var key = keys.nextElement();
-            setAmountOfResource(key, Storage.get(key) + new Random().nextInt() % maxAmount);
+        for (ItemStack item:
+             Storage) {
+            setAmountOfResource(item, getAmountOfResource(item) + new Random().nextInt() % maxAmount);
         }
     }
 
     public void UseResources(int maxAmount) {
         if (!isNPC) return;
-        var keys = Storage.keys();
 
-        for (var i = 0; i < Storage.size(); i++) {
-            var key = keys.nextElement();
-            if (Storage.get(key) < 1) continue;
-            setAmountOfResource(key, Storage.get(key) - new Random().nextInt() % maxAmount);
+        for (ItemStack item:
+                Storage) {
+            if (item.getAmount() < 10) return;
+            setAmountOfResource(item, getAmountOfResource(item) - new Random().nextInt() % maxAmount);
         }
     }
 
     public void GenerateLocalPrices() { // Только для НПС города
-        var keys = Storage.keys();
-
-        for (var i = 0; i < Storage.size(); i++) {
-            Prices.put(keys.nextElement(), Storage.get(keys.nextElement()) / getBudget());
+        for (ItemStack itemStack : Storage) {
+            Prices.put(itemStack, itemStack.getAmount() / getBudget());
         }
     }
 
@@ -71,21 +70,40 @@ public class TownObject {
         setBudget(getBudget() + amount);
     }
 
-    public void setAmountOfResource(ItemStack itemStack, int amount) {
-        Storage.remove(itemStack);
-        Storage.put(itemStack, amount);
+    public void setAmountOfResource(ItemStack item, int amount) {
+        for (ItemStack itemStack:
+             Storage) {
+            if (itemStack.isSimilar(item)) {
+                Storage.set(Storage.indexOf(itemStack), new ItemStack(item.getType(), amount));
+            }
+        }
     }
 
-    public int getAmountOfResource(ItemStack itemStack) {
-        return Storage.get(itemStack);
+    public int getAmountOfResource(ItemStack item) {
+        for (ItemStack itemStack:
+                Storage) {
+            if (itemStack.isSimilar(item)) {
+                return itemStack.getAmount();
+            }
+        }
+        return 0;
+    }
+
+    public ItemStack getResource(ItemStack item) {
+        for (ItemStack itemStack:
+                Storage) {
+            if (itemStack.isSimilar(item)) {
+                return itemStack;
+            }
+        }
+        return null;
     }
 
     public int getAmountOfStorage() {
-        var keys = Storage.keys();
         var amount = 0;
 
         for (var i = 0; i < Storage.size(); i++) {
-            amount += Storage.get(keys.nextElement());
+            amount += Storage.get(i).getAmount();
         }
         return amount;
     }

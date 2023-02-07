@@ -1,64 +1,52 @@
 package economy.pcconomy.town;
 
-import economy.pcconomy.PcConomy;
-import economy.pcconomy.town.objects.TownObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import economy.pcconomy.cash.Cash;
+import economy.pcconomy.scripts.ItemWorker;
+import economy.pcconomy.town.scripts.TownWorker;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class Town {
-    public static List<TownObject> townObjects = new ArrayList<>(); // все города сервера
+    public void BuyResourceFromStorage(String townName, ItemStack itemStack, Player buyer) {
+        // Покупка в НПС городе за наличку
+        var townObject = TownWorker.GetTownObject(townName);
+        var itemAmount = itemStack.getAmount();
 
-    public static void AddOldTowns() {
-        for (com.palmergames.bukkit.towny.object.Town town:
-                PcConomy.TownyAPI.getTowns()) {
-            CreateTownObject(town, false);
-        }
+        if (townObject == null) return;
+        var storageAmount = townObject.getAmountOfResource(itemStack);
+
+        if (storageAmount < itemAmount) return;
+        if (!townObject.isNPC) return;
+
+        var price = townObject.Prices.get(townObject.getResource(itemStack));
+        var cash = new Cash();
+
+        if (cash.AmountOfCashInInventory(buyer) < price) return;
+
+        cash.TakeCashFromInventory(price, buyer);
+        townObject.setBudget(townObject.getBudget() + price);
+
+        ItemWorker.giveItems(itemStack, buyer);
+        townObject.setAmountOfResource(itemStack, townObject.getAmountOfResource(itemStack) - itemAmount);
     }
 
-    public static void CreateTownObject(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
-        // метод который должен быть вызван вместе с созданием города игроком
-        townObjects.add(new TownObject(town, isNPC));
-    }
+    public void SellResourceToStorage(String townName, ItemStack itemStack, Player seller) {
+        // Продажа в НПС городе за наличку
+        var townObject = TownWorker.GetTownObject(townName);
+        var itemAmount = itemStack.getAmount();
 
-    public static void DestroyTownObject(String townName) {
-        // метод который должен быть вызван вместе с удалением города игрока
-        for (TownObject townObject:
-                townObjects) {
-            if (townObject.Town.getName().equals(townName)) {
-                townObjects.remove(townObject);
-                break;
-            }
-        }
-    }
+        if (townObject == null) return;
+        if (!townObject.isNPC) return;
 
-    public static void ChangeNPCStatus(String townName, boolean isNPC) {
-        // Метод изменяющий город игрока на город NPC
-        var townObject = GetTownObject(townName);
-        townObject.isNPC = isNPC;
-        SetTownObject(townObject);
-    }
+        var price = townObject.Prices.get(townObject.getResource(itemStack));
+        var cash = new Cash();
 
-    public static TownObject GetTownObject(String townName) {
-        // Получение обьекта города
-        for (TownObject townObject:
-                townObjects) {
-            if (townObject.Town.getName().equals(townName)) {
-                return townObject;
-            }
-        }
+        if (price > townObject.getBudget()) return;
 
-        return null;
-    }
+        ItemWorker.TakeItems(itemStack, seller);
+        townObject.setAmountOfResource(itemStack, townObject.getAmountOfResource(itemStack) + itemAmount);
 
-    public static void SetTownObject(TownObject town) {
-        // Обновление обьекта города
-        for (TownObject townObject:
-                townObjects) {
-            if (townObject.Town.equals(town.Town)) {
-                townObjects.remove(townObject);
-                townObjects.add(town);
-            }
-        }
+        cash.GiveCashToPlayer(price, seller);
+        townObject.setBudget(townObject.getBudget() - price);
     }
 }

@@ -1,7 +1,7 @@
-package economy.pcconomy.listener;
+package economy.pcconomy.town.listener;
 
 import com.palmergames.bukkit.towny.event.*;
-import economy.pcconomy.town.Town;
+import economy.pcconomy.town.scripts.TownWorker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -12,7 +12,7 @@ public class TownyListener implements Listener {
         var town = event.getTown(); // Запоминаем город
 
         System.out.println("cathed creation");
-        Town.CreateTownObject(town, false); // Добавляем в лист установив что это игроковский город
+        TownWorker.CreateTownObject(town, false); // Добавляем в лист установив что это игроковский город
     }
 
     @EventHandler
@@ -20,6 +20,6 @@ public class TownyListener implements Listener {
         var town = event.getTownName(); // Удаление по имени
 
         System.out.println("cathed destroying");
-        Town.DestroyTownObject(town);
+        TownWorker.DestroyTownObject(town);
     }
 }

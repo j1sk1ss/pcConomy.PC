@@ -16,7 +16,7 @@ package economy.pcconomy;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.link.Manager;
-import economy.pcconomy.listener.TownyListener;
+import economy.pcconomy.town.listener.TownyListener;
 import economy.pcconomy.bank.Bank;
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.Bukkit;
