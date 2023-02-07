@@ -25,16 +25,12 @@ public class Manager implements CommandExecutor { // Тестовый класс
         }
 
         if (command.getName().equals("withdraw")) {
-            var townName = args[0];
-            var amount = Double.parseDouble(args[1]);
-
-            PcConomy.GlobalBank.WithdrawCash(amount, (Player) sender, townName);
+            var amount = Double.parseDouble(args[0]);
+            PcConomy.GlobalBank.WithdrawCash(amount, (Player) sender);
         }
 
         if (command.getName().equals("put")) {
-            var townName = args[0];
-
-            PcConomy.GlobalBank.PutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender, townName);
+            PcConomy.GlobalBank.PutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender);
         }
         return true;
     }

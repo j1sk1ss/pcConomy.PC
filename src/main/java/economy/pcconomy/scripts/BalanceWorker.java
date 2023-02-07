@@ -10,6 +10,10 @@ public class BalanceWorker {
 
     private final XConomyAPI xConomyAPI = PcConomy.xConomyAPI;
 
+    public double getBalance(Player player) {
+        return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().doubleValue();
+    }
+
     public boolean isSolvent(double price, Player player) { // Может ли себе позволить это игрок
         return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(price)) < 0;
     }

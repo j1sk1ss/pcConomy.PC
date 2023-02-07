@@ -16,7 +16,7 @@ public class TownObject {
 
     public Town Town;
     public boolean isNPC;
-    public BankObject Bank = PcConomy.GlobalBank;
+    public economy.pcconomy.bank.Bank Bank = PcConomy.GlobalBank;
     public Dictionary<ItemStack, Integer> Storage;
     public Dictionary<ItemStack, Double> Prices;
     private final double StartBudget = 100;
