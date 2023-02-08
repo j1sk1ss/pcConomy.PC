@@ -16,3 +16,5 @@ commands:
     usage: /put
   createB:
     usage: /createB
+  createL:
+    usage: /createL

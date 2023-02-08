@@ -6,10 +6,11 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.event.EventHandler;
 
-@TraitName("Banker")
-public class Banker extends Trait {
-    public Banker() {
-        super("Banker");
+@TraitName("Loaner")
+public class Loaner extends Trait {
+
+    public Loaner() {
+        super("Loaner");
     }
 
     @EventHandler
@@ -17,6 +18,6 @@ public class Banker extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenBankerWindow(player);
+        Window.OpenLoanWindow(player);
     }
 }

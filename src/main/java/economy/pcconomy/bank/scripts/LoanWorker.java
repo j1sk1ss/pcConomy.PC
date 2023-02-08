@@ -10,28 +10,30 @@ public class LoanWorker {
 
     public static double getPercent(double amount, double duration) {
         // Выдать процент под параметры
-        return (amount / duration) / 100d;
+        return Math.round((PcConomy.GlobalBank.GetUsefulAmountOfBudget() / (amount * duration)) * 1000d) / 1000d;
     }
 
     public static double getDailyPayment(double amount, double duration, double percent) {
         // Выдать дневной платёж по параметрам
-        return (amount + amount * percent) / duration;
+        return (amount + amount * (percent / 100d)) / duration;
     }
 
-    public static double getSafetyFactor(double amount, BorrowerObject borrowerObject) {
+    public static double getSafetyFactor(double amount, int duration, BorrowerObject borrowerObject) {
         var expired = 0;
+        if (borrowerObject == null) return ((duration / 100d)) /
+                (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
+
         for (LoanObject loan:
                 borrowerObject.CreditHistory) {
             expired += loan.expired;
         }
 
-        return expired + (amount / 100d) / (borrowerObject.CreditHistory.size() + 1);
+        return (borrowerObject.CreditHistory.size() + (duration / 100d)) /
+                (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
     }
 
-    public static boolean isSafeLoan(double loanAmount, Player borrower) {
-        if (PcConomy.GlobalBank.getBorrowerObject(borrower) != null) // есть кредитная история
-            return !(LoanWorker.getSafetyFactor(loanAmount,
-                    PcConomy.GlobalBank.getBorrowerObject(borrower)) > trustCoefficient); // коэффициент надёжности
-        return true;
+    public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
+        return (getSafetyFactor(loanAmount, duration,
+                PcConomy.GlobalBank.getBorrowerObject(borrower)) >= trustCoefficient); // коэффициент надёжности
     }
 }

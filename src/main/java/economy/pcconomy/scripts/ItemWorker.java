@@ -26,6 +26,17 @@ public class ItemWorker {
         return item;
     }
 
+    public static ItemStack SetMaterial(ItemStack item, Material material) {
+        var itemMeta = item.getItemMeta();
+        var itemStack = new ItemStack(material, item.getAmount());
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    public static Material GetMaterial(ItemStack item) {
+        return item.getType();
+    }
+
     public static List<String> GetLore(ItemStack item) {
         return item.getItemMeta().getLore();
     } // Получает лор

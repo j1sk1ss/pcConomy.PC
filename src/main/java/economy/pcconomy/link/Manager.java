@@ -36,6 +36,10 @@ public class Manager implements CommandExecutor { // Тестовый класс
         if (command.getName().equals("createB")) {
             NPC.CreateBanker((Player) sender);
         }
+
+        if (command.getName().equals("createL")) {
+            NPC.CreateLoaner((Player) sender);
+        }
         return true;
     }
 }

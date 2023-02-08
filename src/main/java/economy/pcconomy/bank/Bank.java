@@ -11,12 +11,14 @@ import economy.pcconomy.scripts.ItemWorker;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.List;
+import java.util.*;
 
 public class Bank {
-    public double BankBudget = 500000.0d;
+    public Bank() {
+        Credit = new Hashtable<>();
+    }
+
+    public double BankBudget = 5000.0d;
     public double UsefulBudgetPercent = .2d;
     public Dictionary<Player, LoanObject> Credit;
     public List<BorrowerObject> borrowerObjects = new ArrayList<>(); // заёмщики
@@ -55,12 +57,6 @@ public class Bank {
 
     public void CreateLoan(double amount, int duration, Player player) {
         // Создание кредита на игрока
-        if (!LoanWorker.isSafeLoan(amount, player)) return; // Одобрение кредита по кредит. истории
-
-        if (GetUsefulAmountOfBudget() *
-                (1 / LoanWorker.getSafetyFactor(amount, getBorrowerObject(player))) < amount)
-            return; // предел кредитования
-
         var percentage = LoanWorker.getPercent(amount, duration); // процент по кредиту
         var dailyPayment = LoanWorker.getDailyPayment(amount, duration, percentage); // дневной платёж
 
@@ -85,13 +81,13 @@ public class Bank {
                 return;
             }
 
-            if (!balanceWorker.isSolvent(loan.dailyPayment, player)) {
+            if (balanceWorker.isSolvent(loan.dailyPayment, player)) {
                 loan.expired += 1;
                 return;
             }
 
             balanceWorker.TakeMoney(loan.dailyPayment, player);
-            loan.amount -= balanceWorker.getBalance(player);
+            loan.amount -= loan.dailyPayment;
 
             BankBudget += loan.dailyPayment;
         }

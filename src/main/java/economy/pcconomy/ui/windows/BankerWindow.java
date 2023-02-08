@@ -1,4 +1,4 @@
-package economy.pcconomy.bank.ui.windows;
+package economy.pcconomy.ui.windows;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.cash.Cash;

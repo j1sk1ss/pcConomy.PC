@@ -13,5 +13,6 @@ public class BorrowerObject {
     }
 
     public Player Borrower;
+    public boolean haveLoan;
     public List<LoanObject> CreditHistory;
 }
