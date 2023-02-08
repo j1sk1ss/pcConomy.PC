@@ -11,8 +11,8 @@ import java.util.Objects;
 
 public class CashWorker {
 
-    final static String currencyName = "Доллар США"; // Название валюты. Оно будет названием банкнот
-    final static String currencySigh = "$"; // Значок валюты. Он будет стоять после номинала в лоре
+    public final static String currencyName = "Доллар США"; // Название валюты. Оно будет названием банкнот
+    public final static String currencySigh = "$"; // Значок валюты. Он будет стоять после номинала в лоре
 
     public static ItemStack CreateCashObject(double amount) { // Создаёт обьект банкноты в одном эксземпляре
         return ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER, 1),

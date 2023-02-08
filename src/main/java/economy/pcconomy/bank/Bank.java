@@ -16,7 +16,7 @@ import java.util.Dictionary;
 import java.util.List;
 
 public class Bank {
-    public double BankBudget = .0d;
+    public double BankBudget = 500000.0d;
     public double UsefulBudgetPercent = .2d;
     public Dictionary<Player, LoanObject> Credit;
     public List<BorrowerObject> borrowerObjects = new ArrayList<>(); // заёмщики
@@ -39,6 +39,16 @@ public class Bank {
 
         var amount = new CashWorker().GetAmountFromCash(money);
         ItemWorker.TakeItems(money, player);
+        new BalanceWorker().GiveMoney(amount, player);
+        PcConomy.GlobalBank.BankBudget += amount;
+    }
+
+    public void PlayerPutCash(double amount, Player player) { // Метод внесения денег в городе в банк
+        var amountInventory = new CashWorker().GetAmountFromCash(
+                new CashWorker().GetCashFromInventory(player.getInventory()));
+        if (amount > amountInventory) return;
+
+        new Cash().TakeCashFromInventory(amount, player);
         new BalanceWorker().GiveMoney(amount, player);
         PcConomy.GlobalBank.BankBudget += amount;
     }

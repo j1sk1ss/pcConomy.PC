@@ -2,6 +2,7 @@ package economy.pcconomy.link;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.cash.Cash;
+import economy.pcconomy.npc.NPC;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,10 @@ public class Manager implements CommandExecutor { // Тестовый класс
 
         if (command.getName().equals("put")) {
             PcConomy.GlobalBank.PlayerPutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender);
+        }
+
+        if (command.getName().equals("createB")) {
+            NPC.CreateBanker((Player) sender);
         }
         return true;
     }

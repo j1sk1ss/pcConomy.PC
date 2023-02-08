@@ -15,6 +15,7 @@ package economy.pcconomy;
 
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import economy.pcconomy.bank.listener.BankerListener;
 import economy.pcconomy.link.Manager;
 import economy.pcconomy.town.listener.TownyListener;
 import economy.pcconomy.bank.Bank;
@@ -33,11 +34,13 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
 
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
 
         getCommand("create").setExecutor(manager);
+        getCommand("createB").setExecutor(manager);
         getCommand("take").setExecutor(manager);
         getCommand("withdraw").setExecutor(manager);
         getCommand("put").setExecutor(manager);
