@@ -1,7 +1,10 @@
 package economy.pcconomy.backend.npc;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.npc.Banker;
 import economy.pcconomy.backend.bank.npc.Loaner;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -27,7 +30,16 @@ public class NPC {
         loaner.spawn(creator.getLocation());
     }
 
+    private final static double traderCost = 3000d;
+
     public static void CreateTrader(Player creator) {
+        var cash = new Cash();
+        if (cash.AmountOfCashInInventory(creator) < traderCost) return;
+        if (LicenseWorker.isOverdue(LicenseWorker.GetLicense(creator))) return;
+
+        cash.TakeCashFromInventory(traderCost, creator);
+        PcConomy.GlobalBank.BankBudget += traderCost;
+
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("Trader" + new Random().nextInt()));
         var trader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
 

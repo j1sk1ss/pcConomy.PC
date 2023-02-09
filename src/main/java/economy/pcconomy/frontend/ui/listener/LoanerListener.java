@@ -1,6 +1,8 @@
 package economy.pcconomy.frontend.ui.listener;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.frontend.ui.windows.LoanWindow;
 import org.bukkit.Material;
@@ -22,7 +24,16 @@ public class LoanerListener implements Listener {
                 if (event.getView().getTitle().equals("Кредит") && player1.equals(player)) {
                     var buttonPosition = event.getSlot();
 
-                    if (ItemWorker.GetName(item).contains("$")) {
+                    if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
+                        var balanceWorker = new BalanceWorker();
+                        if (balanceWorker.isSolvent(PcConomy.GlobalBank.Credit.get(player).amount, player)) return;
+
+                        balanceWorker.TakeMoney(PcConomy.GlobalBank.Credit.get(player).amount, player);
+                        PcConomy.GlobalBank.BankBudget += PcConomy.GlobalBank.Credit.get(player).amount;
+                        PcConomy.GlobalBank.DestroyLoan(player);
+                    }
+
+                    if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
                         event.getInventory().setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
                         boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
 

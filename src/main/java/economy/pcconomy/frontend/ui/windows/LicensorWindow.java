@@ -1,0 +1,23 @@
+package economy.pcconomy.frontend.ui.windows;
+
+import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.license.License;
+import economy.pcconomy.backend.scripts.ItemWorker;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+public class LicensorWindow {
+
+    public static Inventory GetLicensorWindow(Player player) {
+        var window = Bukkit.createInventory(player, 27, "Лицензии");
+
+        window.setItem(0, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
+                License.marketLicensePrice + CashWorker.currencySigh), "Лицензия на создание т. зоны"));
+
+        return window;
+    }
+
+}

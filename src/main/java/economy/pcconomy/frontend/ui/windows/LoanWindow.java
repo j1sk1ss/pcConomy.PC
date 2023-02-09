@@ -33,6 +33,11 @@ public class LoanWindow {
                     durationSteps.get(i) + "дней"));
         }
 
+        if (PcConomy.GlobalBank.Credit.get(player) != null) {
+            window.setItem(10, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.LIGHT_BLUE_WOOL),
+                    "Выплатить кредит"), PcConomy.GlobalBank.Credit.get(player).amount + CashWorker.currencySigh));
+        }
+
         return window;
     }
 
@@ -44,6 +49,12 @@ public class LoanWindow {
             window.setItem(i + 18, ItemWorker.SetName(new ItemStack(Material.GREEN_STAINED_GLASS),
                     durationSteps.get(i) + "дней"));
         }
+
+        if (PcConomy.GlobalBank.Credit.get(player) != null) {
+            window.setItem(10, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.LIGHT_BLUE_WOOL),
+                    "Выплатить кредит"), PcConomy.GlobalBank.Credit.get(player).amount + CashWorker.currencySigh));
+        }
+
         return window;
     }
 
@@ -52,7 +63,7 @@ public class LoanWindow {
         boolean isSafe = LoanWorker.isSafeLoan(maxLoanSize / (i + 1), durationSteps.get(option - 18), player);
 
         ItemStack tempItem = ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL, 1),
-                Math.round(maxLoanSize / (i + 1) * 100) / 100 + "$"), "Банк не одобрит данный займ.");
+                Math.round(maxLoanSize / (i + 1) * 100) / 100 + CashWorker.currencySigh), "Банк не одобрит данный займ.");
 
         if (isSafe) {
             tempItem = ItemWorker.SetMaterial(ItemWorker.SetLore(tempItem, "Банк одобрит данный займ.\nПроцент: " +
