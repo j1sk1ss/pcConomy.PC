@@ -59,6 +59,20 @@ public class ItemWorker {
         player.getInventory().addItem(itemStack);
     }
 
+    public static void giveItemsWithoutLore(List<ItemStack> itemStacks, Player player) {
+        if (getEmptySlots(player) < itemStacks.size()) return;
+
+        for (var item:
+                itemStacks) {
+            player.getInventory().addItem(ItemWorker.SetLore(item, ""));
+        }
+    }
+
+    public static void giveItemsWithoutLore(ItemStack itemStack, Player player) {
+        if (getEmptySlots(player) < 1) return;
+        player.getInventory().addItem(ItemWorker.SetLore(itemStack, ""));
+    }
+
     public static void TakeItems(List<ItemStack> itemStacks, Player player) {
         for (var item:
              itemStacks) {

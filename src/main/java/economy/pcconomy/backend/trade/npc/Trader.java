@@ -2,23 +2,31 @@ package economy.pcconomy.backend.trade.npc;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Town;
+
+import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.scripts.TownWorker;
+
 import economy.pcconomy.frontend.ui.windows.TraderWindow;
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @TraitName("Trader")
 public class Trader extends Trait {
 
-    public List<ItemStack> Storage;
+    public List<ItemStack> Storage = new ArrayList<>();
     public double Revenue;
+    public double Margin;
     public double Cost;
     public boolean isRanted;
     public Town homeTown;
@@ -28,20 +36,13 @@ public class Trader extends Trait {
         super("Trader");
     }
 
-    public Trader(Player player, double cost) {
-        super("Trader");
-
-        homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
-        Revenue  = TownWorker.GetTownObject(homeTown.getName()).Margin;
-        Owner    = player;
-        Cost     = cost;
-    }
-
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
+
+        homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
 
         if (isRanted) {
             if (Owner.equals(player)) {
@@ -55,6 +56,36 @@ public class Trader extends Trait {
             } else {
                 player.openInventory(TraderWindow.GetRanterWindow(player, this));
             }
+        }
+    }
+
+    private Dictionary<Player, NPC> chat = new Hashtable<>();
+
+    @EventHandler
+    public void CreateLot(NPCLeftClickEvent event) {
+        var player = event.getClicker();
+
+        if (!event.getNPC().equals(this.getNPC())) return;
+        if (isRanted) {
+            if (Owner.equals(player)) {
+                player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
+                chat.put(player, event.getNPC());
+            }
+        }
+    }
+
+    @EventHandler
+    public void Chatting(PlayerChatEvent event) {
+        var player = event.getPlayer();
+        if (chat.get(player) != null) {
+            var sellingItem = player.getInventory().getItemInMainHand();
+            if (sellingItem.getType().equals(Material.AIR)) return;
+
+            var cost = Double.parseDouble(event.getMessage());
+            chat.get(player).getTrait(Trader.class).Storage.add(ItemWorker.SetLore(sellingItem,
+                    cost + cost * Margin + CashWorker.currencySigh));
+            player.getInventory().setItemInMainHand(null);
+            chat.remove(player);
         }
     }
 }

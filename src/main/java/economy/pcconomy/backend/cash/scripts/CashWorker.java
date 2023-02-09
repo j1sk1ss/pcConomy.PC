@@ -72,7 +72,6 @@ public class CashWorker {
             if (!Objects.equals(ItemWorker.GetLore(item).get(0), ""))
                 return true;
 
-        System.out.println("Это не деньги.");
         return false;
     }
 }

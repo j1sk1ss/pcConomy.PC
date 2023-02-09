@@ -31,7 +31,7 @@ public class TownObject {
 
     public Town Town;
     public boolean isNPC;
-    public double Margin;
+    public double Margin = .2d;
     public List<ItemStack> Storage;
     public Dictionary<ItemStack, Double> Prices;
     private final double StartBudget = 100;
