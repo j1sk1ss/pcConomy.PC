@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class TraderWindow {
     public static Inventory GetTraderWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 27, "Торговец " + trader.getNPC().getFullName());
+        var window = Bukkit.createInventory(player, 27, "Торговец-Покупка " + trader.getNPC().getFullName());
 
         for (ItemStack item:
                 trader.Storage) {
@@ -45,12 +45,23 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 27, "Торговец-Владелец " + trader.getNPC().getFullName());
 
         window.setItem(0, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Установить цену"));
+        window.setItem(1, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Занять"));
 
         return window;
     }
 
-    public static Inventory GetAcceptWindow(Player player, ItemStack item) {
-        var window = Bukkit.createInventory(player, 9, "Покупка");
+    public static Inventory GetPricesWindow(Player player, Trader trader) {
+        var window = Bukkit.createInventory(player, 9, "Торговец-Цена " + trader.getNPC().getFullName());
+
+        for (var i = 0; i < 9; i++) {
+            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL), i * 20 + "$"));
+        }
+
+        return window;
+    }
+
+    public static Inventory GetAcceptWindow(Player player, ItemStack item, Trader trader) {
+        var window = Bukkit.createInventory(player, 9, "Покупка " + trader.getNPC().getFullName());
 
         for (var i = 0; i < 3; i++) {
             window.setItem(i, ItemWorker.SetName(new ItemStack(Material.RED_STAINED_GLASS_PANE), "ОТМЕНА"));

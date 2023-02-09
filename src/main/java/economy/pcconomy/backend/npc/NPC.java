@@ -22,6 +22,8 @@ public class NPC {
     public static void CreateLoaner(Player creator) {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("Loaner" + new Random().nextInt()));
         var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Loaner");
+        loaner.setName("Loaner");
+
         loaner.addTrait(Loaner.class);
         loaner.spawn(creator.getLocation());
     }
@@ -29,7 +31,7 @@ public class NPC {
     public static void CreateTrader(Player creator) {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("Trader" + new Random().nextInt()));
 
-        var name = "Trader" + new Random().nextInt();
+        var name = "Trader №" + new Random().nextInt();
         var trader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, name);
         TraderWorker.CreateTrader(creator, 1000);
 

@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Random;
 
 @TraitName("Trader")
 public class Trader extends Trait {
@@ -30,8 +31,8 @@ public class Trader extends Trait {
     public Trader(Player player, double cost) {
         super("Trader");
 
-        Revenue  = TownWorker.GetTownObject(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName()).Margin;
         homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
+        Revenue  = TownWorker.GetTownObject(homeTown.getName()).Margin;
         Owner    = player;
         Cost     = cost;
     }
@@ -41,6 +42,7 @@ public class Trader extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
+
         if (isRanted) {
             if (Owner.equals(player)) {
                 player.openInventory(TraderWindow.GetOwnerTraderWindow(player, this));
