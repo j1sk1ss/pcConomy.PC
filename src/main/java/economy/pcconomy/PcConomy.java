@@ -15,12 +15,13 @@ package economy.pcconomy;
 
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.bank.listener.BankerListener;
-import economy.pcconomy.bank.listener.LoanerListener;
-import economy.pcconomy.link.Manager;
-import economy.pcconomy.timer.GlobalTimer;
-import economy.pcconomy.town.listener.TownyListener;
-import economy.pcconomy.bank.Bank;
+import economy.pcconomy.frontend.ui.listener.BankerListener;
+import economy.pcconomy.frontend.ui.listener.LoanerListener;
+import economy.pcconomy.backend.link.Manager;
+import economy.pcconomy.backend.timer.GlobalTimer;
+import economy.pcconomy.backend.town.listener.TownyListener;
+import economy.pcconomy.backend.bank.Bank;
+import economy.pcconomy.frontend.ui.listener.TraderListener;
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +41,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
         Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
         Bukkit.getPluginManager().registerEvents(new LoanerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TraderListener(), this);
 
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
@@ -50,6 +52,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("take").setExecutor(manager);
         getCommand("withdraw").setExecutor(manager);
         getCommand("put").setExecutor(manager);
+        getCommand("createt").setExecutor(manager);
     }
 
     @Override

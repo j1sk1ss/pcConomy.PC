@@ -18,3 +18,5 @@ commands:
     usage: /createB
   createL:
     usage: /createL
+  createt:
+    usage: /createt
