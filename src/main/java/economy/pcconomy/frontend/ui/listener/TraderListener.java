@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.CraftingInventory;
 
 import java.util.Arrays;
 
@@ -26,17 +25,24 @@ public class TraderListener implements Listener {
         if (event.getCurrentItem() != null)
             if (event.getInventory().getHolder() instanceof Player player1)
                 if (player1.equals(player)) {
+
                     var trader = GetTraderFromTitle(event.getView().getTitle());
+                    var title = event.getView().getTitle();
+                    var choseItem = event.getCurrentItem();
+                    var inventory = event.getInventory();
+
                     if (trader == null) return;
 
-                    if (event.getView().getTitle().contains("Торговец-Покупка"))
-                        if (!player.getInventory().contains(event.getCurrentItem())) {
-                            player.openInventory(TraderWindow.GetAcceptWindow(player, event.getCurrentItem(), trader));
-                            event.setCancelled(true);
+                    event.setCancelled(true);
+
+                    if (title.contains("Торговец-Покупка"))
+                        if (!player.getInventory().contains(choseItem)) {
+                            player.openInventory(TraderWindow.GetAcceptWindow(player, choseItem, trader));
+                            return;
                         }
 
-                    if (event.getView().getTitle().contains("Торговец-Управление")) {
-                        switch (ItemWorker.GetName(event.getCurrentItem())) {
+                    if (title.contains("Торговец-Управление")) {
+                        switch (ItemWorker.GetName(choseItem)) {
                             case "Перейти в товары" ->
                                     player.openInventory(TraderWindow.GetTraderWindow(player, trader));
                             case "Забрать все товары" -> {
@@ -48,69 +54,73 @@ public class TraderListener implements Listener {
                                 trader.Revenue = 0;
                             }
                         }
-                        event.setCancelled(true);
+                        return;
                     }
 
-                    if (event.getView().getTitle().contains("Торговец-Аренда")) {
-                        if (ItemWorker.GetName(event.getCurrentItem()).equals("Арендовать")) {
+                    if (title.contains("Торговец-Аренда")) {
+                        if (ItemWorker.GetName(choseItem).equals("Арендовать")) {
                             var cash = new Cash();
                             if (LicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
                                 if (!LicenseWorker.isOverdue(LicenseWorker.GetLicense(player, LicenseType.Trade))) {
                                     if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
                                     cash.TakeCashFromInventory(trader.Cost, player);
-                                    TownWorker.GetTownObject(trader.homeTown.getName()).setBudget(
-                                            TownWorker.GetTownObject(trader.homeTown.getName()).getBudget() + trader.Cost);
+                                    TownWorker.GetTownObject(trader.homeTown.getName())
+                                            .setBudget(TownWorker.GetTownObject(trader.homeTown.getName())
+                                                    .getBudget() + trader.Cost);
 
                                     trader.Owner    = player;
                                     trader.isRanted = true;
+                                    player.closeInventory();
                                 }
                             }
                         }
-                        event.setCancelled(true);
+                        return;
                     }
 
-                    if (event.getView().getTitle().contains("Торговец-Владелец")) {
-                        if (ItemWorker.GetName(event.getCurrentItem()).equals("Установить цену")) {
+                    if (title.contains("Торговец-Владелец")) {
+                        if (ItemWorker.GetName(choseItem).equals("Установить цену")) {
                             player.openInventory(TraderWindow.GetPricesWindow(player, trader));
                         }
 
-                        if (ItemWorker.GetName(event.getCurrentItem()).equals("Установить процент")) {
+                        if (ItemWorker.GetName(choseItem).equals("Установить процент")) {
                             player.openInventory(TraderWindow.GetMarginWindow(player, trader));
                         }
 
-                        if (ItemWorker.GetName(event.getCurrentItem()).equals("Занять")) {
+                        if (ItemWorker.GetName(choseItem).equals("Занять")) {
                             if (LicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
                                 if (!LicenseWorker.isOverdue(LicenseWorker.GetLicense(player, LicenseType.Trade))) {
                                     trader.Owner = player;
                                     trader.isRanted = true;
+                                    player.closeInventory();
                                 }
                             }
                         }
-                        event.setCancelled(true);
+                        return;
                     }
 
-                    if (event.getView().getTitle().contains("Торговец-Цена")) {
+                    if (title.contains("Торговец-Цена")) {
                         trader.Cost = Double.parseDouble(ItemWorker.
-                                GetName(event.getCurrentItem()).replace(CashWorker.currencySigh, ""));
-                        event.setCancelled(true);
+                                GetName(choseItem).replace(CashWorker.currencySigh, ""));
+                        return;
                     }
 
-                    if (event.getView().getTitle().contains("Торговец-Процент")) {
+                    if (title.contains("Торговец-Процент")) {
                         trader.Margin = Double.parseDouble(ItemWorker.
-                                GetName(event.getCurrentItem()).replace("%", "")) / 100d;
-                        event.setCancelled(true);
+                                GetName(choseItem).replace("%", "")) / 100d;
+                        return;
                     }
 
-                    if (event.getView().getTitle().contains("Покупка")) {
-                        if (ItemWorker.GetName(event.getCurrentItem()).equals("КУПИТЬ")) {
+                    if (title.contains("Покупка")) {
+                        if (ItemWorker.GetName(choseItem).equals("КУПИТЬ")) {
                             var cash = new Cash();
+                            var buyingItem = inventory.getItem(4);
 
                             var price = Double.parseDouble(ItemWorker.
-                                    GetLore(event.getInventory().getItem(4)).get(0).replace(CashWorker.currencySigh, ""));
+                                    GetLore(buyingItem).get(0).replace(CashWorker.currencySigh, ""));
                             if (cash.AmountOfCashInInventory(player) >= price || trader.Owner.equals(player)) {
-                                if (trader.Storage.contains(event.getInventory().getItem(4))) {
-                                    trader.Storage.remove(event.getInventory().getItem(4));
-                                    ItemWorker.giveItemsWithoutLore(event.getInventory().getItem(4), player);
+                                if (trader.Storage.contains(buyingItem)) {
+                                    trader.Storage.remove(buyingItem);
+                                    ItemWorker.giveItemsWithoutLore(buyingItem, player);
 
                                     if (!trader.Owner.equals(player)) {
                                         cash.TakeCashFromInventory(price, player);
@@ -126,11 +136,9 @@ public class TraderListener implements Listener {
                             }
 
                             player.openInventory(TraderWindow.GetTraderWindow(player, trader));
-                        } else if (ItemWorker.GetName(event.getCurrentItem()).equals("ОТМЕНА")){
+                        } else if (ItemWorker.GetName(choseItem).equals("ОТМЕНА")){
                             player.openInventory(TraderWindow.GetTraderWindow(player, trader));
                         }
-
-                        event.setCancelled(true);
                     }
                 }
     }

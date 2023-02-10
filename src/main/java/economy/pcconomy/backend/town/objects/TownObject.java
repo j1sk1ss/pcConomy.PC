@@ -34,8 +34,8 @@ public class TownObject {
     public double Margin = .2d;
     public List<ItemStack> Storage;
     public Dictionary<ItemStack, Double> Prices;
-    private final double StartBudget = 100;
-    private final int StartStorageAmount = 100;
+    private final double StartBudget = 5000;
+    private final int StartStorageAmount = 1650;
 
     public void LifeCycle() {
         if (!isNPC) return;

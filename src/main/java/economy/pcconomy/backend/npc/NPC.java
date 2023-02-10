@@ -60,6 +60,10 @@ public class NPC {
         trader.addTrait(Trader.class);
     }
 
+    public static void CreateNPCTrader(Player creator) {
+
+    }
+
     public static void CreateLicensor(Player creator) {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("Licensor" + new Random().nextInt()));
         var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Licensor");

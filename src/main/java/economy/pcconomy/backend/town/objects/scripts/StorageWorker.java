@@ -51,6 +51,11 @@ public class StorageWorker {
         return null;
     }
 
+    public static ItemStack getPercentOfResource(double percent, ItemStack resource) {
+        resource.setAmount((int)(resource.getAmount() * percent));
+        return resource;
+    }
+
     public static int getAmountOfStorage(List<ItemStack> Storage) {
         var amount = 0;
 

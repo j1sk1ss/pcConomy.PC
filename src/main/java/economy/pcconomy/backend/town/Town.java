@@ -2,15 +2,15 @@ package economy.pcconomy.backend.town;
 
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.town.objects.TownObject;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
 import economy.pcconomy.backend.town.scripts.TownWorker;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Town {
-    public static void BuyResourceFromStorage(String townName, ItemStack itemStack, Player buyer) {
+    public static void BuyResourceFromStorage(TownObject townObject, ItemStack itemStack, Player buyer) {
         // Покупка в НПС городе за наличку
-        var townObject = TownWorker.GetTownObject(townName);
         var itemAmount = itemStack.getAmount();
 
         if (townObject == null) return;
@@ -32,9 +32,8 @@ public class Town {
                 townObject.Storage) - itemAmount, townObject.Storage);
     }
 
-    public static void SellResourceToStorage(String townName, ItemStack itemStack, Player seller) {
+    public static void SellResourceToStorage(TownObject townObject, ItemStack itemStack, Player seller) {
         // Продажа в НПС городе за наличку
-        var townObject = TownWorker.GetTownObject(townName);
         var itemAmount = itemStack.getAmount();
 
         if (townObject == null) return;
