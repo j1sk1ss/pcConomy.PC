@@ -1,5 +1,6 @@
 package economy.pcconomy.backend.town.objects.scripts;
 
+import economy.pcconomy.backend.scripts.ItemWorker;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class StorageWorker {
     public static ItemStack getResource(ItemStack item, List<ItemStack> Storage) {
         for (ItemStack itemStack:
                 Storage) {
-            if (itemStack.isSimilar(item)) {
+            if (itemStack.getType().equals(item.getType())) {
                 return itemStack;
             }
         }
@@ -52,8 +53,9 @@ public class StorageWorker {
     }
 
     public static ItemStack getPercentOfResource(double percent, ItemStack resource) {
-        resource.setAmount((int)(resource.getAmount() * percent));
-        return resource;
+        var item = new ItemStack(resource);
+        item.setAmount((int)(resource.getAmount() * percent));
+        return item;
     }
 
     public static int getAmountOfStorage(List<ItemStack> Storage) {

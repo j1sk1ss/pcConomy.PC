@@ -62,7 +62,7 @@ public class NPC {
     }
 
     public static void CreateNPCTrader(Player creator) {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("NPCTrader" + new Random().nextInt()));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCTrader.class).withName("NPCTrader" + new Random().nextInt()));
         var npcTrader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "NPCTrader");
 
         npcTrader.addTrait(NPCTrader.class);

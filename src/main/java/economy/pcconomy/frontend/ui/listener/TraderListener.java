@@ -26,8 +26,10 @@ public class TraderListener implements Listener {
             if (event.getInventory().getHolder() instanceof Player player1)
                 if (player1.equals(player)) {
 
-                    var trader = GetTraderFromTitle(event.getView().getTitle());
                     var title = event.getView().getTitle();
+                    if (title.contains("Магазин")) return;
+
+                    var trader = GetTraderFromTitle(event.getView().getTitle());
                     var choseItem = event.getCurrentItem();
                     var inventory = event.getInventory();
 

@@ -3,13 +3,13 @@ package economy.pcconomy.backend.town.objects;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.Dictionary;
-import java.util.List;
+import java.util.*;
 
 public class TownObject {
     public TownObject(Town town, boolean isNPC) {
@@ -17,25 +17,24 @@ public class TownObject {
         this.isNPC = isNPC;
 
         if (isNPC) { // Хранилище НПС города
-            Storage = Arrays.asList(
-                    new ItemStack(Material.SPRUCE_WOOD, 100),
-                    new ItemStack(Material.STONE, 250),
-                    new ItemStack(Material.GLASS, 50),
-                    new ItemStack(Material.CARROT, 500),
-                    new ItemStack(Material.BEEF, 200),
-                    new ItemStack(Material.IRON_INGOT, 50),
-                    new ItemStack(Material.COBBLESTONE, 500)
-            );
+            Storage.add(new ItemStack(Material.SPRUCE_WOOD, 1000));
+            Storage.add(new ItemStack(Material.STONE, 2500));
+            Storage.add(new ItemStack(Material.GLASS, 500));
+            Storage.add(new ItemStack(Material.CARROT, 5000));
+            Storage.add(new ItemStack(Material.BEEF, 2000));
+            Storage.add(new ItemStack(Material.IRON_INGOT, 500));
+            Storage.add(new ItemStack(Material.COBBLESTONE, 5000));
+
+            setBudget(StartBudget);
+            LifeCycle();
         }
     }
 
     public Town Town;
     public boolean isNPC;
-    public double Margin = .2d;
-    public List<ItemStack> Storage;
-    public Dictionary<ItemStack, Double> Prices;
-    private final double StartBudget = 5000;
-    private final int StartStorageAmount = 1650;
+    public List<ItemStack> Storage = new ArrayList<>();
+    private final double StartBudget = 40000;
+    private final int StartStorageAmount = 16500;
 
     public void LifeCycle() {
         if (!isNPC) return;
@@ -48,7 +47,8 @@ public class TownObject {
 
     public void GenerateLocalPrices() { // Только для НПС города
         for (ItemStack itemStack : Storage) {
-            Prices.put(itemStack, itemStack.getAmount() / getBudget());
+            ItemWorker.SetLore(itemStack, "Цена за 1 шт. (Покупка X8):\n" +
+                    (Math.round(getBudget() / itemStack.getAmount() * 100d) / 100d) + CashWorker.currencySigh);
         }
     }
 

@@ -1,9 +1,8 @@
 package economy.pcconomy.frontend.ui.windows;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+
 import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
 import economy.pcconomy.backend.town.scripts.TownWorker;
 
 import net.citizensnpcs.api.npc.NPC;
@@ -17,15 +16,15 @@ public class NPCTraderWindow {
     public static Inventory GetNPCTraderWindow(Player player, NPC trader) {
         var town = TownWorker
                 .GetTownObject(TownyAPI.getInstance().getTown(trader.getStoredLocation()).getName());
-        var window = Bukkit.createInventory(player, 27, "Магазин " + town.Town.getName());
+        var window = Bukkit.createInventory(player, 54, "Магазин " + town.Town.getName());
 
         if (town == null) return null;
         var townStorage = town.Storage;
 
         for (ItemStack item :
              townStorage) {
-            window.addItem(ItemWorker.SetLore(StorageWorker.getPercentOfResource(.4d, item),
-                    town.Prices.get(item) + CashWorker.currencySigh));
+            window.addItem(ItemWorker.SetLore(new ItemStack(item.getType()),
+                    ItemWorker.GetLore(item).get(0) + "\n" +  ItemWorker.GetLore(item).get(1)));
         }
 
         return window;
