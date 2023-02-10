@@ -20,5 +20,7 @@ commands:
     usage: /createL
   createt:
     usage: /createt
+  createnpct:
+    usage: /createnpct
   createLic:
     usage: /createLic

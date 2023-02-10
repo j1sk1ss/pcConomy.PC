@@ -7,6 +7,7 @@ import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.npc.Licensor;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.license.scripts.LicenseWorker;
+import economy.pcconomy.backend.trade.npc.NPCTrader;
 import economy.pcconomy.backend.trade.npc.Trader;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
@@ -61,7 +62,12 @@ public class NPC {
     }
 
     public static void CreateNPCTrader(Player creator) {
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("NPCTrader" + new Random().nextInt()));
+        var npcTrader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "NPCTrader");
 
+        npcTrader.addTrait(NPCTrader.class);
+        Traits.put(npcTrader, npcTrader.getTrait(NPCTrader.class));
+        npcTrader.spawn(creator.getLocation());
     }
 
     public static void CreateLicensor(Player creator) {

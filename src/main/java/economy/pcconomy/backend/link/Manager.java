@@ -45,6 +45,10 @@ public class Manager implements CommandExecutor { // Тестовый класс
             NPC.CreateTrader((Player) sender);
         }
 
+        if (command.getName().equals("createnpct")) {
+            NPC.CreateNPCTrader((Player) sender);
+        }
+
         if (command.getName().equals("createLic")) {
             NPC.CreateLicensor((Player) sender);
         }
