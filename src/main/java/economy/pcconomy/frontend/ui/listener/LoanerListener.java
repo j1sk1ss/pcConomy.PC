@@ -26,11 +26,15 @@ public class LoanerListener implements Listener {
 
                     if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
                         var balanceWorker = new BalanceWorker();
-                        if (balanceWorker.isSolvent(PcConomy.GlobalBank.Credit.get(player).amount, player)) return;
+                        if (!balanceWorker.isSolvent(PcConomy.GlobalBank.Credit.get(player).amount, player)) {
+                            balanceWorker.TakeMoney(PcConomy.GlobalBank.Credit.get(player).amount, player);
+                            PcConomy.GlobalBank.BankBudget += PcConomy.GlobalBank.Credit.get(player).amount;
+                            PcConomy.GlobalBank.DestroyLoan(player);
 
-                        balanceWorker.TakeMoney(PcConomy.GlobalBank.Credit.get(player).amount, player);
-                        PcConomy.GlobalBank.BankBudget += PcConomy.GlobalBank.Credit.get(player).amount;
-                        PcConomy.GlobalBank.DestroyLoan(player);
+                            event.setCancelled(true);
+                            player.openInventory(LoanWindow.GetLoanWindow(player));
+                            return;
+                        }
                     }
 
                     if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {

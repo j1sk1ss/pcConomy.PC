@@ -34,7 +34,7 @@ public class LoanWindow {
         }
 
         if (PcConomy.GlobalBank.Credit.get(player) != null) {
-            window.setItem(10, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.LIGHT_BLUE_WOOL),
+            window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
                     "Выплатить кредит"), PcConomy.GlobalBank.Credit.get(player).amount + CashWorker.currencySigh));
         }
 
@@ -51,7 +51,7 @@ public class LoanWindow {
         }
 
         if (PcConomy.GlobalBank.Credit.get(player) != null) {
-            window.setItem(10, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.LIGHT_BLUE_WOOL),
+            window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
                     "Выплатить кредит"), PcConomy.GlobalBank.Credit.get(player).amount + CashWorker.currencySigh));
         }
 

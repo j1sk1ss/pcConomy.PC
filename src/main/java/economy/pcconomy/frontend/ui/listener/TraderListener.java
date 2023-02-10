@@ -2,15 +2,19 @@ package economy.pcconomy.frontend.ui.listener;
 
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.license.objects.LicenseType;
+import economy.pcconomy.backend.license.scripts.LicenseWorker;
+import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
 import economy.pcconomy.frontend.ui.windows.TraderWindow;
-import net.citizensnpcs.api.CitizensAPI;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.CraftingInventory;
 
 import java.util.Arrays;
 
@@ -25,11 +29,11 @@ public class TraderListener implements Listener {
                     var trader = GetTraderFromTitle(event.getView().getTitle());
                     if (trader == null) return;
 
-                    System.out.println(trader.Revenue);
-                    if (event.getView().getTitle().contains("Торговец-Покупка")) {
-                        player.openInventory(TraderWindow.GetAcceptWindow(player, event.getCurrentItem(), trader));
-                        event.setCancelled(true);
-                    }
+                    if (event.getView().getTitle().contains("Торговец-Покупка"))
+                        if (!player.getInventory().contains(event.getCurrentItem())) {
+                            player.openInventory(TraderWindow.GetAcceptWindow(player, event.getCurrentItem(), trader));
+                            event.setCancelled(true);
+                        }
 
                     if (event.getView().getTitle().contains("Торговец-Управление")) {
                         switch (ItemWorker.GetName(event.getCurrentItem())) {
@@ -50,14 +54,17 @@ public class TraderListener implements Listener {
                     if (event.getView().getTitle().contains("Торговец-Аренда")) {
                         if (ItemWorker.GetName(event.getCurrentItem()).equals("Арендовать")) {
                             var cash = new Cash();
+                            if (LicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
+                                if (!LicenseWorker.isOverdue(LicenseWorker.GetLicense(player, LicenseType.Trade))) {
+                                    if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
+                                    cash.TakeCashFromInventory(trader.Cost, player);
+                                    TownWorker.GetTownObject(trader.homeTown.getName()).setBudget(
+                                            TownWorker.GetTownObject(trader.homeTown.getName()).getBudget() + trader.Cost);
 
-                            if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
-                            cash.TakeCashFromInventory(trader.Cost, player);
-                            TownWorker.GetTownObject(trader.homeTown.getName()).setBudget(
-                                    TownWorker.GetTownObject(trader.homeTown.getName()).getBudget() + trader.Cost);
-
-                            trader.Owner = player;
-                            trader.isRanted = true;
+                                    trader.Owner    = player;
+                                    trader.isRanted = true;
+                                }
+                            }
                         }
                         event.setCancelled(true);
                     }
@@ -72,7 +79,12 @@ public class TraderListener implements Listener {
                         }
 
                         if (ItemWorker.GetName(event.getCurrentItem()).equals("Занять")) {
-
+                            if (LicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
+                                if (!LicenseWorker.isOverdue(LicenseWorker.GetLicense(player, LicenseType.Trade))) {
+                                    trader.Owner = player;
+                                    trader.isRanted = true;
+                                }
+                            }
                         }
                         event.setCancelled(true);
                     }
@@ -127,6 +139,6 @@ public class TraderListener implements Listener {
         if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
         var id = Integer.parseInt(name.split(" ")[1]);
 
-        return CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class);
+        return NPC.GetNPC(id).getTrait(Trader.class);
     }
  }

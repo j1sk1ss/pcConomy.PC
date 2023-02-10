@@ -60,7 +60,7 @@ public class Bank {
         var percentage = LoanWorker.getPercent(amount, duration); // процент по кредиту
         var dailyPayment = LoanWorker.getDailyPayment(amount, duration, percentage); // дневной платёж
 
-        Credit.put(player, new LoanObject(amount, percentage, duration, dailyPayment));
+        Credit.put(player, new LoanObject(amount + amount * percentage, percentage, duration, dailyPayment));
 
         BankBudget -= amount;
         new BalanceWorker().GiveMoney(amount, player);
@@ -96,7 +96,6 @@ public class Bank {
     public void DestroyLoan(Player player) {
         // Закрытие кредита
         var loan = Credit.get(player);
-        if (loan.amount > 0) return;
 
         var borrower = BorrowerWorker.getBorrowerObject(player);
         if (borrower != null) {

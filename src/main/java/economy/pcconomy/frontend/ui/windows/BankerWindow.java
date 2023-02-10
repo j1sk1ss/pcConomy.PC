@@ -2,6 +2,7 @@ package economy.pcconomy.frontend.ui.windows;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.cash.scripts.ChangeWorker;
 import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
@@ -18,26 +19,38 @@ public class BankerWindow {
 
         var size = PcConomy.GlobalBank.GetUsefulAmountOfBudget();
         var balance = new BalanceWorker().getBalance(player);
+
         // Кнопки вывода
         for (var i = 0; i < 9; i++) {
             if (size >= ChangeWorker.Denomination.get(i) && balance >= ChangeWorker.Denomination.get(i)) {
-                for (var j = i; j < 9; j++) {
-                    window.setItem(j, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL),
-                            ChangeWorker.Denomination.get(j) + "$"));
+                for (var j = i; j < 8; j++) {
+                    window.setItem(j + 1, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL),
+                            ChangeWorker.Denomination.get(j) + CashWorker.currencySigh));
                 }
                 break;
+            }
+
+            if (i == 0 && balance < size) {
+                window.setItem(0, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL),
+                        balance + CashWorker.currencySigh));
             }
         }
 
         var cashInInventory = new Cash().AmountOfCashInInventory(player);
+
         // Кнопки внесения
         for (var i = 0; i < 9; i++) {
             if (cashInInventory >= ChangeWorker.Denomination.get(i)) {
-                for (var j = i; j < 9; j++) {
-                    window.setItem(j + 18, ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
-                            "-" + ChangeWorker.Denomination.get(j) + "$"));
+                for (var j = i; j < 8; j++) {
+                    window.setItem(j + 19, ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
+                            "-" + ChangeWorker.Denomination.get(j) + CashWorker.currencySigh));
                 }
                 break;
+            }
+
+            if (i == 0) {
+                window.setItem(18, ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
+                        "-" + cashInInventory + CashWorker.currencySigh));
             }
         }
 

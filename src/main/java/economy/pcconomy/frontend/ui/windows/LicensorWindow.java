@@ -16,6 +16,8 @@ public class LicensorWindow {
 
         window.setItem(0, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
                 License.marketLicensePrice + CashWorker.currencySigh), "Лицензия на создание т. зоны"));
+        window.setItem(1, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.RED_WOOL),
+                License.tradeLicensePrice + CashWorker.currencySigh), "Лицензия на торговую деятельность"));
 
         return window;
     }

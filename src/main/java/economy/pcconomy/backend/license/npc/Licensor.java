@@ -18,6 +18,6 @@ public class Licensor extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenBankerWindow(player);
+        Window.OpenLicenseWindow(player);
     }
 }

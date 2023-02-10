@@ -7,18 +7,19 @@ package economy.pcconomy;
  - Towny. А именно снятие со счёта через город и пополнение счёта через город. Взаимосвязанно с "Cash"
  - Обьект города. См. папку "town"
  - Торговля меж игроками. Создание торговцев, настройка
+ - Лицензии на торговлю со стороны мэра и со стороны игрока
 
  Чего нету:
  - Аренда торговцев. Сейчас только покупка навсегда
  - Цены хоть и в теории генерируются, но склад нормально не сделан. Это всё можно найти в папке "town"
- - Нет  торговцев НПС городов
- - Нет лицензий и всего что с ними связанно
+ - Нет торговцев НПС городов
  - Сохранение данных
  */
 
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.frontend.ui.listener.BankerListener;
+import economy.pcconomy.frontend.ui.listener.LicensorListener;
 import economy.pcconomy.frontend.ui.listener.LoanerListener;
 import economy.pcconomy.backend.link.Manager;
 import economy.pcconomy.backend.timer.GlobalTimer;
@@ -45,6 +46,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
         Bukkit.getPluginManager().registerEvents(new LoanerListener(), this);
         Bukkit.getPluginManager().registerEvents(new TraderListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LicensorListener(), this);
 
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
@@ -56,6 +58,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("withdraw").setExecutor(manager);
         getCommand("put").setExecutor(manager);
         getCommand("createt").setExecutor(manager);
+        getCommand("createLic").setExecutor(manager);
     }
 
     @Override
