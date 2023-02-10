@@ -19,8 +19,8 @@ public class Bank {
         Credit = new Hashtable<>();
     }
 
-    public double BankBudget = 5000.0d;
-    public double UsefulBudgetPercent = .2d;
+    public double BankBudget = 15000.0d;
+    public double UsefulBudgetPercent = .25d;
     public Dictionary<Player, LoanObject> Credit;
 
     public void PlayerWithdrawCash(double amount, Player player) {
