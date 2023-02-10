@@ -12,7 +12,7 @@ public class TownyListener implements Listener {
         var town = event.getTown(); // Запоминаем город
 
         System.out.println("cathed creation");
-        TownWorker.CreateTownObject(town, true); // Добавляем в лист установив что это игроковский город
+        TownWorker.CreateTownObject(town, false); // Добавляем в лист установив что это игроковский город
     }
 
     @EventHandler

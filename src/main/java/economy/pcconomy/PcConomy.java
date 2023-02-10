@@ -58,6 +58,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("createt").setExecutor(manager);
         getCommand("createnpct").setExecutor(manager);
         getCommand("createLic").setExecutor(manager);
+        getCommand("swnpc").setExecutor(manager);
     }
 
     @Override

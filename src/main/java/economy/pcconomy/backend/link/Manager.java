@@ -3,6 +3,7 @@ package economy.pcconomy.backend.link;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.npc.NPC;
+import economy.pcconomy.backend.town.scripts.TownWorker;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -51,6 +52,10 @@ public class Manager implements CommandExecutor { // Тестовый класс
 
         if (command.getName().equals("createLic")) {
             NPC.CreateLicensor((Player) sender);
+        }
+
+        if (command.getName().equals("swnpc")) {
+            TownWorker.ChangeNPCStatus(args[0], true);
         }
         return true;
     }

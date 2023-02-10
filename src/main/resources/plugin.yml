@@ -24,3 +24,5 @@ commands:
     usage: /createnpct
   createLic:
     usage: /createLic
+  swnpc:
+    usage: /swnpc
