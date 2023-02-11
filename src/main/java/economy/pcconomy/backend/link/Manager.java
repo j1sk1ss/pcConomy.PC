@@ -1,9 +1,11 @@
 package economy.pcconomy.backend.link;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.bank.npc.Banker;
+import economy.pcconomy.backend.bank.npc.Loaner;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.npc.NPC;
-import economy.pcconomy.backend.town.scripts.TownWorker;
+import economy.pcconomy.backend.license.npc.Licensor;
+import economy.pcconomy.backend.trade.npc.NPCTrader;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,28 +39,23 @@ public class Manager implements CommandExecutor { // Тестовый класс
         }
 
         if (command.getName().equals("createB")) {
-            PcConomy.GlobalNPC.CreateBanker((Player) sender);
+            PcConomy.GlobalNPC.CreateNPC((Player) sender, new Banker());
         }
 
         if (command.getName().equals("createL")) {
-            PcConomy.GlobalNPC.CreateLoaner((Player) sender);
+            PcConomy.GlobalNPC.CreateNPC((Player) sender, new Loaner());
         }
 
         if (command.getName().equals("createt")) {
-            PcConomy.GlobalNPC.CreateTrader((Player) sender);
-            try {
-                PcConomy.GlobalTownWorker.SaveTown("TEST");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            PcConomy.GlobalNPC.BuyTrader((Player) sender);
         }
 
         if (command.getName().equals("createnpct")) {
-            PcConomy.GlobalNPC.CreateNPCTrader((Player) sender);
+            PcConomy.GlobalNPC.CreateNPC((Player) sender, new NPCTrader());
         }
 
         if (command.getName().equals("createLic")) {
-            PcConomy.GlobalNPC.CreateLicensor((Player) sender);
+            PcConomy.GlobalNPC.CreateNPC((Player) sender, new Licensor());
         }
 
         if (command.getName().equals("swnpc")) {

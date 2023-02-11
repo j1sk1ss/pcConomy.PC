@@ -10,9 +10,12 @@ import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.trade.npc.NPCTrader;
 import economy.pcconomy.backend.trade.npc.Trader;
+
+import economy.pcconomy.backend.trade.objects.TraderObject;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
+
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -22,32 +25,54 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 
-import java.util.Random;
-
 public class NPC {
-    public Map<Integer, Trait> Traits = new Hashtable<>(); // Для сохранения
+    public Map<Integer, TraderObject> Traders = new Hashtable<>(); // Для сохранения
 
-    public void CreateBanker(Player creator) {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName(new Random().nextInt() + ""));
+    public void CreateNPC(Player creator, Trait trait) {
+        if (CitizensAPI.getTraitFactory().getTraitClass(trait.getName()) == null)
+            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName(trait.getName()));
+        var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, trait.getName());
 
-        var banker = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Banker");
-
-        banker.addTrait(Banker.class);
-        Traits.put(banker.getId(), banker.getTrait(Banker.class));
-        banker.spawn(creator.getLocation());
+        npc.addTrait(trait);
+        npc.spawn(creator.getLocation());
     }
 
-    public void CreateLoaner(Player creator) {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName(new Random().nextInt() + ""));
+    public void UpdateNPC() {
+        for (net.citizensnpcs.api.npc.NPC npc:
+             CitizensAPI.getNPCRegistry()) {
 
-        var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Loaner");
-
-        loaner.addTrait(Loaner.class);
-        Traits.put(loaner.getId(), loaner.getTrait(Loaner.class));
-        loaner.spawn(creator.getLocation());
+            switch (npc.getName()) {
+                case "loaner" -> {
+                    if (CitizensAPI.getTraitFactory().getTraitClass(npc.getName()) == null)
+                        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName(npc.getName()));
+                    npc.addTrait(Loaner.class);
+                }
+                case "banker" -> {
+                    if (CitizensAPI.getTraitFactory().getTraitClass(npc.getName()) == null)
+                        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName(npc.getName()));
+                    npc.addTrait(Banker.class);
+                }
+                case "licensor" -> {
+                    if (CitizensAPI.getTraitFactory().getTraitClass(npc.getName()) == null)
+                        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName(npc.getName()));
+                    npc.addTrait(Licensor.class);
+                }
+                case "npctrader" -> {
+                    if (CitizensAPI.getTraitFactory().getTraitClass(npc.getName()) == null)
+                        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCTrader.class).withName(npc.getName()));
+                    npc.addTrait(NPCTrader.class);
+                }
+                case "Trader" -> {
+                    if (CitizensAPI.getTraitFactory().getTraitClass(npc.getName()) == null)
+                        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName(npc.getName()));
+                    npc.addTrait(Trader.class);
+                }
+            }
+        }
+        LoadTraders();
     }
 
-    public void CreateTrader(Player creator) {
+    public void BuyTrader(Player creator) {
         var cash = new Cash();
         double traderCost = 3000d;
         if (cash.AmountOfCashInInventory(creator) < traderCost) return;
@@ -58,39 +83,18 @@ public class NPC {
         cash.TakeCashFromInventory(traderCost, creator);
         PcConomy.GlobalBank.BankBudget += traderCost;
 
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName(new Random().nextInt() + ""));
-
+        if (CitizensAPI.getTraitFactory().getTraitClass("Trader") == null)
+            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("Trader"));
         var trader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
 
         trader.spawn(creator.getLocation());
-        Traits.put(trader.getId(), trader.getTrait(Trader.class));
         trader.addTrait(Trader.class);
-    }
-
-    public void CreateNPCTrader(Player creator) {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCTrader.class).withName(new Random().nextInt() + ""));
-
-        var npcTrader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "NPCTrader");
-
-        npcTrader.addTrait(NPCTrader.class);
-        Traits.put(npcTrader.getId(), npcTrader.getTrait(NPCTrader.class));
-        npcTrader.spawn(creator.getLocation());
-    }
-
-    public void CreateLicensor(Player creator) {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName(new Random().nextInt() + ""));
-
-        var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Licensor");
-
-        loaner.addTrait(Licensor.class);
-        Traits.put(loaner.getId(), loaner.getTrait(Licensor.class));
-        loaner.spawn(creator.getLocation());
     }
 
     public net.citizensnpcs.api.npc.NPC GetNPC(int id) {
         for (net.citizensnpcs.api.npc.NPC npc:
                 CitizensAPI.getNPCRegistry()) {
-            if (Traits.get(npc.getId()) != null) {
+            if (npc.hasTrait(Trader.class)) {
                 if (npc.getId() == id) {
                     return npc;
                 }
@@ -100,34 +104,31 @@ public class NPC {
         return null;
     }
 
-    public void UpdateNPC(Trait trait) { // Перед сохранением
-        for (net.citizensnpcs.api.npc.NPC npc:
-             CitizensAPI.getNPCRegistry()) {
-            if (Traits.get(npc.getId()) != null) {
-                Traits.put(npc.getId(), npc.getTrait(trait.getClass()));
-            }
-        }
-    }
-
-    public void DeleteNPC(int id) {
-        var npc = GetNPC(id);
-        if (npc != null) {
-            Traits.remove(npc.getId());
-            npc.destroy();
-        }
-    }
-
-    private void DeleteAllNPC() {
-        for (net.citizensnpcs.api.npc.NPC npc:
-                CitizensAPI.getNPCRegistry()) {
-            if (Traits.get(npc.getId()) != null) {
-                Traits.remove(npc.getId());
-                npc.destroy();
-            }
+    public void LoadTraders() {
+        for (int id:
+                Traders.keySet()) {
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).Owner = Traders.get(id).Owner;
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).Storage = Traders.get(id).Storage;
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).Revenue = Traders.get(id).Revenue;
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).Cost = Traders.get(id).Cost;
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).Margin = Traders.get(id).Margin;
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).homeTown = Traders.get(id).homeTown;
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).isRanted = Traders.get(id).isRanted;
         }
     }
 
     public void SaveNPC(String fileName) throws IOException {
+
+        for (net.citizensnpcs.api.npc.NPC npc:
+                CitizensAPI.getNPCRegistry()) {
+            if (npc.hasTrait(Trader.class)) {
+                var traderTrait = npc.getTrait(Trader.class);
+
+                Traders.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
+                        traderTrait.Cost, traderTrait.isRanted, traderTrait.homeTown, traderTrait.Owner));
+            }
+        }
+
         FileWriter writer = new FileWriter(fileName + ".txt", false);
         new GsonBuilder()
                 .setPrettyPrinting()

@@ -72,7 +72,7 @@ public class TraderListener implements Listener {
                                             .setBudget(PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)
                                                     .getBudget() + trader.Cost);
 
-                                    trader.Owner    = player;
+                                    trader.Owner    = player.getUniqueId();
                                     trader.isRanted = true;
                                     player.closeInventory();
                                 }
@@ -94,7 +94,7 @@ public class TraderListener implements Listener {
                             if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
                                 if (!PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
                                         .GetLicense(player, LicenseType.Trade))) {
-                                    trader.Owner = player;
+                                    trader.Owner = player.getUniqueId();
                                     trader.isRanted = true;
                                     player.closeInventory();
                                 }

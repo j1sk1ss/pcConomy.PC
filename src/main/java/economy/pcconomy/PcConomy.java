@@ -9,13 +9,13 @@ package economy.pcconomy;
  - Торговля меж игроками. Создание торговцев, настройка
  - Лицензии на торговлю со стороны мэра и со стороны игрока
  - НПС торговцы
+ - Сохранение данных
+  - Города
+  - Банк
+  - НПС
 
  Чего нету:
  - Аренда торговцев. Сейчас только покупка навсегда
- - Сохранение данных
-  - Сохранение городов
-  - Сохранение НПС
- - Обновление кредитных данных
  */
 
 
@@ -60,6 +60,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     public void onEnable() {
 
         try {
+            if (new File("NPCData.txt").exists()) GlobalNPC = Loader.LoadNPC("NPCData");
             if (new File("BankData.txt").exists()) GlobalBank = Loader.LoadBank("BankData");
             if (new File("TownsData.txt").exists()) GlobalTownWorker = Loader.LoadTowns("TownsData");
             if (new File("LicenseData.txt").exists()) GlobalLicenseWorker = Loader.LoadLicenses("LicenseData");
@@ -97,7 +98,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         // на разные классы. Но кого я учу, верно?
         // Plugin shutdown logic
         try {
-            //GlobalNPC.SaveNPC("NPCData"); // Not work
+            GlobalNPC.SaveNPC("NPCData"); // Not work
             GlobalBank.SaveBank("BankData");
             GlobalTownWorker.SaveTown("TownsData");
             GlobalLicenseWorker.SaveLicenses("LicenseData");

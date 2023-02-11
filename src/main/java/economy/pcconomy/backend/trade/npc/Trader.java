@@ -1,19 +1,18 @@
 package economy.pcconomy.backend.trade.npc;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.Town;
 
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
-
 import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
+
+import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
-import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
+
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +28,7 @@ public class Trader extends Trait {
     public double Cost;
     public boolean isRanted;
     public String homeTown;
-    public Player Owner;
+    public UUID Owner;
 
     public Trader() {
         super("Trader");
@@ -44,13 +43,14 @@ public class Trader extends Trait {
         homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
 
         if (isRanted) {
-            if (Owner.equals(player)) {
+            if (Owner.equals(player.getUniqueId())) {
                 player.openInventory(TraderWindow.GetOwnerTraderWindow(player, this));
             } else {
                 player.openInventory(TraderWindow.GetTraderWindow(player, this));
             }
         } else {
-            if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor().getPlayer().equals(player)) {
+            if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor()
+                    .getPlayer().getUniqueId().equals(player.getUniqueId())) {
                 player.openInventory(TraderWindow.GetMayorWindow(player, this));
             } else {
                 player.openInventory(TraderWindow.GetRanterWindow(player, this));
@@ -58,7 +58,7 @@ public class Trader extends Trait {
         }
     }
 
-    private Dictionary<Player, NPC> chat = new Hashtable<>();
+    private final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
     public void CreateLot(NPCLeftClickEvent event) {
@@ -66,9 +66,9 @@ public class Trader extends Trait {
 
         if (!event.getNPC().equals(this.getNPC())) return;
         if (isRanted) {
-            if (Owner.equals(player)) {
+            if (Owner.equals(player.getUniqueId())) {
                 player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
-                chat.put(player, event.getNPC());
+                chat.put(player.getUniqueId(), event.getNPC().getId());
             }
         }
     }
@@ -76,15 +76,16 @@ public class Trader extends Trait {
     @EventHandler
     public void Chatting(PlayerChatEvent event) {
         var player = event.getPlayer();
-        if (chat.get(player) != null) {
+        if (chat.get(player.getUniqueId()) != null) {
             var sellingItem = player.getInventory().getItemInMainHand();
             if (sellingItem.getType().equals(Material.AIR)) return;
 
             var cost = Double.parseDouble(event.getMessage());
-            chat.get(player).getTrait(Trader.class).Storage.add(ItemWorker.SetLore(sellingItem,
+           CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId())).getTrait(Trader.class)
+                   .Storage.add(ItemWorker.SetLore(sellingItem,
                     cost + cost * Margin + CashWorker.currencySigh));
             player.getInventory().setItemInMainHand(null);
-            chat.remove(player);
+            chat.remove(player.getUniqueId());
         }
     }
 }

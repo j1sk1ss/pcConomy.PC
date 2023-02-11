@@ -32,7 +32,7 @@ public class BankerWindow {
 
             if (i == 0 && balance < size) {
                 window.setItem(0, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL),
-                        balance + CashWorker.currencySigh));
+                        Math.round(balance * 100) / 100 + CashWorker.currencySigh));
             }
         }
 
