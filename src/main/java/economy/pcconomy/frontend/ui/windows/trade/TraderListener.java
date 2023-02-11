@@ -63,12 +63,13 @@ public class TraderListener implements Listener {
                     if (title.contains("Торговец-Аренда")) {
                         if (ItemWorker.GetName(choseItem).equals("Арендовать")) {
                             var cash = new Cash();
-                            if (LicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
-                                if (!LicenseWorker.isOverdue(LicenseWorker.GetLicense(player, LicenseType.Trade))) {
+                            if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
+                                if (!PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
+                                        .GetLicense(player, LicenseType.Trade))) {
                                     if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
                                     cash.TakeCashFromInventory(trader.Cost, player);
-                                    PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName())
-                                            .setBudget(PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName())
+                                    PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)
+                                            .setBudget(PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)
                                                     .getBudget() + trader.Cost);
 
                                     trader.Owner    = player;
@@ -90,8 +91,9 @@ public class TraderListener implements Listener {
                         }
 
                         if (ItemWorker.GetName(choseItem).equals("Занять")) {
-                            if (LicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
-                                if (!LicenseWorker.isOverdue(LicenseWorker.GetLicense(player, LicenseType.Trade))) {
+                            if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
+                                if (!PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
+                                        .GetLicense(player, LicenseType.Trade))) {
                                     trader.Owner = player;
                                     trader.isRanted = true;
                                     player.closeInventory();
@@ -131,8 +133,8 @@ public class TraderListener implements Listener {
 
                                         var endPrice = price / (1 + trader.Margin);
 
-                                        PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName()).setBudget((
-                                                PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName())).getBudget() + (price - endPrice));
+                                        PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown).setBudget((
+                                                PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)).getBudget() + (price - endPrice));
                                         trader.Revenue += endPrice;
                                     }
                                 }

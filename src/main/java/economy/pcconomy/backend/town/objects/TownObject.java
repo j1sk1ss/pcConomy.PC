@@ -1,5 +1,6 @@
 package economy.pcconomy.backend.town.objects;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 import economy.pcconomy.PcConomy;
@@ -13,13 +14,10 @@ import java.util.*;
 
 public class TownObject {
     public TownObject(Town town, boolean isNPC) {
-        Town = town;
         this.isNPC = isNPC;
-
-
+        TownName = town.getName();
     }
-
-    public Town Town;
+    public String TownName;
     public boolean isNPC;
     public List<ItemStack> Storage = new ArrayList<>();
     private final double StartBudget = 10000;
@@ -76,6 +74,6 @@ public class TownObject {
     }
 
     public BankAccount getBankAccount() {
-        return Town.getAccount();
+        return TownyAPI.getInstance().getTown(TownName).getAccount();
     }
 }

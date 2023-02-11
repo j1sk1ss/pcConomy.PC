@@ -46,6 +46,11 @@ public class Manager implements CommandExecutor { // Тестовый класс
 
         if (command.getName().equals("createt")) {
             PcConomy.GlobalNPC.CreateTrader((Player) sender);
+            try {
+                PcConomy.GlobalTownWorker.SaveTown("TEST");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (command.getName().equals("createnpct")) {

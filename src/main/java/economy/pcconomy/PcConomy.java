@@ -20,10 +20,12 @@ package economy.pcconomy;
 
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.backend.bank.objects.BorrowerObject;
+
 import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
+import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.link.Manager;
 import economy.pcconomy.backend.npc.NPC;
+import economy.pcconomy.backend.save.Loader;
 import economy.pcconomy.backend.timer.GlobalTimer;
 import economy.pcconomy.backend.town.listener.TownyListener;
 import economy.pcconomy.backend.bank.Bank;
@@ -33,10 +35,13 @@ import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
 import economy.pcconomy.frontend.ui.windows.loan.LoanerListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
 import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
+
 import me.yic.xconomy.api.XConomyAPI;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
 
 public final class PcConomy extends JavaPlugin { // Гл класс плагина. Тут обьявляйте в статике нужные API
@@ -45,13 +50,24 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
     public static XConomyAPI xConomyAPI;
     public static TownyAPI TownyAPI;
-
-    public static Bank GlobalBank = new Bank(); // Глобальный банк
+    public static Bank GlobalBank = new Bank();
     public static NPC GlobalNPC = new NPC();
     public static BorrowerWorker GlobalBorrowerWorker = new BorrowerWorker();
     public static TownWorker GlobalTownWorker = new TownWorker();
+    public static LicenseWorker GlobalLicenseWorker = new LicenseWorker();
+
     @Override
     public void onEnable() {
+
+        try {
+            if (new File("BankData.txt").exists()) GlobalBank = Loader.LoadBank("BankData");
+            if (new File("TownsData.txt").exists()) GlobalTownWorker = Loader.LoadTowns("TownsData");
+            if (new File("LicenseData.txt").exists()) GlobalLicenseWorker = Loader.LoadLicenses("LicenseData");
+            if (new File("BorrowersData.txt").exists()) GlobalBorrowerWorker = Loader.LoadBorrowers("BorrowersData");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         new GlobalTimer(this);
 
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
@@ -81,10 +97,11 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         // на разные классы. Но кого я учу, верно?
         // Plugin shutdown logic
         try {
+            //GlobalNPC.SaveNPC("NPCData"); // Not work
             GlobalBank.SaveBank("BankData");
-            GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
             GlobalTownWorker.SaveTown("TownsData");
-            GlobalNPC.SaveNPC("NPCData");
+            GlobalLicenseWorker.SaveLicenses("LicenseData");
+            GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

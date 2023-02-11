@@ -28,7 +28,7 @@ public class TownWorker {
         // метод который должен быть вызван вместе с удалением города игрока
         for (TownObject townObject:
                 townObjects) {
-            if (townObject.Town.getName().equals(townName)) {
+            if (townObject.TownName.equals(townName)) {
                 townObjects.remove(townObject);
                 break;
             }
@@ -47,7 +47,7 @@ public class TownWorker {
         // Получение обьекта города
         for (TownObject townObject:
                 townObjects) {
-            if (townObject.Town.getName().equals(townName)) {
+            if (townObject.TownName.equals(townName)) {
                 return townObject;
             }
         }
@@ -59,7 +59,7 @@ public class TownWorker {
         // Обновление обьекта города
         for (TownObject townObject:
                 townObjects) {
-            if (townObject.Town.equals(town.Town)) {
+            if (townObject.TownName.equals(town.TownName)) {
                 townObjects.remove(townObject);
                 townObjects.add(town);
             }

@@ -1,39 +1,56 @@
 package economy.pcconomy.backend.license.scripts;
 
+import com.google.gson.*;
 import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import org.bukkit.entity.Player;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LicenseWorker {
-    public static List<LicenseBody> Licenses = new ArrayList<>();
+    public List<LicenseBody> Licenses = new ArrayList<>();
 
-    public static void CreateLicense(LicenseBody licenseBody) {
+    public void CreateLicense(LicenseBody licenseBody) {
         Licenses.add(licenseBody);
     }
 
-    public static boolean isOverdue(LicenseBody licenseBody) {
-        return LocalDateTime.now().isAfter(licenseBody.Term);
+    public boolean isOverdue(LicenseBody licenseBody) {
+        return LocalDateTime.now().isAfter(LocalDateTime.parse(licenseBody.Term));
     }
 
-    public static LicenseBody GetLicense(Player player) {
+    public LicenseBody GetLicense(Player player) {
         for (LicenseBody lic:
              Licenses) {
-            if (lic.Owner.equals(player)) return lic;
+            if (lic.Owner.equals(player.getUniqueId())) return lic;
         }
 
         return null;
     }
 
-    public static LicenseBody GetLicense(Player player, LicenseType licenseType) {
+    public LicenseBody GetLicense(Player player, LicenseType licenseType) {
         for (LicenseBody lic:
                 Licenses) {
-            if (lic.Owner.equals(player)) if (lic.LicenseType.equals(licenseType)) return lic;
+            if (lic.Owner.equals(player.getUniqueId())) if (lic.LicenseType.equals(licenseType)) return lic;
         }
 
         return null;
+    }
+
+    public void SaveLicenses(String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName + ".txt", false);
+        new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .toJson(this, writer);
+        writer.close();
     }
 }

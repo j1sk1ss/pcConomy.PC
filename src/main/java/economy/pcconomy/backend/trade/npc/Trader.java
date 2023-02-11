@@ -28,7 +28,7 @@ public class Trader extends Trait {
     public double Margin;
     public double Cost;
     public boolean isRanted;
-    public Town homeTown;
+    public String homeTown;
     public Player Owner;
 
     public Trader() {
@@ -41,7 +41,7 @@ public class Trader extends Trait {
 
         if (!event.getNPC().equals(this.getNPC())) return;
 
-        homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
+        homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
 
         if (isRanted) {
             if (Owner.equals(player)) {
