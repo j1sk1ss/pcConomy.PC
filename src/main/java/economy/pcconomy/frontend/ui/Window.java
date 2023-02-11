@@ -1,8 +1,8 @@
 package economy.pcconomy.frontend.ui;
 
-import economy.pcconomy.frontend.ui.windows.BankerWindow;
-import economy.pcconomy.frontend.ui.windows.LicensorWindow;
-import economy.pcconomy.frontend.ui.windows.LoanWindow;
+import economy.pcconomy.frontend.ui.windows.bank.BankerWindow;
+import economy.pcconomy.frontend.ui.windows.license.LicensorWindow;
+import economy.pcconomy.frontend.ui.windows.loan.LoanWindow;
 import org.bukkit.entity.Player;
 
 public class Window {

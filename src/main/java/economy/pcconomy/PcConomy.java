@@ -13,18 +13,31 @@ package economy.pcconomy;
  Чего нету:
  - Аренда торговцев. Сейчас только покупка навсегда
  - Сохранение данных
+  - Сохранение городов
+  - Сохранение НПС
+ - Обновление кредитных данных
  */
 
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.frontend.ui.listener.*;
+import economy.pcconomy.backend.bank.objects.BorrowerObject;
+import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
 import economy.pcconomy.backend.link.Manager;
+import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.timer.GlobalTimer;
 import economy.pcconomy.backend.town.listener.TownyListener;
 import economy.pcconomy.backend.bank.Bank;
+import economy.pcconomy.backend.town.scripts.TownWorker;
+import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
+import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
+import economy.pcconomy.frontend.ui.windows.loan.LoanerListener;
+import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
+import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
 
 public final class PcConomy extends JavaPlugin { // Гл класс плагина. Тут обьявляйте в статике нужные API
     // Так же желательно тут регистрировать Listeners
@@ -32,8 +45,11 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
     public static XConomyAPI xConomyAPI;
     public static TownyAPI TownyAPI;
-    public static Bank GlobalBank = new Bank(); // Глобальный банк
 
+    public static Bank GlobalBank = new Bank(); // Глобальный банк
+    public static NPC GlobalNPC = new NPC();
+    public static BorrowerWorker GlobalBorrowerWorker = new BorrowerWorker();
+    public static TownWorker GlobalTownWorker = new TownWorker();
     @Override
     public void onEnable() {
         new GlobalTimer(this);
@@ -64,5 +80,13 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     public void onDisable() { // Тут будет сохранение всего и вся. Делайте не каскадом из 9999 строк, а разбейте
         // на разные классы. Но кого я учу, верно?
         // Plugin shutdown logic
+        try {
+            GlobalBank.SaveBank("BankData");
+            GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
+            GlobalTownWorker.SaveTown("TownsData");
+            GlobalNPC.SaveNPC("NPCData");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

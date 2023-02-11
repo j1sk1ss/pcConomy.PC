@@ -1,10 +1,10 @@
-package economy.pcconomy.frontend.ui.listener;
+package economy.pcconomy.frontend.ui.windows.loan;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.frontend.ui.windows.LoanWindow;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,18 +23,18 @@ public class LoanerListener implements Listener {
             if (event.getInventory().getHolder() instanceof Player player1)
                 if (event.getView().getTitle().equals("Кредит") && player1.equals(player)) {
                     var buttonPosition = event.getSlot();
+                    event.setCancelled(true);
 
                     if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
                         var balanceWorker = new BalanceWorker();
-                        if (!balanceWorker.isSolvent(PcConomy.GlobalBank.Credit.get(player).amount, player)) {
-                            balanceWorker.TakeMoney(PcConomy.GlobalBank.Credit.get(player).amount, player);
-                            PcConomy.GlobalBank.BankBudget += PcConomy.GlobalBank.Credit.get(player).amount;
-                            PcConomy.GlobalBank.DestroyLoan(player);
+                        if (!balanceWorker.isSolvent(PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount, player)) {
+                            balanceWorker.TakeMoney(PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount, player);
+                            PcConomy.GlobalBank.BankBudget += PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount;
+                            PcConomy.GlobalBank.DestroyLoan(player.getUniqueId());
 
-                            event.setCancelled(true);
                             player.openInventory(LoanWindow.GetLoanWindow(player));
-                            return;
                         }
+                        return;
                     }
 
                     if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
@@ -42,7 +42,7 @@ public class LoanerListener implements Listener {
                         boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
 
                         if (isSafe) {
-                            if (PcConomy.GlobalBank.Credit.get(player) == null) {
+                            if (!PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
                                 PcConomy.GlobalBank.CreateLoan(LoanWindow.GetSelectedAmount(event.getInventory()),
                                         LoanWindow.GetSelectedDuration(event.getInventory()), player);
                                 Close(event);
@@ -52,7 +52,6 @@ public class LoanerListener implements Listener {
                         event.getInventory().setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
                         player.openInventory(LoanWindow.GetLoanWindow(event.getInventory(), player, buttonPosition));
                     }
-                    event.setCancelled(true);
                 }
         }
     }

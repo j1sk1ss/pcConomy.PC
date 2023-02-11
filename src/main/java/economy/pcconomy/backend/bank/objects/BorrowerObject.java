@@ -2,18 +2,15 @@ package economy.pcconomy.backend.bank.objects;
 
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BorrowerObject {
     public BorrowerObject(Player player, LoanObject loanObject) {
-        Borrower = player;
+        Borrower = player.getUniqueId();
         CreditHistory = new ArrayList<>();
         CreditHistory.add(loanObject);
     }
 
-    public Player Borrower;
+    public UUID Borrower;
     public List<LoanObject> CreditHistory;
 }

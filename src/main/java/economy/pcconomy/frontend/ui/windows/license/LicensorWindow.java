@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.ui.windows;
+package economy.pcconomy.frontend.ui.windows.license;
 
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.license.License;

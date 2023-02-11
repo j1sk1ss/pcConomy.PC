@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.ui.listener;
+package economy.pcconomy.frontend.ui.windows.bank;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.scripts.CashWorker;

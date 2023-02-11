@@ -5,9 +5,8 @@ import com.palmergames.bukkit.towny.object.Town;
 
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 
-import economy.pcconomy.frontend.ui.windows.TraderWindow;
+import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;

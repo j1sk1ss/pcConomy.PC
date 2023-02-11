@@ -1,9 +1,10 @@
 package economy.pcconomy.backend.trade.npc;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.town.Town;
 import economy.pcconomy.backend.town.scripts.TownWorker;
-import economy.pcconomy.frontend.ui.windows.NPCTraderWindow;
+import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderWindow;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
@@ -21,7 +22,7 @@ public class NPCTrader extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        TownWorker.GetTownObject(TownyAPI.getInstance()
+        PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance()
                 .getTownName(this.getNPC().getStoredLocation())).GenerateLocalPrices();
         player.openInventory(NPCTraderWindow.GetNPCTraderWindow(player, this.getNPC()));
     }
@@ -31,9 +32,9 @@ public class NPCTrader extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        TownWorker.GetTownObject(TownyAPI.getInstance()
+        PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance()
                 .getTownName(this.getNPC().getStoredLocation())).GenerateLocalPrices();
-        Town.SellResourceToStorage(TownWorker.GetTownObject(TownyAPI.getInstance()
+        Town.SellResourceToStorage(PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance()
                 .getTownName(this.getNPC().getStoredLocation())), player.getInventory().getItemInMainHand(), player);
     }
 }

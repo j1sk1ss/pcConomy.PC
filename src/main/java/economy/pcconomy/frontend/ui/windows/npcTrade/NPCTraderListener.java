@@ -1,7 +1,8 @@
-package economy.pcconomy.frontend.ui.listener;
+package economy.pcconomy.frontend.ui.windows.npcTrade;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.town.Town;
 import economy.pcconomy.backend.town.scripts.TownWorker;
 
@@ -24,7 +25,7 @@ public class NPCTraderListener implements Listener {
                         var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                         if (!player.getInventory().contains(event.getCurrentItem())) {
                             if (event.isLeftClick()) {
-                                Town.BuyResourceFromStorage(TownWorker.GetTownObject(town.getName()),
+                                Town.BuyResourceFromStorage(PcConomy.GlobalTownWorker.GetTownObject(town.getName()),
                                         event.getCurrentItem(), player);
                             }
                         }

@@ -16,6 +16,16 @@ public class TownObject {
         Town = town;
         this.isNPC = isNPC;
 
+
+    }
+
+    public Town Town;
+    public boolean isNPC;
+    public List<ItemStack> Storage = new ArrayList<>();
+    private final double StartBudget = 10000;
+    private final int StartStorageAmount = 1650;
+
+    public void InitializeNPC() {
         if (isNPC) { // Хранилище НПС города
             Storage.add(new ItemStack(Material.SPRUCE_WOOD, 100));
             Storage.add(new ItemStack(Material.STONE, 250));
@@ -29,12 +39,6 @@ public class TownObject {
             LifeCycle();
         }
     }
-
-    public Town Town;
-    public boolean isNPC;
-    public List<ItemStack> Storage = new ArrayList<>();
-    private final double StartBudget = 10000;
-    private final int StartStorageAmount = 1650;
 
     public void LifeCycle() {
         if (!isNPC) return;

@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.ui.windows;
+package economy.pcconomy.frontend.ui.windows.loan;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.scripts.LoanWorker;
@@ -33,9 +33,9 @@ public class LoanWindow {
                     durationSteps.get(i) + "дней"));
         }
 
-        if (PcConomy.GlobalBank.Credit.get(player) != null) {
+        if (PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
             window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
-                    "Выплатить кредит"), PcConomy.GlobalBank.Credit.get(player).amount + CashWorker.currencySigh));
+                    "Выплатить кредит"), PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
         }
 
         return window;
@@ -50,9 +50,9 @@ public class LoanWindow {
                     durationSteps.get(i) + "дней"));
         }
 
-        if (PcConomy.GlobalBank.Credit.get(player) != null) {
+        if (PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
             window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
-                    "Выплатить кредит"), PcConomy.GlobalBank.Credit.get(player).amount + CashWorker.currencySigh));
+                    "Выплатить кредит"), PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
         }
 
         return window;
@@ -65,7 +65,7 @@ public class LoanWindow {
         ItemStack tempItem = ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL, 1),
                 Math.round(maxLoanSize / (i + 1) * 100) / 100 + CashWorker.currencySigh), "Банк не одобрит данный займ.");
 
-        if (isSafe) {
+        if (isSafe && !PcConomy.GlobalBank.Credit.contains(player.getUniqueId())) {
             tempItem = ItemWorker.SetMaterial(ItemWorker.SetLore(tempItem, "Банк одобрит данный займ.\nПроцент: " +
                     (Math.round(LoanWorker.getPercent(maxLoanSize / (i + 1),
                             durationSteps.get(option - 18)) * 100) * 100d) / 100d + "%"),  Material.GREEN_WOOL);

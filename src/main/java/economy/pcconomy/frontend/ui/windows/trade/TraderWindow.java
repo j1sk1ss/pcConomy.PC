@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.ui.windows;
+package economy.pcconomy.frontend.ui.windows.trade;
 
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.scripts.TownWorker;

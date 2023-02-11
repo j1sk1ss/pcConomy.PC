@@ -13,7 +13,7 @@ public class GlobalTimer {
 
     private void Tick() {
         for (TownObject town :
-                TownWorker.townObjects) {
+                PcConomy.GlobalTownWorker.townObjects) {
             town.LifeCycle();
         }
 

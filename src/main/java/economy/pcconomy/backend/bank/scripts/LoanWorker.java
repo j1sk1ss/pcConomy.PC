@@ -34,6 +34,6 @@ public class LoanWorker {
 
     public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
         return (getSafetyFactor(loanAmount, duration,
-                BorrowerWorker.getBorrowerObject(borrower)) >= trustCoefficient); // коэффициент надёжности
+                PcConomy.GlobalBorrowerWorker.getBorrowerObject(borrower)) >= trustCoefficient); // коэффициент надёжности
     }
 }

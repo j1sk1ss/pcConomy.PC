@@ -1,5 +1,6 @@
-package economy.pcconomy.frontend.ui.listener;
+package economy.pcconomy.frontend.ui.windows.trade;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.license.objects.LicenseType;
@@ -8,7 +9,7 @@ import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
-import economy.pcconomy.frontend.ui.windows.TraderWindow;
+import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -66,8 +67,8 @@ public class TraderListener implements Listener {
                                 if (!LicenseWorker.isOverdue(LicenseWorker.GetLicense(player, LicenseType.Trade))) {
                                     if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
                                     cash.TakeCashFromInventory(trader.Cost, player);
-                                    TownWorker.GetTownObject(trader.homeTown.getName())
-                                            .setBudget(TownWorker.GetTownObject(trader.homeTown.getName())
+                                    PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName())
+                                            .setBudget(PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName())
                                                     .getBudget() + trader.Cost);
 
                                     trader.Owner    = player;
@@ -130,8 +131,8 @@ public class TraderListener implements Listener {
 
                                         var endPrice = price / (1 + trader.Margin);
 
-                                        TownWorker.GetTownObject(trader.homeTown.getName()).setBudget((
-                                                TownWorker.GetTownObject(trader.homeTown.getName())).getBudget() + (price - endPrice));
+                                        PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName()).setBudget((
+                                                PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown.getName())).getBudget() + (price - endPrice));
                                         trader.Revenue += endPrice;
                                     }
                                 }
@@ -149,6 +150,6 @@ public class TraderListener implements Listener {
         if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
         var id = Integer.parseInt(name.split(" ")[1]);
 
-        return NPC.GetNPC(id).getTrait(Trader.class);
+        return PcConomy.GlobalNPC.GetNPC(id).getTrait(Trader.class);
     }
  }

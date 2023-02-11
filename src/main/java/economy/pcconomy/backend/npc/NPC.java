@@ -1,5 +1,6 @@
 package economy.pcconomy.backend.npc;
 
+import com.google.gson.GsonBuilder;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.npc.Banker;
 import economy.pcconomy.backend.bank.npc.Loaner;
@@ -15,15 +16,16 @@ import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.Dictionary;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Random;
 
 public class NPC {
+    public Map<net.citizensnpcs.api.npc.NPC, Trait> Traits = new Hashtable<>(); // Для сохранения
 
-    public static Dictionary<net.citizensnpcs.api.npc.NPC, Trait> Traits = new Hashtable<>(); // Для сохранения
-
-    public static void CreateBanker(Player creator) {
+    public void CreateBanker(Player creator) {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("Banker" + new Random().nextInt()));
         var banker = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Banker");
 
@@ -32,7 +34,7 @@ public class NPC {
         banker.spawn(creator.getLocation());
     }
 
-    public static void CreateLoaner(Player creator) {
+    public void CreateLoaner(Player creator) {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("Loaner" + new Random().nextInt()));
         var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Loaner");
 
@@ -41,10 +43,9 @@ public class NPC {
         loaner.spawn(creator.getLocation());
     }
 
-    private final static double traderCost = 3000d;
-
-    public static void CreateTrader(Player creator) {
+    public void CreateTrader(Player creator) {
         var cash = new Cash();
+        double traderCost = 3000d;
         if (cash.AmountOfCashInInventory(creator) < traderCost) return;
 
         if (LicenseWorker.GetLicense(creator, LicenseType.Market) == null) return;
@@ -61,7 +62,7 @@ public class NPC {
         trader.addTrait(Trader.class);
     }
 
-    public static void CreateNPCTrader(Player creator) {
+    public void CreateNPCTrader(Player creator) {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCTrader.class).withName("NPCTrader" + new Random().nextInt()));
         var npcTrader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "NPCTrader");
 
@@ -70,7 +71,7 @@ public class NPC {
         npcTrader.spawn(creator.getLocation());
     }
 
-    public static void CreateLicensor(Player creator) {
+    public void CreateLicensor(Player creator) {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("Licensor" + new Random().nextInt()));
         var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Licensor");
 
@@ -79,7 +80,7 @@ public class NPC {
         loaner.spawn(creator.getLocation());
     }
 
-    public static net.citizensnpcs.api.npc.NPC GetNPC(int id) {
+    public net.citizensnpcs.api.npc.NPC GetNPC(int id) {
         for (net.citizensnpcs.api.npc.NPC npc:
                 CitizensAPI.getNPCRegistry()) {
             if (Traits.get(npc) != null) {
@@ -92,7 +93,7 @@ public class NPC {
         return null;
     }
 
-    public static void UpdateNPC(Trait trait) { // Перед сохранением
+    public void UpdateNPC(Trait trait) { // Перед сохранением
         for (net.citizensnpcs.api.npc.NPC npc:
              CitizensAPI.getNPCRegistry()) {
             if (Traits.get(npc) != null) {
@@ -101,7 +102,7 @@ public class NPC {
         }
     }
 
-    public static void DeleteNPC(int id) {
+    public void DeleteNPC(int id) {
         var npc = GetNPC(id);
         if (npc != null) {
             Traits.remove(npc);
@@ -109,7 +110,7 @@ public class NPC {
         }
     }
 
-    private static void DeleteAllNPC() {
+    private void DeleteAllNPC() {
         for (net.citizensnpcs.api.npc.NPC npc:
                 CitizensAPI.getNPCRegistry()) {
             if (Traits.get(npc) != null) {
@@ -117,5 +118,15 @@ public class NPC {
                 npc.destroy();
             }
         }
+    }
+
+    public void SaveNPC(String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName + ".txt", false);
+        new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .toJson(this, writer);
+        writer.close();
     }
 }

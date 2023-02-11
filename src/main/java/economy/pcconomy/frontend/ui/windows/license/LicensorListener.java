@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.ui.listener;
+package economy.pcconomy.frontend.ui.windows.license;
 
 import economy.pcconomy.backend.license.License;
 import economy.pcconomy.backend.scripts.ItemWorker;

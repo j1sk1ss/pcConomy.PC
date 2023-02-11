@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 public class Manager implements CommandExecutor { // Тестовый класс для отладки работы плагина. Кидайте сюда команды
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
@@ -35,27 +37,27 @@ public class Manager implements CommandExecutor { // Тестовый класс
         }
 
         if (command.getName().equals("createB")) {
-            NPC.CreateBanker((Player) sender);
+            PcConomy.GlobalNPC.CreateBanker((Player) sender);
         }
 
         if (command.getName().equals("createL")) {
-            NPC.CreateLoaner((Player) sender);
+            PcConomy.GlobalNPC.CreateLoaner((Player) sender);
         }
 
         if (command.getName().equals("createt")) {
-            NPC.CreateTrader((Player) sender);
+            PcConomy.GlobalNPC.CreateTrader((Player) sender);
         }
 
         if (command.getName().equals("createnpct")) {
-            NPC.CreateNPCTrader((Player) sender);
+            PcConomy.GlobalNPC.CreateNPCTrader((Player) sender);
         }
 
         if (command.getName().equals("createLic")) {
-            NPC.CreateLicensor((Player) sender);
+            PcConomy.GlobalNPC.CreateLicensor((Player) sender);
         }
 
         if (command.getName().equals("swnpc")) {
-            TownWorker.ChangeNPCStatus(args[0], true);
+            PcConomy.GlobalTownWorker.ChangeNPCStatus(args[0], true);
         }
         return true;
     }

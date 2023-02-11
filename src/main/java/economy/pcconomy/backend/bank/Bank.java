@@ -1,27 +1,32 @@
 package economy.pcconomy.backend.bank;
 
+import com.google.gson.GsonBuilder;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.objects.BorrowerObject;
 import economy.pcconomy.backend.bank.objects.LoanObject;
-import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
 import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Bank {
     public Bank() {
-        Credit = new Hashtable<>();
+        Credit = new ArrayList<>();
     }
 
     public double BankBudget = 15000.0d;
     public double UsefulBudgetPercent = .25d;
-    public Dictionary<Player, LoanObject> Credit;
+    public List<LoanObject> Credit;
 
     public void PlayerWithdrawCash(double amount, Player player) {
         // Метод снятия денег в городе из банка игроком (если в городе есть на это бюджет)
@@ -60,7 +65,7 @@ public class Bank {
         var percentage = LoanWorker.getPercent(amount, duration); // процент по кредиту
         var dailyPayment = LoanWorker.getDailyPayment(amount, duration, percentage); // дневной платёж
 
-        Credit.put(player, new LoanObject(amount + amount * percentage, percentage, duration, dailyPayment));
+        Credit.add(new LoanObject(amount + amount * percentage, percentage, duration, dailyPayment, player));
 
         BankBudget -= amount;
         new BalanceWorker().GiveMoney(amount, player);
@@ -68,44 +73,49 @@ public class Bank {
 
     public void TakePercentFromBorrowers() {
         // Взятие процента со счёта игрока
-        var keys = Credit.keys();
-
         for (var i = 0; i < Credit.size(); i++) {
             var balanceWorker = new BalanceWorker();
-
-            var player = keys.nextElement();
-            var loan = Credit.get(player);
+            var loan = Credit.get(i);
 
             if (loan.amount <= 0) {
-                DestroyLoan(player);
+                DestroyLoan(loan.Owner);
                 return;
             }
 
-            if (balanceWorker.isSolvent(loan.dailyPayment, player)) {
+            if (balanceWorker.isSolvent(loan.dailyPayment, Bukkit.getPlayer(loan.Owner))) {
                 loan.expired += 1;
                 return;
             }
 
-            balanceWorker.TakeMoney(loan.dailyPayment, player);
+            balanceWorker.TakeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
             loan.amount -= loan.dailyPayment;
 
             BankBudget += loan.dailyPayment;
         }
     }
 
-    public void DestroyLoan(Player player) {
-        // Закрытие кредита
-        var loan = Credit.get(player);
-
-        var borrower = BorrowerWorker.getBorrowerObject(player);
-        if (borrower != null) {
-            borrower.CreditHistory.add(loan);
-            BorrowerWorker.setBorrowerObject(borrower);
-        } else {
-            BorrowerWorker.borrowerObjects.add(new BorrowerObject(player, loan));
+    public LoanObject GetLoan(UUID player) {
+        for (LoanObject loan:
+             Credit) {
+            if (loan.Owner.equals(player)) return loan;
         }
 
-        Credit.remove(player);
+        return null;
+    }
+
+    public void DestroyLoan(UUID player) {
+        // Закрытие кредита
+        var loan = GetLoan(player);
+
+        var borrower = PcConomy.GlobalBorrowerWorker.getBorrowerObject(Bukkit.getPlayer(player));
+        if (borrower != null) {
+            borrower.CreditHistory.add(loan);
+            PcConomy.GlobalBorrowerWorker.setBorrowerObject(borrower);
+        } else {
+            PcConomy.GlobalBorrowerWorker.borrowerObjects.add(new BorrowerObject(Bukkit.getPlayer(player), loan));
+        }
+
+        Credit.remove(GetLoan(player));
     }
 
     public void PrintMoneys(double amount) {
@@ -116,5 +126,15 @@ public class Bank {
     public double GetUsefulAmountOfBudget() {
         // Получение обьёма бюджета пригодного для операции
         return BankBudget * UsefulBudgetPercent;
+    }
+
+    public void SaveBank(String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName + ".txt", false);
+        new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .toJson(this, writer);
+        writer.close();
     }
 }
