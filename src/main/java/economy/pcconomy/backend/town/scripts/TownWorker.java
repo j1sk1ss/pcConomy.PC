@@ -2,7 +2,9 @@ package economy.pcconomy.backend.town.scripts;
 
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.town.objects.TownObject;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -71,6 +73,7 @@ public class TownWorker {
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
+                .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
                 .toJson(this, writer);
         writer.close();

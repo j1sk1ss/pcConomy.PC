@@ -96,9 +96,8 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     @Override
     public void onDisable() { // Тут будет сохранение всего и вся. Делайте не каскадом из 9999 строк, а разбейте
         // на разные классы. Но кого я учу, верно?
-        // Plugin shutdown logic
         try {
-            GlobalNPC.SaveNPC("NPCData"); // Not work
+            GlobalNPC.SaveNPC("NPCData");
             GlobalBank.SaveBank("BankData");
             GlobalTownWorker.SaveTown("TownsData");
             GlobalLicenseWorker.SaveLicenses("LicenseData");
