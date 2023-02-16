@@ -26,3 +26,5 @@ commands:
     usage: /createLic
   swnpc:
     usage: /swnpc
+  tmenu:
+    usage: /tmenu

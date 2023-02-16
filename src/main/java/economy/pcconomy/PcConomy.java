@@ -34,6 +34,7 @@ import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
 import economy.pcconomy.frontend.ui.windows.loan.LoanerListener;
+import economy.pcconomy.frontend.ui.windows.mayor.MayorListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
 import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
 
@@ -59,7 +60,6 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
     @Override
     public void onEnable() {
-
         try {
             if (new File("NPCData.txt").exists()) GlobalNPC = Loader.LoadNPC("NPCData");
             if (new File("BankData.txt").exists()) GlobalBank = Loader.LoadBank("BankData");
@@ -70,9 +70,8 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
             throw new RuntimeException(e);
         }
 
-        new GlobalTimer(this);
-
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MayorListener(), this);
         Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
         Bukkit.getPluginManager().registerEvents(new LoanerListener(), this);
         Bukkit.getPluginManager().registerEvents(new TraderListener(), this);
@@ -81,6 +80,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
+        new GlobalTimer(this);
 
         getCommand("create").setExecutor(manager);
         getCommand("createB").setExecutor(manager);
@@ -92,6 +92,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("createnpct").setExecutor(manager);
         getCommand("createLic").setExecutor(manager);
         getCommand("swnpc").setExecutor(manager);
+        getCommand("tmenu").setExecutor(manager);
     }
 
     @Override

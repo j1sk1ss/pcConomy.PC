@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.trade;
 
+import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -35,7 +35,7 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 27, "Торговец-Аренда " + trader.getNPC().getId());
 
         window.setItem(0, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
-                "Арендовать"), trader.Cost + "$"));
+                "Арендовать на день"), trader.Cost + CashWorker.currencySigh));
         window.setItem(1, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
                 "Процент:"), trader.Margin * 100 + "%"));
 
@@ -56,7 +56,7 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 9, "Торговец-Цена " + trader.getNPC().getId());
 
         for (var i = 0; i < 9; i++) {
-            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL), (i + 1) * 200 + "$"));
+            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL), (i + 1) * 200 + CashWorker.currencySigh));
         }
 
         return window;

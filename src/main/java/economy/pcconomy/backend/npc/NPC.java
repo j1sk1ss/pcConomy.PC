@@ -72,9 +72,10 @@ public class NPC {
         LoadTraders();
     }
 
+    public static double traderCost = 3000d;
+
     public void BuyTrader(Player creator) {
         var cash = new Cash();
-        double traderCost = 3000d;
         if (cash.AmountOfCashInInventory(creator) < traderCost) return;
 
         if (PcConomy.GlobalLicenseWorker.GetLicense(creator, LicenseType.Market) == null) return;

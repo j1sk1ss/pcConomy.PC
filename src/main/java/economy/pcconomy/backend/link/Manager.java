@@ -6,6 +6,7 @@ import economy.pcconomy.backend.bank.npc.Loaner;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.npc.Licensor;
 import economy.pcconomy.backend.trade.npc.NPCTrader;
+import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -60,6 +61,11 @@ public class Manager implements CommandExecutor { // Тестовый класс
 
         if (command.getName().equals("swnpc")) {
             PcConomy.GlobalTownWorker.ChangeNPCStatus(args[0], true);
+        }
+
+        if (command.getName().equals("tmenu")) {
+            if (!PcConomy.TownyAPI.getTown((Player) sender).getMayor().getPlayer().equals((Player) sender)) return true;
+            ((Player) sender).openInventory(MayorWindow.GetMayorWindow((Player) sender));
         }
         return true;
     }
