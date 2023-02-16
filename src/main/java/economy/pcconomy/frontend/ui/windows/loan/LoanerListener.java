@@ -38,10 +38,11 @@ public class LoanerListener implements Listener {
                     }
 
                     if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
-                        event.getInventory().setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
                         boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
 
                         if (isSafe) {
+                            event.getInventory().setItem(buttonPosition, ItemWorker.SetMaterial(item,
+                                    Material.LIGHT_BLUE_WOOL));
                             if (!PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
                                 PcConomy.GlobalBank.CreateLoan(LoanWindow.GetSelectedAmount(event.getInventory()),
                                         LoanWindow.GetSelectedDuration(event.getInventory()), player);

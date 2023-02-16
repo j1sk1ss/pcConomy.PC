@@ -23,7 +23,6 @@ public class Bank {
     public Bank() {
         Credit = new ArrayList<>();
     }
-
     public double BankBudget = 15000.0d;
     public double UsefulBudgetPercent = .25d;
     public List<LoanObject> Credit;
@@ -31,7 +30,7 @@ public class Bank {
     public void PlayerWithdrawCash(double amount, Player player) {
         // Метод снятия денег в городе из банка игроком (если в городе есть на это бюджет)
         var balanceWorker = new BalanceWorker();
-        var cash = new Cash();
+        var cash          = new Cash();
 
         if (amount > PcConomy.GlobalBank.GetUsefulAmountOfBudget()) return;
         if (balanceWorker.isSolvent(amount, player)) return;
@@ -43,9 +42,9 @@ public class Bank {
 
     public void PlayerPutCash(ItemStack money, Player player) { // Метод внесения купюры в городе в банк
         if (!CashWorker.isCash(money)) return;
+        ItemWorker.TakeItems(money, player);
 
         var amount = new CashWorker().GetAmountFromCash(money);
-        ItemWorker.TakeItems(money, player);
         new BalanceWorker().GiveMoney(amount, player);
         PcConomy.GlobalBank.BankBudget += amount;
     }
@@ -73,24 +72,20 @@ public class Bank {
 
     public void TakePercentFromBorrowers() {
         // Взятие процента со счёта игрока
-        for (var i = 0; i < Credit.size(); i++) {
+        for (LoanObject loanObject : Credit) {
+            if (loanObject.amount <= 0) {
+                DestroyLoan(loanObject.Owner);
+                return;
+            }
+
             var balanceWorker = new BalanceWorker();
-            var loan = Credit.get(i);
+            if (balanceWorker.isSolvent(loanObject.dailyPayment, Bukkit.getPlayer(loanObject.Owner)))
+                loanObject.expired += 1;
 
-            if (loan.amount <= 0) {
-                DestroyLoan(loan.Owner);
-                return;
-            }
+            balanceWorker.TakeMoney(loanObject.dailyPayment, Bukkit.getPlayer(loanObject.Owner));
+            loanObject.amount -= loanObject.dailyPayment;
 
-            if (balanceWorker.isSolvent(loan.dailyPayment, Bukkit.getPlayer(loan.Owner))) {
-                loan.expired += 1;
-                return;
-            }
-
-            balanceWorker.TakeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
-            loan.amount -= loan.dailyPayment;
-
-            BankBudget += loan.dailyPayment;
+            BankBudget += loanObject.dailyPayment;
         }
     }
 

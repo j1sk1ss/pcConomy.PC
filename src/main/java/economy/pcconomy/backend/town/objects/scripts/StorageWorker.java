@@ -11,15 +11,17 @@ public class StorageWorker {
     public static void CreateResources(int maxAmount, List<ItemStack> Storage) { // Только для НПС города
         for (ItemStack item:
                 Storage) {
-            setAmountOfResource(item, getAmountOfResource(item, Storage) + new Random().nextInt() % maxAmount, Storage);
+            setAmountOfResource(item, getAmountOfResource(item, Storage) + new Random().nextInt() % maxAmount,
+                    Storage);
         }
     }
 
     public static void UseResources(int maxAmount, List<ItemStack> Storage) {
         for (ItemStack item:
                 Storage) {
-            if (item.getAmount() < 10) return;
-            setAmountOfResource(item, getAmountOfResource(item, Storage) - new Random().nextInt() % maxAmount, Storage);
+            if (item.getAmount() < maxAmount) return;
+            setAmountOfResource(item, getAmountOfResource(item, Storage) - new Random().nextInt() % maxAmount,
+                    Storage);
         }
     }
 

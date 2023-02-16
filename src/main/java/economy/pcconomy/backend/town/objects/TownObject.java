@@ -15,7 +15,9 @@ import java.util.*;
 public class TownObject {
     public TownObject(Town town, boolean isNPC) {
         this.isNPC = isNPC;
-        TownName = town.getName();
+        TownName   = town.getName();
+
+        InitializeNPC();
     }
     public String TownName;
     public boolean isNPC;
@@ -49,8 +51,9 @@ public class TownObject {
 
     public void GenerateLocalPrices() { // Только для НПС города
         for (ItemStack itemStack : Storage) {
+
             ItemWorker.SetLore(itemStack, "Цена за 1 шт. (Покупка X8):\n" +
-                    (Math.round(getBudget() / itemStack.getAmount() * 100d) / 100d) + CashWorker.currencySigh);
+                    (Math.round((getBudget() / itemStack.getAmount()) * 100d) / 100d) + CashWorker.currencySigh);
         }
     }
 

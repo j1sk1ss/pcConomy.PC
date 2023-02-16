@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class TraderListener implements Listener {
@@ -74,6 +75,7 @@ public class TraderListener implements Listener {
 
                                     trader.Owner    = player.getUniqueId();
                                     trader.isRanted = true;
+                                    trader.Term     = LocalDateTime.now().plusDays(1).toString();
                                     player.closeInventory();
                                 }
                             }

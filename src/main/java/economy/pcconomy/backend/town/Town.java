@@ -18,9 +18,9 @@ public class Town {
 
         if (townObject == null) return;
         if (!townObject.isNPC) return;
+        if (StorageWorker.getAmountOfResource(itemStack, townObject.Storage) * 2 < itemAmount) return;
 
         var cash = new Cash();
-
         if (cash.AmountOfCashInInventory(buyer) < price) return;
 
         cash.TakeCashFromInventory(price, buyer);

@@ -17,16 +17,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @TraitName("Trader")
 public class Trader extends Trait {
-
     public List<ItemStack> Storage = new ArrayList<>();
     public double Revenue;
     public double Margin;
     public double Cost;
     public boolean isRanted;
+    public String Term;
     public String homeTown;
     public UUID Owner;
 
@@ -36,12 +37,19 @@ public class Trader extends Trait {
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
-        var player = event.getClicker();
-
         if (!event.getNPC().equals(this.getNPC())) return;
+        if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && isRanted) {
+            Term     = "";
+            isRanted = false;
+            Owner    = null;
+            Revenue  = 0;
+            Storage.clear();
+            return;
+        }
 
         homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
 
+        var player = event.getClicker();
         if (isRanted) {
             if (Owner.equals(player.getUniqueId())) {
                 player.openInventory(TraderWindow.GetOwnerTraderWindow(player, this));
