@@ -1,5 +1,6 @@
 package economy.pcconomy.backend.link;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.npc.Banker;
 import economy.pcconomy.backend.bank.npc.Loaner;
@@ -37,10 +38,22 @@ public class Manager implements CommandExecutor { // Тестовый класс
 
         if (command.getName().equals("put")) {
             PcConomy.GlobalBank.PlayerPutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender);
+            /*
+            try {
+                PcConomy.GlobalNPC.SaveNPC("NPCData");
+                PcConomy.GlobalBank.SaveBank("BankData");
+                PcConomy.GlobalTownWorker.SaveTown("TownsData");
+                PcConomy.GlobalLicenseWorker.SaveLicenses("LicenseData");
+                PcConomy.GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+             */
         }
 
         if (command.getName().equals("createB")) {
             PcConomy.GlobalNPC.CreateNPC((Player) sender, new Banker());
+            //PcConomy.GlobalNPC.UpdateNPC();
         }
 
         if (command.getName().equals("createL")) {
@@ -64,7 +77,7 @@ public class Manager implements CommandExecutor { // Тестовый класс
         }
 
         if (command.getName().equals("tmenu")) {
-            if (!PcConomy.TownyAPI.getTown((Player) sender).getMayor().getPlayer().equals((Player) sender)) return true;
+            if (!TownyAPI.getInstance().getTown((Player) sender).getMayor().getName().equals((sender).getName())) return true;
             ((Player) sender).openInventory(MayorWindow.GetMayorWindow((Player) sender));
         }
         return true;

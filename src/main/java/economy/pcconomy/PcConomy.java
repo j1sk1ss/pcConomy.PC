@@ -40,7 +40,9 @@ import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
 
 import me.yic.xconomy.api.XConomyAPI;
 
+import net.citizensnpcs.api.event.CitizensEnableEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -51,7 +53,6 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     // Ну и обработчики команд с командами тоже bruh
 
     public static XConomyAPI xConomyAPI;
-    public static TownyAPI TownyAPI;
     public static Bank GlobalBank = new Bank();
     public static NPC GlobalNPC = new NPC();
     public static BorrowerWorker GlobalBorrowerWorker = new BorrowerWorker();
@@ -93,6 +94,11 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("createLic").setExecutor(manager);
         getCommand("swnpc").setExecutor(manager);
         getCommand("tmenu").setExecutor(manager);
+    }
+
+    @EventHandler
+    public void loadNPC(CitizensEnableEvent event) {
+        GlobalNPC.UpdateNPC();
     }
 
     @Override

@@ -27,7 +27,7 @@ public class Trader extends Trait {
     public double Margin;
     public double Cost;
     public boolean isRanted;
-    public String Term;
+    public String Term = LocalDateTime.now().toString();
     public String homeTown;
     public UUID Owner;
 

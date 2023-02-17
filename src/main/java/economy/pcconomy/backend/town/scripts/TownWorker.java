@@ -1,6 +1,7 @@
 package economy.pcconomy.backend.town.scripts;
 
 import com.google.gson.GsonBuilder;
+import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.town.objects.TownObject;
@@ -16,7 +17,7 @@ public class TownWorker {
 
     public void AddOldTowns() {
         for (com.palmergames.bukkit.towny.object.Town town:
-                PcConomy.TownyAPI.getTowns()) {
+                TownyAPI.getInstance().getTowns()) {
             CreateTownObject(town, false);
         }
     }

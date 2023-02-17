@@ -115,6 +115,7 @@ public class NPC {
             CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).Margin = Traders.get(id).Margin;
             CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).homeTown = Traders.get(id).homeTown;
             CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).isRanted = Traders.get(id).isRanted;
+            CitizensAPI.getNPCRegistry().getById(id).getTrait(Trader.class).Term = Traders.get(id).Term;
         }
     }
 
@@ -126,7 +127,7 @@ public class NPC {
                 var traderTrait = npc.getTrait(Trader.class);
 
                 Traders.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
-                        traderTrait.Cost, traderTrait.isRanted, traderTrait.homeTown, traderTrait.Owner));
+                        traderTrait.Cost, traderTrait.isRanted, traderTrait.homeTown, traderTrait.Owner, traderTrait.Term));
             }
         }
 
