@@ -6,8 +6,12 @@ import economy.pcconomy.backend.bank.npc.Banker;
 import economy.pcconomy.backend.bank.npc.Loaner;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.npc.Licensor;
+import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
+import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.backend.trade.npc.NPCTrader;
+import economy.pcconomy.frontend.ui.Window;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -78,7 +82,12 @@ public class Manager implements CommandExecutor { // Тестовый класс
 
         if (command.getName().equals("tmenu")) {
             if (!TownyAPI.getInstance().getTown((Player) sender).getMayor().getName().equals((sender).getName())) return true;
-            ((Player) sender).openInventory(MayorWindow.GetMayorWindow((Player) sender));
+            Window.OpenMayorWindow((Player) sender);
+        }
+
+        if (command.getName().equals("addTrade")) {
+            StorageWorker.addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]),
+                    PcConomy.GlobalTownWorker.GetTownObject(args[0]).Storage);
         }
         return true;
     }

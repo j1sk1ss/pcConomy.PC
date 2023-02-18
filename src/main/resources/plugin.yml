@@ -28,3 +28,5 @@ commands:
     usage: /swnpc
   tmenu:
     usage: /tmenu
+  addTrade:
+    usage: /addTrade <npc_town_name> <material> <amount>

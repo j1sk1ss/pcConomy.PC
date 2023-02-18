@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.town.objects.scripts;
 
-import economy.pcconomy.backend.scripts.ItemWorker;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -23,6 +23,14 @@ public class StorageWorker {
             setAmountOfResource(item, getAmountOfResource(item, Storage) - new Random().nextInt() % maxAmount,
                     Storage);
         }
+    }
+
+    public static void addResource(Material item, int amount, List<ItemStack> Storage) {
+        Storage.add(new ItemStack(item, amount));
+    }
+
+    public static void deleteResource(Material item, List<ItemStack> Storage) {
+        Storage.removeIf(itemStack -> itemStack.getType().equals(item));
     }
 
     public static void setAmountOfResource(ItemStack item, int amount, List<ItemStack> Storage) {

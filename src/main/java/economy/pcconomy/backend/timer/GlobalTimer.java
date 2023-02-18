@@ -18,6 +18,6 @@ public class GlobalTimer {
         }
 
         PcConomy.GlobalBank.TakePercentFromBorrowers();
-        PcConomy.GlobalBank.PrintMoneys(100d);
+        PcConomy.GlobalBank.PrintMoneys();
     }
 }

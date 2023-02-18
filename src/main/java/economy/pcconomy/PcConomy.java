@@ -94,6 +94,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("createLic").setExecutor(manager);
         getCommand("swnpc").setExecutor(manager);
         getCommand("tmenu").setExecutor(manager);
+        getCommand("addTrade").setExecutor(manager);
     }
 
     @EventHandler

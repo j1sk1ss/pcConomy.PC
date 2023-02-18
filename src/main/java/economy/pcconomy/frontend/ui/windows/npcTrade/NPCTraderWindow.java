@@ -16,7 +16,7 @@ public class NPCTraderWindow {
     public static Inventory GetNPCTraderWindow(Player player, NPC trader) {
         var town = PcConomy.GlobalTownWorker.
                 GetTownObject(TownyAPI.getInstance().getTown(trader.getStoredLocation()).getName());
-        var window = Bukkit.createInventory(player, 54, "Магазин " + town.TownName);
+        var window = Bukkit.createInventory(player, 54, "Магазин " + town.TownName + " " + trader.getId());
 
         if (town == null) return null;
         var townStorage = town.Storage;
@@ -24,7 +24,7 @@ public class NPCTraderWindow {
         for (ItemStack item :
              townStorage) {
             window.addItem(ItemWorker.SetLore(new ItemStack(item.getType()),
-                    ItemWorker.GetLore(item).get(0) + "\n" +  ItemWorker.GetLore(item).get(1)));
+                    String.join("\n", ItemWorker.GetLore(item))));
         }
 
         return window;

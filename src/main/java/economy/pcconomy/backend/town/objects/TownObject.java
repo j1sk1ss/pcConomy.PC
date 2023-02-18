@@ -23,16 +23,16 @@ public class TownObject {
     public boolean isNPC;
     public List<ItemStack> Storage = new ArrayList<>();
     private final double StartBudget = 10000;
-    private final int StartStorageAmount = 1650;
+    private final int StartStorageAmount = 1885;
 
     public void InitializeNPC() {
         if (isNPC) { // Хранилище НПС города
             Storage.add(new ItemStack(Material.SPRUCE_WOOD, 100));
             Storage.add(new ItemStack(Material.STONE, 250));
-            Storage.add(new ItemStack(Material.GLASS, 50));
+            Storage.add(new ItemStack(Material.GLASS, 170));
             Storage.add(new ItemStack(Material.CARROT, 500));
             Storage.add(new ItemStack(Material.BEEF, 200));
-            Storage.add(new ItemStack(Material.IRON_INGOT, 50));
+            Storage.add(new ItemStack(Material.IRON_INGOT, 165));
             Storage.add(new ItemStack(Material.COBBLESTONE, 500));
 
             setBudget(StartBudget);
@@ -43,22 +43,29 @@ public class TownObject {
     public void LifeCycle() {
         if (!isNPC) return;
 
-        if (getLocalInflation() < 1) GetMoneyFromBank(1000); // Печать денег при дефляции
+        if (getLocalInflation() < .5) GetMoneyFromBank(1000); // Взятие кредита при дефляции
         StorageWorker.CreateResources(100, Storage); // Создание ресурсов с потолком 100 штук
         StorageWorker.UseResources(10, Storage); // Потребление ресурсов
         GenerateLocalPrices(); // Генерация цен для товаров
     }
 
     public void GenerateLocalPrices() { // Только для НПС города
-        for (ItemStack itemStack : Storage) {
+        var budget = getBudget();
 
-            ItemWorker.SetLore(itemStack, "Цена за 1 шт. (Покупка X8):\n" +
-                    (Math.round((getBudget() / itemStack.getAmount()) * 100d) / 100d) + CashWorker.currencySigh);
+        for (ItemStack itemStack : Storage) {
+            var amount = itemStack.getAmount() + 1;
+            var price = Math.abs(budget / amount);
+
+            ItemWorker.SetLore(itemStack,
+                    "Цена за 1 шт. (Покупка X8):\n" +
+                    Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 100d + CashWorker.currencySigh +
+                            "\nБез НДС в " + PcConomy.GlobalBank.VAT * 100 + "%:\n" +
+                            Math.round(price * 100d) / 1000d + CashWorker.currencySigh);
         }
     }
 
     public double getLocalInflation() {
-        return ((double)StorageWorker.getAmountOfStorage(Storage) / StartStorageAmount) - (getBudget() / StartBudget);
+        return (getBudget() / StartBudget) - ((double)StorageWorker.getAmountOfStorage(Storage) / StartStorageAmount);
     }
 
     public void GetMoneyFromBank(double amount) {

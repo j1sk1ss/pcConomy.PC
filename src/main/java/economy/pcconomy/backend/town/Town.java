@@ -1,5 +1,7 @@
 package economy.pcconomy.backend.town;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
@@ -10,6 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Town {
+
+    public static final double usefulStorage = .3d;
+
     public static void BuyResourceFromStorage(TownObject townObject, ItemStack itemStack, Player buyer) {
         // Покупка в НПС городе за наличку
         var itemAmount = 8;
@@ -18,18 +23,24 @@ public class Town {
 
         if (townObject == null) return;
         if (!townObject.isNPC) return;
-        if (StorageWorker.getAmountOfResource(itemStack, townObject.Storage) * 2 < itemAmount) return;
+        if (StorageWorker.getAmountOfResource(itemStack, townObject.Storage) * usefulStorage < itemAmount) return;
 
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(buyer) < price) return;
 
         cash.TakeCashFromInventory(price, buyer);
-        townObject.setBudget(townObject.getBudget() + price);
+        townObject.setBudget(townObject.getBudget() + price / PcConomy.GlobalBank.VAT);
+        PcConomy.GlobalBank.BankBudget += (price / (PcConomy.GlobalBank.VAT + 1) * PcConomy.GlobalBank.VAT);
 
         ItemWorker.giveItems(new ItemStack(itemStack.getType(), itemAmount), buyer);
         StorageWorker.setAmountOfResource(itemStack, StorageWorker.getAmountOfResource(itemStack,
                 townObject.Storage) - itemAmount, townObject.Storage);
+
+        PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance()
+                .getTownName(buyer.getLocation())).GenerateLocalPrices();
     }
+
+    public static final double usefulBudget = .35d;
 
     public static void SellResourceToStorage(TownObject townObject, ItemStack itemStack, Player seller) {
         // Продажа в НПС городе за наличку
@@ -44,13 +55,14 @@ public class Town {
                 .get(1).replace(CashWorker.currencySigh, "")) * itemAmount;
         var cash = new Cash();
 
-        if (price > townObject.getBudget()) return;
+        if (price > townObject.getBudget() * usefulBudget) return;
 
         seller.getInventory().setItemInMainHand(null);
         StorageWorker.setAmountOfResource(itemStack, StorageWorker.getAmountOfResource(itemStack,
                 townObject.Storage) + itemAmount, townObject.Storage);
 
-        cash.GiveCashToPlayer(price, seller);
+        cash.GiveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);
+        PcConomy.GlobalBank.BankBudget += (price / (PcConomy.GlobalBank.VAT + 1) * PcConomy.GlobalBank.VAT);
         townObject.setBudget(townObject.getBudget() - price);
     }
 }

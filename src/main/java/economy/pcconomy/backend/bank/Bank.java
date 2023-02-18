@@ -25,6 +25,7 @@ public class Bank {
     }
     public double BankBudget = 15000.0d;
     public double UsefulBudgetPercent = .25d;
+    public double VAT = .1d;
     public List<LoanObject> Credit;
 
     public void PlayerWithdrawCash(double amount, Player player) {
@@ -113,9 +114,16 @@ public class Bank {
         Credit.remove(GetLoan(player));
     }
 
-    public void PrintMoneys(double amount) {
+    double previousBudget = BankBudget;
+
+    public void PrintMoneys() {
         // Создание денег банком
-        BankBudget += amount;
+        var changePercent = (BankBudget - previousBudget) / previousBudget;
+        if (changePercent <= 0) {
+            BankBudget += BankBudget * Math.abs(changePercent);
+        }
+
+        previousBudget = BankBudget;
     }
 
     public double GetUsefulAmountOfBudget() {
