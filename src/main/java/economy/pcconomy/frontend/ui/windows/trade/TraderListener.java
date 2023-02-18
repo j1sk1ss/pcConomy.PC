@@ -28,14 +28,11 @@ public class TraderListener implements Listener {
             if (event.getInventory().getHolder() instanceof Player player1)
                 if (player1.equals(player)) {
                     var title = event.getView().getTitle();
-                    if (title.contains("Магазин")) return;
-                    if (title.contains("Меню")) return;
+                    var trader = GetTraderFromTitle(title);
+                    if (trader == null) return;
 
-                    var trader = GetTraderFromTitle(event.getView().getTitle());
                     var choseItem = event.getCurrentItem();
                     var inventory = event.getInventory();
-
-                    if (trader == null) return;
 
                     event.setCancelled(true);
 
@@ -64,10 +61,13 @@ public class TraderListener implements Listener {
                     if (title.contains("Торговец-Аренда")) {
                         if (ItemWorker.GetName(choseItem).equals("Арендовать")) {
                             var cash = new Cash();
-                            if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
-                                if (!PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
-                                        .GetLicense(player, LicenseType.Trade))) {
+                            var playerTradeLicense =
+                                    PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade);
+
+                            if (playerTradeLicense != null) {
+                                if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
                                     if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
+
                                     cash.TakeCashFromInventory(trader.Cost, player);
                                     PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)
                                             .setBudget(PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)
@@ -76,6 +76,7 @@ public class TraderListener implements Listener {
                                     trader.Owner    = player.getUniqueId();
                                     trader.isRanted = true;
                                     trader.Term     = LocalDateTime.now().plusDays(1).toString();
+
                                     player.closeInventory();
                                 }
                             }
@@ -93,11 +94,15 @@ public class TraderListener implements Listener {
                         }
 
                         if (ItemWorker.GetName(choseItem).equals("Занять")) {
-                            if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade) != null) {
-                                if (!PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
-                                        .GetLicense(player, LicenseType.Trade))) {
-                                    trader.Owner = player.getUniqueId();
+                            var playerTradeLicense =
+                                    PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade);
+
+                            if (playerTradeLicense != null) {
+                                if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
+                                    trader.Owner    = player.getUniqueId();
                                     trader.isRanted = true;
+                                    trader.Term     = LocalDateTime.now().plusDays(1).toString();
+
                                     player.closeInventory();
                                 }
                             }
@@ -121,9 +126,9 @@ public class TraderListener implements Listener {
                         if (ItemWorker.GetName(choseItem).equals("КУПИТЬ")) {
                             var cash = new Cash();
                             var buyingItem = inventory.getItem(4);
+                            var price = Double.parseDouble(ItemWorker.GetLore(buyingItem)
+                                    .get(0).replace(CashWorker.currencySigh, ""));
 
-                            var price = Double.parseDouble(ItemWorker.
-                                    GetLore(buyingItem).get(0).replace(CashWorker.currencySigh, ""));
                             if (cash.AmountOfCashInInventory(player) >= price || trader.Owner.equals(player)) {
                                 if (trader.Storage.contains(buyingItem)) {
                                     trader.Storage.remove(buyingItem);
@@ -132,11 +137,10 @@ public class TraderListener implements Listener {
                                     if (!trader.Owner.equals(player)) {
                                         cash.TakeCashFromInventory(price, player);
 
-
                                         var endPrice = price / (1 + trader.Margin);
-
                                         PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown).setBudget((
-                                                PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)).getBudget() + (price - endPrice));
+                                                PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown))
+                                                .getBudget() + (price - endPrice));
                                         trader.Revenue += endPrice;
                                     }
                                 }
@@ -151,9 +155,13 @@ public class TraderListener implements Listener {
     }
 
     private Trader GetTraderFromTitle(String name) {
-        if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
-        var id = Integer.parseInt(name.split(" ")[1]);
+        try {
+            if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
 
-        return PcConomy.GlobalNPC.GetNPC(id).getTrait(Trader.class);
+            var id = Integer.parseInt(name.split(" ")[1]);
+            return PcConomy.GlobalNPC.GetNPC(id).getTrait(Trader.class);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
     }
  }

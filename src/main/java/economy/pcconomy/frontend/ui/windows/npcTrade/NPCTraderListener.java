@@ -20,17 +20,18 @@ public class NPCTraderListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
+        var currentItem = event.getCurrentItem();
 
-        if (event.getCurrentItem() != null)
+        if (currentItem != null)
             if (event.getInventory().getHolder() instanceof Player player1)
                 if (player1.equals(player)) {
-
                     if (event.getView().getTitle().contains("Магазин")) {
                         var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
-                        if (!player.getInventory().contains(event.getCurrentItem())) {
+
+                        if (!player.getInventory().contains(currentItem)) {
                             if (event.isLeftClick()) {
                                 Town.BuyResourceFromStorage(PcConomy.GlobalTownWorker.GetTownObject(town.getName()),
-                                        event.getCurrentItem(), player);
+                                        currentItem, player);
                                 player.openInventory(Objects.requireNonNull(NPCTraderWindow.GetNPCTraderWindow(player,
                                         CitizensAPI.getNPCRegistry().getById(Integer
                                                 .parseInt(event.getView().getTitle().split(" ")[2])))));

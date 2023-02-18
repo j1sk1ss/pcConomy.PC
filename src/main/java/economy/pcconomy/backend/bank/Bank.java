@@ -11,6 +11,7 @@ import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 
+import economy.pcconomy.backend.town.objects.TownObject;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -115,15 +116,40 @@ public class Bank {
     }
 
     double previousBudget = BankBudget;
+    int recessionCount = 0;
 
-    public void PrintMoneys() {
-        // Создание денег банком
+    public void LifeCycle() {
         var changePercent = (BankBudget - previousBudget) / previousBudget;
-        if (changePercent <= 0) {
-            BankBudget += BankBudget * Math.abs(changePercent);
+        var isRecession  = (changePercent <= 0 && GetGlobalInflation() > 0) ? 1 : -1;
+
+        VAT += (VAT * Math.abs(changePercent) / 2) * isRecession;
+        UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
+        LoanWorker.trustCoefficient -= LoanWorker.trustCoefficient * Math.abs(changePercent) * isRecession;
+
+        if (isRecession > 0) recessionCount++;
+        else recessionCount = 0;
+
+        if (recessionCount >= 5) {
+            BankBudget += BankBudget * (changePercent * recessionCount);
+            recessionCount = 0;
         }
 
         previousBudget = BankBudget;
+    }
+
+    public double GetGlobalInflation() {
+        var count = 0;
+        var bigInflation = 0d;
+
+        for (TownObject town :
+                PcConomy.GlobalTownWorker.townObjects) {
+            if (!town.isNPC) continue;
+
+            count++;
+            bigInflation += town.getLocalInflation();
+        }
+
+        return bigInflation / count;
     }
 
     public double GetUsefulAmountOfBudget() {

@@ -6,7 +6,7 @@ import economy.pcconomy.backend.bank.objects.LoanObject;
 import org.bukkit.entity.Player;
 
 public class LoanWorker {
-    private final static double trustCoefficient = 1.5d;
+    public static double trustCoefficient = 1.5d;
 
     public static double getPercent(double amount, double duration) {
         // Выдать процент под параметры
@@ -20,7 +20,7 @@ public class LoanWorker {
 
     public static double getSafetyFactor(double amount, int duration, BorrowerObject borrowerObject) {
         var expired = 0;
-        if (borrowerObject == null) return ((duration / 100d)) /
+        if (borrowerObject == null) return ((duration / 160d)) /
                 (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
 
         for (LoanObject loan:
@@ -28,7 +28,7 @@ public class LoanWorker {
             expired += loan.expired;
         }
 
-        return (borrowerObject.CreditHistory.size() + (duration / 100d)) /
+        return (borrowerObject.CreditHistory.size() + (duration / 150d)) /
                 (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
     }
 

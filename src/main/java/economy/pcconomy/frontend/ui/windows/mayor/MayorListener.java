@@ -19,9 +19,7 @@ public class MayorListener implements Listener {
                 if (player1.equals(player)) {
                     if (event.getView().getTitle().contains("Меню")) {
                         if (!player.getInventory().contains(event.getCurrentItem())) {
-                            if (TownyAPI.getInstance().getTown(player.getLocation()).getMayor().getPlayer().equals(player)) {
-                                PcConomy.GlobalNPC.BuyTrader(player);
-                            }
+                            PcConomy.GlobalNPC.BuyTrader(player);
                         }
 
                         event.setCancelled(true);

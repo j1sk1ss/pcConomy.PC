@@ -2,7 +2,6 @@ package economy.pcconomy.backend.timer;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.town.objects.TownObject;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -18,6 +17,6 @@ public class GlobalTimer {
         }
 
         PcConomy.GlobalBank.TakePercentFromBorrowers();
-        PcConomy.GlobalBank.PrintMoneys();
+        PcConomy.GlobalBank.LifeCycle();
     }
 }
