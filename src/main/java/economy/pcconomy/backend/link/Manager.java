@@ -1,24 +1,23 @@
 package economy.pcconomy.backend.link;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.npc.Banker;
 import economy.pcconomy.backend.bank.npc.Loaner;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.npc.Licensor;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.backend.trade.npc.NPCTrader;
 import economy.pcconomy.frontend.ui.Window;
-import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import org.jetbrains.annotations.NotNull;
 
 public class Manager implements CommandExecutor { // Тестовый класс для отладки работы плагина. Кидайте сюда команды
     @Override
@@ -41,7 +40,8 @@ public class Manager implements CommandExecutor { // Тестовый класс
         }
 
         if (command.getName().equals("put")) {
-            PcConomy.GlobalBank.PlayerPutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender);
+            //PcConomy.GlobalBank.PlayerPutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender);
+            PcConomy.SaveData();
         }
 
         if (command.getName().equals("createB")) {

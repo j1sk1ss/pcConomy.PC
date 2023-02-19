@@ -19,20 +19,17 @@ package economy.pcconomy;
 
  */
 
-
-import economy.pcconomy.backend.bank.npc.Banker;
-import economy.pcconomy.backend.bank.npc.Loaner;
 import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
-import economy.pcconomy.backend.license.npc.Licensor;
+
 import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.link.Manager;
 import economy.pcconomy.backend.npc.NPC;
+import economy.pcconomy.backend.npc.NPCListener;
 import economy.pcconomy.backend.save.Loader;
 import economy.pcconomy.backend.town.listener.TownyListener;
 import economy.pcconomy.backend.bank.Bank;
 import economy.pcconomy.backend.town.scripts.TownWorker;
-import economy.pcconomy.backend.trade.npc.NPCTrader;
-import economy.pcconomy.backend.trade.npc.Trader;
+
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
 import economy.pcconomy.frontend.ui.windows.loan.LoanerListener;
@@ -42,24 +39,20 @@ import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
 
 import me.yic.xconomy.api.XConomyAPI;
 
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.CitizensEnableEvent;
-import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 
-public final class PcConomy extends JavaPlugin implements Listener { // Гл класс плагина. Тут обьявляйте в статике нужные API
+public final class PcConomy extends JavaPlugin { // Гл класс плагина. Тут обьявляйте в статике нужные API
     // Так же желательно тут регистрировать Listeners
     // Ну и обработчики команд с командами тоже bruh
 
     public static XConomyAPI xConomyAPI;
     public static Bank GlobalBank = new Bank();
-    public static NPC GlobalNPC = new NPC();
+    public static NPC GlobalNPC;
     public static BorrowerWorker GlobalBorrowerWorker = new BorrowerWorker();
     public static TownWorker GlobalTownWorker = new TownWorker();
     public static LicenseWorker GlobalLicenseWorker = new LicenseWorker();
@@ -76,6 +69,7 @@ public final class PcConomy extends JavaPlugin implements Listener { // Гл к�
             throw new RuntimeException(e);
         }
 
+        Bukkit.getPluginManager().registerEvents(new NPCListener(), this);
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
         Bukkit.getPluginManager().registerEvents(new MayorListener(), this);
         Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
@@ -101,19 +95,7 @@ public final class PcConomy extends JavaPlugin implements Listener { // Гл к�
         getCommand("addTrade").setExecutor(manager);
     }
 
-    @EventHandler
-    public void loadNPC(CitizensEnableEvent event) {
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("trader"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("loaner"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCTrader.class).withName("npctrader"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("banker"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("licensor"));
-        GlobalNPC.UpdateNPC();
-    }
-
-    @Override
-    public void onDisable() { // Тут будет сохранение всего и вся. Делайте не каскадом из 9999 строк, а разбейте
-        // на разные классы. Но кого я учу, верно?
+    public static void SaveData() {
         try {
             GlobalNPC.SaveNPC("NPCData");
             GlobalBank.SaveBank("BankData");
@@ -123,5 +105,11 @@ public final class PcConomy extends JavaPlugin implements Listener { // Гл к�
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void onDisable() { // Тут будет сохранение всего и вся. Делайте не каскадом из 9999 строк, а разбейте
+        // на разные классы. Но кого я учу, верно?
+
     }
 }

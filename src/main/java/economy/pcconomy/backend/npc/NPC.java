@@ -14,7 +14,6 @@ import economy.pcconomy.backend.trade.npc.Trader;
 import economy.pcconomy.backend.trade.objects.TraderObject;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.api.trait.TraitInfo;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.EntityType;
