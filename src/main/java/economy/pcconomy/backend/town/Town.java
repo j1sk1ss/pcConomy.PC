@@ -18,8 +18,7 @@ public class Town {
     public static void BuyResourceFromStorage(TownObject townObject, ItemStack itemStack, Player buyer) {
         // Покупка в НПС городе за наличку
         var itemAmount = 8;
-        var price = Double.parseDouble(ItemWorker.GetLore(itemStack).get(1)
-                .replace(CashWorker.currencySigh, "")) * itemAmount;
+        var price = ItemWorker.GetPriceFromLore(itemStack, 1) * itemAmount;
 
         if (townObject == null) return;
         if (!townObject.isNPC) return;
@@ -29,7 +28,7 @@ public class Town {
         if (cash.AmountOfCashInInventory(buyer) < price) return;
 
         cash.TakeCashFromInventory(price, buyer);
-        townObject.setBudget(townObject.getBudget() + price / PcConomy.GlobalBank.VAT);
+        townObject.changeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price / (PcConomy.GlobalBank.VAT + 1) * PcConomy.GlobalBank.VAT);
 
         ItemWorker.giveItems(new ItemStack(itemStack.getType(), itemAmount), buyer);
@@ -51,9 +50,8 @@ public class Town {
         var resource = StorageWorker.getResource(itemStack, townObject.Storage);
         if (resource == null) return;
 
-        var price = Double.parseDouble(ItemWorker.GetLore(resource)
-                .get(1).replace(CashWorker.currencySigh, "")) * itemAmount;
-        var cash = new Cash();
+        var price = ItemWorker.GetPriceFromLore(itemStack, 1) * itemAmount;
+        var cash  = new Cash();
 
         if (price > townObject.getBudget() * usefulBudget) return;
 
@@ -63,6 +61,6 @@ public class Town {
 
         cash.GiveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);
         PcConomy.GlobalBank.BankBudget += (price / (PcConomy.GlobalBank.VAT + 1) * PcConomy.GlobalBank.VAT);
-        townObject.setBudget(townObject.getBudget() - price);
+        townObject.changeBudget(-price);
     }
 }

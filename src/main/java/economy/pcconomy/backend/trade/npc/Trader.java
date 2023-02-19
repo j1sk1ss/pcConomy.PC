@@ -4,9 +4,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
-import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 
 import net.citizensnpcs.api.CitizensAPI;
@@ -46,8 +44,7 @@ public class Trader extends Trait {
             homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
 
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && isRanted) {
-            PcConomy.GlobalTownWorker.GetTownObject(homeTown)
-                    .setBudget(PcConomy.GlobalTownWorker.GetTownObject(homeTown).getBudget() + Revenue);
+            PcConomy.GlobalTownWorker.GetTownObject(homeTown).changeBudget(Revenue);
 
             isRanted = false;
             Owner    = null;
@@ -57,29 +54,34 @@ public class Trader extends Trait {
         }
 
         var player = event.getClicker();
-        if (isRanted) {
-            if (Owner.equals(player.getUniqueId())) {
-                player.openInventory(TraderWindow.GetOwnerTraderWindow(player, this));
+
+        try {
+            if (isRanted) {
+                if (Owner.equals(player.getUniqueId())) {
+                    player.openInventory(TraderWindow.GetOwnerTraderWindow(player, this));
+                } else {
+                    player.openInventory(TraderWindow.GetTraderWindow(player, this));
+                }
             } else {
-                player.openInventory(TraderWindow.GetTraderWindow(player, this));
+                if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor()
+                        .getPlayer().getUniqueId().equals(player.getUniqueId())) {
+                    player.openInventory(TraderWindow.GetMayorWindow(player, this));
+                } else {
+                    player.openInventory(TraderWindow.GetRanterWindow(player, this));
+                }
             }
-        } else {
-            if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor()
-                    .getPlayer().getUniqueId().equals(player.getUniqueId())) {
-                player.openInventory(TraderWindow.GetMayorWindow(player, this));
-            } else {
-                player.openInventory(TraderWindow.GetRanterWindow(player, this));
-            }
+        } catch (NullPointerException e) {
+            player.sendMessage("Что-то пошло не так (1).");
         }
     }
 
     private final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
-    public void CreateLot(NPCLeftClickEvent event) {
+    public void onInteraction(NPCLeftClickEvent event) {
+        if (!event.getNPC().equals(this.getNPC())) return;
         var player = event.getClicker();
 
-        if (!event.getNPC().equals(this.getNPC())) return;
         if (isRanted) {
             if (Owner.equals(player.getUniqueId())) {
                 player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");

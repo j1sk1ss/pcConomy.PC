@@ -13,7 +13,6 @@ public class LoanObject {
         Owner = player.getUniqueId();
     }
     public UUID Owner;
-
     public double amount;
     public double percentage;
     public int duration;

@@ -42,22 +42,10 @@ public class Manager implements CommandExecutor { // Тестовый класс
 
         if (command.getName().equals("put")) {
             PcConomy.GlobalBank.PlayerPutCash(((Player) sender).getInventory().getItemInMainHand(), (Player) sender);
-            /*
-            try {
-                PcConomy.GlobalNPC.SaveNPC("NPCData");
-                PcConomy.GlobalBank.SaveBank("BankData");
-                PcConomy.GlobalTownWorker.SaveTown("TownsData");
-                PcConomy.GlobalLicenseWorker.SaveLicenses("LicenseData");
-                PcConomy.GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-             */
         }
 
         if (command.getName().equals("createB")) {
             PcConomy.GlobalNPC.CreateNPC((Player) sender, new Banker());
-            //PcConomy.GlobalNPC.UpdateNPC();
         }
 
         if (command.getName().equals("createL")) {

@@ -71,11 +71,15 @@ public class TownObject {
         if (amount > PcConomy.GlobalBank.GetUsefulAmountOfBudget()) return;
 
         PcConomy.GlobalBank.BankBudget -= amount;
-        setBudget(getBudget() + amount);
+        changeBudget(amount);
     }
 
     public void setBudget(double amount) {
         getBankAccount().setBalance(amount, "Economic action");
+    }
+
+    public void changeBudget(double amount) {
+        getBankAccount().setBalance(getBudget() + amount, "Economic action");
     }
 
     public double getBudget() {
