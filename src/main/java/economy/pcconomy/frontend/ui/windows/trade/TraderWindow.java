@@ -35,9 +35,9 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 27, "Торговец-Аренда " + trader.getNPC().getId());
 
         window.setItem(0, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
-                "Арендовать на день"), trader.Cost + CashWorker.currencySigh));
+                "Арендовать на один день"), trader.Cost + CashWorker.currencySigh));
         window.setItem(1, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
-                "Процент:"), trader.Margin * 100 + "%"));
+                "НДС города: "), trader.Margin * 100 + "%"));
 
         return window;
     }
@@ -56,7 +56,8 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 9, "Торговец-Цена " + trader.getNPC().getId());
 
         for (var i = 0; i < 9; i++) {
-            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL), (i + 1) * 200 + CashWorker.currencySigh));
+            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL),
+                    (i + 1) * 200 + CashWorker.currencySigh));
         }
 
         return window;

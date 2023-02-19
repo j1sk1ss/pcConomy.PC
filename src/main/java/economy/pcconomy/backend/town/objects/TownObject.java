@@ -18,27 +18,25 @@ public class TownObject {
         this.isNPC = isNPC;
         TownName   = town.getName();
 
-        InitializeNPC();
+        if (isNPC) InitializeNPC();
     }
     public String TownName;
     public boolean isNPC;
     public List<ItemStack> Storage = new ArrayList<>();
     private final double StartBudget = 10000;
-    private final int StartStorageAmount = 1885;
+    private final int StartStorageAmount = StorageWorker.getAmountOfStorage(Storage);
 
     public void InitializeNPC() {
-        if (isNPC) { // Хранилище НПС города
-            Storage.add(new ItemStack(Material.SPRUCE_WOOD, 100));
-            Storage.add(new ItemStack(Material.STONE, 250));
-            Storage.add(new ItemStack(Material.GLASS, 170));
-            Storage.add(new ItemStack(Material.CARROT, 500));
-            Storage.add(new ItemStack(Material.BEEF, 200));
-            Storage.add(new ItemStack(Material.IRON_INGOT, 165));
-            Storage.add(new ItemStack(Material.COBBLESTONE, 500));
+        Storage.add(new ItemStack(Material.SPRUCE_WOOD, 100));
+        Storage.add(new ItemStack(Material.STONE, 250));
+        Storage.add(new ItemStack(Material.GLASS, 170));
+        Storage.add(new ItemStack(Material.CARROT, 500));
+        Storage.add(new ItemStack(Material.BEEF, 200));
+        Storage.add(new ItemStack(Material.IRON_INGOT, 165));
+        Storage.add(new ItemStack(Material.COBBLESTONE, 500));
 
-            setBudget(StartBudget);
-            LifeCycle();
-        }
+        setBudget(StartBudget);
+        LifeCycle();
     }
 
     public void LifeCycle() {
