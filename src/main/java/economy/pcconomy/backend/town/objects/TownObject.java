@@ -7,6 +7,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
+import economy.pcconomy.backend.town.scripts.TownWorker;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,9 +45,9 @@ public class TownObject {
         if (!isNPC) return;
 
         if (getLocalInflation() < .5) GetMoneyFromBank(1000); // Взятие кредита при дефляции
-        StorageWorker.CreateResources(100, Storage); // Создание ресурсов с потолком 100 штук
-        StorageWorker.UseResources(10, Storage); // Потребление ресурсов
-        GenerateLocalPrices(); // Генерация цен для товаров
+        else StorageWorker.CreateResources(500, Storage); // Создание ресурсов с потолком 100 штук
+
+        StorageWorker.UseResources(100, Storage); // Потребление ресурсов
     }
 
     public void GenerateLocalPrices() { // Только для НПС города

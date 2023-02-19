@@ -20,14 +20,11 @@ package economy.pcconomy;
  */
 
 
-import com.palmergames.bukkit.towny.TownyAPI;
-
 import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
 import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.link.Manager;
 import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.save.Loader;
-import economy.pcconomy.backend.timer.GlobalTimer;
 import economy.pcconomy.backend.town.listener.TownyListener;
 import economy.pcconomy.backend.bank.Bank;
 import economy.pcconomy.backend.town.scripts.TownWorker;
@@ -81,7 +78,6 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
-        new GlobalTimer(this);
 
         getCommand("create").setExecutor(manager);
         getCommand("createB").setExecutor(manager);

@@ -134,6 +134,7 @@ public class Bank {
             recessionCount = 0;
         }
 
+        TakePercentFromBorrowers();
         previousBudget = BankBudget;
     }
 
