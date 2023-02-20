@@ -40,6 +40,7 @@ public class NPC {
              CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
                 case "npcloaner" -> npc.addTrait(NPCLoaner.class);
+                case "loaner" -> npc.addTrait(Loaner.class);
                 case "banker" -> npc.addTrait(Banker.class);
                 case "licensor" -> npc.addTrait(Licensor.class);
                 case "npctrader" -> npc.addTrait(NPCTrader.class);

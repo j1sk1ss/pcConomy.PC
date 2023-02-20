@@ -20,7 +20,7 @@ public class LoanWorker {
 
     public static double getSafetyFactor(double amount, int duration, BorrowerObject borrowerObject) {
         var expired = 0;
-        if (borrowerObject == null) return ((duration / 160d)) /
+        if (borrowerObject == null) return ((duration / 100d)) /
                 (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
 
         for (LoanObject loan:
@@ -28,7 +28,7 @@ public class LoanWorker {
             expired += loan.expired;
         }
 
-        return (borrowerObject.CreditHistory.size() + (duration / 150d)) /
+        return (borrowerObject.CreditHistory.size() + (duration / 100d)) /
                 (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
     }
 

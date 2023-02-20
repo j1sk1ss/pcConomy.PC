@@ -25,15 +25,13 @@ public class LoanListener implements Listener {
         if (item != null) {
             if (activeInventory.getHolder() instanceof Player player1)
                 if (player1.equals(player)) {
-                    var town = TownyAPI.getInstance().getTown(player.getLocation());
-                    var townObject = PcConomy.GlobalTownWorker.GetTownObject(town.getName());
-                    boolean canReadHistory =
-                            !PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
-                                    .GetLicense(town.getMayor().getPlayer(), LicenseType.LoanHistory));
-                    var buttonPosition = event.getSlot();
-                    event.setCancelled(true);
-
                     if (event.getView().getTitle().contains("Кредит-Город")) {
+
+                        var town = TownyAPI.getInstance().getTown(player.getLocation());
+                        var townObject = PcConomy.GlobalTownWorker.GetTownObject(town.getName());
+                        var buttonPosition = event.getSlot();
+                        event.setCancelled(true);
+
                         if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
                             var balanceWorker = new BalanceWorker();
                             var loanAmount = townObject.GetLoan(player.getUniqueId()).amount;
@@ -43,7 +41,7 @@ public class LoanListener implements Listener {
                                 townObject.changeBudget(loanAmount);
                                 townObject.DestroyLoan(player.getUniqueId());
 
-                                player.openInventory(LoanWindow.GetLoanWindow(player, canReadHistory));
+                                player.openInventory(LoanWindow.GetLoanWindow(player, false));
                             }
                             return;
                         }
@@ -61,7 +59,7 @@ public class LoanListener implements Listener {
                             }
                         } else {
                             activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                            player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, canReadHistory));
+                            player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, false));
                         }
                     }
                 }

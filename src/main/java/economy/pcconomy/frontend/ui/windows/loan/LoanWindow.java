@@ -6,6 +6,7 @@ import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.town.scripts.TownWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LoanWindow {
-
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
  // Много хардкодинга, кто нибудь почистите потом
@@ -25,15 +25,9 @@ public class LoanWindow {
 
         for (var i = 0; i < countOfAmountSteps; i++) {
             if (isNPC) window.setItem(i, GetAmountButton(i, 18, player));
-            else {
-                var town = TownyAPI.getInstance().getTown(player.getLocation());
-                boolean canReadHistory =
-                        !PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
-                                .GetLicense(town.getMayor().getPlayer(), LicenseType.LoanHistory));
-
+            else
                 window.setItem(i, GetAmountButton(i, 18,
-                        TownyAPI.getInstance().getTown(player.getLocation()).getName(), player, canReadHistory));
-            }
+                        TownyAPI.getInstance().getTown(player.getLocation()).getName(), player, canReadHistory(player)));
 
             if (i == 0) {
                 window.setItem(i + 18, ItemWorker.SetName(new ItemStack(Material.PURPLE_WOOL),
@@ -44,38 +38,48 @@ public class LoanWindow {
                     durationSteps.get(i) + "дней"));
         }
 
-        if (PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
-            window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
-                    "Выплатить кредит"), PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
-        }
-
-        return window;
+        return CreditDestroyButton(window, isNPC, player);
     }
 
     public static Inventory GetLoanWindow(Inventory window, Player player, int option, boolean isNPC) {
         for (var i = 0; i < countOfAmountSteps; i++) {
-            if (isNPC) window.setItem(i, GetAmountButton(i, 18, player));
-            else {
-                var town = TownyAPI.getInstance().getTown(player.getLocation());
-                boolean canReadHistory =
-                        !PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
-                                .GetLicense(town.getMayor().getPlayer(), LicenseType.LoanHistory));
-
-                window.setItem(i, GetAmountButton(i, 18,
-                    TownyAPI.getInstance().getTown(player.getLocation()).getName(), player, canReadHistory));
-            }
+            if (isNPC) window.setItem(i, GetAmountButton(i, option, player));
+            else
+                window.setItem(i, GetAmountButton(i, option,
+                    TownyAPI.getInstance().getTown(player.getLocation()).getName(), player, canReadHistory(player)));
 
             if (i == option - 18) continue;
             window.setItem(i + 18, ItemWorker.SetName(new ItemStack(Material.GREEN_STAINED_GLASS),
                     durationSteps.get(i) + "дней"));
         }
 
-        if (PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
-            window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
-                    "Выплатить кредит"), PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
-        }
+        return CreditDestroyButton(window, isNPC, player);
+    }
 
+    private static Inventory CreditDestroyButton(Inventory window, boolean isNPC, Player player) {
+        if (isNPC) {
+            if (PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
+                window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
+                        "Выплатить кредит"), PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
+            }
+        } else {
+            var townObject = PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance().getTownName(player.getLocation()));
+            if (townObject.GetLoan(player.getUniqueId()) != null) {
+                window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
+                        "Выплатить кредит"), townObject.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
+            }
+        }
         return window;
+    }
+
+    private static boolean canReadHistory(Player player) {
+        var town = TownyAPI.getInstance().getTown(player.getLocation());
+        var licenseHistory = PcConomy.GlobalLicenseWorker
+                .GetLicense(town.getMayor().getPlayer(), LicenseType.LoanHistory);
+        if (licenseHistory == null) return false;
+
+        return !PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
+                        .GetLicense(town.getMayor().getPlayer(), LicenseType.LoanHistory));
     }
 
     public static ItemStack GetAmountButton(int i, int option, Player player) {
@@ -101,11 +105,12 @@ public class LoanWindow {
 
         ItemStack tempItem = ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL, 1),
                 Math.round(maxLoanSize / (i + 1) * 100) / 100 + CashWorker.currencySigh), "Банк не одобрит данный займ.");
-        if ((isSafe || !canReadHistory) && !PcConomy.GlobalBank.Credit.contains(player.getUniqueId())) {
+
+        if (((isSafe || !canReadHistory) && !PcConomy.GlobalBank.Credit.contains(player.getUniqueId()) && maxLoanSize > 0))
             tempItem = ItemWorker.SetMaterial(ItemWorker.SetLore(tempItem, "Банк одобрит данный займ.\nПроцент: " +
                     (Math.round(LoanWorker.getPercent(maxLoanSize / (i + 1),
                             durationSteps.get(option - 18)) * 100) * 100d) / 100d + "%"),  Material.GREEN_WOOL);
-        }
+
         return tempItem;
     }
 

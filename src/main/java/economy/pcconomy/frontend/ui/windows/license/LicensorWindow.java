@@ -19,9 +19,9 @@ public class LicensorWindow {
         window.setItem(1, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.RED_WOOL),
                 License.tradeLicensePrice + CashWorker.currencySigh), "Лицензия на торговую деятельность"));
         window.setItem(2, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.RED_WOOL),
-                License.tradeLicensePrice + CashWorker.currencySigh), "Лицензия на кредитную деятельность"));
+                License.loanLicensePrice + CashWorker.currencySigh), "Лицензия на кредитную деятельность"));
         window.setItem(3, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.RED_WOOL),
-                License.tradeLicensePrice + CashWorker.currencySigh), "Лицензия на доступ к кредитной истории"));
+                License.loanHistoryLicensePrice + CashWorker.currencySigh), "Лицензия на доступ к кредитной истории"));
 
         return window;
     }
