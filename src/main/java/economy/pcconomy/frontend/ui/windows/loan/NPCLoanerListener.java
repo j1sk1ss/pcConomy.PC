@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class LoanerListener implements Listener {
+public class NPCLoanerListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
@@ -35,7 +35,7 @@ public class LoanerListener implements Listener {
                             PcConomy.GlobalBank.BankBudget += loanAmount;
                             PcConomy.GlobalBank.DestroyLoan(player.getUniqueId());
 
-                            player.openInventory(LoanWindow.GetLoanWindow(player));
+                            player.openInventory(LoanWindow.GetNPCLoanWindow(player, true));
                         }
                         return;
                     }
@@ -53,7 +53,7 @@ public class LoanerListener implements Listener {
                         }
                     } else {
                         activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                        player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition));
+                        player.openInventory(LoanWindow.GetNPCLoanWindow(activeInventory, player, buttonPosition, true));
                     }
                 }
         }

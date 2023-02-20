@@ -4,7 +4,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.npc.Banker;
-import economy.pcconomy.backend.bank.npc.Loaner;
+import economy.pcconomy.backend.bank.npc.NPCLoaner;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.npc.Licensor;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
@@ -49,7 +49,7 @@ public class Manager implements CommandExecutor { // Тестовый класс
         }
 
         if (command.getName().equals("createL")) {
-            PcConomy.GlobalNPC.CreateNPC((Player) sender, new Loaner());
+            PcConomy.GlobalNPC.CreateNPC((Player) sender, new NPCLoaner());
         }
 
         if (command.getName().equals("createt")) {

@@ -32,7 +32,7 @@ import economy.pcconomy.backend.town.scripts.TownWorker;
 
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
-import economy.pcconomy.frontend.ui.windows.loan.LoanerListener;
+import economy.pcconomy.frontend.ui.windows.loan.NPCLoanerListener;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
 import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
@@ -73,7 +73,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
         Bukkit.getPluginManager().registerEvents(new MayorListener(), this);
         Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
-        Bukkit.getPluginManager().registerEvents(new LoanerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new NPCLoanerListener(), this);
         Bukkit.getPluginManager().registerEvents(new TraderListener(), this);
         Bukkit.getPluginManager().registerEvents(new LicensorListener(), this);
         Bukkit.getPluginManager().registerEvents(new NPCTraderListener(), this);

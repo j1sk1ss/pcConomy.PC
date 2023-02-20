@@ -1,9 +1,11 @@
 package economy.pcconomy.frontend.ui.windows.loan;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.town.scripts.TownWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,11 +20,13 @@ public class LoanWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
-    public static Inventory GetLoanWindow(Player player) {
-        var window = Bukkit.createInventory(player, 27, "Кредит");
+    public static Inventory GetNPCLoanWindow(Player player, boolean canReadHistory) {
+        var window = Bukkit.createInventory(player, 27, canReadHistory ? "Кредит" : "Кредит-Город");
 
         for (var i = 0; i < countOfAmountSteps; i++) {
-            window.setItem(i, GetAmountButton(i, 18, player));
+            if (canReadHistory) window.setItem(i, GetAmountButton(i, 18, player));
+            else window.setItem(i, GetAmountButton(i, 18,
+                    TownyAPI.getInstance().getTown(player.getLocation()).getName()));
 
             if (i == 0) {
                 window.setItem(i + 18, ItemWorker.SetName(new ItemStack(Material.PURPLE_WOOL),
@@ -41,9 +45,11 @@ public class LoanWindow {
         return window;
     }
 
-    public static Inventory GetLoanWindow(Inventory window, Player player, int option) {
+    public static Inventory GetNPCLoanWindow(Inventory window, Player player, int option, boolean canReadHistory) {
         for (var i = 0; i < countOfAmountSteps; i++) {
-            window.setItem(i, GetAmountButton(i, option, player));
+            if (canReadHistory) window.setItem(i, GetAmountButton(i, 18, player));
+            else window.setItem(i, GetAmountButton(i, 18,
+                    TownyAPI.getInstance().getTown(player.getLocation()).getName()));
 
             if (i == option - 18) continue;
             window.setItem(i + 18, ItemWorker.SetName(new ItemStack(Material.GREEN_STAINED_GLASS),
@@ -58,7 +64,7 @@ public class LoanWindow {
         return window;
     }
 
-    private static ItemStack GetAmountButton(int i, int option, Player player) {
+    public static ItemStack GetAmountButton(int i, int option, Player player) {
         var maxLoanSize = PcConomy.GlobalBank.GetUsefulAmountOfBudget() * 2;
         boolean isSafe = LoanWorker.isSafeLoan(maxLoanSize / (i + 1), durationSteps.get(option - 18), player);
 
@@ -70,6 +76,19 @@ public class LoanWindow {
                     (Math.round(LoanWorker.getPercent(maxLoanSize / (i + 1),
                             durationSteps.get(option - 18)) * 100) * 100d) / 100d + "%"),  Material.GREEN_WOOL);
         }
+
+        return tempItem;
+    }
+
+    public static ItemStack GetAmountButton(int i, int option, String townName) {
+        var townObject = PcConomy.GlobalTownWorker.GetTownObject(townName);
+        var maxLoanSize = townObject.getBudget() * .2d;
+
+        ItemStack tempItem = ItemWorker.SetName(new ItemStack(Material.RED_WOOL, 1),
+                Math.round(maxLoanSize / (i + 1) * 100) / 100 + CashWorker.currencySigh);
+        tempItem = ItemWorker.SetMaterial(ItemWorker.SetLore(tempItem, "Банк одобрит данный займ.\nПроцент: " +
+                (Math.round(LoanWorker.getPercent(maxLoanSize / (i + 1),
+                        durationSteps.get(option - 18)) * 100) * 100d) / 100d + "%"),  Material.GREEN_WOOL);
 
         return tempItem;
     }

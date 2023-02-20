@@ -12,7 +12,7 @@ public class Window {
     }
 
     public static void OpenLoanWindow(Player player) {
-        player.openInventory(LoanWindow.GetLoanWindow(player));
+        player.openInventory(LoanWindow.GetNPCLoanWindow(player, true));
     }
 
     public static void OpenLicenseWindow(Player player) {player.openInventory(LicensorWindow.GetLicensorWindow(player));}

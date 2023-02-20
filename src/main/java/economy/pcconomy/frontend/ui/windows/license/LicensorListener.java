@@ -18,9 +18,13 @@ public class LicensorListener implements Listener {
                 if (event.getView().getTitle().equals("Лицензии") && player1.equals(player)) {
                     switch (ItemWorker.GetName(event.getCurrentItem())) {
                         case "Лицензия на создание т. зоны" ->
-                                License.GetMarketLicense(((Player) event.getWhoClicked()).getPlayer());
+                                License.GetMarketLicense(player);
                         case "Лицензия на торговую деятельность" ->
-                                License.GetTradeLicense(((Player) event.getWhoClicked()).getPlayer());
+                                License.GetTradeLicense(player);
+                        case "Лицензия на кредитную деятельность" ->
+                                License.GetLoanLicense(player);
+                        case "Лицензия на доступ к кредитной истории" ->
+                                License.GetLoanHistoryLicense(player);
                     }
 
                     event.setCancelled(true);

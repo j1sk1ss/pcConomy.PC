@@ -21,6 +21,8 @@ public class MayorWindow {
 
         window.setItem(0, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
                 NPC.traderCost + CashWorker.currencySigh), "Установить торговца"));
+        window.setItem(1, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
+                NPC.traderCost + CashWorker.currencySigh), "Установить кредитора"));
 
         return window;
     }

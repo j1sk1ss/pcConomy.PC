@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.npc.Banker;
 import economy.pcconomy.backend.bank.npc.Loaner;
+import economy.pcconomy.backend.bank.npc.NPCLoaner;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.npc.Licensor;
 import economy.pcconomy.backend.license.objects.LicenseType;
@@ -38,7 +39,7 @@ public class NPC {
         for (net.citizensnpcs.api.npc.NPC npc:
              CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
-                case "loaner" -> npc.addTrait(Loaner.class);
+                case "npcloaner" -> npc.addTrait(NPCLoaner.class);
                 case "banker" -> npc.addTrait(Banker.class);
                 case "licensor" -> npc.addTrait(Licensor.class);
                 case "npctrader" -> npc.addTrait(NPCTrader.class);
@@ -64,6 +65,24 @@ public class NPC {
         var trader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
         trader.spawn(creator.getLocation());
         trader.addTrait(Trader.class);
+    }
+
+    public static double loanerCost = 4500d;
+
+    public void BuyLoaner(Player creator) {
+        var cash = new Cash();
+        if (cash.AmountOfCashInInventory(creator) < loanerCost) return;
+
+        var loanerLicense = PcConomy.GlobalLicenseWorker.GetLicense(creator, LicenseType.Loan);
+        if (loanerLicense == null) return;
+        if (PcConomy.GlobalLicenseWorker.isOverdue(loanerLicense)) return;
+
+        cash.TakeCashFromInventory(loanerCost, creator);
+        PcConomy.GlobalBank.BankBudget += loanerCost;
+
+        var trader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Loaner");
+        trader.spawn(creator.getLocation());
+        trader.addTrait(Loaner.class);
     }
 
     public net.citizensnpcs.api.npc.NPC GetNPC(int id) {
