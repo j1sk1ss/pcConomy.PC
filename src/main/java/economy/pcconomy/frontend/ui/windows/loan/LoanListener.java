@@ -15,7 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class LoanListener implements Listener {
-
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         // Клик по кредиту
@@ -26,7 +25,6 @@ public class LoanListener implements Listener {
         if (item != null) {
             if (activeInventory.getHolder() instanceof Player player1)
                 if (player1.equals(player)) {
-                    var title = event.getView().getTitle();
                     var town = TownyAPI.getInstance().getTown(player.getLocation());
                     var townObject = PcConomy.GlobalTownWorker.GetTownObject(town.getName());
                     boolean canReadHistory =
@@ -35,7 +33,7 @@ public class LoanListener implements Listener {
                     var buttonPosition = event.getSlot();
                     event.setCancelled(true);
 
-                    if (title.contains("Кредит-Город")) {
+                    if (event.getView().getTitle().contains("Кредит-Город")) {
                         if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
                             var balanceWorker = new BalanceWorker();
                             var loanAmount = townObject.GetLoan(player.getUniqueId()).amount;
@@ -45,7 +43,7 @@ public class LoanListener implements Listener {
                                 townObject.changeBudget(loanAmount);
                                 townObject.DestroyLoan(player.getUniqueId());
 
-                                player.openInventory(LoanWindow.GetNPCLoanWindow(player, canReadHistory));
+                                player.openInventory(LoanWindow.GetLoanWindow(player, canReadHistory));
                             }
                             return;
                         }
@@ -63,7 +61,7 @@ public class LoanListener implements Listener {
                             }
                         } else {
                             activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                            player.openInventory(LoanWindow.GetNPCLoanWindow(activeInventory, player, buttonPosition, canReadHistory));
+                            player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, canReadHistory));
                         }
                     }
                 }

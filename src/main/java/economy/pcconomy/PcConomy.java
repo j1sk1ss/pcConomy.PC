@@ -8,11 +8,13 @@ package economy.pcconomy;
  - Обьект города. См. папку "town"
  - Торговля меж игроками. Создание торговцев, настройка
  - Лицензии на торговлю со стороны мэра и со стороны игрока
- - НПС торговцы
+ - НПС торговцы игроковских городов
   - Аренда на один день
+ - Кредиторы игроковских городов
  - Сохранение данных
   - Города
   - Банк
+   - Кредиты
   - НПС
 
  Чего нету:
@@ -32,6 +34,7 @@ import economy.pcconomy.backend.town.scripts.TownWorker;
 
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
+import economy.pcconomy.frontend.ui.windows.loan.LoanListener;
 import economy.pcconomy.frontend.ui.windows.loan.NPCLoanerListener;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
@@ -51,32 +54,39 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     // Ну и обработчики команд с командами тоже bruh
 
     public static XConomyAPI xConomyAPI;
-    public static Bank GlobalBank = new Bank();
     public static NPC GlobalNPC;
+
+    public static Bank GlobalBank                     = new Bank();
     public static BorrowerWorker GlobalBorrowerWorker = new BorrowerWorker();
-    public static TownWorker GlobalTownWorker = new TownWorker();
-    public static LicenseWorker GlobalLicenseWorker = new LicenseWorker();
+    public static TownWorker GlobalTownWorker         = new TownWorker();
+    public static LicenseWorker GlobalLicenseWorker   = new LicenseWorker();
 
     @Override
     public void onEnable() {
         try {
-            if (new File("NPCData.txt").exists()) GlobalNPC = Loader.LoadNPC("NPCData");
-            if (new File("BankData.txt").exists()) GlobalBank = Loader.LoadBank("BankData");
-            if (new File("TownsData.txt").exists()) GlobalTownWorker = Loader.LoadTowns("TownsData");
-            if (new File("LicenseData.txt").exists()) GlobalLicenseWorker = Loader.LoadLicenses("LicenseData");
-            if (new File("BorrowersData.txt").exists()) GlobalBorrowerWorker = Loader.LoadBorrowers("BorrowersData");
+            if (new File("PcConomyData/NPCData.txt").exists())
+                GlobalNPC = Loader.LoadNPC("NPCData");
+            if (new File("PcConomyData/BankData.txt").exists())
+                GlobalBank = Loader.LoadBank("BankData");
+            if (new File("PcConomyData/TownsData.txt").exists())
+                GlobalTownWorker = Loader.LoadTowns("TownsData");
+            if (new File("PcConomyData/LicenseData.txt").exists())
+                GlobalLicenseWorker = Loader.LoadLicenses("LicenseData");
+            if (new File("PcConomyData/BorrowersData.txt").exists())
+                GlobalBorrowerWorker = Loader.LoadBorrowers("BorrowersData");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         Bukkit.getPluginManager().registerEvents(new NPCListener(), this);
+        Bukkit.getPluginManager().registerEvents(new LoanListener(), this);
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
         Bukkit.getPluginManager().registerEvents(new MayorListener(), this);
         Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
-        Bukkit.getPluginManager().registerEvents(new NPCLoanerListener(), this);
         Bukkit.getPluginManager().registerEvents(new TraderListener(), this);
         Bukkit.getPluginManager().registerEvents(new LicensorListener(), this);
         Bukkit.getPluginManager().registerEvents(new NPCTraderListener(), this);
+        Bukkit.getPluginManager().registerEvents(new NPCLoanerListener(), this);
 
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
@@ -97,11 +107,11 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
     public static void SaveData() {
         try {
-            GlobalNPC.SaveNPC("NPCData");
-            GlobalBank.SaveBank("BankData");
-            GlobalTownWorker.SaveTown("TownsData");
-            GlobalLicenseWorker.SaveLicenses("LicenseData");
-            GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
+            GlobalNPC.SaveNPC("PcConomyData/NPCData");
+            GlobalBank.SaveBank("PcConomyData/BankData");
+            GlobalTownWorker.SaveTown("PcConomyData/TownsData");
+            GlobalLicenseWorker.SaveLicenses("PcConomyData/LicenseData");
+            GlobalBorrowerWorker.SaveBorrowers("PcConomyData/BorrowersData");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -110,6 +120,6 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     @Override
     public void onDisable() { // Тут будет сохранение всего и вся. Делайте не каскадом из 9999 строк, а разбейте
         // на разные классы. Но кого я учу, верно?
-
+        SaveData();
     }
 }

@@ -18,6 +18,6 @@ public class NPCLoaner extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         var player = event.getClicker();
 
-        Window.OpenLoanWindow(player);
+        Window.OpenLoanWindow(player, true);
     }
 }

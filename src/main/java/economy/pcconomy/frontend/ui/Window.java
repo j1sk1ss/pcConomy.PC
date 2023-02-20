@@ -11,8 +11,8 @@ public class Window {
         player.openInventory(BankerWindow.GetBankerWindow(player));
     }
 
-    public static void OpenLoanWindow(Player player) {
-        player.openInventory(LoanWindow.GetNPCLoanWindow(player, true));
+    public static void OpenLoanWindow(Player player, boolean canReadHistory) {
+        player.openInventory(LoanWindow.GetLoanWindow(player, canReadHistory));
     }
 
     public static void OpenLicenseWindow(Player player) {player.openInventory(LicensorWindow.GetLicensorWindow(player));}

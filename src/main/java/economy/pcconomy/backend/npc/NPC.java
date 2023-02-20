@@ -80,9 +80,9 @@ public class NPC {
         cash.TakeCashFromInventory(loanerCost, creator);
         PcConomy.GlobalBank.BankBudget += loanerCost;
 
-        var trader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Loaner");
-        trader.spawn(creator.getLocation());
-        trader.addTrait(Loaner.class);
+        var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Loaner");
+        loaner.spawn(creator.getLocation());
+        loaner.addTrait(Loaner.class);
     }
 
     public net.citizensnpcs.api.npc.NPC GetNPC(int id) {
@@ -102,15 +102,16 @@ public class NPC {
         for (int id:
                 Traders.keySet()) {
             var trait = new Trader();
+            var saveTrait = Traders.get(id);
 
-            trait.Owner    = Traders.get(id).Owner;
-            trait.Storage  = Traders.get(id).Storage;
-            trait.Revenue  = Traders.get(id).Revenue;
-            trait.Cost     = Traders.get(id).Cost;
-            trait.Margin   = Traders.get(id).Margin;
-            trait.homeTown = Traders.get(id).homeTown;
-            trait.isRanted = Traders.get(id).isRanted;
-            trait.Term     = Traders.get(id).Term;
+            trait.Owner    = saveTrait.Owner;
+            trait.Storage  = saveTrait.Storage;
+            trait.Revenue  = saveTrait.Revenue;
+            trait.Cost     = saveTrait.Cost;
+            trait.Margin   = saveTrait.Margin;
+            trait.homeTown = saveTrait.homeTown;
+            trait.isRanted = saveTrait.isRanted;
+            trait.Term     = saveTrait.Term;
 
             CitizensAPI.getNPCRegistry().getById(id).addTrait(trait);
         }

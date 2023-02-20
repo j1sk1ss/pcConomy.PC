@@ -35,7 +35,7 @@ public class NPCLoanerListener implements Listener {
                             PcConomy.GlobalBank.BankBudget += loanAmount;
                             PcConomy.GlobalBank.DestroyLoan(player.getUniqueId());
 
-                            player.openInventory(LoanWindow.GetNPCLoanWindow(player, true));
+                            player.openInventory(LoanWindow.GetLoanWindow(player, true));
                         }
                         return;
                     }
@@ -53,7 +53,7 @@ public class NPCLoanerListener implements Listener {
                         }
                     } else {
                         activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                        player.openInventory(LoanWindow.GetNPCLoanWindow(activeInventory, player, buttonPosition, true));
+                        player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, true));
                     }
                 }
         }
