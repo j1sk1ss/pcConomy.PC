@@ -3,6 +3,7 @@ package economy.pcconomy.frontend.ui.windows.bank;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.frontend.ui.Window;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,18 +14,14 @@ public class BankerListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
 
-        if (event.getCurrentItem() != null) {
-            if (event.getInventory().getHolder() instanceof Player player1)
-                if (event.getView().getTitle().equals("Банк") && player1.equals(player)) {
+        if (Window.isThisWindow(event, player, "Банк")) {
+            var amount = Double.parseDouble(ItemWorker.GetName(event.getCurrentItem()).
+                    replace(CashWorker.currencySigh, ""));
 
-                    var amount = Double.parseDouble(ItemWorker.GetName(event.getCurrentItem()).
-                            replace(CashWorker.currencySigh, ""));
+            if (amount > 0) PcConomy.GlobalBank.PlayerWithdrawCash(amount, player);
+            else PcConomy.GlobalBank.PlayerPutCash(Math.abs(amount), player);
 
-                    if (amount > 0) PcConomy.GlobalBank.PlayerWithdrawCash(amount, player);
-                    else PcConomy.GlobalBank.PlayerPutCash(Math.abs(amount), player);
-
-                    event.setCancelled(true);
-                }
+            event.setCancelled(true);
         }
     }
 }

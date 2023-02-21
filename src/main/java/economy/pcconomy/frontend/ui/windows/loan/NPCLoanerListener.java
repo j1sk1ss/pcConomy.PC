@@ -6,6 +6,7 @@ import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 
+import economy.pcconomy.frontend.ui.Window;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,43 +22,40 @@ public class NPCLoanerListener implements Listener {
         var activeInventory = event.getInventory();
         var item = event.getCurrentItem();
 
-        if (item != null) {
-            if (activeInventory.getHolder() instanceof Player player1)
-                if (event.getView().getTitle().equals("Кредит") && player1.equals(player)) {
-                    var buttonPosition = event.getSlot();
-                    event.setCancelled(true);
+        if (Window.isThisWindow(event, player, "Кредит")) {
+            var buttonPosition = event.getSlot();
+            event.setCancelled(true);
 
-                    if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
-                        var balanceWorker = new BalanceWorker();
-                        var loanAmount = LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank).amount;
+            if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
+                var balanceWorker = new BalanceWorker();
+                var loanAmount = LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank).amount;
 
-                        if (!balanceWorker.isSolvent(loanAmount, player)) {
-                            balanceWorker.TakeMoney(loanAmount, player);
-                            PcConomy.GlobalBank.BankBudget += loanAmount;
-                            LoanWorker.destroyLoan(player.getUniqueId(), PcConomy.GlobalBank);
+                if (!balanceWorker.isSolvent(loanAmount, player)) {
+                    balanceWorker.TakeMoney(loanAmount, player);
+                    PcConomy.GlobalBank.BankBudget += loanAmount;
+                    LoanWorker.destroyLoan(player.getUniqueId(), PcConomy.GlobalBank);
 
-                            player.openInventory(LoanWindow.GetLoanWindow(player, true));
-                        }
-                        return;
-                    }
+                    player.openInventory(LoanWindow.GetLoanWindow(player, true));
+                }
+                return;
+            }
 
-                    if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
-                        boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
+            if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
+                boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
 
-                        if (isSafe) {
-                            if (!PcConomy.GlobalBank.Credit.contains(LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
-                                activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
-                                LoanWorker.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
-                                        LoanWindow.GetSelectedDuration(activeInventory), player, PcConomy.GlobalBank.Credit,
-                                        PcConomy.GlobalBank);
-                                player.closeInventory();
-                            }
-                        }
-                    } else {
-                        activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                        player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, true));
+                if (isSafe) {
+                    if (!PcConomy.GlobalBank.Credit.contains(LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
+                        activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
+                        LoanWorker.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
+                                LoanWindow.GetSelectedDuration(activeInventory), player, PcConomy.GlobalBank.Credit,
+                                PcConomy.GlobalBank);
+                        player.closeInventory();
                     }
                 }
+            } else {
+                activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
+                player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, true));
+            }
         }
     }
 }

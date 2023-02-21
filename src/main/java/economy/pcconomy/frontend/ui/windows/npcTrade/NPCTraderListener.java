@@ -22,25 +22,21 @@ public class NPCTraderListener implements Listener {
         var player = (Player) event.getWhoClicked();
         var currentItem = event.getCurrentItem();
 
-        if (currentItem != null)
-            if (event.getInventory().getHolder() instanceof Player player1)
-                if (player1.equals(player)) {
-                    if (event.getView().getTitle().contains("Магазин")) {
-                        var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+        if (Window.isThisWindow(event, player, "Магазин")) {
+            var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
 
-                        if (!player.getInventory().contains(currentItem)) {
-                            if (event.isLeftClick()) {
-                                Town.BuyResourceFromStorage(PcConomy.GlobalTownWorker.GetTownObject(town.getName()),
-                                        currentItem, player);
-                                player.openInventory(Objects.requireNonNull(NPCTraderWindow.GetNPCTraderWindow(player,
-                                        CitizensAPI.getNPCRegistry().getById(Integer
-                                                .parseInt(event.getView().getTitle().split(" ")[2])))));
-                            }
-                        }
-
-                        event.setCancelled(true);
-                    }
+            if (!player.getInventory().contains(currentItem)) {
+                if (event.isLeftClick()) {
+                    Town.BuyResourceFromStorage(PcConomy.GlobalTownWorker.GetTownObject(town.getName()),
+                            currentItem, player);
+                    player.openInventory(Objects.requireNonNull(NPCTraderWindow.GetNPCTraderWindow(player,
+                            CitizensAPI.getNPCRegistry().getById(Integer
+                                    .parseInt(event.getView().getTitle().split(" ")[2])))));
                 }
+            }
+
+            event.setCancelled(true);
+        }
     }
 }
 
