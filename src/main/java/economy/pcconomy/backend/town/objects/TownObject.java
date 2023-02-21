@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.bank.interfaces.IMoney;
 import economy.pcconomy.backend.bank.objects.BorrowerObject;
 import economy.pcconomy.backend.bank.objects.LoanObject;
 import economy.pcconomy.backend.bank.scripts.LoanWorker;
@@ -11,7 +12,6 @@ import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class TownObject {
+public class TownObject implements IMoney {
     public TownObject(Town town, boolean isNPC) {
         this.isNPC = isNPC;
         TownName   = town.getName();
@@ -48,7 +48,7 @@ public class TownObject {
     }
 
     public void LifeCycle() {
-        TakePercentFromBorrowers();
+        LoanWorker.takePercentFromBorrowers(this);
         if (!isNPC) return;
 
         if (getLocalInflation() < .5) GetMoneyFromBank(1000); // Взятие кредита при дефляции
@@ -80,69 +80,19 @@ public class TownObject {
         if (amount > PcConomy.GlobalBank.GetUsefulAmountOfBudget()) return;
 
         PcConomy.GlobalBank.BankBudget -= amount;
-        changeBudget(amount);
-    }
-
-    public void CreateLoan(double amount, int duration, Player player) {
-        // Создание кредита на игрока
-        var percentage = LoanWorker.getPercent(amount, duration); // процент по кредиту
-        var dailyPayment = LoanWorker.getDailyPayment(amount, duration, percentage); // дневной платёж
-
-        Credit.add(new LoanObject(amount + amount * percentage, percentage, duration, dailyPayment, player));
-
-        changeBudget(-amount);
-        new BalanceWorker().GiveMoney(amount, player);
-    }
-
-    public void TakePercentFromBorrowers() {
-        // Взятие процента со счёта игрока
-        for (LoanObject loanObject : Credit) {
-            if (loanObject.amount <= 0) {
-                DestroyLoan(loanObject.Owner);
-                return;
-            }
-
-            var balanceWorker = new BalanceWorker();
-            if (balanceWorker.isSolvent(loanObject.dailyPayment, Bukkit.getPlayer(loanObject.Owner)))
-                loanObject.expired += 1;
-
-            balanceWorker.TakeMoney(loanObject.dailyPayment, Bukkit.getPlayer(loanObject.Owner));
-            loanObject.amount -= loanObject.dailyPayment;
-
-            changeBudget(loanObject.dailyPayment);
-        }
-    }
-
-    public LoanObject GetLoan(UUID player) {
-        for (LoanObject loan:
-                Credit) {
-            if (loan.Owner.equals(player)) return loan;
-        }
-
-        return null;
-    }
-
-    public void DestroyLoan(UUID player) {
-        // Закрытие кредита
-        var loan = GetLoan(player);
-
-        var borrower = PcConomy.GlobalBorrowerWorker.getBorrowerObject(Bukkit.getPlayer(player));
-        if (borrower != null) {
-            borrower.CreditHistory.add(loan);
-            PcConomy.GlobalBorrowerWorker.setBorrowerObject(borrower);
-        } else {
-            PcConomy.GlobalBorrowerWorker.borrowerObjects.add(new BorrowerObject(Bukkit.getPlayer(player), loan));
-        }
-
-        Credit.remove(GetLoan(player));
+        ChangeBudget(amount);
     }
 
     public void setBudget(double amount) {
         getBankAccount().setBalance(amount, "Economic action");
     }
 
-    public void changeBudget(double amount) {
+    public void ChangeBudget(double amount) {
         getBankAccount().setBalance(getBudget() + amount, "Economic action");
+    }
+
+    public List<LoanObject> GetCreditList() {
+        return Credit;
     }
 
     public double getBudget() {

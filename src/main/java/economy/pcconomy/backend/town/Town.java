@@ -3,7 +3,6 @@ package economy.pcconomy.backend.town;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.objects.TownObject;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
@@ -28,7 +27,7 @@ public class Town {
         if (cash.AmountOfCashInInventory(buyer) < price) return;
 
         cash.TakeCashFromInventory(price, buyer);
-        townObject.changeBudget(price / PcConomy.GlobalBank.VAT);
+        townObject.ChangeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price / (PcConomy.GlobalBank.VAT + 1) * PcConomy.GlobalBank.VAT);
 
         ItemWorker.giveItems(new ItemStack(itemStack.getType(), itemAmount), buyer);
@@ -61,6 +60,6 @@ public class Town {
 
         cash.GiveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);
         PcConomy.GlobalBank.BankBudget += (price / (PcConomy.GlobalBank.VAT + 1) * PcConomy.GlobalBank.VAT);
-        townObject.changeBudget(-price);
+        townObject.ChangeBudget(-price);
     }
 }

@@ -2,6 +2,7 @@ package economy.pcconomy.backend.town.listener;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.*;
+import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 import com.palmergames.bukkit.towny.object.Town;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.town.objects.TownObject;
@@ -14,12 +15,25 @@ public class TownyListener implements Listener {
     public void OnCreation(NewTownEvent event) {
         var town = event.getTown(); // Запоминаем город
 
+        PcConomy.GlobalBank.BankBudget += 250d;
         PcConomy.GlobalTownWorker.CreateTownObject(town, false); // Добавляем в лист установив что это игроковский город
+    }
+
+    @EventHandler
+    public void onClaim(TownClaimEvent event) {
+        PcConomy.GlobalBank.BankBudget += 25d;
     }
 
     @EventHandler
     public void OnDestroy(DeleteTownEvent event) {
         var town = event.getTownName(); // Удаление по имени
+
+        PcConomy.GlobalTownWorker.DestroyTownObject(town);
+    }
+
+    @EventHandler
+    public void onDied(TownRuinedEvent event) {
+        var town = event.getTown().getName(); // Удаление по имени
 
         PcConomy.GlobalTownWorker.DestroyTownObject(town);
     }

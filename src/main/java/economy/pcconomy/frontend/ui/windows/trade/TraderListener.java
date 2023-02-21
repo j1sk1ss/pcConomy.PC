@@ -4,12 +4,8 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.license.scripts.LicenseWorker;
-import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
-import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -69,7 +65,7 @@ public class TraderListener implements Listener {
                                     if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
 
                                     cash.TakeCashFromInventory(trader.Cost, player);
-                                    PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown).changeBudget(trader.Cost);
+                                    PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown).ChangeBudget(trader.Cost);
 
                                     RantTrader(trader, player);
                                     player.closeInventory();
@@ -130,7 +126,7 @@ public class TraderListener implements Listener {
 
                                         var endPrice = price / (1 + trader.Margin);
                                         PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)
-                                                .changeBudget(price - endPrice);
+                                                .ChangeBudget(price - endPrice);
                                         trader.Revenue += endPrice;
                                     }
                                 }

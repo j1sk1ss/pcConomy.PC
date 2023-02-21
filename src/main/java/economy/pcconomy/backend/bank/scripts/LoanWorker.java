@@ -1,9 +1,15 @@
 package economy.pcconomy.backend.bank.scripts;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.bank.interfaces.IMoney;
 import economy.pcconomy.backend.bank.objects.BorrowerObject;
 import economy.pcconomy.backend.bank.objects.LoanObject;
+import economy.pcconomy.backend.scripts.BalanceWorker;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.UUID;
 
 public class LoanWorker {
     public static double trustCoefficient = 1.5d;
@@ -35,5 +41,60 @@ public class LoanWorker {
     public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
         return (getSafetyFactor(loanAmount, duration,
                 PcConomy.GlobalBorrowerWorker.getBorrowerObject(borrower)) >= trustCoefficient); // коэффициент надёжности
+    }
+
+    public static void createLoan(double amount, int duration, Player player, List<LoanObject> Credit, IMoney moneyGiver) {
+        // Создание кредита на игрока
+        var percentage = LoanWorker.getPercent(amount, duration); // процент по кредиту
+        var dailyPayment = LoanWorker.getDailyPayment(amount, duration, percentage); // дневной платёж
+
+        Credit.add(new LoanObject(amount + amount * percentage, percentage, duration, dailyPayment, player));
+
+        moneyGiver.ChangeBudget(-amount);
+        new BalanceWorker().GiveMoney(amount, player);
+    }
+
+    public static void takePercentFromBorrowers(IMoney moneyTaker) {
+        for (LoanObject loan:
+                moneyTaker.GetCreditList()) {
+            if (loan.amount <= 0) {
+                destroyLoan(loan.Owner, moneyTaker);
+                return;
+            }
+
+            var balanceWorker = new BalanceWorker();
+            if (balanceWorker.isSolvent(loan.dailyPayment, Bukkit.getPlayer(loan.Owner)))
+                loan.expired += 1;
+
+            balanceWorker.TakeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
+            loan.amount -= loan.dailyPayment;
+
+            moneyTaker.ChangeBudget(loan.dailyPayment);
+        }
+    }
+
+    public static LoanObject getLoan(UUID player, IMoney creditOwner) {
+        for (LoanObject loan:
+                creditOwner.GetCreditList()) {
+            if (loan.Owner.equals(player)) return loan;
+        }
+
+        return null;
+    }
+
+    public static void destroyLoan(UUID player, IMoney creditOwner) {
+        var credit = creditOwner.GetCreditList();
+        // Закрытие кредита
+        var loan = getLoan(player, creditOwner);
+
+        var borrower = PcConomy.GlobalBorrowerWorker.getBorrowerObject(Bukkit.getPlayer(player));
+        if (borrower != null) {
+            borrower.CreditHistory.add(loan);
+            PcConomy.GlobalBorrowerWorker.setBorrowerObject(borrower);
+        } else {
+            PcConomy.GlobalBorrowerWorker.borrowerObjects.add(new BorrowerObject(Bukkit.getPlayer(player), loan));
+        }
+
+        credit.remove(getLoan(player, creditOwner));
     }
 }

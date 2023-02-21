@@ -44,7 +44,7 @@ public class Trader extends Trait {
             homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
 
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && isRanted) {
-            PcConomy.GlobalTownWorker.GetTownObject(homeTown).changeBudget(Revenue);
+            PcConomy.GlobalTownWorker.GetTownObject(homeTown).ChangeBudget(Revenue);
 
             isRanted = false;
             Owner    = null;

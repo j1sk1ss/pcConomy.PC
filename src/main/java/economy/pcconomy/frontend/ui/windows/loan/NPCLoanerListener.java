@@ -1,6 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.loan;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
@@ -28,12 +29,12 @@ public class NPCLoanerListener implements Listener {
 
                     if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
                         var balanceWorker = new BalanceWorker();
-                        var loanAmount = PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount;
+                        var loanAmount = LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank).amount;
 
                         if (!balanceWorker.isSolvent(loanAmount, player)) {
                             balanceWorker.TakeMoney(loanAmount, player);
                             PcConomy.GlobalBank.BankBudget += loanAmount;
-                            PcConomy.GlobalBank.DestroyLoan(player.getUniqueId());
+                            LoanWorker.destroyLoan(player.getUniqueId(), PcConomy.GlobalBank);
 
                             player.openInventory(LoanWindow.GetLoanWindow(player, true));
                         }
@@ -44,10 +45,11 @@ public class NPCLoanerListener implements Listener {
                         boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
 
                         if (isSafe) {
-                            if (!PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
+                            if (!PcConomy.GlobalBank.Credit.contains(LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
                                 activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
-                                PcConomy.GlobalBank.CreateLoan(LoanWindow.GetSelectedAmount(activeInventory),
-                                        LoanWindow.GetSelectedDuration(activeInventory), player);
+                                LoanWorker.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
+                                        LoanWindow.GetSelectedDuration(activeInventory), player, PcConomy.GlobalBank.Credit,
+                                        PcConomy.GlobalBank);
                                 player.closeInventory();
                             }
                         }

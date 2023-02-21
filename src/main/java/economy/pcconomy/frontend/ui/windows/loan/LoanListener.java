@@ -3,8 +3,8 @@ package economy.pcconomy.frontend.ui.windows.loan;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 
+import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
-import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 
@@ -34,12 +34,12 @@ public class LoanListener implements Listener {
 
                         if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
                             var balanceWorker = new BalanceWorker();
-                            var loanAmount = townObject.GetLoan(player.getUniqueId()).amount;
+                            var loanAmount = LoanWorker.getLoan(player.getUniqueId(), townObject).amount;
 
                             if (!balanceWorker.isSolvent(loanAmount, player)) {
                                 balanceWorker.TakeMoney(loanAmount, player);
-                                townObject.changeBudget(loanAmount);
-                                townObject.DestroyLoan(player.getUniqueId());
+                                townObject.ChangeBudget(loanAmount);
+                                LoanWorker.destroyLoan(player.getUniqueId(), townObject);
 
                                 player.openInventory(LoanWindow.GetLoanWindow(player, false));
                             }
@@ -48,12 +48,14 @@ public class LoanListener implements Listener {
 
                         if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
                             boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
+                            final int maxCreditCount = 5;
 
-                            if (isSafe) {
-                                if (!townObject.Credit.contains(townObject.GetLoan(player.getUniqueId()))) {
+                            if (isSafe && townObject.Credit.size() < maxCreditCount) {
+                                if (!townObject.Credit.contains(LoanWorker.getLoan(player.getUniqueId(), townObject))) {
                                     activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
-                                    townObject.CreateLoan(LoanWindow.GetSelectedAmount(activeInventory),
-                                            LoanWindow.GetSelectedDuration(activeInventory), player);
+                                    LoanWorker.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
+                                            LoanWindow.GetSelectedDuration(activeInventory), player, townObject.Credit,
+                                            townObject);
                                     player.closeInventory();
                                 }
                             }
