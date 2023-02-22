@@ -64,15 +64,15 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     @Override
     public void onEnable() {
         try {
-            if (new File("PcConomyData/NPCData.txt").exists())
+            if (new File("NPCData.txt").exists())
                 GlobalNPC = Loader.LoadNPC("NPCData");
-            if (new File("PcConomyData/BankData.txt").exists())
+            if (new File("BankData.txt").exists())
                 GlobalBank = Loader.LoadBank("BankData");
-            if (new File("PcConomyData/TownsData.txt").exists())
+            if (new File("TownsData.txt").exists())
                 GlobalTownWorker = Loader.LoadTowns("TownsData");
-            if (new File("PcConomyData/LicenseData.txt").exists())
+            if (new File("LicenseData.txt").exists())
                 GlobalLicenseWorker = Loader.LoadLicenses("LicenseData");
-            if (new File("PcConomyData/BorrowersData.txt").exists())
+            if (new File("BorrowersData.txt").exists())
                 GlobalBorrowerWorker = Loader.LoadBorrowers("BorrowersData");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -107,11 +107,11 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
     public static void SaveData() {
         try {
-            GlobalNPC.SaveNPC("PcConomyData/NPCData");
-            GlobalBank.SaveBank("PcConomyData/BankData");
-            GlobalTownWorker.SaveTown("PcConomyData/TownsData");
-            GlobalLicenseWorker.SaveLicenses("PcConomyData/LicenseData");
-            GlobalBorrowerWorker.SaveBorrowers("PcConomyData/BorrowersData");
+            GlobalNPC.SaveNPC("NPCData");
+            GlobalBank.SaveBank("BankData");
+            GlobalTownWorker.SaveTown("TownsData");
+            GlobalLicenseWorker.SaveLicenses("LicenseData");
+            GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

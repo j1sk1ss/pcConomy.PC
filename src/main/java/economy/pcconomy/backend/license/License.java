@@ -22,8 +22,8 @@ public class License {
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(player) < marketLicensePrice) return;
 
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Market) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Market));
+        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Market) != null)
+            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Market));
 
         cash.TakeCashFromInventory(marketLicensePrice, player);
         PcConomy.GlobalBank.BankBudget += marketLicensePrice;
@@ -37,8 +37,8 @@ public class License {
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(player) < tradeLicensePrice) return;
 
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade));
+        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade) != null)
+            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade));
 
         cash.TakeCashFromInventory(tradeLicensePrice, player);
         PcConomy.GlobalBank.BankBudget += tradeLicensePrice;
@@ -52,8 +52,8 @@ public class License {
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(player) < loanLicensePrice) return;
 
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Loan) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Loan));
+        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Loan) != null)
+            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Loan));
 
         cash.TakeCashFromInventory(loanLicensePrice, player);
         PcConomy.GlobalBank.BankBudget += loanLicensePrice;
@@ -67,8 +67,8 @@ public class License {
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(player) < loanHistoryLicensePrice) return;
 
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.LoanHistory) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.LoanHistory));
+        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.LoanHistory) != null)
+            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.LoanHistory));
 
         cash.TakeCashFromInventory(loanHistoryLicensePrice, player);
         PcConomy.GlobalBank.BankBudget += loanHistoryLicensePrice;

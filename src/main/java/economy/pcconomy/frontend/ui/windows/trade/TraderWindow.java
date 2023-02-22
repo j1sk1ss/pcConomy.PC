@@ -13,9 +13,8 @@ public class TraderWindow {
     public static Inventory GetTraderWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27, "Торговец-Покупка " + trader.getNPC().getId());
 
-        for (ItemStack item:
-                trader.Storage) {
-            window.addItem(item);
+        for (var i = 0; i < trader.Storage.size(); i++) {
+            window.setItem(i, trader.Storage.get(i));
         }
 
         return window;

@@ -64,7 +64,7 @@ public class Trader extends Trait {
                 }
             } else {
                 if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor()
-                        .getPlayer().getUniqueId().equals(player.getUniqueId())) {
+                        .getUUID().equals(player.getUniqueId())) {
                     player.openInventory(TraderWindow.GetMayorWindow(player, this));
                 } else {
                     player.openInventory(TraderWindow.GetRanterWindow(player, this));
@@ -81,16 +81,17 @@ public class Trader extends Trait {
     public void onInteraction(NPCLeftClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
         var player = event.getClicker();
+        var playerUUID = player.getUniqueId();
 
         if (isRanted) {
-            if (Owner.equals(player.getUniqueId())) {
+            if (Owner.equals(playerUUID) && Storage.size() < 27) {
                 player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
-                chat.put(player.getUniqueId(), event.getNPC().getId());
-            }
+                chat.put(playerUUID, event.getNPC().getId());
+            } else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
         } else {
-            if (TownyAPI.getInstance().getTown(homeTown).getMayor().getPlayer().equals(player)) {
+            if (TownyAPI.getInstance().getTown(homeTown).getMayor().getUUID().equals(playerUUID)) {
                 player.sendMessage("Удалить торговца? (y/n)");
-                chat.put(player.getUniqueId(), event.getNPC().getId());
+                chat.put(playerUUID, event.getNPC().getId());
             }
         }
     }
@@ -98,11 +99,16 @@ public class Trader extends Trait {
     @EventHandler
     public void Chatting(PlayerChatEvent event) {
         var player = event.getPlayer();
+        var playerMessage = event.getMessage();
+        event.setCancelled(true);
 
         if (chat.get(player.getUniqueId()) != null) {
             var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
-            if (StringUtils.containsAny(event.getMessage(), "ynYN")) {
-                if (event.getMessage().toLowerCase().contains("y")) trader.destroy();
+            if (StringUtils.containsAny(playerMessage, "ynYN")) {
+                if (playerMessage.toLowerCase().contains("y")) {
+                    PcConomy.GlobalNPC.Traders.remove(trader.getId());
+                    trader.destroy();
+                }
                 return;
             }
 
@@ -113,11 +119,14 @@ public class Trader extends Trait {
             }
 
             try {
-                var cost = Double.parseDouble(event.getMessage());
+                var cost = Double.parseDouble(playerMessage);
                 trader.getTrait(Trader.class).Storage.add(ItemWorker.SetLore(sellingItem,
                         cost + cost * Margin + CashWorker.currencySigh));
                 player.getInventory().setItemInMainHand(null);
                 chat.remove(player.getUniqueId());
+
+                player.sendMessage("Предмет " + ItemWorker.GetName(sellingItem) + " выставлен на продажу за "
+                    + (cost + cost * Margin) + " " + CashWorker.currencySigh);
             } catch (NumberFormatException exception) {
                 player.sendMessage("Напишите корректную цену");
             }

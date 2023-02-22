@@ -54,10 +54,10 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Аренда")) {
-                if (ItemWorker.GetName(choseItem).equals("Арендовать")) {
+                if (ItemWorker.GetName(choseItem).equals("Арендовать на один день")) {
                     var cash = new Cash();
                     var playerTradeLicense =
-                            PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade);
+                            PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade);
 
                     if (playerTradeLicense != null) {
                         if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
@@ -85,7 +85,7 @@ public class TraderListener implements Listener {
 
                 if (ItemWorker.GetName(choseItem).equals("Занять")) {
                     var playerTradeLicense =
-                            PcConomy.GlobalLicenseWorker.GetLicense(player, LicenseType.Trade);
+                            PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade);
 
                     if (playerTradeLicense != null) {
                         if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
@@ -115,12 +115,12 @@ public class TraderListener implements Listener {
                     var buyingItem = inventory.getItem(4);
                     var price = ItemWorker.GetPriceFromLore(buyingItem, 0);
 
-                    if (cash.AmountOfCashInInventory(player) >= price || trader.Owner.equals(player)) {
+                    if (cash.AmountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {
                         if (trader.Storage.contains(buyingItem)) {
                             trader.Storage.remove(buyingItem);
                             ItemWorker.giveItemsWithoutLore(buyingItem, player);
 
-                            if (!trader.Owner.equals(player)) {
+                            if (!trader.Owner.equals(player.getUniqueId())) {
                                 cash.TakeCashFromInventory(price, player);
 
                                 var endPrice = price / (1 + trader.Margin);

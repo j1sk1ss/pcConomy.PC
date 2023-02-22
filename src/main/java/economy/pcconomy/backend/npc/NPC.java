@@ -40,7 +40,7 @@ public class NPC {
              CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
                 case "npcloaner" -> npc.addTrait(NPCLoaner.class);
-                case "loaner" -> npc.addTrait(Loaner.class);
+                case "Loaner" -> npc.addTrait(Loaner.class);
                 case "banker" -> npc.addTrait(Banker.class);
                 case "licensor" -> npc.addTrait(Licensor.class);
                 case "npctrader" -> npc.addTrait(NPCTrader.class);
@@ -56,7 +56,7 @@ public class NPC {
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(creator) < traderCost) return;
 
-        var marketLicense = PcConomy.GlobalLicenseWorker.GetLicense(creator, LicenseType.Market);
+        var marketLicense = PcConomy.GlobalLicenseWorker.GetLicense(creator.getUniqueId(), LicenseType.Market);
         if (marketLicense == null) return;
         if (PcConomy.GlobalLicenseWorker.isOverdue(marketLicense)) return;
 
@@ -74,7 +74,7 @@ public class NPC {
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(creator) < loanerCost) return;
 
-        var loanerLicense = PcConomy.GlobalLicenseWorker.GetLicense(creator, LicenseType.Loan);
+        var loanerLicense = PcConomy.GlobalLicenseWorker.GetLicense(creator.getUniqueId(), LicenseType.Loan);
         if (loanerLicense == null) return;
         if (PcConomy.GlobalLicenseWorker.isOverdue(loanerLicense)) return;
 

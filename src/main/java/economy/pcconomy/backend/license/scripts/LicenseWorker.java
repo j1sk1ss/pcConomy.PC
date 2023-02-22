@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class LicenseWorker {
     public List<LicenseBody> Licenses = new ArrayList<>();
@@ -31,10 +32,10 @@ public class LicenseWorker {
         return null;
     }
 
-    public LicenseBody GetLicense(Player player, LicenseType licenseType) {
+    public LicenseBody GetLicense(UUID player, LicenseType licenseType) {
         for (LicenseBody lic:
                 Licenses) {
-            if (lic.Owner.equals(player.getUniqueId())) if (lic.LicenseType.equals(licenseType)) return lic;
+            if (lic.Owner.equals(player)) if (lic.LicenseType.equals(licenseType)) return lic;
         }
 
         return null;

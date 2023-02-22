@@ -15,9 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class MayorWindow {
     public static Inventory GetMayorWindow(Player mayor) {
-        var town = PcConomy.GlobalTownWorker.
-                GetTownObject(TownyAPI.getInstance().getTown(mayor.getLocation()).getName());
-        var window = Bukkit.createInventory(mayor, 27, "Меню " + town.TownName);
+        var window = Bukkit.createInventory(mayor, 27, "Меню");
 
         window.setItem(0, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
                 NPC.traderCost + CashWorker.currencySigh), "Установить торговца"));

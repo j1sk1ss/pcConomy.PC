@@ -58,15 +58,15 @@ public class LoanWindow {
 
     private static Inventory CreditDestroyButton(Inventory window, boolean isNPC, Player player) {
         if (isNPC) {
-            if (PcConomy.GlobalBank.Credit.contains(PcConomy.GlobalBank.GetLoan(player.getUniqueId()))) {
+            if (PcConomy.GlobalBank.Credit.contains(LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
                 window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
-                        "Выплатить кредит"), PcConomy.GlobalBank.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
+                        "Выплатить кредит"), LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank).amount + CashWorker.currencySigh));
             }
         } else {
             var townObject = PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance().getTownName(player.getLocation()));
-            if (townObject.GetLoan(player.getUniqueId()) != null) {
+            if (LoanWorker.getLoan(player.getUniqueId(), townObject) != null) {
                 window.setItem(9, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.BLACK_SHULKER_BOX),
-                        "Выплатить кредит"), townObject.GetLoan(player.getUniqueId()).amount + CashWorker.currencySigh));
+                        "Выплатить кредит"), LoanWorker.getLoan(player.getUniqueId(), townObject).amount + CashWorker.currencySigh));
             }
         }
         return window;
@@ -75,11 +75,11 @@ public class LoanWindow {
     private static boolean canReadHistory(Player player) {
         var town = TownyAPI.getInstance().getTown(player.getLocation());
         var licenseHistory = PcConomy.GlobalLicenseWorker
-                .GetLicense(town.getMayor().getPlayer(), LicenseType.LoanHistory);
+                .GetLicense(town.getMayor().getUUID(), LicenseType.LoanHistory);
         if (licenseHistory == null) return false;
 
         return !PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
-                        .GetLicense(town.getMayor().getPlayer(), LicenseType.LoanHistory));
+                        .GetLicense(town.getMayor().getUUID(), LicenseType.LoanHistory));
     }
 
     public static ItemStack GetAmountButton(int i, int option, Player player) {
