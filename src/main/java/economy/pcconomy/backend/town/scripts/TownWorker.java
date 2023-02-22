@@ -2,7 +2,6 @@ package economy.pcconomy.backend.town.scripts;
 
 import com.google.gson.GsonBuilder;
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.town.objects.TownObject;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -15,9 +14,10 @@ import java.util.List;
 public class TownWorker {
     public List<TownObject> townObjects = new ArrayList<>(); // все города сервера
 
-    public void AddOldTowns() {
+    public void ReloadTownObjects() {
         for (com.palmergames.bukkit.towny.object.Town town:
                 TownyAPI.getInstance().getTowns()) {
+            townObjects.clear();
             CreateTownObject(town, false);
         }
     }
