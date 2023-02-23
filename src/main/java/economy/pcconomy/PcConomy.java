@@ -44,10 +44,12 @@ import me.yic.xconomy.api.XConomyAPI;
 
 import org.bukkit.Bukkit;
 
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public final class PcConomy extends JavaPlugin { // Гл класс плагина. Тут обьявляйте в статике нужные API
     // Так же желательно тут регистрировать Listeners
@@ -78,15 +80,14 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
             throw new RuntimeException(e);
         }
 
-        Bukkit.getPluginManager().registerEvents(new NPCLoader(), this);
-        Bukkit.getPluginManager().registerEvents(new LoanListener(), this);
-        Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
-        Bukkit.getPluginManager().registerEvents(new MayorListener(), this);
-        Bukkit.getPluginManager().registerEvents(new BankerListener(), this);
-        Bukkit.getPluginManager().registerEvents(new TraderListener(), this);
-        Bukkit.getPluginManager().registerEvents(new LicensorListener(), this);
-        Bukkit.getPluginManager().registerEvents(new NPCTraderListener(), this);
-        Bukkit.getPluginManager().registerEvents(new NPCLoanerListener(), this);
+        var listeners = Arrays.asList(new NPCLoader(), new LoanListener(), new TownyListener(),
+                new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
+                new NPCTraderListener(), new NPCLoanerListener());
+
+        for (Listener listener:
+             listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, this);
+        }
 
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд

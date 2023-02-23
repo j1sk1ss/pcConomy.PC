@@ -42,7 +42,7 @@ public class TraderListener implements Listener {
                     case "Перейти в товары" ->
                             player.openInventory(TraderWindow.GetWindow(player, trader));
                     case "Забрать все товары" -> {
-                        ItemWorker.giveItemsWithoutLore(trader.Storage, player);
+                        ItemWorker.GiveItemsWithoutLore(trader.Storage, player);
                         trader.Storage.clear();
                     }
                     case "Забрать прибыль" -> {
@@ -118,7 +118,7 @@ public class TraderListener implements Listener {
                     if (cash.AmountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {
                         if (trader.Storage.contains(buyingItem)) {
                             trader.Storage.remove(buyingItem);
-                            ItemWorker.giveItemsWithoutLore(buyingItem, player);
+                            ItemWorker.GiveItemsWithoutLore(buyingItem, player);
 
                             if (!trader.Owner.equals(player.getUniqueId())) {
                                 cash.TakeCashFromInventory(price, player);

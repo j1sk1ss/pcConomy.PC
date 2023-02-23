@@ -12,9 +12,7 @@ public class Window {
         player.openInventory(BankerWindow.GetWindow(player));
     }
 
-    public static void OpenLoanWindow(Player player, boolean isNPC) {
-        player.openInventory(LoanWindow.GetWindow(player, isNPC));
-    }
+    public static void OpenLoanWindow(Player player, boolean isNPC) {player.openInventory(LoanWindow.GetWindow(player, isNPC));}
 
     public static void OpenLicenseWindow(Player player) {player.openInventory(LicensorWindow.GetWindow(player));}
 

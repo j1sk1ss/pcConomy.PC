@@ -21,7 +21,7 @@ public class Town {
 
         if (townObject == null) return;
         if (!townObject.isNPC) return;
-        if (StorageWorker.getAmountOfResource(itemStack, townObject.Storage) * usefulStorage < itemAmount) return;
+        if (StorageWorker.GetAmountOfResource(itemStack, townObject.Storage) * usefulStorage < itemAmount) return;
 
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(buyer) < price) return;
@@ -30,8 +30,8 @@ public class Town {
         townObject.ChangeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price / (PcConomy.GlobalBank.VAT + 1) * PcConomy.GlobalBank.VAT);
 
-        ItemWorker.giveItems(new ItemStack(itemStack.getType(), itemAmount), buyer);
-        StorageWorker.setAmountOfResource(itemStack, StorageWorker.getAmountOfResource(itemStack,
+        ItemWorker.GiveItems(new ItemStack(itemStack.getType(), itemAmount), buyer);
+        StorageWorker.SetAmountOfResource(itemStack, StorageWorker.GetAmountOfResource(itemStack,
                 townObject.Storage) - itemAmount, townObject.Storage);
 
         PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance()
@@ -46,7 +46,7 @@ public class Town {
         if (townObject == null) return;
         if (!townObject.isNPC) return;
 
-        var resource = StorageWorker.getResource(itemStack, townObject.Storage);
+        var resource = StorageWorker.GetResource(itemStack, townObject.Storage);
         if (resource == null) return;
 
         var price = ItemWorker.GetPriceFromLore(itemStack, 1) * itemAmount;
@@ -55,7 +55,7 @@ public class Town {
         if (price > townObject.getBudget() * usefulBudget) return;
 
         seller.getInventory().setItemInMainHand(null);
-        StorageWorker.setAmountOfResource(itemStack, StorageWorker.getAmountOfResource(itemStack,
+        StorageWorker.SetAmountOfResource(itemStack, StorageWorker.GetAmountOfResource(itemStack,
                 townObject.Storage) + itemAmount, townObject.Storage);
 
         cash.GiveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);

@@ -1,6 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.license;
 
 import economy.pcconomy.backend.license.License;
+import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.frontend.ui.Window;
 import org.bukkit.entity.Player;
@@ -18,13 +19,13 @@ public class LicensorListener implements Listener {
         if (Window.isThisWindow(event, player, "Лицензии") && option != null) {
             switch (ItemWorker.GetName(option)) {
                 case "Лицензия на создание т. зоны" ->
-                        License.GetMarketLicense(player);
+                        License.GetLicense(player, LicenseType.Market, License.marketLicensePrice);
                 case "Лицензия на торговую деятельность" ->
-                        License.GetTradeLicense(player);
+                        License.GetLicense(player, LicenseType.Trade, License.tradeLicensePrice);
                 case "Лицензия на кредитную деятельность" ->
-                        License.GetLoanLicense(player);
+                        License.GetLicense(player, LicenseType.Loan, License.loanLicensePrice);
                 case "Лицензия на доступ к кредитной истории" ->
-                        License.GetLoanHistoryLicense(player);
+                        License.GetLicense(player, LicenseType.LoanHistory, License.loanHistoryLicensePrice);
             }
 
             event.setCancelled(true);

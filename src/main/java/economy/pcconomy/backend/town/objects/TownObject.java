@@ -28,7 +28,7 @@ public class TownObject implements IMoney {
     public boolean isNPC;
     public final List<ItemStack> Storage = new ArrayList<>();
     private final double StartBudget = 10000;
-    private final int StartStorageAmount = StorageWorker.getAmountOfStorage(Storage);
+    private final int StartStorageAmount = StorageWorker.GetAmountOfStorage(Storage);
 
     public void InitializeNPC() {
         Storage.add(new ItemStack(Material.SPRUCE_WOOD, 100));
@@ -69,7 +69,7 @@ public class TownObject implements IMoney {
     }
 
     public double getLocalInflation() {
-        return (getBudget() / StartBudget) - ((double)StorageWorker.getAmountOfStorage(Storage) / StartStorageAmount);
+        return (getBudget() / StartBudget) - ((double)StorageWorker.GetAmountOfStorage(Storage) / StartStorageAmount);
     }
 
     public void GetMoneyFromBank(double amount) {

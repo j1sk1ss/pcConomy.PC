@@ -17,17 +17,17 @@ public class Cash {
             GiveSpecialAmountOfCashToPlayer(amount, player); // Выдача другими номиналами
             return;
         }
-        if (ItemWorker.getEmptySlots(player) < 1) return; // Есть место под банкноту
+        if (ItemWorker.GetEmptySlots(player) < 1) return; // Есть место под банкноту
 
-        ItemWorker.giveItems(CreateCashObject(amount), player);
+        ItemWorker.GiveItems(CreateCashObject(amount), player);
     }
 
     public void GiveSpecialAmountOfCashToPlayer(double amount, Player player) { // Выдача любой суммы купюрами
         var changeNumeric = ChangeWorker.getChange(amount); // Лист из кол-ва необходимых номиналов
-        if (ItemWorker.getEmptySlots(player) < changeNumeric.size()) return; // Если нет места для сдачи
+        if (ItemWorker.GetEmptySlots(player) < changeNumeric.size()) return; // Если нет места для сдачи
 
         List<ItemStack> change = CashWorker.getChangeInCash(changeNumeric);
-        ItemWorker.giveItems(change, player);
+        ItemWorker.GiveItems(change, player);
     }
 
     public double AmountOfCashInHand(Player player) { // Колличество денег у игрока в руке
@@ -52,7 +52,7 @@ public class Cash {
         var playerCashAmount = AmountOfCashInInventory(player);
 
         if (playerCashAmount < amount) return; // Если у игрока ет таких денег
-        if (ItemWorker.getEmptySlots(player) < ChangeWorker.getChange(amount).size()) return; // Если нет места для сдачи
+        if (ItemWorker.GetEmptySlots(player) < ChangeWorker.getChange(amount).size()) return; // Если нет места для сдачи
 
         ItemWorker.TakeItems(playerCash, player);
         GiveSpecialAmountOfCashToPlayer(playerCashAmount - amount, player);

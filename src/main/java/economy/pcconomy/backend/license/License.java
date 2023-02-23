@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class License {
     public final static double marketLicensePrice = 1200d;
@@ -17,63 +18,25 @@ public class License {
     public final static double loanLicensePrice = 3200d;
     public final static double loanHistoryLicensePrice = 1600d;
 
-    public static void GetMarketLicense(Player player) {
+    private static final Map<LicenseType, String> licenseTypes = Map.of(
+            LicenseType.Trade, "Лицензия на ведение торговой деятельности",
+            LicenseType.Market, "Лицензия на создание торговой зоны",
+            LicenseType.Loan, "Лицензия на ведение кредитной деятельности",
+            LicenseType.LoanHistory, "Лицензия на доступ к кредитной истории"
+    );
+
+    public static void GetLicense(Player player, LicenseType licenseType, double price) {
         var cash = new Cash();
-        if (cash.AmountOfCashInInventory(player) < marketLicensePrice) return;
+        if (cash.AmountOfCashInInventory(player) < price) return;
 
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Market) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Market));
+        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), licenseType) != null)
+            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), licenseType));
 
-        cash.TakeCashFromInventory(marketLicensePrice, player);
-        PcConomy.GlobalBank.BankBudget += marketLicensePrice;
+        cash.TakeCashFromInventory(price, player);
+        PcConomy.GlobalBank.BankBudget += price;
 
-        PcConomy.GlobalLicenseWorker.CreateLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), LicenseType.Market));
-        ItemWorker.giveItems(ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER),
-                "Лицензия на создание торговой зоны\nВыдана: " + player.getName()), "Лицензия"), player);
-    }
-
-    public static void GetTradeLicense(Player player) {
-        var cash = new Cash();
-        if (cash.AmountOfCashInInventory(player) < tradeLicensePrice) return;
-
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade));
-
-        cash.TakeCashFromInventory(tradeLicensePrice, player);
-        PcConomy.GlobalBank.BankBudget += tradeLicensePrice;
-
-        PcConomy.GlobalLicenseWorker.CreateLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), LicenseType.Trade));
-        ItemWorker.giveItems(ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER),
-                "Лицензия на ведение торговой деятельности\nВыдана: " + player.getName()), "Лицензия"), player);
-    }
-
-    public static void GetLoanLicense(Player player) {
-        var cash = new Cash();
-        if (cash.AmountOfCashInInventory(player) < loanLicensePrice) return;
-
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Loan) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Loan));
-
-        cash.TakeCashFromInventory(loanLicensePrice, player);
-        PcConomy.GlobalBank.BankBudget += loanLicensePrice;
-
-        PcConomy.GlobalLicenseWorker.CreateLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), LicenseType.Loan));
-        ItemWorker.giveItems(ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER),
-                "Лицензия на ведение кредитной деятельности\nВыдана: " + player.getName()), "Лицензия"), player);
-    }
-
-    public static void GetLoanHistoryLicense(Player player) {
-        var cash = new Cash();
-        if (cash.AmountOfCashInInventory(player) < loanHistoryLicensePrice) return;
-
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.LoanHistory) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.LoanHistory));
-
-        cash.TakeCashFromInventory(loanHistoryLicensePrice, player);
-        PcConomy.GlobalBank.BankBudget += loanHistoryLicensePrice;
-
-        PcConomy.GlobalLicenseWorker.CreateLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), LicenseType.LoanHistory));
-        ItemWorker.giveItems(ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER),
-                "Лицензия на доступ к кредитной истории\nВыдана: " + player.getName()), "Лицензия"), player);
+        PcConomy.GlobalLicenseWorker.CreateLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));
+        ItemWorker.GiveItems(ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER),
+                licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()), "Лицензия"), player);
     }
 }

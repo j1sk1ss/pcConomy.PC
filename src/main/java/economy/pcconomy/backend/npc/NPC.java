@@ -35,55 +35,43 @@ public class NPC {
         npc.spawn(creator.getLocation());
     }
 
+    public static final double traderCost = 3000d;
+    public static final double loanerCost = 4500d;
+
+    private final Map<LicenseType, Trait> npcList = Map.of(
+            LicenseType.Market, new Trader(),
+            LicenseType.Loan, new Loaner()
+    );
+
+    public void BuyNPC(Player buyer, LicenseType neededLicense, double price) {
+        var cash = new Cash();
+        if (cash.AmountOfCashInInventory(buyer) < price) return;
+
+        var license = PcConomy.GlobalLicenseWorker.GetLicense(buyer.getUniqueId(), neededLicense);
+        if (license == null) return;
+        if (PcConomy.GlobalLicenseWorker.isOverdue(license)) return;
+
+        cash.TakeCashFromInventory(price, buyer);
+        PcConomy.GlobalBank.BankBudget += price;
+
+        var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());
+        npc.spawn(buyer.getLocation());
+        npc.addTrait(npcList.get(neededLicense));
+    }
+
     public void UpdateNPC() {
         for (net.citizensnpcs.api.npc.NPC npc:
              CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
                 case "npcloaner" -> npc.addTrait(NPCLoaner.class);
-                case "Loaner" -> npc.addTrait(Loaner.class);
+                case "loaner" -> npc.addTrait(Loaner.class);
                 case "banker" -> npc.addTrait(Banker.class);
                 case "licensor" -> npc.addTrait(Licensor.class);
                 case "npctrader" -> npc.addTrait(NPCTrader.class);
-                case "Trader" -> npc.addTrait(Trader.class);
+                case "trader" -> npc.addTrait(Trader.class);
             }
         }
         LoadTraders();
-    }
-
-    public static final double traderCost = 3000d;
-
-    public void BuyTrader(Player creator) {
-        var cash = new Cash();
-        if (cash.AmountOfCashInInventory(creator) < traderCost) return;
-
-        var marketLicense = PcConomy.GlobalLicenseWorker.GetLicense(creator.getUniqueId(), LicenseType.Market);
-        if (marketLicense == null) return;
-        if (PcConomy.GlobalLicenseWorker.isOverdue(marketLicense)) return;
-
-        cash.TakeCashFromInventory(traderCost, creator);
-        PcConomy.GlobalBank.BankBudget += traderCost;
-
-        var trader = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
-        trader.spawn(creator.getLocation());
-        trader.addTrait(Trader.class);
-    }
-
-    public static final double loanerCost = 4500d;
-
-    public void BuyLoaner(Player creator) {
-        var cash = new Cash();
-        if (cash.AmountOfCashInInventory(creator) < loanerCost) return;
-
-        var loanerLicense = PcConomy.GlobalLicenseWorker.GetLicense(creator.getUniqueId(), LicenseType.Loan);
-        if (loanerLicense == null) return;
-        if (PcConomy.GlobalLicenseWorker.isOverdue(loanerLicense)) return;
-
-        cash.TakeCashFromInventory(loanerCost, creator);
-        PcConomy.GlobalBank.BankBudget += loanerCost;
-
-        var loaner = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Loaner");
-        loaner.spawn(creator.getLocation());
-        loaner.addTrait(Loaner.class);
     }
 
     public net.citizensnpcs.api.npc.NPC GetNPC(int id) {

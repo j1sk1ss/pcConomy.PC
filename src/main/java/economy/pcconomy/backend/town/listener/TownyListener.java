@@ -40,16 +40,16 @@ public class TownyListener implements Listener {
 
     @EventHandler
     public void NewDay(NewDayEvent event) {
-        for (Town town:
+        for (Town town: // Передача налогов с города в банк
                 TownyAPI.getInstance().getTowns()) {
             PcConomy.GlobalBank.BankBudget += town.getPlotTax();
         }
 
-        for (TownObject town :
+        for (TownObject town : // НПС города делают свои дела, а нон-НПС берут проценты
                 PcConomy.GlobalTownWorker.townObjects) {
             town.LifeCycle();
         }
 
-        PcConomy.GlobalBank.LifeCycle();
+        PcConomy.GlobalBank.LifeCycle(); // Банк анализирует и меняет свои параметры
     }
 }

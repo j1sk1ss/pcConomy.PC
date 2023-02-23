@@ -46,31 +46,29 @@ public class ItemWorker {
         return item.getItemMeta().getDisplayName();
     } // Получает имя
 
-    public static void giveItems(List<ItemStack> itemStacks, Player player) { // Выдаёт лист предметов игроку
-        if (getEmptySlots(player) < itemStacks.size()) return;
+    public static void GiveItems(List<ItemStack> itemStacks, Player player) { // Выдаёт лист предметов игроку
+        if (GetEmptySlots(player) < itemStacks.size()) return;
 
         for (var item:
-                itemStacks) {
+                itemStacks)
             player.getInventory().addItem(item);
-        }
     }
 
-    public static void giveItems(ItemStack itemStack, Player player) { // Выдаёт один предмет игроку
-        if (getEmptySlots(player) < 1) return;
+    public static void GiveItems(ItemStack itemStack, Player player) { // Выдаёт один предмет игроку
+        if (GetEmptySlots(player) < 1) return;
         player.getInventory().addItem(itemStack);
     }
 
-    public static void giveItemsWithoutLore(List<ItemStack> itemStacks, Player player) {
-        if (getEmptySlots(player) < itemStacks.size()) return;
+    public static void GiveItemsWithoutLore(List<ItemStack> itemStacks, Player player) {
+        if (GetEmptySlots(player) < itemStacks.size()) return;
 
         for (var item:
-                itemStacks) {
+                itemStacks)
             player.getInventory().addItem(ItemWorker.SetLore(item, ""));
-        }
     }
 
-    public static void giveItemsWithoutLore(ItemStack itemStack, Player player) {
-        if (getEmptySlots(player) < 1) return;
+    public static void GiveItemsWithoutLore(ItemStack itemStack, Player player) {
+        if (GetEmptySlots(player) < 1) return;
         player.getInventory().addItem(ItemWorker.SetLore(itemStack, ""));
     }
 
@@ -97,7 +95,7 @@ public class ItemWorker {
         }
     }
 
-    public static int getEmptySlots(Player player) { // Получает кол-во пустых слотов у игрока
+    public static int GetEmptySlots(Player player) { // Получает кол-во пустых слотов у игрока
         var inventory = player.getInventory();
         var cont = inventory.getContents();
         int i = 0;
