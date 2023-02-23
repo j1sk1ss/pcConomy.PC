@@ -26,7 +26,7 @@ import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
 import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.link.Manager;
 import economy.pcconomy.backend.npc.NPC;
-import economy.pcconomy.backend.npc.NPCListener;
+import economy.pcconomy.backend.npc.listener.NPCLoader;
 import economy.pcconomy.backend.save.Loader;
 import economy.pcconomy.backend.town.listener.TownyListener;
 import economy.pcconomy.backend.bank.Bank;
@@ -78,7 +78,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
             throw new RuntimeException(e);
         }
 
-        Bukkit.getPluginManager().registerEvents(new NPCListener(), this);
+        Bukkit.getPluginManager().registerEvents(new NPCLoader(), this);
         Bukkit.getPluginManager().registerEvents(new LoanListener(), this);
         Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
         Bukkit.getPluginManager().registerEvents(new MayorListener(), this);

@@ -58,9 +58,9 @@ public class Trader extends Trait {
         try {
             if (isRanted) {
                 if (Owner.equals(player.getUniqueId())) {
-                    player.openInventory(TraderWindow.GetOwnerTraderWindow(player, this));
+                    player.openInventory(TraderWindow.GetOwnerWindow(player, this));
                 } else {
-                    player.openInventory(TraderWindow.GetTraderWindow(player, this));
+                    player.openInventory(TraderWindow.GetWindow(player, this));
                 }
             } else {
                 if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor()

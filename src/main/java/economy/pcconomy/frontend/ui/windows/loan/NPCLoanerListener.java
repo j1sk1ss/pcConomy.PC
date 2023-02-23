@@ -27,17 +27,8 @@ public class NPCLoanerListener implements Listener {
             event.setCancelled(true);
 
             if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
-                var balanceWorker = new BalanceWorker();
-                var loanAmount = LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank).amount;
-
-                if (!balanceWorker.isSolvent(loanAmount, player)) {
-                    balanceWorker.TakeMoney(loanAmount, player);
-                    PcConomy.GlobalBank.BankBudget += loanAmount;
-                    LoanWorker.destroyLoan(player.getUniqueId(), PcConomy.GlobalBank);
-
-                    player.openInventory(LoanWindow.GetLoanWindow(player, true));
-                }
-                return;
+                LoanWorker.payOffADebt(player, PcConomy.GlobalBank);
+                player.closeInventory();
             }
 
             if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
@@ -54,7 +45,7 @@ public class NPCLoanerListener implements Listener {
                 }
             } else {
                 activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, true));
+                player.openInventory(LoanWindow.GetWindow(activeInventory, player, buttonPosition, true));
             }
         }
     }

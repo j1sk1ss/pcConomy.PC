@@ -31,7 +31,7 @@ public class Cash {
     }
 
     public double AmountOfCashInHand(Player player) { // Колличество денег у игрока в руке
-        return new CashWorker().GetAmountFromCash(player.getInventory().getItemInMainHand());
+        return CashWorker.GetAmountFromCash(player.getInventory().getItemInMainHand());
     }
 
     public double TakeCashFromHand(Player player) { // Забрать деньги из рук игрока и получить их кол-во
@@ -43,12 +43,12 @@ public class Cash {
     }
 
     public double AmountOfCashInInventory(Player player) { // Колличество денег у игрока в инвенторе
-        var playerCash = new CashWorker().GetCashFromInventory(player.getInventory());
-        return new CashWorker().GetAmountFromCash(playerCash);
+        var playerCash = CashWorker.GetCashFromInventory(player.getInventory());
+        return CashWorker.GetAmountFromCash(playerCash);
     }
 
     public void TakeCashFromInventory(double amount, Player player) { // Забрать необходимую сумму из инвентаря со сдачей
-        var playerCash = new CashWorker().GetCashFromInventory(player.getInventory());
+        var playerCash = CashWorker.GetCashFromInventory(player.getInventory());
         var playerCashAmount = AmountOfCashInInventory(player);
 
         if (playerCashAmount < amount) return; // Если у игрока ет таких денег

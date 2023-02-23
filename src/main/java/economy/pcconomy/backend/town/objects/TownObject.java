@@ -5,16 +5,12 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.interfaces.IMoney;
-import economy.pcconomy.backend.bank.objects.BorrowerObject;
 import economy.pcconomy.backend.bank.objects.LoanObject;
 import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
-import economy.pcconomy.backend.scripts.BalanceWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -27,10 +23,10 @@ public class TownObject implements IMoney {
 
         if (isNPC) InitializeNPC();
     }
-    public String TownName;
-    public List<LoanObject> Credit;
+    public final String TownName;
+    public final List<LoanObject> Credit;
     public boolean isNPC;
-    public List<ItemStack> Storage = new ArrayList<>();
+    public final List<ItemStack> Storage = new ArrayList<>();
     private final double StartBudget = 10000;
     private final int StartStorageAmount = StorageWorker.getAmountOfStorage(Storage);
 

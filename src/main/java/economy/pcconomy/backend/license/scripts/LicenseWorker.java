@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class LicenseWorker {
-    public List<LicenseBody> Licenses = new ArrayList<>();
+    public final List<LicenseBody> Licenses = new ArrayList<>();
 
     public void CreateLicense(LicenseBody licenseBody) {
         Licenses.add(licenseBody);

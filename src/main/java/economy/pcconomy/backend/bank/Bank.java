@@ -4,7 +4,6 @@ import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.interfaces.IMoney;
-import economy.pcconomy.backend.bank.objects.BorrowerObject;
 import economy.pcconomy.backend.bank.objects.LoanObject;
 import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.Cash;
@@ -13,7 +12,6 @@ import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.scripts.ItemWorker;
 
 import economy.pcconomy.backend.town.objects.TownObject;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -28,33 +26,33 @@ public class Bank implements IMoney {
     public double BankBudget = 15000.0d;
     public double UsefulBudgetPercent = .25d;
     public double VAT = .1d;
-    public List<LoanObject> Credit;
+    public final List<LoanObject> Credit;
 
-    public void PlayerWithdrawCash(double amount, Player player) {
+    public void GiveCashToPlayer(double amount, Player player) {
         // Метод снятия денег в городе из банка игроком (если в городе есть на это бюджет)
         var balanceWorker = new BalanceWorker();
         var cash          = new Cash();
 
         if (amount > PcConomy.GlobalBank.GetUsefulAmountOfBudget()) return;
-        if (balanceWorker.isSolvent(amount, player)) return;
+        if (balanceWorker.notSolvent(amount, player)) return;
 
         balanceWorker.TakeMoney(amount, player);
         PcConomy.GlobalBank.BankBudget -= amount;
         cash.GiveCashToPlayer(amount, player);
     }
 
-    public void PlayerPutCash(ItemStack money, Player player) { // Метод внесения купюры в городе в банк
+    public void TakeCashFromPlayer(ItemStack money, Player player) { // Метод внесения купюры в городе в банк
         if (!CashWorker.isCash(money)) return;
         ItemWorker.TakeItems(money, player);
 
-        var amount = new CashWorker().GetAmountFromCash(money);
+        var amount = CashWorker.GetAmountFromCash(money);
         new BalanceWorker().GiveMoney(amount, player);
         PcConomy.GlobalBank.BankBudget += amount;
     }
 
-    public void PlayerPutCash(double amount, Player player) { // Метод внесения денег в городе в банк
-        var amountInventory = new CashWorker().GetAmountFromCash(
-                new CashWorker().GetCashFromInventory(player.getInventory()));
+    public void TakeCashFromPlayer(double amount, Player player) { // Метод внесения денег в городе в банк
+        var amountInventory = CashWorker.GetAmountFromCash(
+                CashWorker.GetCashFromInventory(player.getInventory()));
         if (amount > amountInventory) return;
 
         new Cash().TakeCashFromInventory(amount, player);

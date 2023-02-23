@@ -12,11 +12,11 @@ public class LoanObject {
         this.dailyPayment = dayPayment;
         Owner = player.getUniqueId();
     }
-    public UUID Owner;
+    public final UUID Owner;
     public double amount;
-    public double percentage;
-    public int duration;
-    public double dailyPayment;
+    public final double percentage;
+    public final int duration;
+    public final double dailyPayment;
 
     public int expired;
 }

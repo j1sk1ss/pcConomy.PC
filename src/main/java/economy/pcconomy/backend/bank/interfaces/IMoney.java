@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IMoney {
 
-    public void ChangeBudget(double amount);
+    void ChangeBudget(double amount);
 
-    public List<LoanObject> GetCreditList();
+    List<LoanObject> GetCreditList();
 
 }

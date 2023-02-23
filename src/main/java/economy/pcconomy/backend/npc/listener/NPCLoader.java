@@ -1,9 +1,10 @@
-package economy.pcconomy.backend.npc;
+package economy.pcconomy.backend.npc.listener;
 
 import economy.pcconomy.backend.bank.npc.Banker;
 import economy.pcconomy.backend.bank.npc.Loaner;
 import economy.pcconomy.backend.bank.npc.NPCLoaner;
 import economy.pcconomy.backend.license.npc.Licensor;
+import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.trade.npc.NPCTrader;
 import economy.pcconomy.backend.trade.npc.Trader;
 
@@ -16,8 +17,7 @@ import org.bukkit.event.Listener;
 
 import static economy.pcconomy.PcConomy.GlobalNPC;
 
-public class NPCListener implements Listener {
-
+public class NPCLoader implements Listener {
     @EventHandler
     public void loadNPC(CitizensEnableEvent event) {
         if (GlobalNPC == null) GlobalNPC = new NPC();
@@ -29,5 +29,4 @@ public class NPCListener implements Listener {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("licensor"));
         GlobalNPC.UpdateNPC();
     }
-
 }

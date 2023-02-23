@@ -11,6 +11,6 @@ public class BorrowerObject {
         CreditHistory.add(loanObject);
     }
 
-    public UUID Borrower;
-    public List<LoanObject> CreditHistory;
+    public final UUID Borrower;
+    public final List<LoanObject> CreditHistory;
 }

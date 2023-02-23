@@ -40,7 +40,7 @@ public class TraderListener implements Listener {
             if (title.contains("Торговец-Управление")) {
                 switch (ItemWorker.GetName(choseItem)) {
                     case "Перейти в товары" ->
-                            player.openInventory(TraderWindow.GetTraderWindow(player, trader));
+                            player.openInventory(TraderWindow.GetWindow(player, trader));
                     case "Забрать все товары" -> {
                         ItemWorker.giveItemsWithoutLore(trader.Storage, player);
                         trader.Storage.clear();
@@ -131,9 +131,9 @@ public class TraderListener implements Listener {
                         }
                     }
 
-                    player.openInventory(TraderWindow.GetTraderWindow(player, trader));
+                    player.openInventory(TraderWindow.GetWindow(player, trader));
                 } else if (ItemWorker.GetName(choseItem).equals("ОТМЕНА")){
-                    player.openInventory(TraderWindow.GetTraderWindow(player, trader));
+                    player.openInventory(TraderWindow.GetWindow(player, trader));
                 }
             }
         }

@@ -3,6 +3,7 @@ package economy.pcconomy.frontend.ui.windows.license;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.license.License;
 import economy.pcconomy.backend.scripts.ItemWorker;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class LicensorWindow {
 
-    public static Inventory GetLicensorWindow(Player player) {
-        var window = Bukkit.createInventory(player, 27, "Лицензии");
+    public static Inventory GetWindow(Player player) {
+        var window = Bukkit.createInventory(player, 27, Component.text("Лицензии"));
 
         window.setItem(0, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
                 License.marketLicensePrice + CashWorker.currencySigh), "Лицензия на создание т. зоны"));

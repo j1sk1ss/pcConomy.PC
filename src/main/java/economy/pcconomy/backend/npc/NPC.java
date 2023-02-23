@@ -26,7 +26,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class NPC {
-    public Map<Integer, TraderObject> Traders = new Hashtable<>(); // Для сохранения
+    public final Map<Integer, TraderObject> Traders = new Hashtable<>(); // Для сохранения
 
     public void CreateNPC(Player creator, Trait trait) {
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, trait.getName());
@@ -50,7 +50,7 @@ public class NPC {
         LoadTraders();
     }
 
-    public static double traderCost = 3000d;
+    public static final double traderCost = 3000d;
 
     public void BuyTrader(Player creator) {
         var cash = new Cash();
@@ -68,7 +68,7 @@ public class NPC {
         trader.addTrait(Trader.class);
     }
 
-    public static double loanerCost = 4500d;
+    public static final double loanerCost = 4500d;
 
     public void BuyLoaner(Player creator) {
         var cash = new Cash();

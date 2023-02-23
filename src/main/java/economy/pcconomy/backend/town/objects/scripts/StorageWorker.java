@@ -71,8 +71,8 @@ public class StorageWorker {
     public static int getAmountOfStorage(List<ItemStack> Storage) {
         var amount = 0;
 
-        for (var i = 0; i < Storage.size(); i++) {
-            amount += Storage.get(i).getAmount();
+        for (ItemStack itemStack : Storage) {
+            amount += itemStack.getAmount();
         }
         return amount;
     }

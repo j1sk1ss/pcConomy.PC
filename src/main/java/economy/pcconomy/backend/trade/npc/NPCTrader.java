@@ -3,7 +3,6 @@ package economy.pcconomy.backend.trade.npc;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.town.Town;
-import economy.pcconomy.backend.town.scripts.TownWorker;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderWindow;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -26,7 +25,7 @@ public class NPCTrader extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         PcConomy.GlobalTownWorker.GetTownObject(TownyAPI.getInstance()
                 .getTownName(this.getNPC().getStoredLocation())).GenerateLocalPrices();
-        player.openInventory(Objects.requireNonNull(NPCTraderWindow.GetNPCTraderWindow(player, this.getNPC())));
+        player.openInventory(Objects.requireNonNull(NPCTraderWindow.GetWindow(player, this.getNPC())));
     }
 
     @EventHandler

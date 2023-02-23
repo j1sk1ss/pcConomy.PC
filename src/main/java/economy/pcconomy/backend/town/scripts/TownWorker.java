@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TownWorker {
-    public List<TownObject> townObjects = new ArrayList<>(); // все города сервера
+    public final List<TownObject> townObjects = new ArrayList<>(); // все города сервера
 
     public void ReloadTownObjects() {
         for (com.palmergames.bukkit.towny.object.Town town:

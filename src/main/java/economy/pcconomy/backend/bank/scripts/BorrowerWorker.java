@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowerWorker {
-    public List<BorrowerObject> borrowerObjects = new ArrayList<>();
+    public final List<BorrowerObject> borrowerObjects = new ArrayList<>();
 
     public BorrowerObject getBorrowerObject(Player player) {
         for (BorrowerObject borrower:

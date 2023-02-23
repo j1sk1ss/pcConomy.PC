@@ -54,6 +54,18 @@ public class LoanWorker {
         new BalanceWorker().GiveMoney(amount, player);
     }
 
+    public static void payOffADebt(Player player, IMoney creditOwner) {
+        var balance = new BalanceWorker();
+        var loan = getLoan(player.getUniqueId(), creditOwner);
+
+        if (loan == null) return;
+        if (balance.notSolvent(loan.amount, player)) return;
+
+        balance.TakeMoney(loan.amount, player);
+        creditOwner.ChangeBudget(loan.amount);
+        destroyLoan(player.getUniqueId(), creditOwner);
+    }
+
     public static void takePercentFromBorrowers(IMoney moneyTaker) {
         for (LoanObject loan:
                 moneyTaker.GetCreditList()) {
@@ -63,7 +75,7 @@ public class LoanWorker {
             }
 
             var balanceWorker = new BalanceWorker();
-            if (balanceWorker.isSolvent(loan.dailyPayment, Bukkit.getPlayer(loan.Owner)))
+            if (balanceWorker.notSolvent(loan.dailyPayment, Bukkit.getPlayer(loan.Owner)))
                 loan.expired += 1;
 
             balanceWorker.TakeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));

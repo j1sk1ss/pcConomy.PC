@@ -13,13 +13,14 @@ public class BankerListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
+        var option = event.getCurrentItem();
 
-        if (Window.isThisWindow(event, player, "Банк")) {
-            var amount = Double.parseDouble(ItemWorker.GetName(event.getCurrentItem()).
+        if (Window.isThisWindow(event, player, "Банк") && option != null) {
+            var amount = Double.parseDouble(ItemWorker.GetName(option).
                     replace(CashWorker.currencySigh, ""));
 
-            if (amount > 0) PcConomy.GlobalBank.PlayerWithdrawCash(amount, player);
-            else PcConomy.GlobalBank.PlayerPutCash(Math.abs(amount), player);
+            if (amount > 0) PcConomy.GlobalBank.GiveCashToPlayer(amount, player);
+            else PcConomy.GlobalBank.TakeCashFromPlayer(Math.abs(amount), player);
 
             event.setCancelled(true);
         }

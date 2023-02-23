@@ -13,8 +13,8 @@ public class LicenseBody {
         LicenseType = licenseType;
     }
 
-    public UUID Owner;
-    public String Term;
-    public LicenseType LicenseType;
+    public final UUID Owner;
+    public final String Term;
+    public final LicenseType LicenseType;
 }
 

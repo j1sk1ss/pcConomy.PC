@@ -13,9 +13,10 @@ public class LicensorListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
+        var option = event.getCurrentItem();
 
-        if (Window.isThisWindow(event, player, "Лицензии")) {
-            switch (ItemWorker.GetName(event.getCurrentItem())) {
+        if (Window.isThisWindow(event, player, "Лицензии") && option != null) {
+            switch (ItemWorker.GetName(option)) {
                 case "Лицензия на создание т. зоны" ->
                         License.GetMarketLicense(player);
                 case "Лицензия на торговую деятельность" ->

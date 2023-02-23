@@ -30,17 +30,8 @@ public class LoanListener implements Listener {
             event.setCancelled(true);
 
             if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
-                var balanceWorker = new BalanceWorker();
-                var loanAmount = LoanWorker.getLoan(player.getUniqueId(), townObject).amount;
-
-                if (!balanceWorker.isSolvent(loanAmount, player)) {
-                    balanceWorker.TakeMoney(loanAmount, player);
-                    townObject.ChangeBudget(loanAmount);
-                    LoanWorker.destroyLoan(player.getUniqueId(), townObject);
-
-                    player.openInventory(LoanWindow.GetLoanWindow(player, false));
-                }
-                return;
+                LoanWorker.payOffADebt(player, townObject);
+                player.closeInventory();
             }
 
             if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
@@ -58,7 +49,7 @@ public class LoanListener implements Listener {
                 }
             } else {
                 activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                player.openInventory(LoanWindow.GetLoanWindow(activeInventory, player, buttonPosition, false));
+                player.openInventory(LoanWindow.GetWindow(activeInventory, player, buttonPosition, false));
             }
         }
     }

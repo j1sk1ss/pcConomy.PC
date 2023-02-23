@@ -15,13 +15,13 @@ public class TownyListener implements Listener {
     public void OnCreation(NewTownEvent event) {
         var town = event.getTown(); // Запоминаем город
 
-        PcConomy.GlobalBank.BankBudget += 250d;
+        PcConomy.GlobalBank.BankBudget += 250.0d;
         PcConomy.GlobalTownWorker.CreateTownObject(town, false); // Добавляем в лист установив что это игроковский город
     }
 
     @EventHandler
     public void onClaim(TownClaimEvent event) {
-        PcConomy.GlobalBank.BankBudget += 25d;
+        PcConomy.GlobalBank.BankBudget += event.getTownBlock().getPlotPrice();
     }
 
     @EventHandler

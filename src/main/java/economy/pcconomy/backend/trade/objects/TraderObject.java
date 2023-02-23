@@ -1,6 +1,5 @@
 package economy.pcconomy.backend.trade.objects;
 
-import economy.pcconomy.backend.trade.npc.Trader;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -21,12 +20,12 @@ public class TraderObject {
         Term          = term;
     }
     public List<ItemStack> Storage = new ArrayList<>();
-    public double Revenue;
-    public double Margin;
-    public double Cost;
-    public boolean isRanted;
-    public String homeTown;
-    public UUID Owner;
-    public String Term;
+    public final double Revenue;
+    public final double Margin;
+    public final double Cost;
+    public final boolean isRanted;
+    public final String homeTown;
+    public final UUID Owner;
+    public final String Term;
 
 }

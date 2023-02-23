@@ -6,7 +6,7 @@ import economy.pcconomy.backend.bank.scripts.LoanWorker;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.town.scripts.TownWorker;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,8 +20,8 @@ public class LoanWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
  // Много хардкодинга, кто нибудь почистите потом
-    public static Inventory GetLoanWindow(Player player, boolean isNPC) {
-        var window = Bukkit.createInventory(player, 27, isNPC ? "Кредит" : "Кредит-Город");
+    public static Inventory GetWindow(Player player, boolean isNPC) {
+        var window = Bukkit.createInventory(player, 27, Component.text(isNPC ? "Кредит" : "Кредит-Город"));
 
         for (var i = 0; i < countOfAmountSteps; i++) {
             if (isNPC) window.setItem(i, GetAmountButton(i, 18, player));
@@ -41,7 +41,7 @@ public class LoanWindow {
         return CreditDestroyButton(window, isNPC, player);
     }
 
-    public static Inventory GetLoanWindow(Inventory window, Player player, int option, boolean isNPC) {
+    public static Inventory GetWindow(Inventory window, Player player, int option, boolean isNPC) {
         for (var i = 0; i < countOfAmountSteps; i++) {
             if (isNPC) window.setItem(i, GetAmountButton(i, option, player));
             else

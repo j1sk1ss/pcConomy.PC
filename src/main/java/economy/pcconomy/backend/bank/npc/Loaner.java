@@ -1,10 +1,6 @@
 package economy.pcconomy.backend.bank.npc;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
-import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.trade.npc.Trader;
 import economy.pcconomy.frontend.ui.Window;
 
 import net.citizensnpcs.api.CitizensAPI;
@@ -13,7 +9,6 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChatEvent;
 

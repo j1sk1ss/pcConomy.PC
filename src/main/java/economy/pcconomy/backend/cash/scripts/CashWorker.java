@@ -24,7 +24,7 @@ public class CashWorker {
                 "" + amount + currencySigh), currencyName);
     }
 
-    public double GetAmountFromCash(ItemStack money) { // Получает итоговую сумму обьекта банкнот
+    public static double GetAmountFromCash(ItemStack money) { // Получает итоговую сумму обьекта банкнот
         if (isCash(money))
             return Double.parseDouble(ItemWorker.GetLore(money).get(0)
                     .replace(currencySigh,"")) * money.getAmount();
@@ -32,7 +32,7 @@ public class CashWorker {
         return 0;
     }
 
-    public double GetAmountFromCash(List<ItemStack> money) { // Получает итоговую сумму обьектов банкнот
+    public static double GetAmountFromCash(List<ItemStack> money) { // Получает итоговую сумму обьектов банкнот
         var amount = 0.0;
 
         for (var item:
@@ -45,7 +45,7 @@ public class CashWorker {
         return amount;
     }
 
-    public List<ItemStack> GetCashFromInventory(PlayerInventory inventory) { // Выдаёт лист всех купюр из инвентаря
+    public static List<ItemStack> GetCashFromInventory(PlayerInventory inventory) { // Выдаёт лист всех купюр из инвентаря
         List<ItemStack> moneys = new ArrayList<>();
 
         for (var item: // Формируем лист купюр
