@@ -55,17 +55,25 @@ import java.util.Arrays;
 public final class PcConomy extends JavaPlugin { // Гл класс плагина. Тут обьявляйте в статике нужные API
     // Так же желательно тут регистрировать Listeners
     // Ну и обработчики команд с командами тоже bruh
-    public static FileConfiguration Config = PcConomy.getPlugin(PcConomy.class).getConfig();
+    public static FileConfiguration Config;
     public static XConomyAPI xConomyAPI;
     public static NPC GlobalNPC;
 
-    public static Bank GlobalBank                     = new Bank();
-    public static BorrowerWorker GlobalBorrowerWorker = new BorrowerWorker();
-    public static TownWorker GlobalTownWorker         = new TownWorker();
-    public static LicenseWorker GlobalLicenseWorker   = new LicenseWorker();
+    public static Bank GlobalBank;
+    public static BorrowerWorker GlobalBorrowerWorker;
+    public static TownWorker GlobalTownWorker;
+    public static LicenseWorker GlobalLicenseWorker;
 
     @Override
     public void onEnable() {
+        saveConfig();
+
+        Config               = PcConomy.getPlugin(PcConomy.class).getConfig();
+        GlobalBank           = new Bank();
+        GlobalBorrowerWorker = new BorrowerWorker();
+        GlobalTownWorker     = new TownWorker();
+        GlobalLicenseWorker  = new LicenseWorker();
+
         try {
             if (new File("NPCData.txt").exists())
                 GlobalNPC = Loader.LoadNPC("NPCData");
@@ -105,6 +113,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("swnpc").setExecutor(manager);
         getCommand("tmenu").setExecutor(manager);
         getCommand("addTrade").setExecutor(manager);
+
     }
 
     public static void SaveData() {
