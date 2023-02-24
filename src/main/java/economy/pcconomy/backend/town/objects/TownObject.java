@@ -25,10 +25,12 @@ public class TownObject implements IMoney {
     }
     public final String TownName;
     public final List<LoanObject> Credit;
-    public boolean isNPC;
     public final List<ItemStack> Storage = new ArrayList<>();
-    private final double StartBudget = 10000;
     private final int StartStorageAmount = StorageWorker.GetAmountOfStorage(Storage);
+    public boolean isNPC;
+    private double previousBudget = 10000;
+    public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage");
+    public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget");
 
     public void InitializeNPC() {
         Storage.add(new ItemStack(Material.SPRUCE_WOOD, 100));
@@ -39,7 +41,7 @@ public class TownObject implements IMoney {
         Storage.add(new ItemStack(Material.IRON_INGOT, 165));
         Storage.add(new ItemStack(Material.COBBLESTONE, 500));
 
-        setBudget(StartBudget);
+        setBudget(previousBudget);
         LifeCycle();
     }
 
@@ -47,10 +49,18 @@ public class TownObject implements IMoney {
         LoanWorker.takePercentFromBorrowers(this);
         if (!isNPC) return;
 
-        if (getLocalInflation() < .5) GetMoneyFromBank(1000); // Взятие кредита при дефляции
-        else StorageWorker.CreateResources(500, Storage); // Создание ресурсов с потолком 100 штук
+        var changePercent = (getBudget() - previousBudget) / previousBudget;
+        var isRecession  = (changePercent <= 0 && getLocalInflation() > 0) ? 1 : -1;
 
-        StorageWorker.UseResources(100, Storage); // Потребление ресурсов
+        GetMoneyFromBank(1000);
+
+        usefulBudget  = usefulStorage - (usefulBudget * Math.abs(changePercent)) * isRecession;
+        usefulStorage = usefulBudget + (usefulStorage * Math.abs(changePercent)) * isRecession;
+
+        StorageWorker.CreateResources(500, Storage);
+        StorageWorker.UseResources(100, Storage);
+
+        previousBudget = getBudget();
     }
 
     public void GenerateLocalPrices() { // Только для НПС города
@@ -69,7 +79,7 @@ public class TownObject implements IMoney {
     }
 
     public double getLocalInflation() {
-        return (getBudget() / StartBudget) - ((double)StorageWorker.GetAmountOfStorage(Storage) / StartStorageAmount);
+        return (getBudget() / previousBudget) - ((double)StorageWorker.GetAmountOfStorage(Storage) / StartStorageAmount);
     }
 
     public void GetMoneyFromBank(double amount) {

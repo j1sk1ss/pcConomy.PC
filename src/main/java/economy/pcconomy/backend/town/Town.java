@@ -11,9 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Town {
-
-    public static final double usefulStorage = .3d;
-
     public static void BuyResourceFromStorage(TownObject townObject, ItemStack itemStack, Player buyer) {
         // Покупка в НПС городе за наличку
         var itemAmount = 8;
@@ -21,7 +18,7 @@ public class Town {
 
         if (townObject == null) return;
         if (!townObject.isNPC) return;
-        if (StorageWorker.GetAmountOfResource(itemStack, townObject.Storage) * usefulStorage < itemAmount) return;
+        if (StorageWorker.GetAmountOfResource(itemStack, townObject.Storage) * townObject.usefulStorage < itemAmount) return;
 
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(buyer) < price) return;
@@ -38,8 +35,6 @@ public class Town {
                 .getTownName(buyer.getLocation())).GenerateLocalPrices();
     }
 
-    public static final double usefulBudget = .35d;
-
     public static void SellResourceToStorage(TownObject townObject, ItemStack itemStack, Player seller) {
         // Продажа в НПС городе за наличку
         var itemAmount = itemStack.getAmount();
@@ -52,7 +47,7 @@ public class Town {
         var price = ItemWorker.GetPriceFromLore(itemStack, 1) * itemAmount;
         var cash  = new Cash();
 
-        if (price > townObject.getBudget() * usefulBudget) return;
+        if (price > townObject.getBudget() * townObject.usefulBudget) return;
 
         seller.getInventory().setItemInMainHand(null);
         StorageWorker.SetAmountOfResource(itemStack, StorageWorker.GetAmountOfResource(itemStack,

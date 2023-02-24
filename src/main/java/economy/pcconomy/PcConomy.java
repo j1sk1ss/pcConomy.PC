@@ -44,6 +44,7 @@ import me.yic.xconomy.api.XConomyAPI;
 
 import org.bukkit.Bukkit;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,7 +55,7 @@ import java.util.Arrays;
 public final class PcConomy extends JavaPlugin { // Гл класс плагина. Тут обьявляйте в статике нужные API
     // Так же желательно тут регистрировать Listeners
     // Ну и обработчики команд с командами тоже bruh
-
+    public static FileConfiguration Config = PcConomy.getPlugin(PcConomy.class).getConfig();
     public static XConomyAPI xConomyAPI;
     public static NPC GlobalNPC;
 

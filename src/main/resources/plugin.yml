@@ -5,6 +5,7 @@ api-version: 1.16
 authors: [ PC_Java_Team ]
 description: Main economy plugin for Potolot Craft
 website: https://potolotcraft.net
+
 commands:
   create:
     usage: /create
@@ -30,3 +31,20 @@ commands:
     usage: /tmenu
   addTrade:
     usage: /addTrade <npc_town_name> <material> <amount>
+
+bank:
+  start_budget: 15000
+  start_useful_budget: 0.25
+  start_VAT: 0.10
+license:
+  market_license_price: 1200
+  trade_license_price: 500
+  loan_license_price: 3200
+  loan_history_license_price: 1600
+npc:
+  trader_cost: 3000
+  loaner_cost: 4500
+town:
+  start_useful_budget: 0.35
+  start_useful_storage: 0.30
+

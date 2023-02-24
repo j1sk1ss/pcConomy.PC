@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public class License {
-    public final static double marketLicensePrice = 1200d;
-    public final static double tradeLicensePrice = 500d;
-    public final static double loanLicensePrice = 3200d;
-    public final static double loanHistoryLicensePrice = 1600d;
+    public final static double marketLicensePrice = PcConomy.Config.getDouble("license.market_license_price");
+    public final static double tradeLicensePrice = PcConomy.Config.getDouble("license.trade_license_price");
+    public final static double loanLicensePrice = PcConomy.Config.getDouble("license.loan_license_price");
+    public final static double loanHistoryLicensePrice = PcConomy.Config.getDouble("license.loan_history_license_price");
 
     private static final Map<LicenseType, String> licenseTypes = Map.of(
             LicenseType.Trade, "Лицензия на ведение торговой деятельности",

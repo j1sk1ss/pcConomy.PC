@@ -23,9 +23,9 @@ public class Bank implements IMoney {
     public Bank() {
         Credit = new ArrayList<>();
     }
-    public double BankBudget = 15000.0d;
-    public double UsefulBudgetPercent = .25d;
-    public double VAT = .1d;
+    public double BankBudget = PcConomy.Config.getDouble("bank.start_budget");
+    public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget");
+    public double VAT = PcConomy.Config.getDouble("bank.start_VAT");
     public final List<LoanObject> Credit;
 
     public void GiveCashToPlayer(double amount, Player player) {
