@@ -6,13 +6,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class CashWorker {
 
-    public final static String currencyName = "Доллар США"; // Название валюты. Оно будет названием банкнот
+    public final static String currencyName = "Алеф"; // Название валюты. Оно будет названием банкнот
     public final static String currencySigh = "$"; // Значок валюты. Он будет стоять после номинала в лоре
+    private static HashMap<String, String> currencyNameCases = new HashMap<String,String>(); // Список склонений названия валюты по падежам и числам
+    
+    static { // Инициализация падежей
+    	currencyNameCases.put("is", "Алеф"); // Единственное число
+    	currencyNameCases.put("rs", "Алефа");
+    	currencyNameCases.put("ds", "Алефу");
+    	currencyNameCases.put("vs", "Алеф");
+    	currencyNameCases.put("ts", "Алефом");
+    	currencyNameCases.put("ps", "Алефе");
+    	
+    	currencyNameCases.put("ip", "Алефы"); // Множественное число
+    	currencyNameCases.put("rp", "Алефов");
+    	currencyNameCases.put("dp", "Алефам");
+    	currencyNameCases.put("vp", "Алефы");
+    	currencyNameCases.put("tp", "Алефами");
+    	currencyNameCases.put("pp", "Алефах");
+    }
 
     public static ItemStack CreateCashObject(double amount) { // Создаёт обьект банкноты в одном эксземпляре
         return ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER, 1),
@@ -72,5 +90,17 @@ public class CashWorker {
             return !Objects.equals(ItemWorker.GetLore(item).get(0), "");
 
         return false;
+    }
+    
+    public static String getCurrencyNameCase(String ncase) { // Получение склонённого названия валюты
+    	return currencyNameCases.get(ncase);
+    }
+    
+    // TODO заменить везде слова валюты с количеством денег на этот метод
+    // Например ("В кошельке лежит " + amount + CashWorker.getCurrencyNameByNum(amount))
+    public static String getCurrencyNameByNum(int num) { // Получение склонённого названия валюты в зависимости от суммы денег (в именительном падеже)
+    	if (num % 10 == 1 && num % 100 != 11) return currencyNameCases.get("is");
+    	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14)) return currencyNameCases.get("rs");
+    	return currencyNameCases.get("rp");
     }
 }

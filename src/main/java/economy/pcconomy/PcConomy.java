@@ -27,6 +27,7 @@ import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.link.Manager;
 import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.npc.listener.NPCLoader;
+import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
 import economy.pcconomy.backend.save.Loader;
 import economy.pcconomy.backend.town.listener.TownyListener;
 import economy.pcconomy.backend.bank.Bank;
@@ -113,6 +114,10 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         getCommand("swnpc").setExecutor(manager);
         getCommand("tmenu").setExecutor(manager);
         getCommand("addTrade").setExecutor(manager);
+        
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) { // Регистрация PAPI
+        	new PcConomyPAPI().register();
+        }
 
     }
 
