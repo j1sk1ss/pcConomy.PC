@@ -19,8 +19,11 @@ public class MayorListener implements Listener {
         if (Window.isThisWindow(event, player, "Меню")) {
             var option = ItemWorker.GetName(event.getCurrentItem());
 
-            if (option.equals("Установить торговца")) PcConomy.GlobalNPC.BuyNPC(player, LicenseType.Market, NPC.traderCost);
-            if (option.equals("Установить кредитора")) PcConomy.GlobalNPC.BuyNPC(player, LicenseType.Loan, NPC.loanerCost);
+            if (option.equals("Установить торговца"))
+                PcConomy.GlobalNPC.BuyNPC(player, LicenseType.Market, NPC.traderCost + NPC.traderCost * PcConomy.GlobalBank.VAT);
+            if (option.equals("Установить кредитора"))
+                PcConomy.GlobalNPC.BuyNPC(player, LicenseType.Loan, NPC.loanerCost + NPC.loanerCost * PcConomy.GlobalBank.VAT);
+
             event.setCancelled(true);
         }
     }

@@ -35,8 +35,8 @@ public class NPC {
         npc.spawn(creator.getLocation());
     }
 
-    public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost");
-    public static final double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost");
+    public static double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
+    public static double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost", 2000d);
 
     private final Map<LicenseType, Trait> npcList = Map.of(
             LicenseType.Market, new Trader(),
@@ -47,9 +47,8 @@ public class NPC {
         var cash = new Cash();
         if (cash.AmountOfCashInInventory(buyer) < price) return;
 
-        var license = PcConomy.GlobalLicenseWorker.GetLicense(buyer.getUniqueId(), neededLicense);
-        if (license == null) return;
-        if (PcConomy.GlobalLicenseWorker.isOverdue(license)) return;
+        if (PcConomy.GlobalLicenseWorker.isOverdue(
+                PcConomy.GlobalLicenseWorker.GetLicense(buyer.getUniqueId(), neededLicense))) return;
 
         cash.TakeCashFromInventory(price, buyer);
         PcConomy.GlobalBank.BankBudget += price;
@@ -60,36 +59,31 @@ public class NPC {
     }
 
     public void UpdateNPC() {
-        for (net.citizensnpcs.api.npc.NPC npc:
-             CitizensAPI.getNPCRegistry()) {
+        for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
                 case "npcloaner" -> npc.addTrait(NPCLoaner.class);
-                case "loaner" -> npc.addTrait(Loaner.class);
-                case "banker" -> npc.addTrait(Banker.class);
-                case "licensor" -> npc.addTrait(Licensor.class);
+                case "loaner"    -> npc.addTrait(Loaner.class);
+                case "banker"    -> npc.addTrait(Banker.class);
+                case "licensor"  -> npc.addTrait(Licensor.class);
                 case "npctrader" -> npc.addTrait(NPCTrader.class);
-                case "trader" -> npc.addTrait(Trader.class);
+                case "trader"    -> npc.addTrait(Trader.class);
             }
         }
+
         LoadTraders();
     }
 
     public net.citizensnpcs.api.npc.NPC GetNPC(int id) {
-        for (net.citizensnpcs.api.npc.NPC npc:
-                CitizensAPI.getNPCRegistry()) {
-            if (npc.hasTrait(Trader.class)) {
-                if (npc.getId() == id) {
+        for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
+            if (npc.hasTrait(Trader.class))
+                if (npc.getId() == id)
                     return npc;
-                }
-            }
-        }
 
         return null;
     }
 
     public void LoadTraders() {
-        for (int id:
-                Traders.keySet()) {
+        for (int id: Traders.keySet()) {
             var trait = new Trader();
             var saveTrait = Traders.get(id);
 
@@ -107,16 +101,13 @@ public class NPC {
     }
 
     public void SaveNPC(String fileName) throws IOException {
-
-        for (net.citizensnpcs.api.npc.NPC npc:
-                CitizensAPI.getNPCRegistry()) {
+        for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class)) {
                 var traderTrait = npc.getTrait(Trader.class);
 
                 Traders.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
                         traderTrait.Cost, traderTrait.isRanted, traderTrait.homeTown, traderTrait.Owner, traderTrait.Term));
             }
-        }
 
         FileWriter writer = new FileWriter(fileName + ".txt", false);
         new GsonBuilder()

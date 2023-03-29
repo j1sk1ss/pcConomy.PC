@@ -23,13 +23,13 @@ public class Bank implements IMoney {
     public Bank() {
         Credit = new ArrayList<>();
     }
-    public double BankBudget = PcConomy.Config.getDouble("bank.start_budget");
-    public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget");
-    public double VAT = PcConomy.Config.getDouble("bank.start_VAT");
+
+    public double BankBudget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
+    public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
+    public double VAT = PcConomy.Config.getDouble("bank.start_VAT", .1d);
     public final List<LoanObject> Credit;
 
     public void GiveCashToPlayer(double amount, Player player) {
-        // Метод снятия денег в городе из банка игроком (если в городе есть на это бюджет)
         var balanceWorker = new BalanceWorker();
         var cash          = new Cash();
 
@@ -41,16 +41,7 @@ public class Bank implements IMoney {
         cash.GiveCashToPlayer(amount, player);
     }
 
-    public void TakeCashFromPlayer(ItemStack money, Player player) { // Метод внесения купюры в городе в банк
-        if (!CashWorker.isCash(money)) return;
-        ItemWorker.TakeItems(money, player);
-
-        var amount = CashWorker.GetAmountFromCash(money);
-        new BalanceWorker().GiveMoney(amount, player);
-        PcConomy.GlobalBank.BankBudget += amount;
-    }
-
-    public void TakeCashFromPlayer(double amount, Player player) { // Метод внесения денег в городе в банк
+    public void TakeCashFromPlayer(double amount, Player player) {
         var amountInventory = CashWorker.GetAmountFromCash(
                 CashWorker.GetCashFromInventory(player.getInventory()));
         if (amount > amountInventory) return;
@@ -99,7 +90,6 @@ public class Bank implements IMoney {
     }
 
     public double GetUsefulAmountOfBudget() {
-        // Получение обьёма бюджета пригодного для операции
         return BankBudget * UsefulBudgetPercent;
     }
 

@@ -5,22 +5,23 @@ import economy.pcconomy.backend.cash.scripts.CashWorker;
 import org.bukkit.OfflinePlayer;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.jetbrains.annotations.NotNull;
 
 public class PcConomyPAPI extends PlaceholderExpansion {
 	
 	@Override
-	public String getAuthor() { // Реализация API
-		return "Potolotcraft Team";
+	public @NotNull String getAuthor() { // Реализация API
+		return "PotolotCraft Team";
 	}
 	
 	@Override
-	public String getIdentifier() {
+	public @NotNull String getIdentifier() {
 		return "pcconomy";
 	}
 	
 	@Override
-	public String getVersion() {
-		return "1.0.0";
+	public @NotNull String getVersion() {
+		return "1.0.4";
 	}
 	
 	@Override 

@@ -11,7 +11,6 @@ import java.util.List;
 import static economy.pcconomy.backend.cash.scripts.CashWorker.CreateCashObject;
 
 public class Cash {
-
     public void GiveCashToPlayer(double amount, Player player) { // Дать игроку купюру существующим номиналом
         if (!ChangeWorker.Denomination.contains(amount)) { // Номинал не существует
             GiveSpecialAmountOfCashToPlayer(amount, player); // Выдача другими номиналами
@@ -30,31 +29,17 @@ public class Cash {
         ItemWorker.GiveItems(change, player);
     }
 
-    public double AmountOfCashInHand(Player player) { // Колличество денег у игрока в руке
-        return CashWorker.GetAmountFromCash(player.getInventory().getItemInMainHand());
-    }
-
-    public double TakeCashFromHand(Player player) { // Забрать деньги из рук игрока и получить их кол-во
-        double amount = AmountOfCashInHand(player);
-        if (amount == 0) return 0;
-
-        player.getInventory().setItemInMainHand(null);
-        return amount;
-    }
-
     public double AmountOfCashInInventory(Player player) { // Колличество денег у игрока в инвенторе
-        var playerCash = CashWorker.GetCashFromInventory(player.getInventory());
-        return CashWorker.GetAmountFromCash(playerCash);
+        return CashWorker.GetAmountFromCash(CashWorker.GetCashFromInventory(player.getInventory()));
     }
 
     public void TakeCashFromInventory(double amount, Player player) { // Забрать необходимую сумму из инвентаря со сдачей
-        var playerCash = CashWorker.GetCashFromInventory(player.getInventory());
         var playerCashAmount = AmountOfCashInInventory(player);
 
-        if (playerCashAmount < amount) return; // Если у игрока ет таких денег
+        if (playerCashAmount < amount) return;
         if (ItemWorker.GetEmptySlots(player) < ChangeWorker.getChange(amount).size()) return; // Если нет места для сдачи
 
-        ItemWorker.TakeItems(playerCash, player);
+        ItemWorker.TakeItems(CashWorker.GetCashFromInventory(player.getInventory()), player);
         GiveSpecialAmountOfCashToPlayer(playerCashAmount - amount, player);
     }
 }

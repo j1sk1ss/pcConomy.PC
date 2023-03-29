@@ -102,19 +102,21 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
         xConomyAPI  = new XConomyAPI(); // Общий API XConomy этого плагина. Брать только от сюда
         var manager = new Manager(); // Обработчик тестовых комманд
 
-        getCommand("create").setExecutor(manager);
-        getCommand("createB").setExecutor(manager);
-        getCommand("createL").setExecutor(manager);
-        getCommand("take").setExecutor(manager);
-        getCommand("withdraw").setExecutor(manager);
-        getCommand("put").setExecutor(manager);
-        getCommand("createt").setExecutor(manager);
-        getCommand("createnpct").setExecutor(manager);
-        getCommand("createLic").setExecutor(manager);
-        getCommand("swnpc").setExecutor(manager);
-        getCommand("tmenu").setExecutor(manager);
-        getCommand("addTrade").setExecutor(manager);
-        
+        getCommand("take_cash").setExecutor(manager);
+        getCommand("create_cash").setExecutor(manager);
+        getCommand("reload_towns").setExecutor(manager);
+        getCommand("save_data").setExecutor(manager);
+        getCommand("put_cash_to_bank").setExecutor(manager);
+        getCommand("create_banker").setExecutor(manager);
+        getCommand("create_loaner").setExecutor(manager);
+        getCommand("create_trader").setExecutor(manager);
+        getCommand("create_npc_trader").setExecutor(manager);
+        getCommand("create_licensor").setExecutor(manager);
+        getCommand("switch_town_to_npc").setExecutor(manager);
+        getCommand("town_menu").setExecutor(manager);
+        getCommand("add_trade_to_town").setExecutor(manager);
+        getCommand("reload_npc").setExecutor(manager);
+
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) { // Регистрация PAPI
         	new PcConomyPAPI().register();
         }

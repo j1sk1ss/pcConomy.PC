@@ -7,30 +7,34 @@ description: Main economy plugin for Potolot Craft made by j1s
 website: https://potolotcraft.net
 
 commands:
-  create:
-    usage: /create
-  take:
-    usage: /take
-  withdraw:
-    usage: /withdraw
-  put:
-    usage: /put
-  createB:
-    usage: /createB
-  createL:
-    usage: /createL
-  createt:
-    usage: /createt
-  createnpct:
-    usage: /createnpct
-  createLic:
-    usage: /createLic
-  swnpc:
-    usage: /swnpc
-  tmenu:
-    usage: /tmenu
-  addTrade:
-    usage: /addTrade <npc_town_name> <material> <amount>
+  take_cash:
+    usage: /take_cash
+  create_cash:
+    usage: /create_cash
+  reload_towns:
+    usage: /reload_towns
+  save_data:
+    usage: /save_data
+  put_cash_to_bank:
+    usage: /put_cash_to_bank
+  create_banker:
+    usage: /create_banker
+  create_loaner:
+    usage: /create_loaner
+  create_trader:
+    usage: /create_trader
+  create_npc_trader:
+    usage: /create_npc_trader
+  create_licensor:
+    usage: /create_licensor
+  switch_town_to_npc:
+    usage: /switch_town_to_npc
+  town_menu:
+    usage: /town_menu
+  add_trade_to_town:
+    usage: /add_trade_to_town
+  reload_npc:
+    usage: /reload_npc
 
 bank:
   start_budget: 15000

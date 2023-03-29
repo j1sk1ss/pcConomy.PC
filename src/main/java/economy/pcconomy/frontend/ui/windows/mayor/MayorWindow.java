@@ -1,5 +1,6 @@
 package economy.pcconomy.frontend.ui.windows.mayor;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.scripts.CashWorker;
 import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.scripts.ItemWorker;
@@ -16,9 +17,11 @@ public class MayorWindow {
         var window = Bukkit.createInventory(mayor, 27, Component.text("Меню"));
 
         window.setItem(0, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
-                NPC.traderCost + CashWorker.currencySigh), "Установить торговца"));
+                (NPC.traderCost + NPC.traderCost * PcConomy.GlobalBank.VAT) + CashWorker.currencySigh),
+                "Установить торговца"));
         window.setItem(1, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
-                NPC.traderCost + CashWorker.currencySigh), "Установить кредитора"));
+                (NPC.loanerCost + NPC.loanerCost * PcConomy.GlobalBank.VAT) + CashWorker.currencySigh),
+                "Установить кредитора"));
 
         return window;
     }

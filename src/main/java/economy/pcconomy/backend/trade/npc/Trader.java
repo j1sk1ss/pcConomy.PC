@@ -40,8 +40,7 @@ public class Trader extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        if (homeTown.equals(""))
-            homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
+        if (homeTown.equals("")) homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
 
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && isRanted) {
             PcConomy.GlobalTownWorker.GetTownObject(homeTown).ChangeBudget(Revenue);
@@ -50,27 +49,22 @@ public class Trader extends Trait {
             Owner    = null;
             Revenue  = 0;
             Storage.clear();
+
             return;
         }
 
         var player = event.getClicker();
 
         try {
-            if (isRanted) {
-                if (Owner.equals(player.getUniqueId())) {
-                    player.openInventory(TraderWindow.GetOwnerWindow(player, this));
-                } else {
-                    player.openInventory(TraderWindow.GetWindow(player, this));
-                }
-            } else {
+            if (isRanted)
+                if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.GetOwnerWindow(player, this));
+                else player.openInventory(TraderWindow.GetWindow(player, this));
+            else
                 if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor()
-                        .getUUID().equals(player.getUniqueId())) {
-                    player.openInventory(TraderWindow.GetMayorWindow(player, this));
-                } else {
-                    player.openInventory(TraderWindow.GetRanterWindow(player, this));
-                }
-            }
-        } catch (NullPointerException e) {
+                        .getUUID().equals(player.getUniqueId())) player.openInventory(TraderWindow.GetMayorWindow(player, this));
+                else player.openInventory(TraderWindow.GetRanterWindow(player, this));
+        }
+        catch (NullPointerException e) {
             player.sendMessage("Что-то пошло не так (1).");
         }
     }
@@ -83,17 +77,17 @@ public class Trader extends Trait {
         var player = event.getClicker();
         var playerUUID = player.getUniqueId();
 
-        if (isRanted) {
+        if (isRanted)
             if (Owner.equals(playerUUID) && Storage.size() < 27) {
                 player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
                 chat.put(playerUUID, event.getNPC().getId());
-            } else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
-        } else {
+            }
+            else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
+        else
             if (TownyAPI.getInstance().getTown(homeTown).getMayor().getUUID().equals(playerUUID)) {
-                player.sendMessage("Удалить торговца? (y/n)");
+                player.sendMessage("Удалить торговца? (д/н)");
                 chat.put(playerUUID, event.getNPC().getId());
             }
-        }
     }
 
     @EventHandler
@@ -104,8 +98,9 @@ public class Trader extends Trait {
 
         if (chat.get(player.getUniqueId()) != null) {
             var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
-            if (StringUtils.containsAny(playerMessage, "ynYN")) {
-                if (playerMessage.toLowerCase().contains("y")) {
+
+            if (StringUtils.containsAny(playerMessage, "днДН")) {
+                if (playerMessage.toLowerCase().contains("д")) {
                     PcConomy.GlobalNPC.Traders.remove(trader.getId());
                     trader.destroy();
                 }
@@ -127,7 +122,8 @@ public class Trader extends Trait {
 
                 player.sendMessage("Предмет " + ItemWorker.GetName(sellingItem) + " выставлен на продажу за "
                     + (cost + cost * Margin) + " " + CashWorker.currencySigh);
-            } catch (NumberFormatException exception) {
+            }
+            catch (NumberFormatException exception) {
                 player.sendMessage("Напишите корректную цену");
             }
         }

@@ -20,6 +20,7 @@ public class LicenseWorker {
     }
 
     public boolean isOverdue(LicenseBody licenseBody) {
+        if (licenseBody == null) return true;
         return LocalDateTime.now().isAfter(LocalDateTime.parse(licenseBody.Term));
     }
 
