@@ -15,9 +15,9 @@ public class TownWorker {
     public final List<TownObject> townObjects = new ArrayList<>(); // все города сервера
 
     public void ReloadTownObjects() {
+        townObjects.clear();
         for (com.palmergames.bukkit.towny.object.Town town:
                 TownyAPI.getInstance().getTowns()) {
-            townObjects.clear();
             CreateTownObject(town, false);
         }
     }
