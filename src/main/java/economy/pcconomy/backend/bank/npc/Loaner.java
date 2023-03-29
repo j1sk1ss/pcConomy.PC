@@ -1,16 +1,21 @@
 package economy.pcconomy.backend.bank.npc;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.frontend.ui.Window;
 
+import economy.pcconomy.PcConomy;
+import economy.pcconomy.frontend.ui.Window;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
+
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.TextComponent;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerChatEvent;
+//import org.bukkit.event.player.PlayerChatEvent;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -46,19 +51,23 @@ public class Loaner extends Trait {
     private final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
-    public void Chatting(PlayerChatEvent event) {
-        var player = event.getPlayer();
-        var playerMessage = event.getMessage();
-        event.setCancelled(true);
-
-        if (chat.get(player.getUniqueId()) != null) {
-            var loaner = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
-            if (StringUtils.containsAny(playerMessage, "ynYN")) {
-                if (playerMessage.toLowerCase().contains("y")) {
-                    loaner.destroy();
-                }
-            }
-        }
+    public void Chatting(AsyncChatEvent event) {
+    	if (event.isAsynchronous()) {
+    		Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("PcConomy"), () -> {
+    			var player = event.getPlayer();
+    	        var playerMessage = ((TextComponent) event.originalMessage()).content();
+    	        event.setCancelled(true);
+    	
+    	        if (chat.get(player.getUniqueId()) != null) {
+    	            var loaner = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
+    	            if (StringUtils.containsAny(playerMessage, "ynYN")) {
+    	                if (playerMessage.toLowerCase().contains("y")) {
+    	                    loaner.destroy();
+    	                }
+    	            }
+    	        }
+    		});
+    	}
     }
 
 }

@@ -103,7 +103,7 @@ public class NPC {
     public void SaveNPC(String fileName) throws IOException {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class)) {
-                var traderTrait = npc.getTrait(Trader.class);
+                var traderTrait = npc.getOrAddTrait(Trader.class);
 
                 Traders.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
                         traderTrait.Cost, traderTrait.isRanted, traderTrait.homeTown, traderTrait.Owner, traderTrait.Term));

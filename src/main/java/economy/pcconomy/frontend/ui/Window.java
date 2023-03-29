@@ -4,6 +4,8 @@ import economy.pcconomy.frontend.ui.windows.bank.BankerWindow;
 import economy.pcconomy.frontend.ui.windows.license.LicensorWindow;
 import economy.pcconomy.frontend.ui.windows.loan.LoanWindow;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
+
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -21,7 +23,7 @@ public class Window {
     public static boolean isThisWindow(InventoryClickEvent event, Player player, String windowName){
         if (event.getCurrentItem() != null)
             if (event.getInventory().getHolder() instanceof Player player1)
-                return event.getView().getTitle().equals(windowName) && player1.equals(player);
+                return ((TextComponent) event.getView().title()).content().equals(windowName) && player1.equals(player);
 
         return false;
     }

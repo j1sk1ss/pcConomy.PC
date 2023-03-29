@@ -1,27 +1,31 @@
 package economy.pcconomy.backend.scripts;
 
 import economy.pcconomy.backend.cash.scripts.CashWorker;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import net.kyori.adventure.text.Component;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ItemWorker {
     public static ItemStack SetLore(ItemStack item, String loreLine) { // Устанавливает лор для предмета
         var itemMeta = Objects.requireNonNull(item).getItemMeta();
-        var lore = Arrays.stream(loreLine.split("\n")).toList();
+        List<Component> lore = Arrays.asList(Component.text(loreLine));
 
-        itemMeta.setLore(lore);
+        itemMeta.lore(lore);
         Objects.requireNonNull(item).setItemMeta(itemMeta);
         return item;
     }
 
     public static ItemStack SetName(ItemStack item, String name) { // Устанавливает имя для предмета
         var itemMeta = Objects.requireNonNull(item).getItemMeta();
-        itemMeta.setDisplayName(name);
+        itemMeta.displayName(Component.text(name));
         Objects.requireNonNull(item).setItemMeta(itemMeta);
 
         return item;
@@ -38,12 +42,12 @@ public class ItemWorker {
         return item.getType();
     }
 
-    public static List<String> GetLore(ItemStack item) {
-        return item.getItemMeta().getLore();
+    public static List<String> GetLore(ItemStack item) { // Возможно лучшего всего сделать статический метод с этими манипуляциями
+        return item.getItemMeta().lore().stream().map(Object::toString).collect(Collectors.toList());
     } // Получает лор
 
     public static String GetName(ItemStack item){
-        return item.getItemMeta().getDisplayName();
+        return item.getItemMeta().displayName().toString();
     } // Получает имя
 
     public static void GiveItems(List<ItemStack> itemStacks, Player player) { // Выдаёт лист предметов игроку

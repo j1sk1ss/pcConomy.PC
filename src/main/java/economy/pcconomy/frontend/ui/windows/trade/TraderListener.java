@@ -8,6 +8,7 @@ import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
 
 import economy.pcconomy.frontend.ui.Window;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +23,7 @@ public class TraderListener implements Listener {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player)) {
-            var title = event.getView().getTitle();
+            var title = ((TextComponent) event.getView().title()).content();
             var trader = GetTraderFromTitle(title);
             if (trader == null) return;
 
@@ -144,7 +145,7 @@ public class TraderListener implements Listener {
             if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
 
             var id = Integer.parseInt(name.split(" ")[1]);
-            return PcConomy.GlobalNPC.GetNPC(id).getTrait(Trader.class);
+            return PcConomy.GlobalNPC.GetNPC(id).getOrAddTrait(Trader.class);
         } catch (NumberFormatException ex) {
             return null;
         }

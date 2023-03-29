@@ -13,7 +13,7 @@
 
     <description>Main economy plugin for Potolot Craft</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>https://potolotcraft.net</url>
@@ -142,5 +142,11 @@
         	<version>2.11.2</version>
         	<scope>provided</scope>
         </dependency>
+        
+        <dependency>
+         	<groupId>net.kyori</groupId>
+         	<artifactId>adventure-api</artifactId>
+        	<version>4.11.0</version>
+      	</dependency>
     </dependencies>
 </project>
