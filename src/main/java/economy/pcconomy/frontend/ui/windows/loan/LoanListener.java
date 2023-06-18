@@ -3,9 +3,8 @@ package economy.pcconomy.frontend.ui.windows.loan;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 
-import economy.pcconomy.backend.bank.scripts.LoanWorker;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
-import economy.pcconomy.backend.scripts.BalanceWorker;
+import economy.pcconomy.backend.bank.scripts.LoanManager;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.scripts.ItemWorker;
 
 import economy.pcconomy.frontend.ui.Window;
@@ -30,18 +29,18 @@ public class LoanListener implements Listener {
             event.setCancelled(true);
 
             if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
-                LoanWorker.payOffADebt(player, townObject);
+                LoanManager.payOffADebt(player, townObject);
                 player.closeInventory();
             }
 
-            if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
+            if (ItemWorker.GetName(item).contains(CashManager.currencySigh)) {
                 boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
                 final int maxCreditCount = 5;
 
                 if (isSafe && townObject.Credit.size() < maxCreditCount) {
-                    if (!townObject.Credit.contains(LoanWorker.getLoan(player.getUniqueId(), townObject))) {
+                    if (!townObject.Credit.contains(LoanManager.getLoan(player.getUniqueId(), townObject))) {
                         activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
-                        LoanWorker.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
+                        LoanManager.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
                                 LoanWindow.GetSelectedDuration(activeInventory), player, townObject.Credit,
                                 townObject);
                         player.closeInventory();
@@ -49,7 +48,7 @@ public class LoanListener implements Listener {
                 }
             } else {
                 activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                player.openInventory(LoanWindow.GetWindow(activeInventory, player, buttonPosition, false));
+                player.openInventory(LoanWindow.regenerateWindow(activeInventory, player, buttonPosition, false));
             }
         }
     }

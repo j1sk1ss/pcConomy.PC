@@ -4,16 +4,14 @@ import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.interfaces.IMoney;
-import economy.pcconomy.backend.bank.objects.LoanObject;
-import economy.pcconomy.backend.bank.scripts.LoanWorker;
+import economy.pcconomy.backend.bank.objects.Loan;
+import economy.pcconomy.backend.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.scripts.BalanceWorker;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
-import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 
 import economy.pcconomy.backend.town.objects.TownObject;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,7 +25,7 @@ public class Bank implements IMoney {
     public double BankBudget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
     public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
     public double VAT = PcConomy.Config.getDouble("bank.start_VAT", .1d);
-    public final List<LoanObject> Credit;
+    public final List<Loan> Credit;
 
     public void GiveCashToPlayer(double amount, Player player) {
         var balanceWorker = new BalanceWorker();
@@ -42,8 +40,7 @@ public class Bank implements IMoney {
     }
 
     public void TakeCashFromPlayer(double amount, Player player) {
-        var amountInventory = CashWorker.GetAmountFromCash(
-                CashWorker.GetCashFromInventory(player.getInventory()));
+        var amountInventory = CashManager.GetAmountFromCash(CashManager.GetCashFromInventory(player.getInventory()));
         if (amount > amountInventory) return;
 
         new Cash().TakeCashFromInventory(amount, player);
@@ -60,7 +57,7 @@ public class Bank implements IMoney {
 
         VAT += (VAT * Math.abs(changePercent) / 2) * isRecession;
         UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
-        LoanWorker.trustCoefficient -= LoanWorker.trustCoefficient * Math.abs(changePercent) * isRecession;
+        LoanManager.trustCoefficient -= LoanManager.trustCoefficient * Math.abs(changePercent) * isRecession;
 
         if (isRecession > 0) recessionCount++;
         else recessionCount = 0;
@@ -70,7 +67,7 @@ public class Bank implements IMoney {
             recessionCount = 0;
         }
 
-        LoanWorker.takePercentFromBorrowers(this);
+        LoanManager.takePercentFromBorrowers(this);
         previousBudget = BankBudget;
     }
 
@@ -97,7 +94,7 @@ public class Bank implements IMoney {
         BankBudget += amount;
     }
 
-    public List<LoanObject> GetCreditList() {
+    public List<Loan> GetCreditList() {
         return Credit;
     }
 

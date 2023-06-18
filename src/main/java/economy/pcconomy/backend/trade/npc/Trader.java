@@ -3,7 +3,7 @@ package economy.pcconomy.backend.trade.npc;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
@@ -79,17 +79,21 @@ public class Trader extends Trait {
         var player = event.getClicker();
         var playerUUID = player.getUniqueId();
 
-        if (isRanted)
-            if (Owner.equals(playerUUID) && Storage.size() < 27) {
-                player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
-                chat.put(playerUUID, event.getNPC().getId());
-            }
-            else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
-        else
-            if (TownyAPI.getInstance().getTown(homeTown).getMayor().getUUID().equals(playerUUID)) {
-                player.sendMessage("Удалить торговца? (д/н)");
-                chat.put(playerUUID, event.getNPC().getId());
-            }
+        try {
+            if (isRanted)
+                if (Owner.equals(playerUUID) && Storage.size() < 27) {
+                    player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
+                    chat.put(playerUUID, event.getNPC().getId());
+                }
+                else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
+                else
+                if (TownyAPI.getInstance().getTown(homeTown).getMayor().getUUID().equals(playerUUID)) {
+                    player.sendMessage("Удалить торговца? (д/н)");
+                    chat.put(playerUUID, event.getNPC().getId());
+                }
+        } catch (NullPointerException exception) {
+            player.sendMessage("Ошибка, мэр города не был найден! (2)");
+        }
     }
 
     @EventHandler
@@ -103,32 +107,33 @@ public class Trader extends Trait {
     	        if (chat.get(player.getUniqueId()) != null) {
     	            var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
     	
-    	            if (StringUtils.containsAny(playerMessage, "днДН")) {
-    	                if (playerMessage.toLowerCase().contains("д")) {
+    	            if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
+    	                if (playerMessage.equalsIgnoreCase("д")) {
     	                    PcConomy.GlobalNPC.Traders.remove(trader.getId());
     	                    trader.destroy();
     	                }
+
     	                return;
     	            }
     	
     	            var sellingItem = player.getInventory().getItemInMainHand();
     	            if (sellingItem.getType().equals(Material.AIR)) {
-    	                player.sendMessage("Воздух, пока что, нельзя продавать");
+    	                player.sendMessage("Воздух, пока что, нельзя продавать.");
     	                return;
     	            }
     	
     	            try {
     	                var cost = Double.parseDouble(playerMessage);
     	                trader.getOrAddTrait(Trader.class).Storage.add(ItemWorker.SetLore(sellingItem,
-    	                        cost + cost * Margin + CashWorker.currencySigh));
+    	                        cost + cost * Margin + CashManager.currencySigh));
     	                player.getInventory().setItemInMainHand(null);
     	                chat.remove(player.getUniqueId());
     	
     	                player.sendMessage("Предмет " + ItemWorker.GetName(sellingItem) + " выставлен на продажу за "
-    	                    + (cost + cost * Margin) + " " + CashWorker.currencySigh);
+    	                    + (cost + cost * Margin) + " " + CashManager.currencySigh);
     	            }
     	            catch (NumberFormatException exception) {
-    	                player.sendMessage("Напишите корректную цену");
+    	                player.sendMessage("Напишите корректную цену.");
     	            }
     	        }
     		});

@@ -1,6 +1,7 @@
 package economy.pcconomy.backend.bank.npc;
 
 import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.loan.LoanWindow;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
@@ -18,6 +19,6 @@ public class NPCLoaner extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         var player = event.getClicker();
 
-        Window.OpenLoanWindow(player, true);
+        Window.OpenWindow(player, new LoanWindow(true));
     }
 }

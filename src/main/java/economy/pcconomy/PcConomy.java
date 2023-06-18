@@ -21,7 +21,7 @@ package economy.pcconomy;
 
  */
 
-import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
+import economy.pcconomy.backend.bank.scripts.BorrowerManager;
 
 import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.link.Manager;
@@ -61,7 +61,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
     public static NPC GlobalNPC;
 
     public static Bank GlobalBank;
-    public static BorrowerWorker GlobalBorrowerWorker;
+    public static BorrowerManager globalBorrowerManager;
     public static TownWorker GlobalTownWorker;
     public static LicenseWorker GlobalLicenseWorker;
 
@@ -71,7 +71,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
 
         Config               = PcConomy.getPlugin(PcConomy.class).getConfig();
         GlobalBank           = new Bank();
-        GlobalBorrowerWorker = new BorrowerWorker();
+        globalBorrowerManager = new BorrowerManager();
         GlobalTownWorker     = new TownWorker();
         GlobalLicenseWorker  = new LicenseWorker();
 
@@ -85,7 +85,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
             if (new File("LicenseData.txt").exists())
                 GlobalLicenseWorker = Loader.LoadLicenses("LicenseData");
             if (new File("BorrowersData.txt").exists())
-                GlobalBorrowerWorker = Loader.LoadBorrowers("BorrowersData");
+                globalBorrowerManager = Loader.LoadBorrowers("BorrowersData");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -129,7 +129,7 @@ public final class PcConomy extends JavaPlugin { // Гл класс плагин
             GlobalBank.SaveBank("BankData");
             GlobalTownWorker.SaveTown("TownsData");
             GlobalLicenseWorker.SaveLicenses("LicenseData");
-            GlobalBorrowerWorker.SaveBorrowers("BorrowersData");
+            globalBorrowerManager.SaveBorrowers("BorrowersData");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

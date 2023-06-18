@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.bank;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.frontend.ui.Window;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ public class BankerListener implements Listener {
 
         if (Window.isThisWindow(event, player, "Банк") && option != null) {
             var amount = Double.parseDouble(ItemWorker.GetName(option).
-                    replace(CashWorker.currencySigh, ""));
+                    replace(CashManager.currencySigh, ""));
 
             if (amount > 0) PcConomy.GlobalBank.GiveCashToPlayer(amount, player);
             else PcConomy.GlobalBank.TakeCashFromPlayer(Math.abs(amount), player);

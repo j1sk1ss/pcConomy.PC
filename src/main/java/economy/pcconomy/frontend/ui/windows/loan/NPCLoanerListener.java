@@ -1,9 +1,8 @@
 package economy.pcconomy.frontend.ui.windows.loan;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.bank.scripts.LoanWorker;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
-import economy.pcconomy.backend.scripts.BalanceWorker;
+import economy.pcconomy.backend.bank.scripts.LoanManager;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.scripts.ItemWorker;
 
 import economy.pcconomy.frontend.ui.Window;
@@ -27,17 +26,17 @@ public class NPCLoanerListener implements Listener {
             event.setCancelled(true);
 
             if (ItemWorker.GetName(item).contains("Выплатить кредит")) {
-                LoanWorker.payOffADebt(player, PcConomy.GlobalBank);
+                LoanManager.payOffADebt(player, PcConomy.GlobalBank);
                 player.closeInventory();
             }
 
-            if (ItemWorker.GetName(item).contains(CashWorker.currencySigh)) {
+            if (ItemWorker.GetName(item).contains(CashManager.currencySigh)) {
                 boolean isSafe = ItemWorker.GetLore(item).contains("Банк одобрит данный займ.");
 
                 if (isSafe) {
-                    if (!PcConomy.GlobalBank.Credit.contains(LoanWorker.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
+                    if (!PcConomy.GlobalBank.Credit.contains(LoanManager.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
                         activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.LIGHT_BLUE_WOOL));
-                        LoanWorker.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
+                        LoanManager.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
                                 LoanWindow.GetSelectedDuration(activeInventory), player, PcConomy.GlobalBank.Credit,
                                 PcConomy.GlobalBank);
                         player.closeInventory();
@@ -45,7 +44,7 @@ public class NPCLoanerListener implements Listener {
                 }
             } else {
                 activeInventory.setItem(buttonPosition, ItemWorker.SetMaterial(item, Material.PURPLE_WOOL));
-                player.openInventory(LoanWindow.GetWindow(activeInventory, player, buttonPosition, true));
+                player.openInventory(LoanWindow.regenerateWindow(activeInventory, player, buttonPosition, true));
             }
         }
     }

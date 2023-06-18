@@ -1,10 +1,11 @@
 package economy.pcconomy.frontend.ui.windows.mayor;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.scripts.ItemWorker;
 
+import economy.pcconomy.frontend.ui.windows.IWindow;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,15 +13,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class MayorWindow {
-    public static Inventory GetWindow(Player mayor) {
+public class MayorWindow implements IWindow {
+    public Inventory generateWindow(Player mayor, boolean isNpc) {
         var window = Bukkit.createInventory(mayor, 27, Component.text("Меню"));
 
         window.setItem(0, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
-                (NPC.traderCost + NPC.traderCost * PcConomy.GlobalBank.VAT) + CashWorker.currencySigh),
+                (NPC.traderCost + NPC.traderCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh),
                 "Установить торговца"));
         window.setItem(1, ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PURPLE_WOOL),
-                (NPC.loanerCost + NPC.loanerCost * PcConomy.GlobalBank.VAT) + CashWorker.currencySigh),
+                (NPC.loanerCost + NPC.loanerCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh),
                 "Установить кредитора"));
 
         return window;

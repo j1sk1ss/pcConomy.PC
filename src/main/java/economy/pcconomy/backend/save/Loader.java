@@ -2,7 +2,7 @@ package economy.pcconomy.backend.save;
 
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.backend.bank.Bank;
-import economy.pcconomy.backend.bank.scripts.BorrowerWorker;
+import economy.pcconomy.backend.bank.scripts.BorrowerManager;
 import economy.pcconomy.backend.license.scripts.LicenseWorker;
 import economy.pcconomy.backend.npc.NPC;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
@@ -36,14 +36,14 @@ public class Loader {
                 .fromJson(json, NPC.class);
     }
 
-    public static BorrowerWorker LoadBorrowers(String fileName) throws IOException {
+    public static BorrowerManager LoadBorrowers(String fileName) throws IOException {
         String json = new String(Files.readAllBytes(Paths.get(fileName + ".txt")));
 
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .create()
-                .fromJson(json, BorrowerWorker.class);
+                .fromJson(json, BorrowerManager.class);
     }
 
     public static TownWorker LoadTowns(String fileName) throws IOException {

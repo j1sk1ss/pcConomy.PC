@@ -5,9 +5,9 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.interfaces.IMoney;
-import economy.pcconomy.backend.bank.objects.LoanObject;
-import economy.pcconomy.backend.bank.scripts.LoanWorker;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.bank.objects.Loan;
+import economy.pcconomy.backend.bank.scripts.LoanManager;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
 import org.bukkit.Material;
@@ -24,7 +24,7 @@ public class TownObject implements IMoney {
         if (isNPC) InitializeNPC();
     }
     public final String TownName;
-    public final List<LoanObject> Credit;
+    public final List<Loan> Credit;
     public final List<ItemStack> Storage = new ArrayList<>();
     private final int StartStorageAmount = StorageWorker.GetAmountOfStorage(Storage);
     public boolean isNPC;
@@ -46,7 +46,7 @@ public class TownObject implements IMoney {
     }
 
     public void LifeCycle() {
-        LoanWorker.takePercentFromBorrowers(this);
+        LoanManager.takePercentFromBorrowers(this);
         if (!isNPC) return;
 
         var changePercent = (getBudget() - previousBudget) / previousBudget;
@@ -72,9 +72,9 @@ public class TownObject implements IMoney {
 
             ItemWorker.SetLore(itemStack,
                     "Цена за 1 шт. (Покупка X8):\n" +
-                    Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 100d + CashWorker.currencySigh +
+                    Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 100d + CashManager.currencySigh +
                             "\nБез НДС в " + PcConomy.GlobalBank.VAT * 100 + "%:\n" +
-                            Math.round(price * 100d) / 1000d + CashWorker.currencySigh);
+                            Math.round(price * 100d) / 1000d + CashManager.currencySigh);
         }
     }
 
@@ -97,7 +97,7 @@ public class TownObject implements IMoney {
         getBankAccount().setBalance(getBudget() + amount, "Economic action");
     }
 
-    public List<LoanObject> GetCreditList() {
+    public List<Loan> GetCreditList() {
         return Credit;
     }
 

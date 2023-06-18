@@ -1,6 +1,7 @@
 package economy.pcconomy.backend.bank.npc;
 
 import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.bank.BankerWindow;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
@@ -16,6 +17,6 @@ public class Banker extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenBankerWindow(player);
+        Window.OpenWindow(player, new BankerWindow());
     }
 }

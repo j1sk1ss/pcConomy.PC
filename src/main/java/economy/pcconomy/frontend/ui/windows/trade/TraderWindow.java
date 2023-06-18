@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.ui.windows.trade;
 
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
 import net.kyori.adventure.text.Component;
@@ -38,7 +38,7 @@ public class TraderWindow {
                 Component.text("Торговец-Аренда " + trader.getNPC().getId()));
 
         window.setItem(0, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
-                "Арендовать на один день"), trader.Cost + CashWorker.currencySigh));
+                "Арендовать на один день"), trader.Cost + CashManager.currencySigh));
         window.setItem(1, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
                 "НДС города: "), trader.Margin * 100 + "%"));
 
@@ -62,7 +62,7 @@ public class TraderWindow {
 
         for (var i = 0; i < 9; i++) {
             window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL),
-                    (i + 1) * 200 + CashWorker.currencySigh));
+                    (i + 1) * 200 + CashManager.currencySigh));
         }
 
         return window;

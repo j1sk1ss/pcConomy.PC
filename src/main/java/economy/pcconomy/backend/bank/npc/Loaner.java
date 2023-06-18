@@ -2,8 +2,8 @@ package economy.pcconomy.backend.bank.npc;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
-import economy.pcconomy.PcConomy;
 import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.loan.LoanWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -15,7 +15,6 @@ import net.kyori.adventure.text.TextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-//import org.bukkit.event.player.PlayerChatEvent;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -32,7 +31,7 @@ public class Loaner extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         var player = event.getClicker();
 
-        Window.OpenLoanWindow(player, false);
+        Window.OpenWindow(player, new LoanWindow(false));
     }
 
     @EventHandler
@@ -43,7 +42,7 @@ public class Loaner extends Trait {
         var homeTown = TownyAPI.getInstance().getTownName(player.getLocation());
 
         if (TownyAPI.getInstance().getTown(homeTown).getMayor().getUUID().equals(playerUUID)) {
-            player.sendMessage("Удалить кредитора? (y/n)");
+            player.sendMessage("Удалить кредитора? (д/н)");
             chat.put(playerUUID, event.getNPC().getId());
         }
     }
@@ -60,8 +59,8 @@ public class Loaner extends Trait {
     	
     	        if (chat.get(player.getUniqueId()) != null) {
     	            var loaner = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
-    	            if (StringUtils.containsAny(playerMessage, "ynYN")) {
-    	                if (playerMessage.toLowerCase().contains("y")) {
+    	            if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
+    	                if (playerMessage.equalsIgnoreCase("д")) {
     	                    loaner.destroy();
     	                }
     	            }

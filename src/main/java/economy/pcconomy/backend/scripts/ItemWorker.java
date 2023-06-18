@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.scripts;
 
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -112,6 +112,6 @@ public class ItemWorker {
 
     public static double GetPriceFromLore(ItemStack itemStack, int loreLine) {
         return Double.parseDouble(ItemWorker.GetLore(itemStack).get(loreLine)
-                .replace(CashWorker.currencySigh, ""));
+                .replace(CashManager.currencySigh, ""));
     }
 }

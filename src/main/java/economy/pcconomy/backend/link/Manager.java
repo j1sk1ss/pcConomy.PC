@@ -13,6 +13,7 @@ import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
 import economy.pcconomy.backend.trade.npc.NPCTrader;
 import economy.pcconomy.frontend.ui.Window;
 
+import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -64,7 +65,7 @@ public class Manager implements CommandExecutor {
 
         if (command.getName().equals("town_menu")) {
             if (!TownyAPI.getInstance().getTown((Player) sender).getMayor().getName().equals((sender).getName())) return true;
-            Window.OpenMayorWindow((Player) sender);
+            Window.OpenWindow((Player) sender, new MayorWindow());
         }
 
         if (command.getName().equals("add_trade_to_town"))

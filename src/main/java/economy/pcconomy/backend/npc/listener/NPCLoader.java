@@ -21,12 +21,14 @@ public class NPCLoader implements Listener {
     @EventHandler
     public void loadNPC(CitizensEnableEvent event) {
         if (GlobalNPC == null) GlobalNPC = new NPC();
+
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("Trader"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCLoaner.class).withName("npcloaner"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("loaner"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NPCTrader.class).withName("npctrader"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("banker"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("licensor"));
+
         GlobalNPC.UpdateNPC();
     }
 }

@@ -10,12 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class CashWorker {
-
+public class CashManager {
     public final static String currencyName = "Алеф"; // Название валюты. Оно будет названием банкнот
     public final static String currencySigh = "$"; // Значок валюты. Он будет стоять после номинала в лоре
-    private static HashMap<String, String> currencyNameCases = new HashMap<String,String>(); // Список склонений названия валюты по падежам и числам
-    
+    private static final HashMap<String, String> currencyNameCases = new HashMap<>(); // Список склонений названия валюты по падежам и числам
     static { // Инициализация падежей
     	currencyNameCases.put("is", "Алеф"); // Единственное число
     	currencyNameCases.put("rs", "Алефа");
@@ -78,7 +76,7 @@ public class CashWorker {
         List<ItemStack> moneyStack = new ArrayList<>();
 
         for (int i = 0; i < ChangeWorker.Denomination.size(); i++) {
-            moneyStack.add(CashWorker.CreateCashObject(ChangeWorker.Denomination.get(i), change.get(i)));
+            moneyStack.add(CashManager.CreateCashObject(ChangeWorker.Denomination.get(i), change.get(i)));
         }
 
         return moneyStack;
@@ -86,14 +84,14 @@ public class CashWorker {
 
     public static boolean isCash(ItemStack item) { // Проверка обьекта на то, что это банкнота
         if (item == null) return false;
-        if (ItemWorker.GetName(item).equals(currencyName))
+        if (ItemWorker.GetName(item).contains(currencyName))
             return !Objects.equals(ItemWorker.GetLore(item).get(0), "");
 
         return false;
     }
     
-    public static String getCurrencyNameCase(String ncase) { // Получение склонённого названия валюты
-    	return currencyNameCases.get(ncase);
+    public static String getCurrencyNameCase(String currencyName) { // Получение склонённого названия валюты
+    	return currencyNameCases.get(currencyName);
     }
     
     // TODO заменить везде слова валюты с количеством денег на этот метод

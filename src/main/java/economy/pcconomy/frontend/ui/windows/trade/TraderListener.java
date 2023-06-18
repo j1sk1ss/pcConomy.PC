@@ -2,7 +2,7 @@ package economy.pcconomy.frontend.ui.windows.trade;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.cash.scripts.CashWorker;
+import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemWorker;
 import economy.pcconomy.backend.trade.npc.Trader;
@@ -30,6 +30,8 @@ public class TraderListener implements Listener {
             var choseItem = event.getCurrentItem();
             var inventory = event.getInventory();
 
+            if (choseItem == null) return;
+
             event.setCancelled(true);
 
             if (title.contains("Торговец-Покупка"))
@@ -42,10 +44,12 @@ public class TraderListener implements Listener {
                 switch (ItemWorker.GetName(choseItem)) {
                     case "Перейти в товары" ->
                             player.openInventory(TraderWindow.GetWindow(player, trader));
+
                     case "Забрать все товары" -> {
                         ItemWorker.GiveItemsWithoutLore(trader.Storage, player);
                         trader.Storage.clear();
                     }
+
                     case "Забрать прибыль" -> {
                         new Cash().GiveCashToPlayer(trader.Revenue, player);
                         trader.Revenue = 0;
@@ -60,16 +64,14 @@ public class TraderListener implements Listener {
                     var playerTradeLicense =
                             PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade);
 
-                    if (playerTradeLicense != null) {
-                        if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
-                            if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
+                    if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
+                        if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
 
-                            cash.TakeCashFromInventory(trader.Cost, player);
-                            PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown).ChangeBudget(trader.Cost);
+                        cash.TakeCashFromInventory(trader.Cost, player);
+                        PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown).ChangeBudget(trader.Cost);
 
-                            RantTrader(trader, player);
-                            player.closeInventory();
-                        }
+                        RantTrader(trader, player);
+                        player.closeInventory();
                     }
                 }
                 return;
@@ -88,11 +90,9 @@ public class TraderListener implements Listener {
                     var playerTradeLicense =
                             PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade);
 
-                    if (playerTradeLicense != null) {
-                        if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
-                            RantTrader(trader, player);
-                            player.closeInventory();
-                        }
+                    if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
+                        RantTrader(trader, player);
+                        player.closeInventory();
                     }
                 }
                 return;
@@ -100,7 +100,7 @@ public class TraderListener implements Listener {
 
             if (title.contains("Торговец-Цена")) {
                 trader.Cost = Double.parseDouble(ItemWorker.
-                        GetName(choseItem).replace(CashWorker.currencySigh, ""));
+                        GetName(choseItem).replace(CashManager.currencySigh, ""));
                 return;
             }
 
@@ -143,9 +143,7 @@ public class TraderListener implements Listener {
     private Trader GetTraderFromTitle(String name) {
         try {
             if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
-
-            var id = Integer.parseInt(name.split(" ")[1]);
-            return PcConomy.GlobalNPC.GetNPC(id).getOrAddTrait(Trader.class);
+            return PcConomy.GlobalNPC.GetNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Trader.class);
         } catch (NumberFormatException ex) {
             return null;
         }

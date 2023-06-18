@@ -1,6 +1,7 @@
 package economy.pcconomy.backend.license.npc;
 
 import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.license.LicensorWindow;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
@@ -18,6 +19,6 @@ public class Licensor extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenLicenseWindow(player);
+        Window.OpenWindow(player, new LicensorWindow());
     }
 }
