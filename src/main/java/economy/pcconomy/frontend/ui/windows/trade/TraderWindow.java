@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.trade;
 
 import economy.pcconomy.backend.cash.scripts.CashManager;
-import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.backend.trade.npc.Trader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -26,9 +26,9 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Управление " + trader.getNPC().getId()));
 
-        window.setItem(0, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Перейти в товары"));
-        window.setItem(1, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Забрать все товары"));
-        window.setItem(2, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Забрать прибыль"));
+        window.setItem(0, ItemManager.setName(new ItemStack(Material.RED_WOOL), "Перейти в товары"));
+        window.setItem(1, ItemManager.setName(new ItemStack(Material.RED_WOOL), "Забрать все товары"));
+        window.setItem(2, ItemManager.setName(new ItemStack(Material.RED_WOOL), "Забрать прибыль"));
 
         return window;
     }
@@ -37,9 +37,9 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Аренда " + trader.getNPC().getId()));
 
-        window.setItem(0, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
+        window.setItem(0, ItemManager.setLore(ItemManager.setName(new ItemStack(Material.RED_WOOL),
                 "Арендовать на один день"), trader.Cost + CashManager.currencySigh));
-        window.setItem(1, ItemWorker.SetLore(ItemWorker.SetName(new ItemStack(Material.RED_WOOL),
+        window.setItem(1, ItemManager.setLore(ItemManager.setName(new ItemStack(Material.RED_WOOL),
                 "НДС города: "), trader.Margin * 100 + "%"));
 
         return window;
@@ -49,9 +49,9 @@ public class TraderWindow {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Владелец " + trader.getNPC().getId()));
 
-        window.setItem(0, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Установить цену"));
-        window.setItem(1, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Установить процент"));
-        window.setItem(2, ItemWorker.SetName(new ItemStack(Material.RED_WOOL), "Занять"));
+        window.setItem(0, ItemManager.setName(new ItemStack(Material.RED_WOOL), "Установить цену"));
+        window.setItem(1, ItemManager.setName(new ItemStack(Material.RED_WOOL), "Установить процент"));
+        window.setItem(2, ItemManager.setName(new ItemStack(Material.RED_WOOL), "Занять"));
 
         return window;
     }
@@ -61,7 +61,7 @@ public class TraderWindow {
                 Component.text("Торговец-Цена " + trader.getNPC().getId()));
 
         for (var i = 0; i < 9; i++) {
-            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL),
+            window.setItem(i, ItemManager.setName(new ItemStack(Material.GREEN_WOOL),
                     (i + 1) * 200 + CashManager.currencySigh));
         }
 
@@ -73,7 +73,7 @@ public class TraderWindow {
                 Component.text("Торговец-Процент " + trader.getNPC().getId()));
 
         for (var i = 0; i < 9; i++) {
-            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_WOOL), (i + 1) * 5 + "%"));
+            window.setItem(i, ItemManager.setName(new ItemStack(Material.GREEN_WOOL), (i + 1) * 5 + "%"));
         }
 
         return window;
@@ -84,13 +84,13 @@ public class TraderWindow {
                 Component.text("Покупка " + trader.getNPC().getId()));
 
         for (var i = 0; i < 3; i++) {
-            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.RED_STAINED_GLASS_PANE), "ОТМЕНА"));
+            window.setItem(i, ItemManager.setName(new ItemStack(Material.RED_STAINED_GLASS_PANE), "ОТМЕНА"));
         }
 
         window.setItem(4, item);
 
         for (var i = 6; i < 9; i++) {
-            window.setItem(i, ItemWorker.SetName(new ItemStack(Material.GREEN_STAINED_GLASS_PANE), "КУПИТЬ"));
+            window.setItem(i, ItemManager.setName(new ItemStack(Material.GREEN_STAINED_GLASS_PANE), "КУПИТЬ"));
         }
 
         return window;

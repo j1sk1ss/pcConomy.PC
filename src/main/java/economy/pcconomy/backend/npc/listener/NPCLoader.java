@@ -29,6 +29,6 @@ public class NPCLoader implements Listener {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("banker"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("licensor"));
 
-        GlobalNPC.UpdateNPC();
+        GlobalNPC.updateNPC();
     }
 }

@@ -3,7 +3,7 @@ package economy.pcconomy.backend.cash.scripts;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChangeWorker {
+public class ChangeManager {
     public static final List<Double> Denomination = // Все номиналы доступные для взаимодействия
             Arrays.asList(5000.0, 2000.0, 1000.0, 500.0, 200.0, 100.0, 50.0, 10.0, 1.0, 0.5, 0.1, 0.05, 0.01);
 

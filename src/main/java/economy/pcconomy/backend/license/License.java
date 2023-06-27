@@ -4,7 +4,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.scripts.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,18 +25,24 @@ public class License {
             LicenseType.LoanHistory, "Лицензия на доступ к кредитной истории"
     );
 
-    public static void GetLicense(Player player, LicenseType licenseType, double price) {
+    /***
+     * Gives license to player
+     * @param player Player that will take license
+     * @param licenseType License type
+     * @param price Price of license
+     */
+    public static void getLicense(Player player, LicenseType licenseType, double price) {
         var cash = new Cash();
-        if (cash.AmountOfCashInInventory(player) < price) return;
+        if (cash.amountOfCashInInventory(player) < price) return;
 
-        if (PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), licenseType) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), licenseType));
+        if (PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), licenseType) != null)
+            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), licenseType));
 
-        cash.TakeCashFromInventory(price, player);
+        cash.takeCashFromInventory(price, player);
         PcConomy.GlobalBank.BankBudget += price;
 
-        PcConomy.GlobalLicenseWorker.CreateLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));
-        ItemWorker.GiveItems(ItemWorker.SetName(ItemWorker.SetLore(new ItemStack(Material.PAPER),
+        PcConomy.GlobalLicenseWorker.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));
+        ItemManager.giveItems(ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PAPER),
                 licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()), "Лицензия"), player);
     }
 }

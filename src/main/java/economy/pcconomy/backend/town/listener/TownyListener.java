@@ -10,13 +10,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class TownyListener implements Listener {
-
     @EventHandler
     public void OnCreation(NewTownEvent event) {
-        var town = event.getTown(); // Запоминаем город
+        var town = event.getTown();
 
         PcConomy.GlobalBank.BankBudget += 250.0d;
-        PcConomy.GlobalTownWorker.CreateTownObject(town, false); // Добавляем в лист установив что это игроковский город
+        PcConomy.GlobalTownWorker.createTownObject(town, false);
     }
 
     @EventHandler
@@ -26,30 +25,26 @@ public class TownyListener implements Listener {
 
     @EventHandler
     public void OnDestroy(DeleteTownEvent event) {
-        var town = event.getTownName(); // Удаление по имени
-
-        PcConomy.GlobalTownWorker.DestroyTownObject(town);
+        var town = event.getTownName();
+        PcConomy.GlobalTownWorker.destroyTownObject(town);
     }
 
     @EventHandler
     public void onDied(TownRuinedEvent event) {
-        var town = event.getTown().getName(); // Удаление по имени
-
-        PcConomy.GlobalTownWorker.DestroyTownObject(town);
+        var town = event.getTown().getName();
+        PcConomy.GlobalTownWorker.destroyTownObject(town);
     }
 
     @EventHandler
     public void NewDay(NewDayEvent event) {
-        for (Town town: // Передача налогов с города в банк
-                TownyAPI.getInstance().getTowns()) {
+        for (Town town : TownyAPI.getInstance().getTowns()) {
             PcConomy.GlobalBank.BankBudget += town.getPlotTax();
         }
 
-        for (TownObject town : // НПС города делают свои дела, а нон-НПС берут проценты
-                PcConomy.GlobalTownWorker.townObjects) {
-            town.LifeCycle();
+        for (TownObject town : PcConomy.GlobalTownWorker.townObjects) {
+            town.lifeCycle();
         }
 
-        PcConomy.GlobalBank.LifeCycle(); // Банк анализирует и меняет свои параметры
+        PcConomy.GlobalBank.lifeCycle();
     }
 }

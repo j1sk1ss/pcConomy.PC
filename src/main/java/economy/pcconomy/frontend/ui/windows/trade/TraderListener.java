@@ -4,11 +4,10 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.scripts.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.backend.trade.npc.Trader;
-
 import economy.pcconomy.frontend.ui.Window;
-import net.kyori.adventure.text.TextComponent;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +22,7 @@ public class TraderListener implements Listener {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player)) {
-            var title = ((TextComponent) event.getView().title()).content();
+            var title = event.getView().getTitle();
             var trader = GetTraderFromTitle(title);
             if (trader == null) return;
 
@@ -41,34 +40,35 @@ public class TraderListener implements Listener {
                 }
 
             if (title.contains("Торговец-Управление")) {
-                switch (ItemWorker.GetName(choseItem)) {
+                switch (ItemManager.getName(choseItem)) {
                     case "Перейти в товары" ->
                             player.openInventory(TraderWindow.GetWindow(player, trader));
 
                     case "Забрать все товары" -> {
-                        ItemWorker.GiveItemsWithoutLore(trader.Storage, player);
+                        ItemManager.giveItemsWithoutLore(trader.Storage, player);
                         trader.Storage.clear();
                     }
 
                     case "Забрать прибыль" -> {
-                        new Cash().GiveCashToPlayer(trader.Revenue, player);
+                        new Cash().giveCashToPlayer(trader.Revenue, player);
                         trader.Revenue = 0;
                     }
                 }
+
                 return;
             }
 
             if (title.contains("Торговец-Аренда")) {
-                if (ItemWorker.GetName(choseItem).equals("Арендовать на один день")) {
+                if (ItemManager.getName(choseItem).equals("Арендовать на один день")) {
                     var cash = new Cash();
                     var playerTradeLicense =
-                            PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade);
+                            PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), LicenseType.Trade);
 
                     if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
-                        if (cash.AmountOfCashInInventory(player) < trader.Cost) return;
+                        if (cash.amountOfCashInInventory(player) < trader.Cost) return;
 
-                        cash.TakeCashFromInventory(trader.Cost, player);
-                        PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown).ChangeBudget(trader.Cost);
+                        cash.takeCashFromInventory(trader.Cost, player);
+                        PcConomy.GlobalTownWorker.getTownObject(trader.homeTown).changeBudget(trader.Cost);
 
                         RantTrader(trader, player);
                         player.closeInventory();
@@ -78,17 +78,15 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Владелец")) {
-                if (ItemWorker.GetName(choseItem).equals("Установить цену")) {
+                if (ItemManager.getName(choseItem).equals("Установить цену"))
                     player.openInventory(TraderWindow.GetPricesWindow(player, trader));
-                }
 
-                if (ItemWorker.GetName(choseItem).equals("Установить процент")) {
+                if (ItemManager.getName(choseItem).equals("Установить процент"))
                     player.openInventory(TraderWindow.GetMarginWindow(player, trader));
-                }
 
-                if (ItemWorker.GetName(choseItem).equals("Занять")) {
+                if (ItemManager.getName(choseItem).equals("Занять")) {
                     var playerTradeLicense =
-                            PcConomy.GlobalLicenseWorker.GetLicense(player.getUniqueId(), LicenseType.Trade);
+                            PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), LicenseType.Trade);
 
                     if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
                         RantTrader(trader, player);
@@ -99,43 +97,42 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Цена")) {
-                trader.Cost = Double.parseDouble(ItemWorker.
-                        GetName(choseItem).replace(CashManager.currencySigh, ""));
+                trader.Cost = Double.parseDouble(ItemManager.
+                        getName(choseItem).replace(CashManager.currencySigh, ""));
                 return;
             }
 
             if (title.contains("Торговец-Процент")) {
-                trader.Margin = Double.parseDouble(ItemWorker.
-                        GetName(choseItem).replace("%", "")) / 100d;
+                trader.Margin = Double.parseDouble(ItemManager.
+                        getName(choseItem).replace("%", "")) / 100d;
                 return;
             }
 
             if (title.contains("Покупка")) {
-                if (ItemWorker.GetName(choseItem).equals("КУПИТЬ")) {
+                if (ItemManager.getName(choseItem).equals("КУПИТЬ")) {
                     var cash = new Cash();
                     var buyingItem = inventory.getItem(4);
-                    var price = ItemWorker.GetPriceFromLore(buyingItem, 0);
+                    var price = ItemManager.getPriceFromLore(buyingItem, 0);
 
-                    if (cash.AmountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {
+                    if (cash.amountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {
                         if (trader.Storage.contains(buyingItem)) {
                             trader.Storage.remove(buyingItem);
-                            ItemWorker.GiveItemsWithoutLore(buyingItem, player);
+                            ItemManager.giveItemsWithoutLore(buyingItem, player);
 
                             if (!trader.Owner.equals(player.getUniqueId())) {
-                                cash.TakeCashFromInventory(price, player);
+                                cash.takeCashFromInventory(price, player);
 
                                 var endPrice = price / (1 + trader.Margin);
-                                PcConomy.GlobalTownWorker.GetTownObject(trader.homeTown)
-                                        .ChangeBudget(price - endPrice);
+                                PcConomy.GlobalTownWorker.getTownObject(trader.homeTown)
+                                        .changeBudget(price - endPrice);
                                 trader.Revenue += endPrice;
                             }
                         }
                     }
 
                     player.openInventory(TraderWindow.GetWindow(player, trader));
-                } else if (ItemWorker.GetName(choseItem).equals("ОТМЕНА")){
+                } else if (ItemManager.getName(choseItem).equals("ОТМЕНА"))
                     player.openInventory(TraderWindow.GetWindow(player, trader));
-                }
             }
         }
     }
@@ -143,7 +140,7 @@ public class TraderListener implements Listener {
     private Trader GetTraderFromTitle(String name) {
         try {
             if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
-            return PcConomy.GlobalNPC.GetNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Trader.class);
+            return PcConomy.GlobalNPC.getNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Trader.class);
         } catch (NumberFormatException ex) {
             return null;
         }

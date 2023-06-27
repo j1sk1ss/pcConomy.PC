@@ -4,7 +4,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.interfaces.IMoney;
 import economy.pcconomy.backend.bank.objects.Borrower;
 import economy.pcconomy.backend.bank.objects.Loan;
-import economy.pcconomy.backend.scripts.BalanceWorker;
+import economy.pcconomy.backend.scripts.BalanceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,7 +16,7 @@ public class LoanManager {
 
     public static double getPercent(double amount, double duration) {
         // Выдать процент под параметры
-        return Math.round((PcConomy.GlobalBank.GetUsefulAmountOfBudget() / (amount * duration)) * 1000d) / 1000d;
+        return Math.round((PcConomy.GlobalBank.getUsefulAmountOfBudget() / (amount * duration)) * 1000d) / 1000d;
     }
 
     public static double getDailyPayment(double amount, double duration, double percent) {
@@ -27,18 +27,18 @@ public class LoanManager {
     public static double getSafetyFactor(double amount, int duration, Borrower borrower) {
         var expired = 0;
         if (borrower == null) return ((duration / 100d)) /
-                (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
+                (expired + (amount / PcConomy.GlobalBank.getUsefulAmountOfBudget()));
 
         for (Loan loan: borrower.CreditHistory)
             expired += loan.expired;
 
         return (borrower.CreditHistory.size() + (duration / 100d)) /
-                (expired + (amount / PcConomy.GlobalBank.GetUsefulAmountOfBudget()));
+                (expired + (amount / PcConomy.GlobalBank.getUsefulAmountOfBudget()));
     }
 
     public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
         return (getSafetyFactor(loanAmount, duration,
-                PcConomy.globalBorrowerManager.getBorrowerObject(borrower)) >= trustCoefficient); // коэффициент надёжности
+                PcConomy.GlobalBorrowerManager.getBorrowerObject(borrower)) >= trustCoefficient); // коэффициент надёжности
     }
 
     public static void createLoan(double amount, int duration, Player player, List<Loan> Credit, IMoney moneyGiver) {
@@ -48,57 +48,57 @@ public class LoanManager {
 
         Credit.add(new Loan(amount + amount * percentage, percentage, duration, dailyPayment, player));
 
-        moneyGiver.ChangeBudget(-amount);
-        new BalanceWorker().GiveMoney(amount, player);
+        moneyGiver.changeBudget(-amount);
+        new BalanceManager().giveMoney(amount, player);
     }
 
     public static void payOffADebt(Player player, IMoney creditOwner) {
-        var balance = new BalanceWorker();
+        var balance = new BalanceManager();
         var loan = getLoan(player.getUniqueId(), creditOwner);
 
         if (loan == null) return;
         if (balance.notSolvent(loan.amount, player)) return;
 
-        balance.TakeMoney(loan.amount, player);
-        creditOwner.ChangeBudget(loan.amount);
+        balance.takeMoney(loan.amount, player);
+        creditOwner.changeBudget(loan.amount);
         destroyLoan(player.getUniqueId(), creditOwner);
     }
 
     public static void takePercentFromBorrowers(IMoney moneyTaker) {
-        for (Loan loan: moneyTaker.GetCreditList()) {
+        for (Loan loan: moneyTaker.getCreditList()) {
             if (loan.amount <= 0) {
                 destroyLoan(loan.Owner, moneyTaker);
                 return;
             }
 
-            var balanceWorker = new BalanceWorker();
+            var balanceWorker = new BalanceManager();
             if (balanceWorker.notSolvent(loan.dailyPayment, Bukkit.getPlayer(loan.Owner)))
                 loan.expired += 1;
 
-            balanceWorker.TakeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
+            balanceWorker.takeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
             loan.amount -= loan.dailyPayment;
 
-            moneyTaker.ChangeBudget(loan.dailyPayment);
+            moneyTaker.changeBudget(loan.dailyPayment);
         }
     }
 
     public static Loan getLoan(UUID player, IMoney creditOwner) {
-        for (Loan loan: creditOwner.GetCreditList())
+        for (Loan loan: creditOwner.getCreditList())
             if (loan.Owner.equals(player)) return loan;
 
         return null;
     }
 
     public static void destroyLoan(UUID player, IMoney creditOwner) {
-        var credit = creditOwner.GetCreditList();
+        var credit = creditOwner.getCreditList();
         var loan = getLoan(player, creditOwner);
-        var borrower = PcConomy.globalBorrowerManager.getBorrowerObject(Bukkit.getPlayer(player));
+        var borrower = PcConomy.GlobalBorrowerManager.getBorrowerObject(Bukkit.getPlayer(player));
 
         if (borrower != null) {
             borrower.CreditHistory.add(loan);
-            PcConomy.globalBorrowerManager.setBorrowerObject(borrower);
+            PcConomy.GlobalBorrowerManager.setBorrowerObject(borrower);
         } else
-            PcConomy.globalBorrowerManager.borrowers.add(new Borrower(Bukkit.getPlayer(player), loan));
+            PcConomy.GlobalBorrowerManager.borrowers.add(new Borrower(Bukkit.getPlayer(player), loan));
 
         credit.remove(getLoan(player, creditOwner));
     }

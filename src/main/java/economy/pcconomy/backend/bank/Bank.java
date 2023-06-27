@@ -7,7 +7,7 @@ import economy.pcconomy.backend.bank.interfaces.IMoney;
 import economy.pcconomy.backend.bank.objects.Loan;
 import economy.pcconomy.backend.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.scripts.BalanceWorker;
+import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.cash.scripts.CashManager;
 
 import economy.pcconomy.backend.town.objects.TownObject;
@@ -27,33 +27,46 @@ public class Bank implements IMoney {
     public double VAT = PcConomy.Config.getDouble("bank.start_VAT", .1d);
     public final List<Loan> Credit;
 
-    public void GiveCashToPlayer(double amount, Player player) {
-        var balanceWorker = new BalanceWorker();
+    /***
+     * Give cash from bank player`s balance to player`s inventory
+     * @param amount Amount of given cash
+     * @param player Player that will take cash
+     */
+    public void giveCashToPlayer(double amount, Player player) {
+        var balanceWorker = new BalanceManager();
         var cash          = new Cash();
 
-        if (amount > PcConomy.GlobalBank.GetUsefulAmountOfBudget()) return;
+        if (amount > PcConomy.GlobalBank.getUsefulAmountOfBudget()) return;
         if (balanceWorker.notSolvent(amount, player)) return;
 
-        balanceWorker.TakeMoney(amount, player);
+        balanceWorker.takeMoney(amount, player);
         PcConomy.GlobalBank.BankBudget -= amount;
-        cash.GiveCashToPlayer(amount, player);
+        cash.giveCashToPlayer(amount, player);
     }
 
-    public void TakeCashFromPlayer(double amount, Player player) {
+    /***
+     * Take cash from player`s inventory to bank player`s balance
+     * @param amount Amount of taken cash
+     * @param player Player that will lose cash
+     */
+    public void takeCashFromPlayer(double amount, Player player) {
         var amountInventory = CashManager.GetAmountFromCash(CashManager.GetCashFromInventory(player.getInventory()));
         if (amount > amountInventory) return;
 
-        new Cash().TakeCashFromInventory(amount, player);
-        new BalanceWorker().GiveMoney(amount, player);
+        new Cash().takeCashFromInventory(amount, player);
+        new BalanceManager().giveMoney(amount, player);
         PcConomy.GlobalBank.BankBudget += amount;
     }
 
     double previousBudget = BankBudget;
     int recessionCount = 0;
 
-    public void LifeCycle() {
+    /***
+     * Life cycle of bank working
+     */
+    public void lifeCycle() {
         var changePercent = (BankBudget - previousBudget) / previousBudget;
-        var isRecession  = (changePercent <= 0 && GetGlobalInflation() > 0) ? 1 : -1;
+        var isRecession  = (changePercent <= 0 && getGlobalInflation() > 0) ? 1 : -1;
 
         VAT += (VAT * Math.abs(changePercent) / 2) * isRecession;
         UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
@@ -71,12 +84,15 @@ public class Bank implements IMoney {
         previousBudget = BankBudget;
     }
 
-    public double GetGlobalInflation() {
+    /***
+     * Gets global inflation of all towns
+     * @return Inflation rate
+     */
+    public double getGlobalInflation() {
         var count = 0;
         var bigInflation = 0d;
 
-        for (TownObject town :
-                PcConomy.GlobalTownWorker.townObjects) {
+        for (TownObject town : PcConomy.GlobalTownWorker.townObjects) {
             if (!town.isNPC) continue;
 
             count++;
@@ -86,20 +102,37 @@ public class Bank implements IMoney {
         return bigInflation / count;
     }
 
-    public double GetUsefulAmountOfBudget() {
+    /***
+     * Get useful amount of budget
+     * @return Useful amount of budget
+     */
+    public double getUsefulAmountOfBudget() {
         return BankBudget * UsefulBudgetPercent;
     }
 
-    public void ChangeBudget(double amount) {
+    /***
+     * Change bank budget
+     * @param amount Amount of changing
+     */
+    public void changeBudget(double amount) {
         BankBudget += amount;
     }
 
-    public List<Loan> GetCreditList() {
+    /***
+     * Gets list of loans
+     * @return List of loans
+     */
+    public List<Loan> getCreditList() {
         return Credit;
     }
 
-    public void SaveBank(String fileName) throws IOException {
-        FileWriter writer = new FileWriter(fileName + ".txt", false);
+    /***
+     * Saves bank into .json file
+     * @param fileName File name
+     * @throws IOException If something goes wrong
+     */
+    public void saveBank(String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()

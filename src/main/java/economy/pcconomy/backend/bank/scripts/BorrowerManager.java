@@ -12,24 +12,37 @@ import java.util.List;
 public class BorrowerManager {
     public final List<Borrower> borrowers = new ArrayList<>();
 
+    /***
+     * Get borrower object of player
+     * @param player Player
+     * @return Borrower object
+     */
     public Borrower getBorrowerObject(Player player) {
-        for (Borrower borrower: borrowers) {
+        for (Borrower borrower: borrowers)
             if (borrower.Borrower.equals(player.getUniqueId())) return borrower;
-        }
+
         return null;
     }
 
+    /***
+     * Update or sets new borrower object of player
+     * @param borrowerObject New borrower object
+     */
     public void setBorrowerObject(Borrower borrowerObject) {
-        for (Borrower borrower: borrowers) {
+        for (Borrower borrower: borrowers)
             if (borrower.Borrower.equals(borrowerObject.Borrower)) {
                 borrowers.remove(borrower);
                 borrowers.add(borrowerObject);
             }
-        }
     }
 
-    public void SaveBorrowers(String fileName) throws IOException {
-        FileWriter writer = new FileWriter(fileName + ".txt", false);
+    /***
+     * Save borrowers data
+     * @param fileName File name
+     * @throws IOException If something goes wrong
+     */
+    public void saveBorrowers(String fileName) throws IOException {
+        FileWriter writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()

@@ -7,7 +7,7 @@ import economy.pcconomy.backend.town.Town;
 
 import economy.pcconomy.frontend.ui.Window;
 import net.citizensnpcs.api.CitizensAPI;
-import net.kyori.adventure.text.TextComponent;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,20 +21,17 @@ public class NPCTraderListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var currentItem = event.getCurrentItem();
-        String title = ((TextComponent) event.getView().title()).content();
+        String title = event.getView().getTitle();
 
         if (Window.isThisWindow(event, player, "Магазин")) {
             var town = TownyAPI.getInstance().getTown(title.split(" ")[1]);
 
-            if (!player.getInventory().contains(currentItem)) {
+            if (!player.getInventory().contains(currentItem))
                 if (event.isLeftClick()) {
-                    Town.BuyResourceFromStorage(PcConomy.GlobalTownWorker.GetTownObject(town.getName()),
-                            currentItem, player);
+                    Town.buyResourceFromStorage(PcConomy.GlobalTownWorker.getTownObject(town.getName()), currentItem, player);
                     player.openInventory(Objects.requireNonNull(NPCTraderWindow.GetWindow(player,
-                            CitizensAPI.getNPCRegistry().getById(Integer
-                                    .parseInt(title.split(" ")[2])))));
+                            CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2])))));
                 }
-            }
 
             event.setCancelled(true);
         }

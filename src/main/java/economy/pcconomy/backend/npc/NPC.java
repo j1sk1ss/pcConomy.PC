@@ -28,7 +28,12 @@ import java.util.Map;
 public class NPC {
     public final Map<Integer, TraderObject> Traders = new Hashtable<>(); // Для сохранения
 
-    public void CreateNPC(Player creator, Trait trait) {
+    /***
+     * Create NPC with special trait
+     * @param creator Player that create NPC
+     * @param trait Trait class
+     */
+    public void createNPC(Player creator, Trait trait) {
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, trait.getName());
 
         npc.addTrait(trait);
@@ -43,14 +48,20 @@ public class NPC {
             LicenseType.Loan, new Loaner()
     );
 
-    public void BuyNPC(Player buyer, LicenseType neededLicense, double price) {
+    /***
+     * Buy NPC
+     * @param buyer Player that buy NPC
+     * @param neededLicense License that needs for this
+     * @param price Price of NPC
+     */
+    public void buyNPC(Player buyer, LicenseType neededLicense, double price) {
         var cash = new Cash();
-        if (cash.AmountOfCashInInventory(buyer) < price) return;
+        if (cash.amountOfCashInInventory(buyer) < price) return;
 
         if (PcConomy.GlobalLicenseWorker.isOverdue(
-                PcConomy.GlobalLicenseWorker.GetLicense(buyer.getUniqueId(), neededLicense))) return;
+                PcConomy.GlobalLicenseWorker.getLicense(buyer.getUniqueId(), neededLicense))) return;
 
-        cash.TakeCashFromInventory(price, buyer);
+        cash.takeCashFromInventory(price, buyer);
         PcConomy.GlobalBank.BankBudget += price;
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());
@@ -58,7 +69,10 @@ public class NPC {
         npc.addTrait(npcList.get(neededLicense));
     }
 
-    public void UpdateNPC() {
+    /***
+     * Update list of available NPC
+     */
+    public void updateNPC() {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
                 case "npcloaner" -> npc.addTrait(NPCLoaner.class);
@@ -70,10 +84,15 @@ public class NPC {
             }
         }
 
-        LoadTraders();
+        loadTraders();
     }
 
-    public net.citizensnpcs.api.npc.NPC GetNPC(int id) {
+    /***
+     * Get NPC class by NPC id
+     * @param id ID of NPC
+     * @return NPC class
+     */
+    public net.citizensnpcs.api.npc.NPC getNPC(int id) {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class))
                 if (npc.getId() == id)
@@ -82,7 +101,10 @@ public class NPC {
         return null;
     }
 
-    public void LoadTraders() {
+    /***
+     * Load traders and their stuff
+     */
+    public void loadTraders() {
         for (int id: Traders.keySet()) {
             var trait = new Trader();
             var saveTrait = Traders.get(id);
@@ -100,7 +122,12 @@ public class NPC {
         }
     }
 
-    public void SaveNPC(String fileName) throws IOException {
+    /***
+     * Saves traders list into .json file
+     * @param fileName File name
+     * @throws IOException If something goes wrong
+     */
+    public void saveNPC(String fileName) throws IOException {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class)) {
                 var traderTrait = npc.getOrAddTrait(Trader.class);
@@ -109,7 +136,7 @@ public class NPC {
                         traderTrait.Cost, traderTrait.isRanted, traderTrait.homeTown, traderTrait.Owner, traderTrait.Term));
             }
 
-        FileWriter writer = new FileWriter(fileName + ".txt", false);
+        FileWriter writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()

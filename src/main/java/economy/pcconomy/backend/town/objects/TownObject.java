@@ -8,8 +8,8 @@ import economy.pcconomy.backend.bank.interfaces.IMoney;
 import economy.pcconomy.backend.bank.objects.Loan;
 import economy.pcconomy.backend.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.scripts.CashManager;
-import economy.pcconomy.backend.scripts.ItemWorker;
-import economy.pcconomy.backend.town.objects.scripts.StorageWorker;
+import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.town.objects.scripts.StorageManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,18 +21,19 @@ public class TownObject implements IMoney {
         TownName   = town.getName();
         Credit     = new ArrayList<>();
 
-        if (isNPC) InitializeNPC();
+        if (isNPC) initializeNPC();
     }
+
     public final String TownName;
     public final List<Loan> Credit;
     public final List<ItemStack> Storage = new ArrayList<>();
-    private final int StartStorageAmount = StorageWorker.GetAmountOfStorage(Storage);
+    private final int StartStorageAmount = StorageManager.getAmountOfStorage(Storage);
     public boolean isNPC;
     private double previousBudget = 10000;
     public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage");
     public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget");
 
-    public void InitializeNPC() {
+    public void initializeNPC() {
         Storage.add(new ItemStack(Material.SPRUCE_WOOD, 100));
         Storage.add(new ItemStack(Material.STONE, 250));
         Storage.add(new ItemStack(Material.GLASS, 170));
@@ -42,35 +43,35 @@ public class TownObject implements IMoney {
         Storage.add(new ItemStack(Material.COBBLESTONE, 500));
 
         setBudget(previousBudget);
-        LifeCycle();
+        lifeCycle();
     }
 
-    public void LifeCycle() {
+    public void lifeCycle() {
         LoanManager.takePercentFromBorrowers(this);
         if (!isNPC) return;
 
         var changePercent = (getBudget() - previousBudget) / previousBudget;
         var isRecession  = (changePercent <= 0 && getLocalInflation() > 0) ? 1 : -1;
 
-        GetMoneyFromBank(1000);
+        getMoneyFromBank(1000);
 
         usefulBudget  = usefulStorage - (usefulBudget * Math.abs(changePercent)) * isRecession;
         usefulStorage = usefulBudget + (usefulStorage * Math.abs(changePercent)) * isRecession;
 
-        StorageWorker.CreateResources(500, Storage);
-        StorageWorker.UseResources(100, Storage);
+        StorageManager.createResources(500, Storage);
+        StorageManager.useResources(100, Storage);
 
         previousBudget = getBudget();
     }
 
-    public void GenerateLocalPrices() { // Только для НПС города
+    public void generateLocalPrices() {
         var budget = getBudget();
 
         for (ItemStack itemStack : Storage) {
             var amount = itemStack.getAmount() + 1;
             var price = Math.abs(budget / amount);
 
-            ItemWorker.SetLore(itemStack,
+            ItemManager.setLore(itemStack,
                     "Цена за 1 шт. (Покупка X8):\n" +
                     Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 100d + CashManager.currencySigh +
                             "\nБез НДС в " + PcConomy.GlobalBank.VAT * 100 + "%:\n" +
@@ -79,25 +80,25 @@ public class TownObject implements IMoney {
     }
 
     public double getLocalInflation() {
-        return (getBudget() / previousBudget) - ((double)StorageWorker.GetAmountOfStorage(Storage) / StartStorageAmount);
+        return (getBudget() / previousBudget) - ((double) StorageManager.getAmountOfStorage(Storage) / StartStorageAmount);
     }
 
-    public void GetMoneyFromBank(double amount) {
-        if (amount > PcConomy.GlobalBank.GetUsefulAmountOfBudget()) return;
+    public void getMoneyFromBank(double amount) {
+        if (amount > PcConomy.GlobalBank.getUsefulAmountOfBudget()) return;
 
         PcConomy.GlobalBank.BankBudget -= amount;
-        ChangeBudget(amount);
+        changeBudget(amount);
     }
 
     public void setBudget(double amount) {
         getBankAccount().setBalance(amount, "Economic action");
     }
 
-    public void ChangeBudget(double amount) {
+    public void changeBudget(double amount) {
         getBankAccount().setBalance(getBudget() + amount, "Economic action");
     }
 
-    public List<Loan> GetCreditList() {
+    public List<Loan> getCreditList() {
         return Credit;
     }
 
@@ -106,6 +107,6 @@ public class TownObject implements IMoney {
     }
 
     public BankAccount getBankAccount() {
-        return TownyAPI.getInstance().getTown(TownName).getAccount();
+        return Objects.requireNonNull(TownyAPI.getInstance().getTown(TownName)).getAccount();
     }
 }

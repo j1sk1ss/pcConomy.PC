@@ -4,7 +4,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.scripts.CashManager;
-import economy.pcconomy.backend.scripts.ItemWorker;
+import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
@@ -18,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-//import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalDateTime;
@@ -42,10 +41,10 @@ public class Trader extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        if (homeTown.equals("")) homeTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getName();
+        if (homeTown.equals("")) homeTown = Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getName();
 
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && isRanted) {
-            PcConomy.GlobalTownWorker.GetTownObject(homeTown).ChangeBudget(Revenue);
+            PcConomy.GlobalTownWorker.getTownObject(homeTown).changeBudget(Revenue);
 
             isRanted = false;
             Owner    = null;
@@ -62,7 +61,7 @@ public class Trader extends Trait {
                 if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.GetOwnerWindow(player, this));
                 else player.openInventory(TraderWindow.GetWindow(player, this));
             else
-                if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor()
+                if (Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getMayor()
                         .getUUID().equals(player.getUniqueId())) player.openInventory(TraderWindow.GetMayorWindow(player, this));
                 else player.openInventory(TraderWindow.GetRanterWindow(player, this));
         }
@@ -87,7 +86,7 @@ public class Trader extends Trait {
                 }
                 else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
                 else
-                if (TownyAPI.getInstance().getTown(homeTown).getMayor().getUUID().equals(playerUUID)) {
+                if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
                     player.sendMessage("Удалить торговца? (д/н)");
                     chat.put(playerUUID, event.getNPC().getId());
                 }
@@ -97,9 +96,9 @@ public class Trader extends Trait {
     }
 
     @EventHandler
-    public void Chatting(AsyncChatEvent event) {
+    public void chatting(AsyncChatEvent event) {
     	if (event.isAsynchronous()) {
-    		Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("PcConomy"), () -> {
+    		Bukkit.getScheduler().runTask(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("PcConomy")), () -> {
     			var player = event.getPlayer();
     	        var playerMessage = ((TextComponent) event.originalMessage()).content();
     	        event.setCancelled(true);
@@ -124,12 +123,12 @@ public class Trader extends Trait {
     	
     	            try {
     	                var cost = Double.parseDouble(playerMessage);
-    	                trader.getOrAddTrait(Trader.class).Storage.add(ItemWorker.SetLore(sellingItem,
+    	                trader.getOrAddTrait(Trader.class).Storage.add(ItemManager.setLore(sellingItem,
     	                        cost + cost * Margin + CashManager.currencySigh));
     	                player.getInventory().setItemInMainHand(null);
     	                chat.remove(player.getUniqueId());
     	
-    	                player.sendMessage("Предмет " + ItemWorker.GetName(sellingItem) + " выставлен на продажу за "
+    	                player.sendMessage("Предмет " + ItemManager.getName(sellingItem) + " выставлен на продажу за "
     	                    + (cost + cost * Margin) + " " + CashManager.currencySigh);
     	            }
     	            catch (NumberFormatException exception) {

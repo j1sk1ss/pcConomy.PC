@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class TraderObject {
-
     public TraderObject(List<ItemStack> storage, double revenue, double margin, double cost, boolean isRanted,
                         String homeTown, UUID owner, String term) {
         Storage       = storage;
@@ -19,6 +18,7 @@ public class TraderObject {
         Owner         = owner;
         Term          = term;
     }
+
     public List<ItemStack> Storage = new ArrayList<>();
     public final double Revenue;
     public final double Margin;

@@ -35,6 +35,8 @@ commands:
     usage: /add_trade_to_town
   reload_npc:
     usage: /reload_npc
+  full_info:
+    usage: /full_info
 
 bank:
   start_budget: 15000
