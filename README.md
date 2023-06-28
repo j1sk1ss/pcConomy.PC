@@ -1,7 +1,7 @@
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover1.png)
 # pcConomy plugin
 ## Main info
-This is a plugin for minecraft 1.16.5 (soon it will be updated for 1.20 version). A few words about: This plugin realize market economy in minecraft. And yes - it`s all... But let me more explain how he works in next part of **ReadMe**.
+This is a plugin for minecraft 1.16.5 (soon it will be updated for 1.20 version). A few words about: This plugin realise market economy in minecraft. And yes - it`s all... But let me more explain how he works in next part of **ReadMe**.
 
 ----------------------------------------
 ### Needed stuff:
