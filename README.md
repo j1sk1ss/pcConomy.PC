@@ -20,6 +20,7 @@ This is a plugin for minecraft 1.16.5 (soon it will be updated for 1.20 version)
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover2.png)
 
 In few words: we have bank, town and player objects. And any of them can do many things. For example:
+
 ----------------------------------------
 **Player actions list**
 - Take loan from bank (NPC) loaner
