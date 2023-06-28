@@ -3,7 +3,7 @@ version: '${project.version}'
 main: economy.pcconomy.PcConomy
 api-version: 1.16
 authors: [ j1sk1ss ]
-description: Main economy plugin for Potolot Craft made by j1s
+description: Main economy plugin for Potolot Craft made by j1sk1ss
 website: https://potolotcraft.net
 
 commands:

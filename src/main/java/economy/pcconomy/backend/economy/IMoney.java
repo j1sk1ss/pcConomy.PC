@@ -4,6 +4,9 @@ import economy.pcconomy.backend.economy.bank.objects.Loan;
 
 import java.util.List;
 
+/**
+ * IMoney interface of economy objects
+ */
 public interface IMoney {
     /**
      * Changing budget of target

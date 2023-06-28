@@ -85,7 +85,7 @@ public final class PcConomy extends JavaPlugin {
         for (var command : commands)
             Objects.requireNonNull(getCommand(command)).setExecutor(manager);
 
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)  // Регистрация PAPI
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
         	new PcConomyPAPI().register();
     }
 
@@ -94,6 +94,9 @@ public final class PcConomy extends JavaPlugin {
         SaveData();
     }
 
+    /***
+     * Save all data into files
+     */
     public static void SaveData() {
         try {
             GlobalNPC.saveNPC("npc_data");

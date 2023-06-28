@@ -31,7 +31,7 @@ public class CashManager {
     	currencyNameCases.put("pp", "Алефах");
     }
 
-    /***
+    /**
      * Creates itemStack object
      * @param amount Amount of cash object
      * @return ItemStack object
@@ -41,7 +41,7 @@ public class CashManager {
                 "" + amount + currencySigh), currencyName);
     }
 
-    /***
+    /**
      * Creates itemStack object
      * @param amount Amount of cash object
      * @param count Count of objects
@@ -52,7 +52,7 @@ public class CashManager {
                 "" + amount + currencySigh), currencyName);
     }
 
-    /***
+    /**
      * Get double value of amount from itemStack cash object
      * @param money ItemStack cash object
      * @return Double value
@@ -64,7 +64,7 @@ public class CashManager {
         return 0;
     }
 
-    /***
+    /**
      * Get double value of amount from list of itemStack cash objects
      * @param money ItemStack cash objects
      * @return Double value
@@ -77,7 +77,7 @@ public class CashManager {
         return amount;
     }
 
-    /***
+    /**
      * Get list of itemStacks
      * @param inventory Inventory
      * @return List of cash objects from inventory
@@ -90,7 +90,7 @@ public class CashManager {
         return moneys;
     }
 
-    /***
+    /**
      * Get change from list
      * @param change Change
      * @return List of cash objects
@@ -104,7 +104,7 @@ public class CashManager {
         return moneyStack;
     }
 
-    /***
+    /**
      * Cash object status
      * @param item Item that should be checked
      * @return Cash object status
@@ -117,7 +117,7 @@ public class CashManager {
         return false;
     }
 
-    /***
+    /**
      * Gives to player items of cash
      * @param amount Amount of cash
      * @param player Player that will take this cash
@@ -133,7 +133,7 @@ public class CashManager {
         ItemManager.giveItems(CashManager.createCashObject(amount), player);
     }
 
-    /***
+    /**
      * Gives to player items of cash with special amount
      * @param amount Amount of cash
      * @param player Player that will take this cash
@@ -146,7 +146,7 @@ public class CashManager {
         ItemManager.giveItems(change, player);
     }
 
-    /***
+    /**
      * Amount of cash in player inventory
      * @param player Player that will be checked
      * @return Amount of cah in player`s inventory
@@ -155,7 +155,7 @@ public class CashManager {
         return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
     }
 
-    /***
+    /**
      * Take cash from player
      * @param amount Amount that will be taken
      * @param player Player that will lose this amount

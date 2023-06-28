@@ -26,7 +26,7 @@ public class Bank implements IMoney {
     public double VAT = PcConomy.Config.getDouble("bank.start_VAT", .1d);
     public final List<Loan> Credit;
 
-    /***
+    /**
      * Give cash from bank player`s balance to player`s inventory
      * @param amount Amount of given cash
      * @param player Player that will take cash
@@ -35,15 +35,16 @@ public class Bank implements IMoney {
         var balanceWorker = new BalanceManager();
         var cash          = new CashManager();
 
-        if (amount > PcConomy.GlobalBank.getUsefulAmountOfBudget()) return;
+        if (amount > getUsefulAmountOfBudget()) return;
         if (balanceWorker.notSolvent(amount, player)) return;
 
         balanceWorker.takeMoney(amount, player);
-        PcConomy.GlobalBank.BankBudget -= amount;
         cash.giveCashToPlayer(amount, player);
+
+        BankBudget -= amount;
     }
 
-    /***
+    /**
      * Take cash from player`s inventory to bank player`s balance
      * @param amount Amount of taken cash
      * @param player Player that will lose cash
@@ -54,13 +55,14 @@ public class Bank implements IMoney {
 
         new CashManager().takeCashFromInventory(amount, player);
         new BalanceManager().giveMoney(amount, player);
-        PcConomy.GlobalBank.BankBudget += amount;
+
+        BankBudget += amount;
     }
 
     double previousBudget = BankBudget;
     int recessionCount = 0;
 
-    /***
+    /**
      * Life cycle of bank working
      */
     public void lifeCycle() {
@@ -83,7 +85,7 @@ public class Bank implements IMoney {
         previousBudget = BankBudget;
     }
 
-    /***
+    /**
      * Gets global inflation of all towns
      * @return Inflation rate
      */
@@ -101,7 +103,7 @@ public class Bank implements IMoney {
         return bigInflation / count;
     }
 
-    /***
+    /**
      * Get useful amount of budget
      * @return Useful amount of budget
      */
@@ -109,7 +111,7 @@ public class Bank implements IMoney {
         return BankBudget * UsefulBudgetPercent;
     }
 
-    /***
+    /**
      * Change bank budget
      * @param amount Amount of changing
      */
@@ -117,7 +119,7 @@ public class Bank implements IMoney {
         BankBudget += amount;
     }
 
-    /***
+    /**
      * Gets list of loans
      * @return List of loans
      */
@@ -125,7 +127,7 @@ public class Bank implements IMoney {
         return Credit;
     }
 
-    /***
+    /**
      * Saves bank into .json file
      * @param fileName File name
      * @throws IOException If something goes wrong

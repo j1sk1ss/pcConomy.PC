@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class BalanceManager {
     private final XConomyAPI xConomyAPI = PcConomy.xConomyAPI;
 
-    /***
+    /**
      * Give value of balance of Player
      * @param player Player that balance should be revealed
      * @return Balance
@@ -18,7 +18,7 @@ public class BalanceManager {
         return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().doubleValue();
     }
 
-    /***
+    /**
      * Check is player have moneys
      * @param value Value
      * @param player Player
@@ -28,7 +28,7 @@ public class BalanceManager {
         return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(value)) < 0;
     }
 
-    /***
+    /**
      * Gives money for player
      * @param amount Amount of giving
      * @param player Player that will take this amount
@@ -37,7 +37,7 @@ public class BalanceManager {
         xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), true);
     }
 
-    /***
+    /**
      * Takes money from player
      * @param amount Amount of taken money
      * @param player Player that will lose moneys

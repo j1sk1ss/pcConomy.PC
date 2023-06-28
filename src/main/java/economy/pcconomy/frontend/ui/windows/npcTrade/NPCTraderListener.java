@@ -3,8 +3,8 @@ package economy.pcconomy.frontend.ui.windows.npcTrade;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.town.Town;
 
+import economy.pcconomy.backend.economy.town.scripts.TownManager;
 import economy.pcconomy.frontend.ui.Window;
 import net.citizensnpcs.api.CitizensAPI;
 
@@ -16,7 +16,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.util.Objects;
 
 public class NPCTraderListener implements Listener {
-
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
@@ -28,7 +27,7 @@ public class NPCTraderListener implements Listener {
 
             if (!player.getInventory().contains(currentItem))
                 if (event.isLeftClick()) {
-                    Town.buyResourceFromStorage(PcConomy.GlobalTownWorker.getTownObject(town.getName()), currentItem, player);
+                    TownManager.buyResourceFromStorage(PcConomy.GlobalTownWorker.getTownObject(town.getName()), currentItem, player);
                     player.openInventory(Objects.requireNonNull(NPCTraderWindow.generateWindow(player,
                             CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2])))));
                 }

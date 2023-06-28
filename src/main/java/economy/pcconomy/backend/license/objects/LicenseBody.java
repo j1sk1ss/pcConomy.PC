@@ -16,7 +16,7 @@ public class LicenseBody {
     public final String Term;
     public final LicenseType LicenseType;
 
-    /***
+    /**
      * Checks status of license
      * @return Status of license
      */

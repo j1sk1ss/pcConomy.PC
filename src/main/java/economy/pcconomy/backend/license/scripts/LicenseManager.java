@@ -15,7 +15,7 @@ import java.util.UUID;
 public class LicenseManager {
     public final List<LicenseBody> Licenses = new ArrayList<>();
 
-    /***
+    /**
      * Creates new license
      * @param licenseBody License body
      */
@@ -23,7 +23,7 @@ public class LicenseManager {
         Licenses.add(licenseBody);
     }
 
-    /***
+    /**
      * Gets license of player
      * @param player Player that should be checked
      * @return License body
@@ -35,7 +35,7 @@ public class LicenseManager {
         return null;
     }
 
-    /***
+    /**
      * Gets license body of player with specified type
      * @param player UUID of player
      * @param licenseType Specified license type
@@ -49,7 +49,7 @@ public class LicenseManager {
         return null;
     }
 
-    /***
+    /**
      * Saves license
      * @param fileName File name
      * @throws IOException If something goes wrong

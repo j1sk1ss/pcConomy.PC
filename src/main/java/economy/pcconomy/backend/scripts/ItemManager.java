@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ItemManager {
-    /***
+    /**
      * Sets lore of itemStack
      * @param item ItemStack that should take new lore
      * @param loreLine Lore line
@@ -27,7 +27,7 @@ public class ItemManager {
         return item;
     }
 
-    /***
+    /**
      * Sets lore of itemStack
      * @param item ItemStack that should take new name
      * @param name New name
@@ -41,7 +41,7 @@ public class ItemManager {
         return item;
     }
 
-    /***
+    /**
      * Sets lore of itemStack
      * @param item ItemStack that should take new material
      * @param material New material
@@ -54,7 +54,7 @@ public class ItemManager {
         return itemStack;
     }
 
-    /***
+    /**
      * Gets material of itemStack
      * @param item ItemStack
      * @return Material of itemStack
@@ -63,7 +63,7 @@ public class ItemManager {
         return item.getType();
     }
 
-    /***
+    /**
      * Gets lore of itemStack
      * @param item ItemStack
      * @return Lore of itemStack
@@ -72,7 +72,7 @@ public class ItemManager {
         return item.getItemMeta().getLore();
     }
 
-    /***
+    /**
      * Gets name of itemStack
      * @param item ItemStack
      * @return Name of itemStack
@@ -81,7 +81,7 @@ public class ItemManager {
         return Objects.requireNonNull(item.getItemMeta().getDisplayName());
     }
 
-    /***
+    /**
      * Give list of items to player
      * @param itemStacks List of items
      * @param player Player that will take this list
@@ -93,7 +93,7 @@ public class ItemManager {
             player.getInventory().addItem(item);
     }
 
-    /***
+    /**
      * Give item to player
      * @param itemStack Item
      * @param player Player that will take this item
@@ -103,7 +103,7 @@ public class ItemManager {
         player.getInventory().addItem(itemStack);
     }
 
-    /***
+    /**
      * Give items to player without any lore
      * @param itemStacks List of items
      * @param player Player that will take this list
@@ -115,7 +115,7 @@ public class ItemManager {
             player.getInventory().addItem(ItemManager.setLore(item, ""));
     }
 
-    /***
+    /**
      * Give item to player without any lore
      * @param itemStack Item
      * @param player Player that will take this item
@@ -125,7 +125,7 @@ public class ItemManager {
         player.getInventory().addItem(ItemManager.setLore(itemStack, ""));
     }
 
-    /***
+    /**
      * Takes items from player
      * @param itemStacks List of items that should be taken
      * @param player Player that will lose this list of items
@@ -141,7 +141,7 @@ public class ItemManager {
         }
     }
 
-    /***
+    /**
      * Takes item from player
      * @param itemStack Item that should be taken
      * @param player Player that will lose this item
@@ -155,7 +155,7 @@ public class ItemManager {
         }
     }
 
-    /***
+    /**
      * Gets count of empty slots
      * @param player Player that's inventory will be checked
      * @return Count of empty slots
@@ -171,7 +171,7 @@ public class ItemManager {
         return 36 - i;
     }
 
-    /***
+    /**
      * Gets double formatted price that wrote in lore
      * @param itemStack Item that price will be given
      * @param loreLine Lore line position that includes price

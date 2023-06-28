@@ -25,7 +25,7 @@ public class License {
             LicenseType.LoanHistory, "Лицензия на доступ к кредитной истории"
     );
 
-    /***
+    /**
      * Gives license to player
      * @param player Player that will take license
      * @param licenseType License type

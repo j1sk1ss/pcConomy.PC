@@ -71,8 +71,7 @@ public class TownObject implements IMoney {
             var amount = itemStack.getAmount() + 1;
             var price = Math.abs(budget / amount);
 
-            ItemManager.setLore(itemStack,
-                    "Цена за 1 шт. (Покупка X8):\n" +
+            ItemManager.setLore(itemStack, "Цена за 1 шт. (Покупка X8):\n" +
                     Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 100d + CashManager.currencySigh +
                             "\nБез НДС в " + PcConomy.GlobalBank.VAT * 100 + "%:\n" +
                             Math.round(price * 100d) / 1000d + CashManager.currencySigh);
