@@ -1,12 +1,12 @@
 package economy.pcconomy.backend.save;
 
 import com.google.gson.GsonBuilder;
-import economy.pcconomy.backend.bank.Bank;
-import economy.pcconomy.backend.bank.scripts.BorrowerManager;
+import economy.pcconomy.backend.economy.bank.Bank;
+import economy.pcconomy.backend.economy.bank.scripts.BorrowerManager;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
-import economy.pcconomy.backend.npc.NPC;
+import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
-import economy.pcconomy.backend.town.scripts.TownManager;
+import economy.pcconomy.backend.economy.town.scripts.TownManager;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class Loader {
      * @return NPC object
      * @throws IOException If something goes wrong
      */
-    public static NPC loadNPC(String fileName) throws IOException {
+    public static NpcManager loadNPC(String fileName) throws IOException {
         String json = new String(Files.readAllBytes(Paths.get(fileName + ".json")));
 
         return new GsonBuilder()
@@ -44,7 +44,7 @@ public class Loader {
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
-                .fromJson(json, NPC.class);
+                .fromJson(json, NpcManager.class);
     }
 
     /***

@@ -1,9 +1,10 @@
 package economy.pcconomy.frontend.ui.windows.bank;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.Window;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

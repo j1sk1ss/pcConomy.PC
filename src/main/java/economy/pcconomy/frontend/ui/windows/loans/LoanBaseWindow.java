@@ -3,9 +3,9 @@ package economy.pcconomy.frontend.ui.windows.loans;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.bank.interfaces.IMoney;
-import economy.pcconomy.backend.bank.scripts.LoanManager;
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.economy.IMoney;
+import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemManager;
 
@@ -51,8 +51,7 @@ public abstract class LoanBaseWindow {
                 .getLicense(Objects.requireNonNull(town).getMayor().getUUID(), LicenseType.LoanHistory);
         if (licenseHistory == null) return false;
 
-        return !PcConomy.GlobalLicenseWorker.isOverdue(PcConomy.GlobalLicenseWorker
-                .getLicense(town.getMayor().getUUID(), LicenseType.LoanHistory));
+        return !licenseHistory.isOverdue();
     }
 
     public abstract ItemStack creditOptionButton(ItemStack itemStack, double maxLoanSize, int chosen, int position);

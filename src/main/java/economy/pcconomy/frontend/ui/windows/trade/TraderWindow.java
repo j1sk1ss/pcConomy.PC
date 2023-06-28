@@ -1,8 +1,8 @@
 package economy.pcconomy.frontend.ui.windows.trade;
 
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
-import economy.pcconomy.backend.trade.npc.Trader;
+import economy.pcconomy.backend.npc.traits.Trader;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

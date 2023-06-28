@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.placeholderapi;
 
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.cash.CashManager;
 
 import org.bukkit.OfflinePlayer;
 

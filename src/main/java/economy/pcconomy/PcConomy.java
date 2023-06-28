@@ -1,16 +1,16 @@
 package economy.pcconomy;
 
-import economy.pcconomy.backend.bank.scripts.BorrowerManager;
+import economy.pcconomy.backend.economy.bank.scripts.BorrowerManager;
 
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.link.Manager;
-import economy.pcconomy.backend.npc.NPC;
-import economy.pcconomy.backend.npc.listener.NPCLoader;
+import economy.pcconomy.backend.npc.NpcManager;
+import economy.pcconomy.backend.npc.listener.NpcLoader;
 import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
 import economy.pcconomy.backend.save.Loader;
-import economy.pcconomy.backend.town.listener.TownyListener;
-import economy.pcconomy.backend.bank.Bank;
-import economy.pcconomy.backend.town.scripts.TownManager;
+import economy.pcconomy.backend.economy.town.listener.TownyListener;
+import economy.pcconomy.backend.economy.bank.Bank;
+import economy.pcconomy.backend.economy.town.scripts.TownManager;
 
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
@@ -36,7 +36,7 @@ import java.util.Objects;
 public final class PcConomy extends JavaPlugin {
     public static FileConfiguration Config;
     public static XConomyAPI xConomyAPI;
-    public static NPC GlobalNPC;
+    public static NpcManager GlobalNPC;
     public static Bank GlobalBank;
     public static BorrowerManager GlobalBorrowerManager;
     public static TownManager GlobalTownWorker;
@@ -68,7 +68,7 @@ public final class PcConomy extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        var listeners = Arrays.asList(new NPCLoader(), new LoanListener(), new TownyListener(),
+        var listeners = Arrays.asList(new NpcLoader(), new LoanListener(), new TownyListener(),
                 new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
                 new NPCTraderListener(), new NPCLoanerListener());
 

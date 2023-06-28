@@ -1,11 +1,10 @@
 package economy.pcconomy.frontend.ui.windows.trade;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemManager;
-import economy.pcconomy.backend.trade.npc.Trader;
+import economy.pcconomy.backend.npc.traits.Trader;
 import economy.pcconomy.frontend.ui.Window;
 
 import org.bukkit.entity.Player;
@@ -50,7 +49,7 @@ public class TraderListener implements Listener {
                     }
 
                     case "Забрать прибыль" -> {
-                        new Cash().giveCashToPlayer(trader.Revenue, player);
+                        new CashManager().giveCashToPlayer(trader.Revenue, player);
                         trader.Revenue = 0;
                     }
                 }
@@ -60,11 +59,11 @@ public class TraderListener implements Listener {
 
             if (title.contains("Торговец-Аренда")) {
                 if (ItemManager.getName(choseItem).equals("Арендовать на один день")) {
-                    var cash = new Cash();
+                    var cash = new CashManager();
                     var playerTradeLicense =
                             PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), LicenseType.Trade);
-
-                    if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
+                    if (playerTradeLicense == null) return;
+                    if (!playerTradeLicense.isOverdue()) {
                         if (cash.amountOfCashInInventory(player) < trader.Cost) return;
 
                         cash.takeCashFromInventory(trader.Cost, player);
@@ -88,8 +87,8 @@ public class TraderListener implements Listener {
                 if (ItemManager.getName(choseItem).equals("Занять")) {
                     var playerTradeLicense =
                             PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), LicenseType.Trade);
-
-                    if (!PcConomy.GlobalLicenseWorker.isOverdue(playerTradeLicense)) {
+                    if (playerTradeLicense == null) return;
+                    if (!playerTradeLicense.isOverdue()) {
                         RantTrader(trader, player);
                         player.closeInventory();
                     }
@@ -111,7 +110,7 @@ public class TraderListener implements Listener {
 
             if (title.contains("Покупка")) {
                 if (ItemManager.getName(choseItem).equals("КУПИТЬ")) {
-                    var cash = new Cash();
+                    var cash = new CashManager();
                     var buyingItem = inventory.getItem(4);
                     var price = ItemManager.getPriceFromLore(buyingItem, 0);
 
@@ -124,8 +123,7 @@ public class TraderListener implements Listener {
                                 cash.takeCashFromInventory(price, player);
 
                                 var endPrice = price / (1 + trader.Margin);
-                                PcConomy.GlobalTownWorker.getTownObject(trader.homeTown)
-                                        .changeBudget(price - endPrice);
+                                PcConomy.GlobalTownWorker.getTownObject(trader.homeTown).changeBudget(price - endPrice);
                                 trader.Revenue += endPrice;
                             }
                         }

@@ -1,9 +1,8 @@
 package economy.pcconomy.frontend.ui.windows.bank;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.cash.scripts.CashManager;
-import economy.pcconomy.backend.cash.scripts.ChangeManager;
+import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.cash.ChangeManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.windows.IWindow;
@@ -22,7 +21,7 @@ public class BankerWindow implements IWindow {
 
         var enableBalance   = PcConomy.GlobalBank.getUsefulAmountOfBudget();
         var playerBalance   = new BalanceManager().getBalance(player);
-        var cashInInventory = new Cash().amountOfCashInInventory(player);
+        var cashInInventory = new CashManager().amountOfCashInInventory(player);
 
         for (var i = 0; i < 9; i++) {
             if (i == 0 && playerBalance < enableBalance) {

@@ -2,7 +2,7 @@ package economy.pcconomy.frontend.ui.windows.mayor;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.npc.NPC;
+import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.Window;
 
@@ -22,9 +22,9 @@ public class MayorListener implements Listener {
             var option = ItemManager.getName(Objects.requireNonNull(event.getCurrentItem()));
 
             if (option.equals("Установить торговца"))
-                PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market, NPC.traderCost + NPC.traderCost * PcConomy.GlobalBank.VAT);
+                PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market, NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT);
             if (option.equals("Установить кредитора"))
-                PcConomy.GlobalNPC.buyNPC(player, LicenseType.Loan, NPC.loanerCost + NPC.loanerCost * PcConomy.GlobalBank.VAT);
+                PcConomy.GlobalNPC.buyNPC(player, LicenseType.Loan, NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT);
 
             event.setCancelled(true);
         }

@@ -2,9 +2,9 @@ package economy.pcconomy.frontend.ui.windows.loans.loan;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.bank.interfaces.IMoney;
-import economy.pcconomy.backend.bank.scripts.LoanManager;
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.economy.IMoney;
+import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.windows.IWindow;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;

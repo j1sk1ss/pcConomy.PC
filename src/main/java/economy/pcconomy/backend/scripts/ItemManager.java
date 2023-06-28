@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.scripts;
 
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.cash.CashManager;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,7 +10,6 @@ import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ItemManager {
     /***
@@ -137,7 +136,6 @@ public class ItemManager {
 
             for (var playerItem: player.getInventory()) {
                 if (playerItem == null) continue;
-
                 takeItems(item, player);
             }
         }
@@ -152,6 +150,7 @@ public class ItemManager {
         for (var playerItem : player.getInventory()) {
             if (playerItem == null) continue;
             if (playerItem.equals(itemStack)) player.getInventory().removeItem(playerItem);
+
             break;
         }
     }
@@ -165,6 +164,7 @@ public class ItemManager {
         var inventory = player.getInventory();
         var cont = inventory.getContents();
         int i = 0;
+
         for (var item : cont)
             if (item != null && item.getType() != Material.AIR) i++;
 

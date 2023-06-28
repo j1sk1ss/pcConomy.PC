@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.math.BigDecimal;
 
 public class BalanceManager {
-
     private final XConomyAPI xConomyAPI = PcConomy.xConomyAPI;
 
     /***
@@ -47,5 +46,4 @@ public class BalanceManager {
         if (notSolvent(amount, player)) return;
         xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), false);
     }
-
 }

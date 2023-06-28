@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.ui.windows.license;
 
-import economy.pcconomy.backend.cash.scripts.CashManager;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.License;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.windows.IWindow;

@@ -1,8 +1,8 @@
 package economy.pcconomy.frontend.ui.windows.mayor;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.scripts.CashManager;
-import economy.pcconomy.backend.npc.NPC;
+import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 
 import economy.pcconomy.frontend.ui.windows.IWindow;
@@ -18,10 +18,10 @@ public class MayorWindow implements IWindow {
         var window = Bukkit.createInventory(mayor, 27, Component.text("Меню"));
 
         window.setItem(0, ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PURPLE_WOOL),
-                (NPC.traderCost + NPC.traderCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh),
+                (NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh),
                 "Установить торговца"));
         window.setItem(1, ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PURPLE_WOOL),
-                (NPC.loanerCost + NPC.loanerCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh),
+                (NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh),
                 "Установить кредитора"));
 
         return window;

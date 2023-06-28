@@ -24,16 +24,6 @@ public class LicenseManager {
     }
 
     /***
-     * Checks status of license
-     * @param licenseBody License body
-     * @return Status of license
-     */
-    public boolean isOverdue(LicenseBody licenseBody) {
-        if (licenseBody == null) return true;
-        return LocalDateTime.now().isAfter(LocalDateTime.parse(licenseBody.Term));
-    }
-
-    /***
      * Gets license of player
      * @param player Player that should be checked
      * @return License body

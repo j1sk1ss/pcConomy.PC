@@ -1,7 +1,7 @@
 package economy.pcconomy.backend.license;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemManager;
@@ -32,7 +32,7 @@ public class License {
      * @param price Price of license
      */
     public static void getLicense(Player player, LicenseType licenseType, double price) {
-        var cash = new Cash();
+        var cash = new CashManager();
         if (cash.amountOfCashInInventory(player) < price) return;
 
         if (PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), licenseType) != null)

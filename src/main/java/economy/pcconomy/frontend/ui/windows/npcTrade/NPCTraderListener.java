@@ -3,7 +3,7 @@ package economy.pcconomy.frontend.ui.windows.npcTrade;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.town.Town;
+import economy.pcconomy.backend.economy.town.Town;
 
 import economy.pcconomy.frontend.ui.Window;
 import net.citizensnpcs.api.CitizensAPI;

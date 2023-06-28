@@ -3,15 +3,15 @@ package economy.pcconomy.backend.link;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.bank.npc.Banker;
-import economy.pcconomy.backend.bank.npc.Loaner;
-import economy.pcconomy.backend.bank.npc.NPCLoaner;
-import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.license.npc.Licensor;
+import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.npc.traits.Banker;
+import economy.pcconomy.backend.npc.traits.Loaner;
+import economy.pcconomy.backend.npc.traits.NpcLoaner;
+import economy.pcconomy.backend.npc.traits.Licensor;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.npc.NPC;
-import economy.pcconomy.backend.town.objects.scripts.StorageManager;
-import economy.pcconomy.backend.trade.npc.NPCTrader;
+import economy.pcconomy.backend.npc.NpcManager;
+import economy.pcconomy.backend.economy.town.objects.scripts.StorageManager;
+import economy.pcconomy.backend.npc.traits.NpcTrader;
 import economy.pcconomy.frontend.ui.Window;
 
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
@@ -31,7 +31,7 @@ public class Manager implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
 
         if (command.getName().equals("take_cash"))
-            new Cash().takeCashFromInventory(Double.parseDouble(args[0]), (Player) sender);
+            new CashManager().takeCashFromInventory(Double.parseDouble(args[0]), (Player) sender);
 
         if (command.getName().equals("create_cash"))
             PcConomy.GlobalBank.giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
@@ -52,16 +52,16 @@ public class Manager implements CommandExecutor {
             PcConomy.GlobalNPC.createNPC((Player) sender, new Banker());
 
         if (command.getName().equals("create_npc_loaner"))
-            PcConomy.GlobalNPC.createNPC((Player) sender, new NPCLoaner());
+            PcConomy.GlobalNPC.createNPC((Player) sender, new NpcLoaner());
 
         if (command.getName().equals("create_loaner"))
             PcConomy.GlobalNPC.createNPC((Player) sender, new Loaner());
 
         if (command.getName().equals("create_trader"))
-            PcConomy.GlobalNPC.buyNPC((Player) sender, LicenseType.Market, NPC.traderCost);
+            PcConomy.GlobalNPC.buyNPC((Player) sender, LicenseType.Market, NpcManager.traderCost);
 
         if (command.getName().equals("create_npc_trader"))
-            PcConomy.GlobalNPC.createNPC((Player) sender, new NPCTrader());
+            PcConomy.GlobalNPC.createNPC((Player) sender, new NpcTrader());
 
         if (command.getName().equals("create_licensor"))
             PcConomy.GlobalNPC.createNPC((Player) sender, new Licensor());
@@ -79,7 +79,7 @@ public class Manager implements CommandExecutor {
                     PcConomy.GlobalTownWorker.getTownObject(args[0]).Storage);
 
         if (command.getName().equals("full_info")) {
-            ((Player) sender).sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "\n" +
+            sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "\n" +
                     "Global VAT: " + PcConomy.GlobalBank.VAT + "\n" +
                     "Registered towns count: " + PcConomy.GlobalTownWorker.townObjects.size() + "\n" +
                     "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
