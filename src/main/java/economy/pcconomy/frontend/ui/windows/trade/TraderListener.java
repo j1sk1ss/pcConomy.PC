@@ -35,14 +35,14 @@ public class TraderListener implements Listener {
 
             if (title.contains("Торговец-Покупка"))
                 if (!player.getInventory().contains(choseItem)) {
-                    player.openInventory(TraderWindow.GetAcceptWindow(player, choseItem, trader));
+                    player.openInventory(TraderWindow.getAcceptWindow(player, choseItem, trader));
                     return;
                 }
 
             if (title.contains("Торговец-Управление")) {
                 switch (ItemManager.getName(choseItem)) {
                     case "Перейти в товары" ->
-                            player.openInventory(TraderWindow.GetWindow(player, trader));
+                            player.openInventory(TraderWindow.getWindow(player, trader));
 
                     case "Забрать все товары" -> {
                         ItemManager.giveItemsWithoutLore(trader.Storage, player);
@@ -74,15 +74,16 @@ public class TraderListener implements Listener {
                         player.closeInventory();
                     }
                 }
+
                 return;
             }
 
             if (title.contains("Торговец-Владелец")) {
                 if (ItemManager.getName(choseItem).equals("Установить цену"))
-                    player.openInventory(TraderWindow.GetPricesWindow(player, trader));
+                    player.openInventory(TraderWindow.getPricesWindow(player, trader));
 
                 if (ItemManager.getName(choseItem).equals("Установить процент"))
-                    player.openInventory(TraderWindow.GetMarginWindow(player, trader));
+                    player.openInventory(TraderWindow.getMarginWindow(player, trader));
 
                 if (ItemManager.getName(choseItem).equals("Занять")) {
                     var playerTradeLicense =
@@ -130,9 +131,9 @@ public class TraderListener implements Listener {
                         }
                     }
 
-                    player.openInventory(TraderWindow.GetWindow(player, trader));
+                    player.openInventory(TraderWindow.getWindow(player, trader));
                 } else if (ItemManager.getName(choseItem).equals("ОТМЕНА"))
-                    player.openInventory(TraderWindow.GetWindow(player, trader));
+                    player.openInventory(TraderWindow.getWindow(player, trader));
             }
         }
     }

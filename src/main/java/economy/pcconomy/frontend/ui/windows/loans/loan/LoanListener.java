@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.ui.windows.loan;
+package economy.pcconomy.frontend.ui.windows.loans.loan;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
@@ -14,17 +14,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Objects;
+
 public class LoanListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        // Клик по кредиту
         var player = (Player) event.getWhoClicked();
         var activeInventory = event.getInventory();
         var item = event.getCurrentItem();
 
         if (Window.isThisWindow(event, player, "Кредит-Город")) {
             var town = TownyAPI.getInstance().getTown(player.getLocation());
-            var townObject = PcConomy.GlobalTownWorker.getTownObject(town.getName());
+            var townObject = PcConomy.GlobalTownWorker.getTownObject(Objects.requireNonNull(town).getName());
             var buttonPosition = event.getSlot();
             event.setCancelled(true);
 
@@ -40,15 +41,14 @@ public class LoanListener implements Listener {
                 if (isSafe && townObject.Credit.size() < maxCreditCount) {
                     if (!townObject.Credit.contains(LoanManager.getLoan(player.getUniqueId(), townObject))) {
                         activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
-                        LoanManager.createLoan(LoanWindow.GetSelectedAmount(activeInventory),
-                                LoanWindow.GetSelectedDuration(activeInventory), player, townObject.Credit,
-                                townObject);
+                        LoanManager.createLoan(LoanWindow.getSelectedAmount(activeInventory),
+                                LoanWindow.getSelectedDuration(activeInventory), player, townObject);
                         player.closeInventory();
                     }
                 }
             } else {
                 activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.PURPLE_WOOL));
-                player.openInventory(LoanWindow.regenerateWindow(activeInventory, player, buttonPosition, false));
+                player.openInventory(new LoanWindow().regenerateWindow(activeInventory, player, buttonPosition, false));
             }
         }
     }

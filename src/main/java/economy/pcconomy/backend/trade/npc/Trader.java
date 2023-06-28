@@ -58,12 +58,12 @@ public class Trader extends Trait {
 
         try {
             if (isRanted)
-                if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.GetOwnerWindow(player, this));
-                else player.openInventory(TraderWindow.GetWindow(player, this));
+                if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.getOwnerWindow(player, this));
+                else player.openInventory(TraderWindow.getWindow(player, this));
             else
                 if (Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getMayor()
-                        .getUUID().equals(player.getUniqueId())) player.openInventory(TraderWindow.GetMayorWindow(player, this));
-                else player.openInventory(TraderWindow.GetRanterWindow(player, this));
+                        .getUUID().equals(player.getUniqueId())) player.openInventory(TraderWindow.getMayorWindow(player, this));
+                else player.openInventory(TraderWindow.getRanterWindow(player, this));
         }
         catch (NullPointerException e) {
             player.sendMessage("Что-то пошло не так (1).");
@@ -75,6 +75,7 @@ public class Trader extends Trait {
     @EventHandler
     public void onInteraction(NPCLeftClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
+
         var player = event.getClicker();
         var playerUUID = player.getUniqueId();
 
@@ -85,8 +86,7 @@ public class Trader extends Trait {
                     chat.put(playerUUID, event.getNPC().getId());
                 }
                 else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
-                else
-                if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
+                else if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
                     player.sendMessage("Удалить торговца? (д/н)");
                     chat.put(playerUUID, event.getNPC().getId());
                 }
@@ -103,38 +103,40 @@ public class Trader extends Trait {
     	        var playerMessage = ((TextComponent) event.originalMessage()).content();
     	        event.setCancelled(true);
     	
-    	        if (chat.get(player.getUniqueId()) != null) {
-    	            var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
-    	
-    	            if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
-    	                if (playerMessage.equalsIgnoreCase("д")) {
-    	                    PcConomy.GlobalNPC.Traders.remove(trader.getId());
-    	                    trader.destroy();
-    	                }
+    	        if (chat.get(player.getUniqueId()) == null) return;
 
-    	                return;
-    	            }
-    	
-    	            var sellingItem = player.getInventory().getItemInMainHand();
-    	            if (sellingItem.getType().equals(Material.AIR)) {
-    	                player.sendMessage("Воздух, пока что, нельзя продавать.");
-    	                return;
-    	            }
-    	
-    	            try {
-    	                var cost = Double.parseDouble(playerMessage);
-    	                trader.getOrAddTrait(Trader.class).Storage.add(ItemManager.setLore(sellingItem,
-    	                        cost + cost * Margin + CashManager.currencySigh));
-    	                player.getInventory().setItemInMainHand(null);
-    	                chat.remove(player.getUniqueId());
-    	
-    	                player.sendMessage("Предмет " + ItemManager.getName(sellingItem) + " выставлен на продажу за "
-    	                    + (cost + cost * Margin) + " " + CashManager.currencySigh);
-    	            }
-    	            catch (NumberFormatException exception) {
-    	                player.sendMessage("Напишите корректную цену.");
-    	            }
-    	        }
+                var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
+                if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
+                    if (!Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(player.getUniqueId())) return;
+                    if (isRanted) return;
+
+                    if (playerMessage.equalsIgnoreCase("д")) {
+                        PcConomy.GlobalNPC.Traders.remove(trader.getId());
+                        trader.destroy();
+                    }
+
+                    return;
+                }
+
+                var sellingItem = player.getInventory().getItemInMainHand();
+                if (sellingItem.getType().equals(Material.AIR)) {
+                    player.sendMessage("Воздух, пока что, нельзя продавать.");
+                    return;
+                }
+
+                try {
+                    var cost = Double.parseDouble(playerMessage);
+                    trader.getOrAddTrait(Trader.class).Storage.add(ItemManager.setLore(sellingItem,
+                            cost + cost * Margin + CashManager.currencySigh));
+                    player.getInventory().setItemInMainHand(null);
+                    chat.remove(player.getUniqueId());
+
+                    player.sendMessage("Предмет " + ItemManager.getName(sellingItem) + " выставлен на продажу за "
+                        + (cost + cost * Margin) + " " + CashManager.currencySigh);
+                }
+                catch (NumberFormatException exception) {
+                    player.sendMessage("Напишите корректную цену.");
+                }
     		});
     	}
     }

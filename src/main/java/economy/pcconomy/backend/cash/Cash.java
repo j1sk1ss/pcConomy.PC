@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-import static economy.pcconomy.backend.cash.scripts.CashManager.CreateCashObject;
+import static economy.pcconomy.backend.cash.scripts.CashManager.createCashObject;
 
 public class Cash {
     /***
@@ -24,7 +24,7 @@ public class Cash {
 
         if (ItemManager.getEmptySlots(player) < 1) return;
 
-        ItemManager.giveItems(CreateCashObject(amount), player);
+        ItemManager.giveItems(CashManager.createCashObject(amount), player);
     }
 
     /***
@@ -46,7 +46,7 @@ public class Cash {
      * @return Amount of cah in player`s inventory
      */
     public double amountOfCashInInventory(Player player) {
-        return CashManager.GetAmountFromCash(CashManager.GetCashFromInventory(player.getInventory()));
+        return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
     }
 
     /***
@@ -60,7 +60,7 @@ public class Cash {
         if (playerCashAmount < amount) return;
         if (ItemManager.getEmptySlots(player) < ChangeManager.getChange(amount).size()) return;
 
-        ItemManager.takeItems(CashManager.GetCashFromInventory(player.getInventory()), player);
+        ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
         giveSpecialAmountOfCashToPlayer(playerCashAmount - amount, player);
     }
 }

@@ -11,13 +11,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Objects;
+
 public class MayorListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player, "Меню")) {
-            var option = ItemManager.getName(event.getCurrentItem());
+            var option = ItemManager.getName(Objects.requireNonNull(event.getCurrentItem()));
 
             if (option.equals("Установить торговца"))
                 PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market, NPC.traderCost + NPC.traderCost * PcConomy.GlobalBank.VAT);

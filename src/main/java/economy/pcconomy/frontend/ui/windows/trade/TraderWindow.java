@@ -11,18 +11,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class TraderWindow {
-    public static Inventory GetWindow(Player player, Trader trader) {
+    public static Inventory getWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Покупка " + trader.getNPC().getId()));
 
-        for (var i = 0; i < trader.Storage.size(); i++) {
+        for (var i = 0; i < trader.Storage.size(); i++)
             window.setItem(i, trader.Storage.get(i));
-        }
 
         return window;
     }
 
-    public static Inventory GetOwnerWindow(Player player, Trader trader) {
+    public static Inventory getOwnerWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Управление " + trader.getNPC().getId()));
 
@@ -33,7 +32,7 @@ public class TraderWindow {
         return window;
     }
 
-    public static Inventory GetRanterWindow(Player player, Trader trader) {
+    public static Inventory getRanterWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Аренда " + trader.getNPC().getId()));
 
@@ -45,7 +44,7 @@ public class TraderWindow {
         return window;
     }
 
-    public static Inventory GetMayorWindow(Player player, Trader trader) {
+    public static Inventory getMayorWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Владелец " + trader.getNPC().getId()));
 
@@ -56,7 +55,7 @@ public class TraderWindow {
         return window;
     }
 
-    public static Inventory GetPricesWindow(Player player, Trader trader) {
+    public static Inventory getPricesWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 9,
                 Component.text("Торговец-Цена " + trader.getNPC().getId()));
 
@@ -68,30 +67,27 @@ public class TraderWindow {
         return window;
     }
 
-    public static Inventory GetMarginWindow(Player player, Trader trader) {
+    public static Inventory getMarginWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 9,
                 Component.text("Торговец-Процент " + trader.getNPC().getId()));
 
-        for (var i = 0; i < 9; i++) {
+        for (var i = 0; i < 9; i++)
             window.setItem(i, ItemManager.setName(new ItemStack(Material.GREEN_WOOL), (i + 1) * 5 + "%"));
-        }
 
         return window;
     }
 
-    public static Inventory GetAcceptWindow(Player player, ItemStack item, Trader trader) {
+    public static Inventory getAcceptWindow(Player player, ItemStack item, Trader trader) {
         var window = Bukkit.createInventory(player, 9,
                 Component.text("Покупка " + trader.getNPC().getId()));
 
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 3; i++)
             window.setItem(i, ItemManager.setName(new ItemStack(Material.RED_STAINED_GLASS_PANE), "ОТМЕНА"));
-        }
 
         window.setItem(4, item);
 
-        for (var i = 6; i < 9; i++) {
+        for (var i = 6; i < 9; i++)
             window.setItem(i, ItemManager.setName(new ItemStack(Material.GREEN_STAINED_GLASS_PANE), "КУПИТЬ"));
-        }
 
         return window;
     }

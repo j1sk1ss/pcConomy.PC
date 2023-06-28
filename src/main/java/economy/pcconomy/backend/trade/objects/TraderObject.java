@@ -2,7 +2,6 @@ package economy.pcconomy.backend.trade.objects;
 
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +18,7 @@ public class TraderObject {
         Term          = term;
     }
 
-    public List<ItemStack> Storage = new ArrayList<>();
+    public List<ItemStack> Storage;
     public final double Revenue;
     public final double Margin;
     public final double Cost;
@@ -27,5 +26,4 @@ public class TraderObject {
     public final String homeTown;
     public final UUID Owner;
     public final String Term;
-
 }

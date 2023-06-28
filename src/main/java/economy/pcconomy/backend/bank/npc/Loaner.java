@@ -3,7 +3,7 @@ package economy.pcconomy.backend.bank.npc;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.frontend.ui.Window;
-import economy.pcconomy.frontend.ui.windows.loan.LoanWindow;
+import economy.pcconomy.frontend.ui.windows.loans.loan.LoanWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -31,7 +31,7 @@ public class Loaner extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         var player = event.getClicker();
 
-        Window.OpenWindow(player, new LoanWindow(false));
+        Window.OpenWindow(player, new LoanWindow());
     }
 
     @EventHandler

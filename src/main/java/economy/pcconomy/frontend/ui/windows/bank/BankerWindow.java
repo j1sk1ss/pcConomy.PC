@@ -7,7 +7,9 @@ import economy.pcconomy.backend.cash.scripts.ChangeManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.windows.IWindow;
+
 import net.kyori.adventure.text.Component;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

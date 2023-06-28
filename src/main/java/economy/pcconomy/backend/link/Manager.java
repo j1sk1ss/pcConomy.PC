@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.bank.npc.Banker;
+import economy.pcconomy.backend.bank.npc.Loaner;
 import economy.pcconomy.backend.bank.npc.NPCLoaner;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.license.npc.Licensor;
@@ -50,8 +51,11 @@ public class Manager implements CommandExecutor {
         if (command.getName().equals("create_banker"))
             PcConomy.GlobalNPC.createNPC((Player) sender, new Banker());
 
-        if (command.getName().equals("create_loaner"))
+        if (command.getName().equals("create_npc_loaner"))
             PcConomy.GlobalNPC.createNPC((Player) sender, new NPCLoaner());
+
+        if (command.getName().equals("create_loaner"))
+            PcConomy.GlobalNPC.createNPC((Player) sender, new Loaner());
 
         if (command.getName().equals("create_trader"))
             PcConomy.GlobalNPC.buyNPC((Player) sender, LicenseType.Market, NPC.traderCost);

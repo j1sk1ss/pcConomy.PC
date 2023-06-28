@@ -1,6 +1,7 @@
 package economy.pcconomy.backend.town;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.scripts.ItemManager;
@@ -30,11 +31,9 @@ public class Town {
         townObject.changeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
         ItemManager.giveItems(new ItemStack(itemStack.getType(), itemAmount), buyer);
-        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack,
-                townObject.Storage) - itemAmount, townObject.Storage);
+        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, townObject.Storage) - itemAmount, townObject.Storage);
 
-        PcConomy.GlobalTownWorker.getTownObject(TownyAPI.getInstance()
-                .getTownName(buyer.getLocation())).generateLocalPrices();
+        PcConomy.GlobalTownWorker.getTownObject(TownyAPI.getInstance().getTownName(buyer.getLocation())).generateLocalPrices();
     }
 
     public static void sellResourceToStorage(TownObject townObject, ItemStack itemStack, Player seller) {
@@ -57,13 +56,11 @@ public class Town {
         var cash  = new Cash();
 
         seller.getInventory().setItemInMainHand(null);
-        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack,
-                townObject.Storage) + itemAmount, townObject.Storage);
+        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, townObject.Storage) + itemAmount, townObject.Storage);
         cash.giveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
         townObject.changeBudget(-price);
 
-        PcConomy.GlobalTownWorker.getTownObject(TownyAPI.getInstance()
-                .getTownName(seller.getLocation())).generateLocalPrices();
+        PcConomy.GlobalTownWorker.getTownObject(TownyAPI.getInstance().getTownName(seller.getLocation())).generateLocalPrices();
     }
 }

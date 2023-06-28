@@ -26,7 +26,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class NPC {
-    public final Map<Integer, TraderObject> Traders = new Hashtable<>(); // Для сохранения
+    public final Map<Integer, TraderObject> Traders = new Hashtable<>();
 
     /***
      * Create NPC with special trait

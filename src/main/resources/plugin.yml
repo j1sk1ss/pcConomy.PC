@@ -21,6 +21,8 @@ commands:
     usage: /create_banker
   create_loaner:
     usage: /create_loaner
+  create_npc_loaner:
+    usage: /create_npc_loaner
   create_trader:
     usage: /create_trader
   create_npc_trader:

@@ -50,7 +50,7 @@ public class Bank implements IMoney {
      * @param player Player that will lose cash
      */
     public void takeCashFromPlayer(double amount, Player player) {
-        var amountInventory = CashManager.GetAmountFromCash(CashManager.GetCashFromInventory(player.getInventory()));
+        var amountInventory = CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
         if (amount > amountInventory) return;
 
         new Cash().takeCashFromInventory(amount, player);

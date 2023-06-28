@@ -70,7 +70,7 @@ public class ItemManager {
      * @return Lore of itemStack
      */
     public static List<String> getLore(ItemStack item) {
-        return Objects.requireNonNull(item.getItemMeta().lore()).stream().map(Object::toString).collect(Collectors.toList());
+        return item.getItemMeta().getLore();
     }
 
     /***
@@ -135,11 +135,10 @@ public class ItemManager {
         for (var item : itemStacks) {
             if (item == null) continue;
 
-            for (var playerItem:
-                 player.getInventory()) {
+            for (var playerItem: player.getInventory()) {
                 if (playerItem == null) continue;
 
-                if (playerItem.equals(item)) player.getInventory().removeItem(playerItem);
+                takeItems(item, player);
             }
         }
     }

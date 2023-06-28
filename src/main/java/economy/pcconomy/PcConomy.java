@@ -14,8 +14,8 @@ import economy.pcconomy.backend.town.scripts.TownManager;
 
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
-import economy.pcconomy.frontend.ui.windows.loan.LoanListener;
-import economy.pcconomy.frontend.ui.windows.loan.NPCLoanerListener;
+import economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener;
+import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanerListener;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
 import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
@@ -54,16 +54,16 @@ public final class PcConomy extends JavaPlugin {
         GlobalLicenseWorker   = new LicenseManager();
 
         try {
-            if (new File("NPCData.txt").exists())
-                GlobalNPC = Loader.loadNPC("NPCData");
-            if (new File("BankData.txt").exists())
-                GlobalBank = Loader.loadBank("BankData");
-            if (new File("TownsData.txt").exists())
-                GlobalTownWorker = Loader.loadTowns("TownsData");
-            if (new File("LicenseData.txt").exists())
-                GlobalLicenseWorker = Loader.loadLicenses("LicenseData");
-            if (new File("BorrowersData.txt").exists())
-                GlobalBorrowerManager = Loader.loadBorrowers("BorrowersData");
+            if (new File("npc_data.json").exists())
+                GlobalNPC = Loader.loadNPC("npc_data");
+            if (new File("bank_data.json").exists())
+                GlobalBank = Loader.loadBank("bank_data");
+            if (new File("towns_data.json").exists())
+                GlobalTownWorker = Loader.loadTowns("towns_data");
+            if (new File("license_data.json").exists())
+                GlobalLicenseWorker = Loader.loadLicenses("license_data");
+            if (new File("borrowers_data.json").exists())
+                GlobalBorrowerManager = Loader.loadBorrowers("borrowers_data");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,7 +79,7 @@ public final class PcConomy extends JavaPlugin {
         var manager = new Manager();
 
         var commands = Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
-                "create_banker", "create_loaner", "create_trader", "create_npc_trader", "create_licensor", "switch_town_to_npc",
+                "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor", "switch_town_to_npc",
                 "town_menu", "add_trade_to_town", "reload_npc", "full_info");
 
         for (var command : commands)
@@ -96,11 +96,11 @@ public final class PcConomy extends JavaPlugin {
 
     public static void SaveData() {
         try {
-            GlobalNPC.saveNPC("NPCData");
-            GlobalBank.saveBank("BankData");
-            GlobalTownWorker.saveTown("TownsData");
-            GlobalLicenseWorker.saveLicenses("LicenseData");
-            GlobalBorrowerManager.saveBorrowers("BorrowersData");
+            GlobalNPC.saveNPC("npc_data");
+            GlobalBank.saveBank("bank_data");
+            GlobalTownWorker.saveTown("towns_data");
+            GlobalLicenseWorker.saveLicenses("license_data");
+            GlobalBorrowerManager.saveBorrowers("borrowers_data");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

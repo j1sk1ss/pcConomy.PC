@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class CashManager {
-    public final static String currencyName = "Алеф"; // Название валюты. Оно будет названием банкнот
-    public final static String currencySigh = "$"; // Значок валюты. Он будет стоять после номинала в лоре
-    private static final HashMap<String, String> currencyNameCases = new HashMap<>(); // Список склонений названия валюты по падежам и числам
-    static { // Инициализация падежей
+    public final static String currencyName = "Алеф";
+    public final static String currencySigh = "$";
+    private static final HashMap<String, String> currencyNameCases = new HashMap<>();
+    static {
     	currencyNameCases.put("is", "Алеф"); // Единственное число
     	currencyNameCases.put("rs", "Алефа");
     	currencyNameCases.put("ds", "Алефу");
@@ -30,17 +30,33 @@ public class CashManager {
     	currencyNameCases.put("pp", "Алефах");
     }
 
-    public static ItemStack CreateCashObject(double amount) { // Создаёт обьект банкноты в одном эксземпляре
+    /***
+     * Creates itemStack object
+     * @param amount Amount of cash object
+     * @return ItemStack object
+     */
+    public static ItemStack createCashObject(double amount) {
         return ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PAPER, 1),
                 "" + amount + currencySigh), currencyName);
     }
 
-    public static ItemStack CreateCashObject(double amount, int count) { // Создаёт обьекты банкнот
+    /***
+     * Creates itemStack object
+     * @param amount Amount of cash object
+     * @param count Count of objects
+     * @return ItemStack object
+     */
+    public static ItemStack createCashObject(double amount, int count) {
         return ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PAPER, count),
                 "" + amount + currencySigh), currencyName);
     }
 
-    public static double GetAmountFromCash(ItemStack money) { // Получает итоговую сумму обьекта банкнот
+    /***
+     * Get double value of amount from itemStack cash object
+     * @param money ItemStack cash object
+     * @return Double value
+     */
+    public static double getAmountFromCash(ItemStack money) {
         if (isCash(money))
             return Double.parseDouble(ItemManager.getLore(money).get(0)
                     .replace(currencySigh,"")) * money.getAmount();
@@ -48,38 +64,54 @@ public class CashManager {
         return 0;
     }
 
-    public static double GetAmountFromCash(List<ItemStack> money) { // Получает итоговую сумму обьектов банкнот
+    /***
+     * Get double value of amount from list of itemStack cash objects
+     * @param money ItemStack cash objects
+     * @return Double value
+     */
+    public static double getAmountFromCash(List<ItemStack> money) { // Получает итоговую сумму обьектов банкнот
         var amount = 0.0;
 
-        for (var item:
-             money) {
-            if (isCash(item))
-                amount += Double.parseDouble(ItemManager.getLore(item).get(0)
-                        .replace(currencySigh,"")) * item.getAmount();
-        }
+        for (var item : money)
+            if (isCash(item)) amount += getAmountFromCash(item);
 
         return amount;
     }
 
-    public static List<ItemStack> GetCashFromInventory(PlayerInventory inventory) { // Выдаёт лист всех купюр из инвентаря
+    /***
+     * Get list of itemStacks
+     * @param inventory Inventory
+     * @return List of cash objects from inventory
+     */
+    public static List<ItemStack> getCashFromInventory(PlayerInventory inventory) {
         List<ItemStack> moneys = new ArrayList<>();
 
-        for (var item: inventory)
+        for (var item : inventory)
             if (isCash(item)) moneys.add(item);
 
         return moneys;
     }
 
-    public static List<ItemStack> getChangeInCash(List<Integer> change) { // Получение листа обьектов из сдачи
+    /***
+     * Get change from list
+     * @param change Change
+     * @return List of cash objects
+     */
+    public static List<ItemStack> getChangeInCash(List<Integer> change) {
         List<ItemStack> moneyStack = new ArrayList<>();
 
         for (int i = 0; i < ChangeManager.Denomination.size(); i++)
-            moneyStack.add(CashManager.CreateCashObject(ChangeManager.Denomination.get(i), change.get(i)));
+            moneyStack.add(CashManager.createCashObject(ChangeManager.Denomination.get(i), change.get(i)));
 
         return moneyStack;
     }
 
-    public static boolean isCash(ItemStack item) { // Проверка обьекта на то, что это банкнота
+    /***
+     * Cash object status
+     * @param item Item that should be checked
+     * @return Cash object status
+     */
+    public static boolean isCash(ItemStack item) {
         if (item == null) return false;
         if (ItemManager.getName(item).contains(currencyName))
             return !Objects.equals(ItemManager.getLore(item).get(0), "");

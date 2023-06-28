@@ -9,5 +9,5 @@ public interface IWindow {
      * @param player Player is an object, that call generation
      * @return Inventory object
      */
-    public Inventory generateWindow(Player player);
+    Inventory generateWindow(Player player);
 }
