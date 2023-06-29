@@ -15,6 +15,8 @@ This is a plugin for minecraft 1.16.5 (soon it will be updated for 1.20 version)
 >> LuckPerms
 >> 
 >> Denizen
+>>
+>> Towny
 ----------------------------------------
 ## How economy works:
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover2.png)
@@ -27,7 +29,7 @@ In few words: we have bank, town and player objects. And any of them can do many
 - Take loan from Player (Player`s town) loaner
 - Deposit cash into bank
 - Withdraw cash from bank
-- Rant traders and sell resoursces in Players`s town *Needs license*
+- Rent traders and sell resoursces in Players`s town *Needs license*
 - Create traders in own town (Set price of trader and margin) *Needs license*
 - Create loaners in own town *Needs license*
 - Buy resources from ranted traders
@@ -45,3 +47,23 @@ In few words: we have bank, town and player objects. And any of them can do many
 - Give loans
 - Change maximum of available deposit
 - Sell licenses
+----------------------------------------
+## More about AFK trading:
+![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover3.png)
+
+Every player in their towns (*Towny*) can place a **Trader** and set a town margin with rent trader cost per day. 
+
+U can do it by using next command to enter **mayour menu**
+>> /town_menu
+
+And press **Create trader** (Requires *license*)
+
+After all steps u can set rant price, town margin and leave trader for finding client. I mean, every people may have interest to visit ur town cuz ur AFK traders have friendly rent price and low town margin. 
+
+----------------------------------------
+### How can i rent AFK trader and sell resources?
+
+After buying a trader in player`s town (or using ur own trader in ur own town) u can put up for sale any resource what u want and set a price what u want, but remember that a price will have a surcharge in the form of VAT and the city's proxy.
+
+After this u can go and take profit from trader.
+
