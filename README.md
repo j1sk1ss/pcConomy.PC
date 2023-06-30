@@ -1,20 +1,14 @@
 
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover1.png)
 # PcConomy plugin
-----------------------------------------
-## Table of contents
-- [Main Info](#Main info:)
-- [How economy works](#How economy works:)
-- [More about AFK trading](#More about AFK trading:)
-- [Useful commands](#Useful commands:)
-- [How can i rent AFK trader and sell resources?](#How can i rent AFK trader and sell resources?)
-
-----------------------------------------
 ## Main info:
 This is a plugin for minecraft [1.16.5](https://www.minecraft.net/ru-ru/article/minecraft-java-edition-1-16-5) (soon it 
-will be updated for [1.20](https://www.minecraft.net/ru-ru/article/minecraft-java-edition-1-16-5) version). A few words about: This plugin realise 
+will be updated for [1.20](https://www.minecraft.net/ru-ru/article/minecraft-java-edition-1-16-5) version). 
+
+A few words about: This plugin realise 
 market economy in minecraft. And yes - it`s all... But let me more explain
 how he works in next part of **ReadMe**.
+
 ----------------------------------------
 ### Needed stuff:
 
