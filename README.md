@@ -1,21 +1,33 @@
-![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover1.png)
-# pcConomy plugin
-## Main info
-This is a plugin for minecraft 1.16.5 (soon it will be updated for 1.20 version). A few words about: This plugin realise market economy in minecraft. And yes - it`s all... But let me more explain how he works in next part of **ReadMe**.
 
+![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover1.png)
+# PcConomy plugin
+----------------------------------------
+## Table of contents
+- [Main Info](#Main info:)
+- [How economy works](#How economy works:)
+- [More about AFK trading](#More about AFK trading:)
+- [Useful commands](#Useful commands:)
+- [How can i rent AFK trader and sell resources?](#How can i rent AFK trader and sell resources?)
+
+----------------------------------------
+## Main info:
+This is a plugin for minecraft [1.16.5](https://www.minecraft.net/ru-ru/article/minecraft-java-edition-1-16-5) (soon it 
+will be updated for [1.20](https://www.minecraft.net/ru-ru/article/minecraft-java-edition-1-16-5) version). A few words about: This plugin realise 
+market economy in minecraft. And yes - it`s all... But let me more explain
+how he works in next part of **ReadMe**.
 ----------------------------------------
 ### Needed stuff:
 
 >> XConomy
->> 
+> 
 >> Vault
->> 
+>
 >> Citizens
->> 
+>
 >> LuckPerms
->> 
+>
 >> Denizen
->>
+>
 >> Towny
 ----------------------------------------
 ## How economy works:
@@ -29,7 +41,7 @@ In few words: we have bank, town and player objects. And any of them can do many
 - Take loan from Player (Player`s town) loaner
 - Deposit cash into bank
 - Withdraw cash from bank
-- Rent traders and sell resoursces in Players`s town *Needs license*
+- Rent traders and sell resources in Players`s town *Needs license*
 - Create traders in own town (Set price of trader and margin) *Needs license*
 - Create loaners in own town *Needs license*
 - Buy resources from ranted traders
@@ -53,7 +65,7 @@ In few words: we have bank, town and player objects. And any of them can do many
 
 Every player in their towns (*Towny*) can place a **Trader** and set a town margin with rent trader cost per day. 
 
-U can do it by using next command to enter **mayour menu**
+U can do it by using next command to enter **mayor menu**
 >> /town_menu
 
 And press **Create trader** (Requires *license*)
@@ -61,7 +73,28 @@ And press **Create trader** (Requires *license*)
 After all steps u can set rant price, town margin and leave trader for finding client. I mean, every people may have interest to visit ur town cuz ur AFK traders have friendly rent price and low town margin. 
 
 ----------------------------------------
-### How can i rent AFK trader and sell resources?
+## Useful commands:
+
+| Command             | Action                               |
+|---------------------|--------------------------------------|
+| /create_banker      | Creates banker npc                   |
+| /create_loaner      | Creates loaner npc                   |
+| /create_npc_loaner  | Creates NPC loaner npc               |
+| /create_trader      | Creates trader npc                   |
+| /create_npc_trader  | Creates NPC trader npc               |
+| /create_licensor    | Creates licensor npc                 |
+| /take_cash          | Take cash from player`s inventory    |
+| /create_cash        | Create cash                          |
+| /reload_towns       | Reload and save towns                |
+| /save_data          | Save plugin data                     |
+| /switch_town_to_npc | Switch player`s town into NPC town   |
+| /town_menu          | Open mayor menu                      |
+| /add_trade_to_town  | Add new trade resource into NPC town |
+| /reload_npc         | Reload and save NPC                  |
+| /full_info          | Get all info of plugin               |
+
+----------------------------------------
+## How can i rent AFK trader and sell resources?
 
 After buying a trader in player`s town (or using ur own trader in ur own town) u can put up for sale any resource what u want and set a price what u want, but remember that a price will have a surcharge in the form of VAT and the city's proxy.
 
