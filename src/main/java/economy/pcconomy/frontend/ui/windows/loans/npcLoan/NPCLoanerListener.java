@@ -5,7 +5,7 @@ import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 
-import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.Window;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -5,7 +5,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 
 import economy.pcconomy.backend.economy.town.scripts.TownManager;
-import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.Window;
 import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.entity.Player;

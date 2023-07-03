@@ -3,15 +3,12 @@ package economy.pcconomy.frontend.ui.windows.mayor;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
-import economy.pcconomy.backend.scripts.ItemManager;
-import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.Window;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-
-import java.util.Objects;
 
 public class MayorListener implements Listener {
     @EventHandler
@@ -19,12 +16,16 @@ public class MayorListener implements Listener {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player, "Меню")) {
-            var option = ItemManager.getName(Objects.requireNonNull(event.getCurrentItem()));
+            var option = event.getSlot();
 
-            if (option.equals("Установить торговца"))
-                PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market, NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT);
-            if (option.equals("Установить кредитора"))
-                PcConomy.GlobalNPC.buyNPC(player, LicenseType.Loan, NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT);
+            switch (MayorWindow.Panel.click(option).getName()) {
+                case "Установить торговца" ->
+                        PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market,
+                                NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT);
+                case "Установить кредитора" ->
+                        PcConomy.GlobalNPC.buyNPC(player, LicenseType.Loan,
+                                NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT);
+            }
 
             event.setCancelled(true);
         }

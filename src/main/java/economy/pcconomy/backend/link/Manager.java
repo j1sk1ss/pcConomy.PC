@@ -12,7 +12,7 @@ import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.economy.town.objects.scripts.StorageManager;
 import economy.pcconomy.backend.npc.traits.NpcTrader;
-import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.Window;
 
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
 import org.bukkit.Material;

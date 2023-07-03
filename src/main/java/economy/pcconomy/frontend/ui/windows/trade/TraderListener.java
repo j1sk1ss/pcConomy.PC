@@ -5,7 +5,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.backend.npc.traits.Trader;
-import economy.pcconomy.frontend.ui.Window;
+import economy.pcconomy.frontend.ui.windows.Window;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

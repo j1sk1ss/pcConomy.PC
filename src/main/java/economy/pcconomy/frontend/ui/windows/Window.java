@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.ui;
+package economy.pcconomy.frontend.ui.windows;
 
 import economy.pcconomy.frontend.ui.windows.IWindow;
 

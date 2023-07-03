@@ -3,12 +3,16 @@ package economy.pcconomy.frontend.ui.windows.trade;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.backend.npc.traits.Trader;
+import economy.pcconomy.frontend.ui.objects.Panel;
+import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
 
 public class TraderWindow {
     public static Inventory getWindow(Player player, Trader trader) {
@@ -21,6 +25,18 @@ public class TraderWindow {
         return window;
     }
 
+    public static economy.pcconomy.frontend.ui.objects.Panel OwnerPanel = new Panel(Arrays.asList(
+            new Button(Arrays.asList(
+                    // TODO: cords
+            ), "Перейти в товары"),
+            new Button(Arrays.asList(
+
+            ), "Забрать все товары"),
+            new Button(Arrays.asList(
+
+            ), "Забрать прибыль")
+    ));
+
     public static Inventory getOwnerWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Управление " + trader.getNPC().getId()));
@@ -31,6 +47,15 @@ public class TraderWindow {
 
         return window;
     }
+
+    public static economy.pcconomy.frontend.ui.objects.Panel RantedPanel = new Panel(Arrays.asList(
+            new Button(Arrays.asList(
+                    // TODO: cords
+            ), "Арендовать на один день"),
+            new Button(Arrays.asList(
+                    // Remember cords
+            ), "НДС города:")
+    ));
 
     public static Inventory getRanterWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
@@ -43,6 +68,18 @@ public class TraderWindow {
 
         return window;
     }
+
+    public static economy.pcconomy.frontend.ui.objects.Panel MayorPanel = new Panel(Arrays.asList(
+            new Button(Arrays.asList(
+                    // TODO: cords
+            ), "Установить цену"),
+            new Button(Arrays.asList(
+
+            ), "Установить процент"),
+            new Button(Arrays.asList(
+
+            ), "Занять")
+    ));
 
     public static Inventory getMayorWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
@@ -76,6 +113,15 @@ public class TraderWindow {
 
         return window;
     }
+
+    public static economy.pcconomy.frontend.ui.objects.Panel AcceptPanel = new Panel(Arrays.asList(
+            new Button(Arrays.asList(
+                    // TODO: cords
+            ), "КУПИТЬ"),
+            new Button(Arrays.asList(
+
+            ), "ОТМЕНА")
+    ));
 
     public static Inventory getAcceptWindow(Player player, ItemStack item, Trader trader) {
         var window = Bukkit.createInventory(player, 9,
