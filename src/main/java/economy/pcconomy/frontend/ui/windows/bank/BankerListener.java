@@ -10,20 +10,35 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Objects;
+
 public class BankerListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
-        var option = event.getCurrentItem();
+        var option = Objects.requireNonNull(event.getCurrentItem());
 
-        if (Window.isThisWindow(event, player, "Банк") && option != null) {
-            var amount = Double.parseDouble(ItemManager.getName(option).
-                    replace(CashManager.currencySigh, ""));
-
-            if (amount > 0) PcConomy.GlobalBank.giveCashToPlayer(amount, player);
-            else PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);
-
-            event.setCancelled(true);
+        if (Window.isThisWindow(event, player)) {
+            switch (event.getView().getTitle()) {
+                case "Банк" -> {
+                    switch (BankerWindow.Panel.click(event.getSlot()).getName()) {
+                        case "Внести деньги" -> player.openInventory(BankerWindow.putWindow(player));
+                        case "Вывести деньги" -> player.openInventory(BankerWindow.withdrawWindow(player));
+                    }
+                }
+                case "Банк-Снятие" -> {
+                    var amount = Double.parseDouble(ItemManager.getName(option).
+                            replace(CashManager.currencySigh, ""));
+                    PcConomy.GlobalBank.giveCashToPlayer(amount, player);
+                }
+                case "Банк-Внесение" -> {
+                    var amount = Double.parseDouble(ItemManager.getName(option).
+                            replace(CashManager.currencySigh, ""));
+                    PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);
+                }
+            }
         }
+
+        event.setCancelled(true);
     }
 }
