@@ -22,7 +22,7 @@ public class TraderListener implements Listener {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player, "Торговец")) {
-            var title = event.getView().title();
+            var title = event.getView().getTitle();
             var trader = GetTraderFromTitle(title);
             if (trader == null) return;
 
