@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.UUID;
 
 @TraitName("Loaner")
@@ -41,7 +42,7 @@ public class Loaner extends Trait {
         var playerUUID = player.getUniqueId();
         var homeTown = TownyAPI.getInstance().getTownName(player.getLocation());
 
-        if (TownyAPI.getInstance().getTown(homeTown).getMayor().getUUID().equals(playerUUID)) {
+        if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
             player.sendMessage("Удалить кредитора? (д/н)");
             chat.put(playerUUID, event.getNPC().getId());
         }
@@ -52,7 +53,7 @@ public class Loaner extends Trait {
     @EventHandler
     public void Chatting(AsyncChatEvent event) {
     	if (event.isAsynchronous()) {
-    		Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("PcConomy"), () -> {
+    		Bukkit.getScheduler().runTask(Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("PcConomy")), () -> {
     			var player = event.getPlayer();
     	        var playerMessage = ((TextComponent) event.originalMessage()).content();
     	        event.setCancelled(true);

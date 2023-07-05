@@ -3,8 +3,6 @@ package economy.pcconomy.frontend.ui.windows.loans;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.IMoney;
-import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemManager;

@@ -18,7 +18,7 @@ public class TraderObject {
         Term          = term;
     }
 
-    public List<ItemStack> Storage;
+    public final List<ItemStack> Storage;
     public final double Revenue;
     public final double Margin;
     public final double Cost;

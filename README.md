@@ -88,7 +88,7 @@ After all steps u can set rant price, town margin and leave trader for finding c
 | /full_info          | Get all info of plugin               |
 
 ----------------------------------------
-## How can i rent AFK trader and sell resources?
+## How to rent AFK trader and sell resources?
 
 After buying a trader in player`s town (or using ur own trader in ur own town) u can put up for sale any resource what u want and set a price what u want, but remember that a price will have a surcharge in the form of VAT and the city's proxy.
 

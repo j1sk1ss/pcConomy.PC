@@ -15,7 +15,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.Arrays;
 
 public class LicensorWindow implements IWindow {
-    public static economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
+    public static final economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 9, 10, 18, 19
             ), "Лицензия на создание торговой зоны", License.marketLicensePrice + CashManager.currencySigh),

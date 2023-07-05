@@ -17,7 +17,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.Arrays;
 
 public class MayorWindow implements IWindow {
-    public static economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
+    public static final economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Установить торговца", (NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh),

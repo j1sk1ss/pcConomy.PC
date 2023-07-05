@@ -2,7 +2,6 @@ package economy.pcconomy.frontend.ui.windows.loans.loan;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.IMoney;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
@@ -25,7 +24,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
-    public static economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
+    public static final economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Взять кредит", ""),

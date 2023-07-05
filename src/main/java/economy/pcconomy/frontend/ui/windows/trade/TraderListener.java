@@ -22,7 +22,7 @@ public class TraderListener implements Listener {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player, "Торговец")) {
-            var title = event.getView().getTitle();
+            var title = event.getView().title();
             var trader = GetTraderFromTitle(title);
             if (trader == null) return;
 
@@ -99,7 +99,7 @@ public class TraderListener implements Listener {
                     case "Slider" -> {
                         var slider = new Slider((Slider)TraderWindow.PricePanel.click(option));
 
-                        slider.getSlider(option);
+                        slider.setChose(option);
                         slider.place(event.getInventory());
                     }
                     case "Установить" -> {
@@ -119,7 +119,7 @@ public class TraderListener implements Listener {
                     case "Slider" -> {
                         var slider = new Slider((Slider)TraderWindow.MarginPanel.click(option));
 
-                        slider.getSlider(option);
+                        slider.setChose(option);
                         slider.place(event.getInventory());
                     }
                     case "Установить" -> {

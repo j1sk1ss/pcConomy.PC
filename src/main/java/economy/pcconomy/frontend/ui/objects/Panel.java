@@ -79,7 +79,7 @@ public class Panel {
                 for (Integer integer : coordinates)
                     inventory.setItem(integer,
                             ItemManager.setLore(ItemManager.setName(new ItemStack(Material.PAPER, 1), text),
-                                    customLore.get(component) + "\nBUTTON"));
+                                    customLore.get(component) + ""));
             } else if (iComponents.get(component) instanceof Slider slider) {
                 for (var i = 0; i < coordinates.size(); i++)
                     inventory.setItem(coordinates.get(i), slider.getSlider().get(i));

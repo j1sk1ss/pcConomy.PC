@@ -28,7 +28,7 @@ public class TraderWindow {
         return window;
     }
 
-    public static economy.pcconomy.frontend.ui.objects.Panel OwnerPanel = new Panel(Arrays.asList(
+    public static final economy.pcconomy.frontend.ui.objects.Panel OwnerPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 9, 10, 11, 18, 19, 20
             ), "Перейти в товары", ""),
@@ -48,7 +48,7 @@ public class TraderWindow {
                 ));
     }
 
-    public static economy.pcconomy.frontend.ui.objects.Panel RantedPanel = new Panel(Arrays.asList(
+    public static final economy.pcconomy.frontend.ui.objects.Panel RantedPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Арендовать на один день", ""),
@@ -64,7 +64,7 @@ public class TraderWindow {
         ));
     }
 
-    public static economy.pcconomy.frontend.ui.objects.Panel MayorPanel = new Panel(Arrays.asList(
+    public static final economy.pcconomy.frontend.ui.objects.Panel MayorPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 9, 10, 11, 18, 19, 20
             ), "Установить цену", ""),
@@ -82,7 +82,7 @@ public class TraderWindow {
     }
 
 
-    public static Panel PricePanel = new Panel(Arrays.asList(
+    public static final Panel PricePanel = new Panel(Arrays.asList(
             new Slider(Arrays.asList(
                     0, 1, 2, 3, 4, 5, 6, 7, 8
             ), Arrays.asList(
@@ -109,7 +109,7 @@ public class TraderWindow {
                 Component.text("Торговец-Цена " + trader.getNPC().getId())));
     }
 
-    public static Panel MarginPanel = new Panel(Arrays.asList(
+    public static final Panel MarginPanel = new Panel(Arrays.asList(
             new Slider(Arrays.asList(
                     0, 1, 2, 3, 4, 5, 6, 7, 8
             ), Arrays.asList(
@@ -136,7 +136,7 @@ public class TraderWindow {
                 Component.text("Торговец-Процент " + trader.getNPC().getId())));
     }
 
-    public static economy.pcconomy.frontend.ui.objects.Panel AcceptPanel = new Panel(Arrays.asList(
+    public static final economy.pcconomy.frontend.ui.objects.Panel AcceptPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Купить", ""),

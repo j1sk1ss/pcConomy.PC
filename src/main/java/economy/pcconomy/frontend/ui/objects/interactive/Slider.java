@@ -1,6 +1,5 @@
 package economy.pcconomy.frontend.ui.objects.interactive;
 
-import economy.pcconomy.backend.scripts.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +23,10 @@ public class Slider implements IComponent {
         this.defaultOption = defaultOption;
     }
 
+    /**
+     * Deep copy of slider
+     * @param slider Slider that will be copied
+     */
     public Slider(Slider slider) {
         this.coordinates   = new ArrayList<>(slider.coordinates);
         this.slider        = new ArrayList<>(slider.slider);
@@ -54,26 +57,16 @@ public class Slider implements IComponent {
      * @return Slider
      */
     public List<ItemStack> getSlider() {
-        for (var i = 0; i < coordinates.size(); i++) {
-            slider.set(i, ItemManager.setLore(slider.get(i),"NOT CHOSE"));
-            slider.get(i).setType(defaultOption);
-        }
-
         return slider;
     }
 
     /**
-     * Get slider with chose
+     * Set slider with chose
      * @param chose Coordinate of chose
-     * @return Slider
      */
-    public List<ItemStack> getSlider(int chose) {
-        for (var i = 0; i < coordinates.size(); i++) {
-            slider.set(i, ItemManager.setLore(slider.get(i), i == chose ? "CHOSE" : "NOT CHOSE"));
+    public void setChose(int chose) {
+        for (var i = 0; i < coordinates.size(); i++)
             slider.get(i).setType(i == chose ? chosenOption : defaultOption);
-        }
-
-        return slider;
     }
 
     /**

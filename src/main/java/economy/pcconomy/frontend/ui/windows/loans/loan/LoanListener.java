@@ -40,7 +40,7 @@ public class LoanListener implements Listener {
             }
 
             if (event.getView().getTitle().contains("Взятие")) {
-                if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
+                if (ItemManager.getName(Objects.requireNonNull(item)).contains(CashManager.currencySigh)) {
                     boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
                     final int maxCreditCount = 5;
 

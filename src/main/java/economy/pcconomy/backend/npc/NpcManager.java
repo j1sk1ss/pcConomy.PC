@@ -40,8 +40,8 @@ public class NpcManager {
         npc.spawn(creator.getLocation());
     }
 
-    public static double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
-    public static double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost", 2000d);
+    public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
+    public static final double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost", 2000d);
 
     private final Map<LicenseType, Trait> npcList = Map.of(
             LicenseType.Market, new Trader(),
