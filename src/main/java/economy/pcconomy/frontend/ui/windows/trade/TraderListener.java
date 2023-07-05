@@ -42,8 +42,7 @@ public class TraderListener implements Listener {
 
             if (title.contains("Торговец-Управление")) {
                 switch (TraderWindow.OwnerPanel.click(option).getName()) {
-                    case "Перейти в товары" ->
-                            player.openInventory(TraderWindow.getWindow(player, trader));
+                    case "Перейти в товары" -> player.openInventory(TraderWindow.getWindow(player, trader));
                     case "Забрать все товары" -> {
                         ItemManager.giveItemsWithoutLore(trader.Storage, player);
                         trader.Storage.clear();
@@ -109,9 +108,7 @@ public class TraderListener implements Listener {
                         trader.Cost = Double.parseDouble(ItemManager.getName(slider.getChose()).replace(CashManager.currencySigh, ""));
                         player.sendMessage("Цена установлена!");
                     }
-                    case "Отмена" -> {
-                        player.closeInventory();
-                    }
+                    case "Отмена" -> player.closeInventory();
                 }
 
                 return;
@@ -131,9 +128,7 @@ public class TraderListener implements Listener {
                         trader.Margin = Double.parseDouble(ItemManager.getName(slider.getChose()).replace("%", ""));
                         player.sendMessage("Процент установлен!");
                     }
-                    case "Отмена" -> {
-                        player.closeInventory();
-                    }
+                    case "Отмена" -> player.closeInventory();
                 }
 
                 return;
