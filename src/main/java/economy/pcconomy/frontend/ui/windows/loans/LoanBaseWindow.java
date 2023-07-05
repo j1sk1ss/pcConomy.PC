@@ -20,27 +20,6 @@ public abstract class LoanBaseWindow {
     public abstract Inventory regenerateWindow(Inventory window, Player player, int option, boolean isNPC);
 
     /***
-     * Logic od destroying credit button
-     * @param window Window where was presed button
-     * @param player Player who pressed
-     * @return Window
-     */
-    protected Inventory creditDestroyButton(Inventory window, Player player) {
-        var iMoney = getMoneyGiver(player);
-        if (iMoney == null) return window;
-
-        if (LoanManager.getLoan(player.getUniqueId(), iMoney) != null) {
-            window.setItem(9, ItemManager.setLore(ItemManager.setName(new ItemStack(Material.BLACK_SHULKER_BOX),
-                    "Выплатить кредит"), Objects.requireNonNull(LoanManager.getLoan(player.getUniqueId(),
-                    iMoney)).amount + CashManager.currencySigh));
-        }
-
-        return window;
-    }
-
-    protected abstract IMoney getMoneyGiver(Player player);
-
-    /***
      * Checks license of reading credit history
      * @param player Player who wants to take credit
      * @return Status

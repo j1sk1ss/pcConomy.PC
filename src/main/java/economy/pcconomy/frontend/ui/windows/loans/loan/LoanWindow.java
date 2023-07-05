@@ -6,6 +6,8 @@ import economy.pcconomy.backend.economy.IMoney;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.frontend.ui.objects.Panel;
+import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.windows.IWindow;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;
 import net.kyori.adventure.text.Component;
@@ -23,7 +25,20 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
+    public static economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
+            new Button(Arrays.asList(
+                    0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
+            ), "Взять кредит", ""),
+            new Button(Arrays.asList(
+                    5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26
+            ), "Погасить кредит", "")
+    ));
+
     public Inventory generateWindow(Player player) {
+        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит")));
+    }
+
+    public Inventory takeWindow(Player player) {
         var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Город"));
 
         for (var i = 0; i < countOfAmountSteps; i++) {
@@ -39,12 +54,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
                     durationSteps.get(i) + "дней"));
         }
 
-        return creditDestroyButton(window, player);
-    }
-
-    @Override
-    protected IMoney getMoneyGiver(Player player) {
-        return PcConomy.GlobalTownWorker.getTownObject(TownyAPI.getInstance().getTownName(player.getLocation()));
+        return window;
     }
 
     @Override
@@ -58,7 +68,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
                     durationSteps.get(i) + "дней"));
         }
 
-        return creditDestroyButton(window, player);
+        return window;
     }
 
     public ItemStack getAmountButton(int position, int chosen, String townName, Player player, boolean canReadHistory) {
@@ -69,7 +79,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
         ItemStack tempItem = ItemManager.setLore(ItemManager.setName(new ItemStack(Material.RED_WOOL, 1),
                 Math.round(maxLoanSize / (position + 1) * 100) / 100 + CashManager.currencySigh), "Город не одобрит данный займ.");
 
-        if (((isSafe || !canReadHistory) && !PcConomy.GlobalBank.Credit.contains(player.getUniqueId()) && maxLoanSize > 0))
+        if (((isSafe || !canReadHistory) && !townObject.getBorrowers().contains(player.getUniqueId()) && maxLoanSize > 0))
             tempItem = creditOptionButton(tempItem, maxLoanSize, chosen, position);
 
         return tempItem;

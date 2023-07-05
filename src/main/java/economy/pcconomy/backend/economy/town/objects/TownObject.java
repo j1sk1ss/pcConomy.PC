@@ -101,6 +101,18 @@ public class TownObject implements IMoney {
         return Credit;
     }
 
+    /**
+     * Get UUID of all borrowers
+     * @return List of borrowers UUID
+     */
+    public List<UUID> getBorrowers() {
+        var list = new ArrayList<UUID>();
+        for (var loan : Credit)
+            list.add(loan.Owner);
+
+        return list;
+    }
+
     public double getBudget() {
         return getBankAccount().getHoldingBalance();
     }

@@ -3,7 +3,7 @@ package economy.pcconomy;
 import economy.pcconomy.backend.economy.bank.scripts.BorrowerManager;
 
 import economy.pcconomy.backend.license.scripts.LicenseManager;
-import economy.pcconomy.backend.link.Manager;
+import economy.pcconomy.backend.link.CommandManager;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.listener.NpcLoader;
 import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
@@ -76,7 +76,7 @@ public final class PcConomy extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(listener, this);
 
         xConomyAPI  = new XConomyAPI();
-        var manager = new Manager();
+        var manager = new CommandManager();
 
         var commands = Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
                 "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor", "switch_town_to_npc",

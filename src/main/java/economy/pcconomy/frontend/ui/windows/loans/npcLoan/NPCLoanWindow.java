@@ -5,6 +5,8 @@ import economy.pcconomy.backend.economy.IMoney;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.frontend.ui.objects.Panel;
+import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.windows.IWindow;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;
 import net.kyori.adventure.text.Component;
@@ -21,8 +23,21 @@ public class NPCLoanWindow extends LoanBaseWindow implements IWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
+    public static Panel Panel = new Panel(Arrays.asList(
+            new Button(Arrays.asList(
+                    0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
+            ), "Взять кредит", ""),
+            new Button(Arrays.asList(
+                    5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26
+            ), "Погасить кредит", "")
+    ));
+
     public Inventory generateWindow(Player player) {
-        var window = Bukkit.createInventory(player, 27, Component.text("Кредит"));
+        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит")));
+    }
+
+    public Inventory takeWindow(Player player) {
+        var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Взятие"));
 
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, 18, player));
@@ -37,12 +52,7 @@ public class NPCLoanWindow extends LoanBaseWindow implements IWindow {
                     durationSteps.get(i) + "дней"));
         }
 
-        return creditDestroyButton(window, player);
-    }
-
-    @Override
-    protected IMoney getMoneyGiver(Player player) {
-        return PcConomy.GlobalBank;
+        return window;
     }
 
     @Override
@@ -55,7 +65,7 @@ public class NPCLoanWindow extends LoanBaseWindow implements IWindow {
                     durationSteps.get(i) + "дней"));
         }
 
-        return creditDestroyButton(window, player);
+        return window;
     }
 
     public ItemStack getAmountButton(int position, int chosen, Player player) {
@@ -65,7 +75,7 @@ public class NPCLoanWindow extends LoanBaseWindow implements IWindow {
         ItemStack tempItem = ItemManager.setLore(ItemManager.setName(new ItemStack(Material.RED_WOOL, 1),
                 Math.round(maxLoanSize / (position + 1) * 100) / 100 + CashManager.currencySigh), "Банк не одобрит данный займ.");
 
-        if (isSafe && !PcConomy.GlobalBank.Credit.contains(player.getUniqueId()))
+        if (isSafe && !PcConomy.GlobalBank.getBorrowers().contains(player.getUniqueId()))
             tempItem = creditOptionButton(tempItem, maxLoanSize, chosen, position);
 
         return tempItem;

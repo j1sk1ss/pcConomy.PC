@@ -6,6 +6,7 @@ import economy.pcconomy.backend.npc.traits.Trader;
 import economy.pcconomy.frontend.ui.objects.Panel;
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
 
+import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
@@ -19,7 +20,7 @@ import java.util.Arrays;
 public class TraderWindow {
     public static Inventory getWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
-                Component.text("Торговец-Покупка " + trader.getNPC().getId()));
+                Component.text("Торговец-Ассортимент " + trader.getNPC().getId()));
 
         for (var i = 0; i < trader.Storage.size(); i++)
             window.setItem(i, trader.Storage.get(i));
@@ -41,7 +42,10 @@ public class TraderWindow {
 
     public static Inventory getOwnerWindow(Player player, Trader trader) {
         return OwnerPanel.placeComponents(Bukkit.createInventory(player, 27,
-                Component.text("Торговец-Управление " + trader.getNPC().getId())));
+                Component.text("Торговец-Управление " + trader.getNPC().getId())),
+                Arrays.asList(
+                        "", trader.Storage.size() + " шт.", trader.Revenue + CashManager.currencySigh
+                ));
     }
 
     public static economy.pcconomy.frontend.ui.objects.Panel RantedPanel = new Panel(Arrays.asList(
@@ -55,7 +59,9 @@ public class TraderWindow {
 
     public static Inventory getRanterWindow(Player player, Trader trader) {
         return RantedPanel.placeComponents(Bukkit.createInventory(player, 27,
-                Component.text("Торговец-Аренда " + trader.getNPC().getId())));
+                Component.text("Торговец-Аренда " + trader.getNPC().getId())), Arrays.asList(
+                trader.Cost + CashManager.currencySigh, trader.Margin + "%"
+        ));
     }
 
     public static economy.pcconomy.frontend.ui.objects.Panel MayorPanel = new Panel(Arrays.asList(
@@ -75,26 +81,59 @@ public class TraderWindow {
                 Component.text("Торговец-Владелец " + trader.getNPC().getId())));
     }
 
+
+    public static Panel PricePanel = new Panel(Arrays.asList(
+            new Slider(Arrays.asList(
+                    0, 1, 2, 3, 4, 5, 6, 7, 8
+            ), Arrays.asList(
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "100" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "200" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "500" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "1000" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "1500" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "2000" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "2500" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "4000" + CashManager.currencySigh),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "10000" + CashManager.currencySigh)
+            ), Material.PURPLE_WOOL, Material.GLASS),
+            new Button(Arrays.asList(
+                9, 10, 11, 12, 18, 19, 20, 21
+            ), "Установить", ""),
+            new Button(Arrays.asList(
+                14, 15, 16, 17, 23, 24, 25, 26
+            ), "Отмена", "")
+    ));
+
     public static Inventory getPricesWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 9,
-                Component.text("Торговец-Цена " + trader.getNPC().getId()));
-
-        for (var i = 0; i < 9; i++) {
-            window.setItem(i, ItemManager.setName(new ItemStack(Material.GREEN_WOOL),
-                    (i + 1) * 200 + CashManager.currencySigh));
-        }
-
-        return window;
+        return PricePanel.placeComponents(Bukkit.createInventory(player, 27,
+                Component.text("Торговец-Цена " + trader.getNPC().getId())));
     }
 
-    public static Inventory getMarginWindow(Player player, Trader trader) { // TODO: Slider
-        var window = Bukkit.createInventory(player, 9,
-                Component.text("Торговец-Процент " + trader.getNPC().getId()));
+    public static Panel MarginPanel = new Panel(Arrays.asList(
+            new Slider(Arrays.asList(
+                    0, 1, 2, 3, 4, 5, 6, 7, 8
+            ), Arrays.asList(
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "5%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "10%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "15%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "20%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "25%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "30%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "35%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "40%"),
+                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "65%")
+            ), Material.PURPLE_WOOL, Material.GLASS),
+            new Button(Arrays.asList(
+                    9, 10, 11, 12, 18, 19, 20, 21
+            ), "Установить", ""),
+            new Button(Arrays.asList(
+                    14, 15, 16, 17, 23, 24, 25, 26
+            ), "Отмена", "")
+    ));
 
-        for (var i = 0; i < 9; i++)
-            window.setItem(i, ItemManager.setName(new ItemStack(Material.GREEN_WOOL), (i + 1) * 5 + "%"));
-
-        return window;
+    public static Inventory getMarginWindow(Player player, Trader trader) {
+        return MarginPanel.placeComponents(Bukkit.createInventory(player, 27,
+                Component.text("Торговец-Процент " + trader.getNPC().getId())));
     }
 
     public static economy.pcconomy.frontend.ui.objects.Panel AcceptPanel = new Panel(Arrays.asList(
@@ -108,7 +147,7 @@ public class TraderWindow {
 
     public static Inventory getAcceptWindow(Player player, ItemStack item, Trader trader) {
         var window = Bukkit.createInventory(player, 27,
-                Component.text("Покупка " + trader.getNPC().getId()));
+                Component.text("Торговец-Покупка " + trader.getNPC().getId()));
         window.setItem(13, item);
 
         return AcceptPanel.placeComponents(window);

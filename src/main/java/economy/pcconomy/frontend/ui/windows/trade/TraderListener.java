@@ -5,6 +5,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.backend.npc.traits.Trader;
+import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import economy.pcconomy.frontend.ui.windows.Window;
 
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public class TraderListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
 
-        if (Window.isThisWindow(event, player)) {
+        if (Window.isThisWindow(event, player, "Торговец")) {
             var title = event.getView().getTitle();
             var trader = GetTraderFromTitle(title);
             if (trader == null) return;
@@ -33,7 +34,7 @@ public class TraderListener implements Listener {
 
             event.setCancelled(true);
 
-            if (title.contains("Торговец-Покупка"))
+            if (title.contains("Торговец-Ассортимент"))
                 if (!player.getInventory().contains(choseItem)) {
                     player.openInventory(TraderWindow.getAcceptWindow(player, choseItem, trader));
                     return;
@@ -95,20 +96,54 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Цена")) {
-                trader.Cost = Double.parseDouble(ItemManager.getName(choseItem).replace(CashManager.currencySigh, ""));
+                switch (TraderWindow.PricePanel.click(option).getName()) {
+                    case "Slider" -> {
+                        var slider = new Slider((Slider)TraderWindow.PricePanel.click(option));
+
+                        slider.getSlider(option);
+                        slider.place(event.getInventory());
+                    }
+                    case "Установить" -> {
+                        var slider = new Slider(TraderWindow.PricePanel.getSliders().get(0));
+
+                        trader.Cost = Double.parseDouble(ItemManager.getName(slider.getChose()).replace(CashManager.currencySigh, ""));
+                        player.sendMessage("Цена установлена!");
+                    }
+                    case "Отмена" -> {
+                        player.closeInventory();
+                    }
+                }
+
                 return;
             }
 
             if (title.contains("Торговец-Процент")) {
-                trader.Margin = Double.parseDouble(ItemManager.getName(choseItem).replace("%", "")) / 100d;
+                switch (TraderWindow.MarginPanel.click(option).getName()) {
+                    case "Slider" -> {
+                        var slider = new Slider((Slider)TraderWindow.MarginPanel.click(option));
+
+                        slider.getSlider(option);
+                        slider.place(event.getInventory());
+                    }
+                    case "Установить" -> {
+                        var slider = new Slider(TraderWindow.MarginPanel.getSliders().get(0));
+
+                        trader.Margin = Double.parseDouble(ItemManager.getName(slider.getChose()).replace("%", ""));
+                        player.sendMessage("Процент установлен!");
+                    }
+                    case "Отмена" -> {
+                        player.closeInventory();
+                    }
+                }
+
                 return;
             }
 
-            if (title.contains("Покупка")) {
+            if (title.contains("Торговец-Покупка")) {
                 switch (TraderWindow.AcceptPanel.click(option).getName()) {
                     case "Купить" -> {
                         var cash = new CashManager();
-                        var buyingItem = inventory.getItem(4);
+                        var buyingItem = inventory.getItem(13);
                         var price = ItemManager.getPriceFromLore(buyingItem, 0);
 
                         if (cash.amountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {

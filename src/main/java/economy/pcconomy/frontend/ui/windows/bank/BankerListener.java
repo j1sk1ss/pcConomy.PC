@@ -16,9 +16,9 @@ public class BankerListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
-        var option = Objects.requireNonNull(event.getCurrentItem());
 
-        if (Window.isThisWindow(event, player)) {
+        if (Window.isThisWindow(event, player, "Банк")) {
+            var option = Objects.requireNonNull(event.getCurrentItem());
             switch (event.getView().getTitle()) {
                 case "Банк" -> {
                     switch (BankerWindow.Panel.click(event.getSlot()).getName()) {
@@ -37,8 +37,8 @@ public class BankerListener implements Listener {
                     PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);
                 }
             }
-        }
 
-        event.setCancelled(true);
+            event.setCancelled(true);
+        }
     }
 }

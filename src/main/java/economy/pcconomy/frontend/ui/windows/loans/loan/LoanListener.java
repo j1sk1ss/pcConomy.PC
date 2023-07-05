@@ -8,6 +8,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 
 import economy.pcconomy.frontend.ui.windows.Window;
+import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanWindow;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,29 +28,39 @@ public class LoanListener implements Listener {
             var town = TownyAPI.getInstance().getTown(player.getLocation());
             var townObject = PcConomy.GlobalTownWorker.getTownObject(Objects.requireNonNull(town).getName());
             var buttonPosition = event.getSlot();
-            event.setCancelled(true);
 
-            if (ItemManager.getName(item).contains("Выплатить кредит")) {
-                LoanManager.payOffADebt(player, townObject);
-                player.closeInventory();
-            }
+            switch (NPCLoanWindow.Panel.click(buttonPosition).getName()) {
+                case "Взять кредит" -> player.openInventory(new NPCLoanWindow().takeWindow(player));
+                case "Погасить кредит" -> {
+                    LoanManager.payOffADebt(player, townObject);
+                    player.closeInventory();
 
-            if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
-                boolean isSafe = ItemManager.getLore(item).contains("Банк одобрит данный займ.");
-                final int maxCreditCount = 5;
-
-                if (isSafe && townObject.Credit.size() < maxCreditCount) {
-                    if (!townObject.Credit.contains(LoanManager.getLoan(player.getUniqueId(), townObject))) {
-                        activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
-                        LoanManager.createLoan(LoanWindow.getSelectedAmount(activeInventory),
-                                LoanWindow.getSelectedDuration(activeInventory), player, townObject);
-                        player.closeInventory();
-                    }
+                    return;
                 }
-            } else {
-                activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.PURPLE_WOOL));
-                player.openInventory(new LoanWindow().regenerateWindow(activeInventory, player, buttonPosition, false));
             }
+
+            if (event.getView().getTitle().contains("Взятие")) {
+                if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
+                    boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
+                    final int maxCreditCount = 5;
+
+                    if (isSafe && townObject.Credit.size() < maxCreditCount) {
+                        if (!townObject.Credit.contains(LoanManager.getLoan(player.getUniqueId(), townObject))) {
+                            activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
+                            LoanManager.createLoan(LoanWindow.getSelectedAmount(activeInventory),
+                                    LoanWindow.getSelectedDuration(activeInventory), player, townObject);
+                            player.closeInventory();
+                        }
+                    }
+                } else {
+                    activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.PURPLE_WOOL));
+                    player.openInventory(new LoanWindow().regenerateWindow(activeInventory, player, buttonPosition, false));
+                }
+
+                return;
+            }
+
+            event.setCancelled(true);
         }
     }
 }

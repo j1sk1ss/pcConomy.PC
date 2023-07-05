@@ -67,7 +67,12 @@ public class NpcManager {
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());
         npc.spawn(buyer.getLocation());
-        npc.addTrait(npcList.get(neededLicense));
+        npc.addTrait(switch (neededLicense) {
+            case Market -> new Trader();
+            case Loan   -> new Loaner();
+
+            case Trade, LoanHistory -> null;
+        });
     }
 
     /***

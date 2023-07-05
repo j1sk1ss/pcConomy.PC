@@ -2,11 +2,14 @@ package economy.pcconomy.frontend.ui.objects;
 
 import economy.pcconomy.backend.scripts.ItemManager;
 
+import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.objects.interactive.IComponent;
+import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,14 +46,70 @@ public class Panel {
     public Inventory placeComponents(Inventory inventory) {
         for (var component : iComponents) {
             var coordinates = component.getCoordinates();
-            var text = component.getName();
-            var lore = component.getLore();
 
-            for (var coordinate : coordinates)
-                inventory.setItem(coordinate, ItemManager.setLore(ItemManager
-                        .setName(new ItemStack(Material.PAPER, 1), text), lore));
+            if (component instanceof Button button) {
+                var text = button.getName();
+                var lore = button.getLore();
+
+                for (var coordinate : coordinates)
+                    inventory.setItem(coordinate, ItemManager.setLore(ItemManager
+                            .setName(new ItemStack(Material.PAPER, 1), text), lore + "\nBUTTON"));
+            } else if (component instanceof Slider slider) {
+                for (var i = 0; i < coordinates.size(); i++)
+                    inventory.setItem(coordinates.get(i), slider.getSlider().get(i));
+            }
         }
 
         return inventory;
+    }
+
+    /**
+     * Place buttons body to new inventory
+     * @param inventory Inventory where should be placed buttons
+     * @param customLore If u need to use custom lore
+     * @return Inventory with buttons body
+     */
+    public Inventory placeComponents(Inventory inventory, List<String> customLore) {
+        for (var component = 0; component < iComponents.size(); component++) {
+            var coordinates = iComponents.get(component).getCoordinates();
+
+            if (iComponents.get(component) instanceof Button button) {
+                var text = button.getName();
+
+                for (Integer integer : coordinates)
+                    inventory.setItem(integer,
+                            ItemManager.setLore(ItemManager.setName(new ItemStack(Material.PAPER, 1), text),
+                                    customLore.get(component) + "\nBUTTON"));
+            } else if (iComponents.get(component) instanceof Slider slider) {
+                for (var i = 0; i < coordinates.size(); i++)
+                    inventory.setItem(coordinates.get(i), slider.getSlider().get(i));
+            }
+        }
+
+        return inventory;
+    }
+
+    /**
+     * Get sliders from panel
+     * @return Sliders
+     */
+    public List<Slider> getSliders() {
+        var sliders = new ArrayList<Slider>();
+        for (var component : iComponents)
+            if (component instanceof Slider slider) sliders.add(slider);
+
+        return sliders;
+    }
+
+    /**
+     * Get buttons from panel
+     * @return Buttons
+     */
+    public List<Button> getButtons() {
+        var buttons = new ArrayList<Button>();
+        for (var component : iComponents)
+            if (component instanceof Button button) buttons.add(button);
+
+        return buttons;
     }
 }

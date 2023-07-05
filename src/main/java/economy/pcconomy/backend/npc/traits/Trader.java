@@ -80,16 +80,19 @@ public class Trader extends Trait {
         var playerUUID = player.getUniqueId();
 
         try {
-            if (isRanted)
+            if (isRanted) {
                 if (Owner.equals(playerUUID) && Storage.size() < 27) {
                     player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
                     chat.put(playerUUID, event.getNPC().getId());
-                }
-                else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
-                else if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
-                    player.sendMessage("Удалить торговца? (д/н)");
-                    chat.put(playerUUID, event.getNPC().getId());
-                }
+                } else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
+
+                return;
+            }
+
+            if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
+                player.sendMessage("Удалить торговца? (д/н)");
+                chat.put(playerUUID, event.getNPC().getId());
+            }
         } catch (NullPointerException exception) {
             player.sendMessage("Ошибка, мэр города не был найден! (2)");
         }

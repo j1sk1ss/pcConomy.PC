@@ -23,31 +23,37 @@ public class NPCLoanerListener implements Listener {
 
         if (Window.isThisWindow(event, player, "Кредит")) {
             var buttonPosition = event.getSlot();
-            event.setCancelled(true);
 
-            if (ItemManager.getName(item).contains("Выплатить кредит")) {
-                LoanManager.payOffADebt(player, PcConomy.GlobalBank);
-                player.closeInventory();
+            if (event.getView().getTitle().contains("Взятие")) {
+                if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
+                    boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
+
+                    if (isSafe)
+                        if (!PcConomy.GlobalBank.Credit.contains(LoanManager.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
+                            activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
+                            LoanManager.createLoan(NPCLoanWindow.getSelectedAmount(activeInventory),
+                                    NPCLoanWindow.getSelectedDuration(activeInventory), player, PcConomy.GlobalBank);
+                            player.closeInventory();
+                        }
+                } else {
+                    activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.PURPLE_WOOL));
+                    player.openInventory(new NPCLoanWindow().regenerateWindow(activeInventory, player, buttonPosition, true));
+                }
 
                 return;
             }
 
-            if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
-                boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
+            switch (NPCLoanWindow.Panel.click(buttonPosition).getName()) {
+                case "Взять кредит" -> player.openInventory(new NPCLoanWindow().takeWindow(player));
+                case "Погасить кредит" -> {
+                    LoanManager.payOffADebt(player, PcConomy.GlobalBank);
+                    player.closeInventory();
 
-                if (isSafe)
-                    if (!PcConomy.GlobalBank.Credit.contains(LoanManager.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
-                        activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
-                        LoanManager.createLoan(NPCLoanWindow.getSelectedAmount(activeInventory),
-                                NPCLoanWindow.getSelectedDuration(activeInventory), player, PcConomy.GlobalBank);
-                        player.closeInventory();
-
-                        return;
-                    }
-            } else {
-                activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.PURPLE_WOOL));
-                player.openInventory(new NPCLoanWindow().regenerateWindow(activeInventory, player, buttonPosition, true));
+                    return;
+                }
             }
+
+            event.setCancelled(true);
         }
     }
 }

@@ -128,6 +128,18 @@ public class Bank implements IMoney {
     }
 
     /**
+     * Get UUID of all borrowers
+     * @return List of borrowers UUID
+     */
+    public List<UUID> getBorrowers() {
+        var list = new ArrayList<UUID>();
+        for (var loan : Credit)
+            list.add(loan.Owner);
+
+        return list;
+    }
+
+    /**
      * Saves bank into .json file
      * @param fileName File name
      * @throws IOException If something goes wrong

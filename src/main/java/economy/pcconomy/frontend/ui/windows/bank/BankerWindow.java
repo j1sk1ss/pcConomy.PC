@@ -3,7 +3,6 @@ package economy.pcconomy.frontend.ui.windows.bank;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.ChangeManager;
-import economy.pcconomy.backend.license.License;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.ItemManager;
 import economy.pcconomy.frontend.ui.objects.Panel;

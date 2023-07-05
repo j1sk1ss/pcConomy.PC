@@ -1,7 +1,5 @@
 package economy.pcconomy.frontend.ui.windows;
 
-import economy.pcconomy.frontend.ui.windows.IWindow;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -25,7 +23,7 @@ public class Window {
     public static boolean isThisWindow(InventoryClickEvent event, Player player, String windowName){
         if (event.getCurrentItem() != null)
             if (event.getInventory().getHolder() instanceof Player currentPlayer)
-                return event.getView().getTitle().equals(windowName) && currentPlayer.equals(player);
+                return event.getView().getTitle().contains(windowName) && currentPlayer.equals(player);
 
         return false;
     }
