@@ -5,7 +5,8 @@ import economy.pcconomy.PcConomy;
 
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanWindow;
@@ -31,19 +32,19 @@ public class LoanListener implements Listener {
 
             if (event.getView().getTitle().contains("Город-Взятие")) {
                 if (ItemManager.getName(Objects.requireNonNull(item)).contains(CashManager.currencySigh)) {
-                    boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
+                    boolean isSafe = ItemManager.getLore(item).get(0).contains("Город одобрит данный займ.");
                     final int maxCreditCount = 5;
 
                     if (isSafe && currentTown.getCreditList().size() < maxCreditCount) {
                         if (!currentTown.getCreditList().contains(LoanManager.getLoan(player.getUniqueId(), currentTown))) {
-                            activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
+                            activeInventory.setItem(buttonPosition, new Item(item, Material.LIGHT_BLUE_WOOL));
                             LoanManager.createLoan(LoanWindow.getSelectedAmount(activeInventory),
                                     LoanWindow.getSelectedDuration(activeInventory), player, currentTown);
                             player.closeInventory();
                         }
                     }
                 } else {
-                    activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.PURPLE_WOOL));
+                    activeInventory.setItem(buttonPosition, new Item(item, Material.PURPLE_WOOL));
                     player.openInventory(new LoanWindow().regenerateWindow(activeInventory, player, buttonPosition, false));
                 }
 

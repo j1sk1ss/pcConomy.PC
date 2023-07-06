@@ -4,7 +4,8 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.town.objects.town.NpcTown;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.kyori.adventure.text.Component;
@@ -28,8 +29,7 @@ public class NPCTraderWindow {
         var townStorage = ((NpcTown)town).Storage;
 
         for (var item : townStorage)
-            window.addItem(ItemManager.setLore(new ItemStack(item.getType()), String.join("\n",
-                    ItemManager.getLore(item))));
+            window.addItem(new Item(item, ItemManager.getName(item), String.join("\n", ItemManager.getLore(item))));
 
         return window;
     }

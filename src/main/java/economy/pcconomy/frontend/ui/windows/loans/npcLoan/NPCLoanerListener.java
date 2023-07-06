@@ -3,7 +3,8 @@ package economy.pcconomy.frontend.ui.windows.loans.npcLoan;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import economy.pcconomy.frontend.ui.windows.Window;
 import org.bukkit.Material;
@@ -30,13 +31,13 @@ public class NPCLoanerListener implements Listener {
 
                     if (isSafe)
                         if (!PcConomy.GlobalBank.Credit.contains(LoanManager.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
-                            activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
+                            activeInventory.setItem(buttonPosition, new Item(item, Material.LIGHT_BLUE_WOOL));
                             LoanManager.createLoan(NPCLoanWindow.getSelectedAmount(activeInventory),
                                     NPCLoanWindow.getSelectedDuration(activeInventory), player, PcConomy.GlobalBank);
                             player.closeInventory();
                         }
                 } else {
-                    activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.PURPLE_WOOL));
+                    activeInventory.setItem(buttonPosition, new Item(item, Material.PURPLE_WOOL));
                     player.openInventory(new NPCLoanWindow().regenerateWindow(activeInventory, player, buttonPosition, true));
                 }
 

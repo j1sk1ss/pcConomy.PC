@@ -4,7 +4,8 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.ChangeManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.Panel;
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.windows.IWindow;
@@ -41,12 +42,12 @@ public class BankerWindow implements IWindow {
 
         for (var i = 0; i < 9; i++) {
             if (i == 0 && playerBalance < enableBalance)
-                window.setItem(0, ItemManager.setName(new ItemStack(Material.GREEN_WOOL),
+                window.setItem(0, new Item(new ItemStack(Material.GREEN_WOOL),
                         Math.round(playerBalance * 100) / 100 + CashManager.currencySigh));
 
             if (enableBalance >= ChangeManager.Denomination.get(i) && playerBalance >= ChangeManager.Denomination.get(i))
                 for (var j = i; j < 8; j++)
-                    window.setItem(j + 1, ItemManager.setName(new ItemStack(Material.GREEN_WOOL),
+                    window.setItem(j + 1, new Item(new ItemStack(Material.GREEN_WOOL),
                             ChangeManager.Denomination.get(j) + CashManager.currencySigh));
         }
 
@@ -59,12 +60,12 @@ public class BankerWindow implements IWindow {
 
         for (var i = 0; i < 9; i++) {
             if (i == 0)
-                window.setItem(0, ItemManager.setName(new ItemStack(Material.RED_WOOL),
+                window.setItem(0, new Item(new ItemStack(Material.RED_WOOL),
                         "-" + cashInInventory + CashManager.currencySigh));
 
             if (cashInInventory >= ChangeManager.Denomination.get(i))
                 for (var j = i; j < 8; j++)
-                    window.setItem(j + 1, ItemManager.setName(new ItemStack(Material.RED_WOOL),
+                    window.setItem(j + 1, new Item(new ItemStack(Material.RED_WOOL),
                             "-" + ChangeManager.Denomination.get(j) + CashManager.currencySigh));
         }
 

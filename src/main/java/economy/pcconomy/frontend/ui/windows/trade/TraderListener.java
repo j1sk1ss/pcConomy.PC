@@ -3,7 +3,7 @@ package economy.pcconomy.frontend.ui.windows.trade;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import economy.pcconomy.frontend.ui.windows.Window;

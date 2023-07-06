@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.ui.objects.interactive;
 
-import org.bukkit.Material;
+import economy.pcconomy.backend.scripts.items.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +16,7 @@ public class Slider implements IComponent {
      * @param defaultOption Material of default option
      */
     public Slider(List<Integer> coordinates, List<ItemStack> slider,
-                  Material chosenOption, Material defaultOption) {
+                  int chosenOption, int defaultOption) {
         this.coordinates   = coordinates;
         this.slider        = slider;
         this.chosenOption  = chosenOption;
@@ -37,8 +37,8 @@ public class Slider implements IComponent {
 
     private final List<Integer> coordinates;
     private final List<ItemStack> slider;
-    private final Material chosenOption;
-    private final Material defaultOption;
+    private final int chosenOption;
+    private final int defaultOption;
 
     public String getName() {
         return "Slider";
@@ -66,7 +66,7 @@ public class Slider implements IComponent {
      */
     public void setChose(int chose) {
         for (var i = 0; i < coordinates.size(); i++)
-            slider.get(i).setType(i == chose ? chosenOption : defaultOption);
+            slider.set(i, new Item(slider.get(i), i == chose ? chosenOption : defaultOption));
     }
 
     /**
@@ -96,7 +96,7 @@ public class Slider implements IComponent {
      */
     public ItemStack getChose() {
         for (var item : slider)
-            if (item.getType().equals(chosenOption)) return item;
+            if (item.getItemMeta().getCustomModelData() == chosenOption) return item;
 
         return null;
     }

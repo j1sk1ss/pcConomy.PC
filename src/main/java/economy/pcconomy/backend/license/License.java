@@ -4,7 +4,8 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,9 +41,8 @@ public class License {
 
         cash.takeCashFromInventory(price, player);
         PcConomy.GlobalBank.BankBudget += price;
-
+        //TODO: DATA MODEL
         PcConomy.GlobalLicenseManager.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));
-        ItemManager.giveItems(ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PAPER),
-                licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()), "Лицензия"), player);
+        ItemManager.giveItems(new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()), player);
     }
 }

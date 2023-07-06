@@ -1,6 +1,7 @@
 package economy.pcconomy.frontend.ui.objects.interactive;
 
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,10 +40,9 @@ public record Button(List<Integer> coordinates, String name, String lore) implem
      * @param inventory Inventory where should be placed button
      * @return Inventory with placed button
      */
-    public Inventory place(Inventory inventory) {
+    public Inventory place(Inventory inventory) { //TODO: DATA MODEL
         for (var coordinate : coordinates())
-            inventory.setItem(coordinate, ItemManager.setLore(ItemManager
-                    .setName(new ItemStack(Material.PAPER, 1), name()), lore()));
+            inventory.setItem(coordinate, new Item(name(), lore(), Material.PAPER, 1, 17000));
 
         return inventory;
     }

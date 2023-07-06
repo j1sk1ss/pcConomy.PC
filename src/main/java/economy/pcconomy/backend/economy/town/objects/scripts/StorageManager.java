@@ -58,7 +58,7 @@ public class StorageManager {
      * @param Storage Storage that will update resource
      */
     public static void setAmountOfResource(ItemStack item, int amount, List<ItemStack> Storage) {
-        for (ItemStack itemStack : Storage)
+        for (var itemStack : Storage)
             if (itemStack.isSimilar(item))
                 Storage.set(Storage.indexOf(itemStack), new ItemStack(item.getType(), amount));
     }
@@ -70,7 +70,7 @@ public class StorageManager {
      * @return Amount of resource
      */
     public static int getAmountOfResource(ItemStack item, List<ItemStack> Storage) {
-        for (ItemStack itemStack : Storage)
+        for (var itemStack : Storage)
             if (itemStack.isSimilar(item))
                 return itemStack.getAmount();
 
@@ -84,7 +84,7 @@ public class StorageManager {
      * @return ItemStack with same characteristics
      */
     public static ItemStack getResource(ItemStack item, List<ItemStack> Storage) {
-        for (ItemStack itemStack : Storage) {
+        for (var itemStack : Storage) {
             if (itemStack.getType().equals(item.getType()))
                 return itemStack;
         }
@@ -99,7 +99,7 @@ public class StorageManager {
     public static int getAmountOfStorage(List<ItemStack> Storage) {
         var amount = 0;
 
-        for (ItemStack itemStack : Storage)
+        for (var itemStack : Storage)
             amount += itemStack.getAmount();
 
         return amount;

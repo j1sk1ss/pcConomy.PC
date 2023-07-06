@@ -4,7 +4,8 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.Panel;
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.windows.IWindow;
@@ -44,13 +45,11 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
             window.setItem(i, getAmountButton(i, 18,
                     Objects.requireNonNull(TownyAPI.getInstance().getTown(player.getLocation())).getName(), player, canReadHistory(player)));
 
-            if (i == 0) {
-                window.setItem(i + 18, ItemManager.setName(new ItemStack(Material.PURPLE_WOOL),
-                        durationSteps.get(i) + "дней"));
+            if (i == 0) { //TODO: DATA MODEL
+                window.setItem(i + 18, new Item(durationSteps.get(i) + "дней", "", Material.PURPLE_WOOL));
                 continue;
             }
-            window.setItem(i + 18, ItemManager.setName(new ItemStack(Material.GREEN_STAINED_GLASS),
-                    durationSteps.get(i) + "дней"));
+            window.setItem(i + 18, new Item(durationSteps.get(i) + "дней", "", Material.GREEN_STAINED_GLASS));
         }
 
         return window;
@@ -62,9 +61,8 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
             window.setItem(i, getAmountButton(i, option,
                 Objects.requireNonNull(TownyAPI.getInstance().getTown(player.getLocation())).getName(), player, canReadHistory(player)));
 
-            if (i == option - 18) continue;
-            window.setItem(i + 18, ItemManager.setName(new ItemStack(Material.GREEN_STAINED_GLASS),
-                    durationSteps.get(i) + "дней"));
+            if (i == option - 18) continue;//TODO: DATA MODEL
+            window.setItem(i + 18, new Item(durationSteps.get(i) + "дней", "", Material.GREEN_STAINED_GLASS));
         }
 
         return window;
@@ -75,8 +73,8 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
         var maxLoanSize = townObject.getBudget() * .2d;
         boolean isSafe = LoanManager.isSafeLoan(maxLoanSize / (position + 1), durationSteps.get(chosen - 18), player);
 
-        ItemStack tempItem = ItemManager.setLore(ItemManager.setName(new ItemStack(Material.RED_WOOL, 1),
-                Math.round(maxLoanSize / (position + 1) * 100) / 100 + CashManager.currencySigh), "Город не одобрит данный займ.");
+        ItemStack tempItem = new Item(Math.round(maxLoanSize / (position + 1) * 100) / 100 + CashManager.currencySigh,
+                "Город не одобрит данный займ.", Material.RED_WOOL, 1, 17000); //TODO: DATA MODEL
 
         if (((isSafe || !canReadHistory) && !townObject.getBorrowers().contains(player.getUniqueId()) && maxLoanSize > 0))
             tempItem = creditOptionButton(tempItem, maxLoanSize, chosen, position);
@@ -86,8 +84,9 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
 
     @Override
     public ItemStack creditOptionButton(ItemStack itemStack, double maxLoanSize, int chosen, int position) {
-        return ItemManager.setMaterial(ItemManager.setLore(itemStack, "Банк одобрит данный займ.\nПроцент: " +
+        //TODO: DATA MODEL
+        return new Item(ItemManager.getName(itemStack), "Город одобрит данный займ.\nПроцент: " +
                 (Math.round(LoanManager.getPercent(maxLoanSize / (position + 1),
-                        durationSteps.get(chosen - 18)) * 100) * 100d) / 100d + "%"),  Material.GREEN_WOOL);
+                        durationSteps.get(chosen - 18)) * 100) * 100d) / 100d + "%", Material.GREEN_WOOL, 1, 17000);
     }
 }

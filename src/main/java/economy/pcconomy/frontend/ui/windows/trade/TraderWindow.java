@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.trade;
 
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.npc.traits.Trader;
 import economy.pcconomy.frontend.ui.objects.Panel;
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
@@ -85,17 +85,17 @@ public class TraderWindow {
     public static final Panel PricePanel = new Panel(Arrays.asList(
             new Slider(Arrays.asList(
                     0, 1, 2, 3, 4, 5, 6, 7, 8
-            ), Arrays.asList(
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "100" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "200" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "500" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "1000" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "1500" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "2000" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "2500" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "4000" + CashManager.currencySigh),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "10000" + CashManager.currencySigh)
-            ), Material.PURPLE_WOOL, Material.GLASS),
+            ), Arrays.asList( //TODO: DATA MODEL
+                    new Item("100" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("400" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("800" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("1600" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("2000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("5000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("6000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("8000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
+                    new Item("10000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000)
+            ), 17000, 17000),
             new Button(Arrays.asList(
                 9, 10, 11, 12, 18, 19, 20, 21
             ), "Установить", ""),
@@ -112,17 +112,17 @@ public class TraderWindow {
     public static final Panel MarginPanel = new Panel(Arrays.asList(
             new Slider(Arrays.asList(
                     0, 1, 2, 3, 4, 5, 6, 7, 8
-            ), Arrays.asList(
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "5%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "10%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "15%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "20%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "25%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "30%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "35%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "40%"),
-                    ItemManager.setName(new ItemStack(Material.GLASS, 1), "65%")
-            ), Material.PURPLE_WOOL, Material.GLASS),
+            ), Arrays.asList( //TODO: DATA MODEL
+                    new Item("5%", "", Material.GLASS, 1, 17000),
+                    new Item("10%", "", Material.GLASS, 1, 17000),
+                    new Item("15%", "", Material.GLASS, 1, 17000),
+                    new Item("25%", "", Material.GLASS, 1, 17000),
+                    new Item("30%", "", Material.GLASS, 1, 17000),
+                    new Item("45%", "", Material.GLASS, 1, 17000),
+                    new Item("65%", "", Material.GLASS, 1, 17000),
+                    new Item("75%", "", Material.GLASS, 1, 17000),
+                    new Item("80%", "", Material.GLASS, 1, 17000)
+            ), 17000, 17000),
             new Button(Arrays.asList(
                     9, 10, 11, 12, 18, 19, 20, 21
             ), "Установить", ""),

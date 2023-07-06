@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.scripts;
+package economy.pcconomy.backend.scripts.items;
 
 import economy.pcconomy.backend.cash.CashManager;
 
@@ -39,19 +39,6 @@ public class ItemManager {
         Objects.requireNonNull(item).setItemMeta(itemMeta);
 
         return item;
-    }
-
-    /**
-     * Sets lore of itemStack
-     * @param item ItemStack that should take new material
-     * @param material New material
-     * @return ItemStack with material
-     */
-    public static ItemStack setMaterial(ItemStack item, Material material) {
-        var itemMeta = item.getItemMeta();
-        var itemStack = new ItemStack(material, item.getAmount());
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
     }
 
     /**

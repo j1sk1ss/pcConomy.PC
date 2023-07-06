@@ -4,7 +4,8 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
@@ -129,7 +130,7 @@ public class Trader extends Trait {
 
                 try {
                     var cost = Double.parseDouble(playerMessage);
-                    trader.getOrAddTrait(Trader.class).Storage.add(ItemManager.setLore(sellingItem,
+                    trader.getOrAddTrait(Trader.class).Storage.add(new Item(sellingItem, ItemManager.getName(sellingItem),
                             cost + cost * Margin + CashManager.currencySigh));
                     player.getInventory().setItemInMainHand(null);
                     chat.remove(player.getUniqueId());

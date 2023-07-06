@@ -1,6 +1,7 @@
 package economy.pcconomy.frontend.ui.objects;
 
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.objects.interactive.IComponent;
@@ -52,8 +53,7 @@ public class Panel {
                 var lore = button.getLore();
 
                 for (var coordinate : coordinates)
-                    inventory.setItem(coordinate, ItemManager.setLore(ItemManager
-                            .setName(new ItemStack(Material.PAPER, 1), text), lore + "\nBUTTON"));
+                    inventory.setItem(coordinate, new Item(text, lore, Material.PAPER, 1, 17000)); //TODO: DATA MODEL
             } else if (component instanceof Slider slider) {
                 for (var i = 0; i < coordinates.size(); i++)
                     inventory.setItem(coordinates.get(i), slider.getSlider().get(i));
@@ -76,10 +76,8 @@ public class Panel {
             if (iComponents.get(component) instanceof Button button) {
                 var text = button.getName();
 
-                for (Integer integer : coordinates)
-                    inventory.setItem(integer,
-                            ItemManager.setLore(ItemManager.setName(new ItemStack(Material.PAPER, 1), text),
-                                    customLore.get(component) + ""));
+                for (var coordinate : coordinates)
+                    inventory.setItem(coordinate, new Item(text, customLore.get(component), Material.PAPER, 1, 17000)); //TODO: DATA MODEL
             } else if (iComponents.get(component) instanceof Slider slider) {
                 for (var i = 0; i < coordinates.size(); i++)
                     inventory.setItem(coordinates.get(i), slider.getSlider().get(i));

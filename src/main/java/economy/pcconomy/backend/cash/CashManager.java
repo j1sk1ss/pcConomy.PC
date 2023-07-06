@@ -1,6 +1,7 @@
 package economy.pcconomy.backend.cash;
 
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -37,8 +38,7 @@ public class CashManager {
      * @return ItemStack object
      */
     public static ItemStack createCashObject(double amount) {
-        return ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PAPER, 1),
-                "" + amount + currencySigh), currencyName);
+        return new Item(currencyName, "" + amount + currencySigh, Material.PAPER, 1, 17000); //TODO: DATA MODEL
     }
 
     /**
@@ -48,8 +48,7 @@ public class CashManager {
      * @return ItemStack object
      */
     public static ItemStack createCashObject(double amount, int count) {
-        return ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PAPER, count),
-                "" + amount + currencySigh), currencyName);
+        return new Item(currencyName, "" + amount + currencySigh, Material.PAPER, count, 17000); //TODO: DATA MODEL
     }
 
     /**

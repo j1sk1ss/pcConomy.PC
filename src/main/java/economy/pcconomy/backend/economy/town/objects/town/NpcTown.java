@@ -8,7 +8,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.bank.objects.Loan;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.objects.scripts.StorageManager;
-import economy.pcconomy.backend.scripts.ItemManager;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -111,7 +111,7 @@ public class NpcTown extends Town {
     public void generateLocalPrices() {
         var budget = getBudget();
 
-        for (ItemStack itemStack : Storage) {
+        for (var itemStack : Storage) {
             var amount = itemStack.getAmount() + 1;
             var price = Math.abs(budget / amount);
 
