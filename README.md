@@ -2,7 +2,7 @@
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover1.png)
 # PcConomy plugin
 ## Main info:
-This is a plugin for minecraft [1.20](https://www.minecraft.net/ru-ru/article/minecraft-java-edition-1-20-1 version). 
+This is a plugin for minecraft [1.20.1](https://www.minecraft.net/ru-ru/article/minecraft-java-edition-1-20-1) version. 
 
 A few words about: This plugin realise 
 market economy in minecraft. And yes - it`s all... But let me more explain
