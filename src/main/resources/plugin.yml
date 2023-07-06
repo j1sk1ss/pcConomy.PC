@@ -39,6 +39,8 @@ commands:
     usage: /reload_npc
   full_info:
     usage: /full_info
+  set_day_bank_budget:
+    usage: /set_day_bank_budget
 
 bank:
   start_budget: 15000

@@ -35,8 +35,10 @@ public class Bank implements IMoney {
         var balanceWorker = new BalanceManager();
         var cash          = new CashManager();
 
-        if (amount > getUsefulAmountOfBudget()) return;
+        if (amount > dayWithdrawBudget) return;
         if (balanceWorker.notSolvent(amount, player)) return;
+
+        dayWithdrawBudget -= amount;
 
         balanceWorker.takeMoney(amount, player);
         cash.giveCashToPlayer(amount, player);
@@ -60,6 +62,7 @@ public class Bank implements IMoney {
     }
 
     double previousBudget = BankBudget;
+    double dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
     int recessionCount = 0;
 
     /**
@@ -83,6 +86,8 @@ public class Bank implements IMoney {
 
         LoanManager.takePercentFromBorrowers(this);
         previousBudget = BankBudget;
+
+        dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
     }
 
     /**
@@ -108,7 +113,14 @@ public class Bank implements IMoney {
      * @return Useful amount of budget
      */
     public double getUsefulAmountOfBudget() {
-        return BankBudget * UsefulBudgetPercent;
+        return dayWithdrawBudget;
+    }
+
+    /**
+     * Set useful amount of budget
+     */
+    public void setUsefulBudgetPercent(double amount) {
+        dayWithdrawBudget += amount;
     }
 
     /**

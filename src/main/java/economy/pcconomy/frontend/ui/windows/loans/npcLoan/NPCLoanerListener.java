@@ -21,10 +21,10 @@ public class NPCLoanerListener implements Listener {
 
         if (item == null) return;
 
-        if (Window.isThisWindow(event, player, "Кредит")) {
+        if (Window.isThisWindow(event, player, "Кредит-Банк")) {
             var buttonPosition = event.getSlot();
 
-            if (event.getView().getTitle().contains("Взятие")) {
+            if (event.getView().getTitle().contains("Банк-Взятие")) {
                 if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
                     boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
 

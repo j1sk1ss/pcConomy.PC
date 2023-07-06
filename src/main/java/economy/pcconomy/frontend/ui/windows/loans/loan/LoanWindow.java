@@ -34,11 +34,11 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
     ));
 
     public Inventory generateWindow(Player player) {
-        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит")));
+        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит-Город")));
     }
 
     public Inventory takeWindow(Player player) {
-        var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Город"));
+        var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Город-Взятие"));
 
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, 18,

@@ -34,7 +34,7 @@ public class CommandManager implements CommandExecutor {
             new CashManager().takeCashFromInventory(Double.parseDouble(args[0]), (Player) sender);
 
         if (command.getName().equals("create_cash"))
-            PcConomy.GlobalBank.giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
+            new CashManager().giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
 
         if (command.getName().equals("reload_towns"))
             PcConomy.GlobalTownWorker.reloadTownObjects();
@@ -85,6 +85,9 @@ public class CommandManager implements CommandExecutor {
                     "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
                     "NPC Traders count: " + PcConomy.GlobalNPC.Traders.size());
         }
+
+        if (command.getName().equals("set_day_bank_budget"))
+            PcConomy.GlobalBank.setUsefulBudgetPercent(Double.parseDouble(args[0]));
 
         return true;
     }

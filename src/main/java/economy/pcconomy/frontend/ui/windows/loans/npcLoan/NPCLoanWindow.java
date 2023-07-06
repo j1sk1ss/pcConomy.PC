@@ -32,11 +32,11 @@ public class NPCLoanWindow extends LoanBaseWindow implements IWindow {
     ));
 
     public Inventory generateWindow(Player player) {
-        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит")));
+        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит-Банк")));
     }
 
     public Inventory takeWindow(Player player) {
-        var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Взятие"));
+        var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Банк-Взятие"));
 
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, 18, player));

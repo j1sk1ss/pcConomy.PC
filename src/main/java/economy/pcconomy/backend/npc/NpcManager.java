@@ -43,11 +43,6 @@ public class NpcManager {
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
     public static final double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost", 2000d);
 
-    private final Map<LicenseType, Trait> npcList = Map.of(
-            LicenseType.Market, new Trader(),
-            LicenseType.Loan, new Loaner()
-    );
-
     /***
      * Buy NPC
      * @param buyer Player that buy NPC
@@ -65,14 +60,14 @@ public class NpcManager {
         cash.takeCashFromInventory(price, buyer);
         PcConomy.GlobalBank.BankBudget += price;
 
+        var npcList = Map.of(
+                LicenseType.Market, new Trader(),
+                LicenseType.Loan, new Loaner()
+        );
+
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());
         npc.spawn(buyer.getLocation());
-        npc.addTrait(switch (neededLicense) {
-            case Market -> new Trader();
-            case Loan   -> new Loaner();
-
-            case Trade, LoanHistory -> null;
-        });
+        npc.addTrait(npcList.get(neededLicense));
     }
 
     /***

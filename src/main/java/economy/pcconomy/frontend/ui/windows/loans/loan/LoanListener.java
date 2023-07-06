@@ -29,17 +29,7 @@ public class LoanListener implements Listener {
             var townObject = PcConomy.GlobalTownWorker.getTownObject(Objects.requireNonNull(town).getName());
             var buttonPosition = event.getSlot();
 
-            switch (NPCLoanWindow.Panel.click(buttonPosition).getName()) {
-                case "Взять кредит" -> player.openInventory(new NPCLoanWindow().takeWindow(player));
-                case "Погасить кредит" -> {
-                    LoanManager.payOffADebt(player, townObject);
-                    player.closeInventory();
-
-                    return;
-                }
-            }
-
-            if (event.getView().getTitle().contains("Взятие")) {
+            if (event.getView().getTitle().contains("Город-Взятие")) {
                 if (ItemManager.getName(Objects.requireNonNull(item)).contains(CashManager.currencySigh)) {
                     boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
                     final int maxCreditCount = 5;
@@ -61,6 +51,14 @@ public class LoanListener implements Listener {
             }
 
             event.setCancelled(true);
+
+            switch (NPCLoanWindow.Panel.click(buttonPosition).getName()) {
+                case "Взять кредит" -> player.openInventory(new LoanWindow().takeWindow(player));
+                case "Погасить кредит" -> {
+                    LoanManager.payOffADebt(player, townObject);
+                    player.closeInventory();
+                }
+            }
         }
     }
 }
