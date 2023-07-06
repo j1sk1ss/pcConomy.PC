@@ -26,7 +26,7 @@ public class LoanListener implements Listener {
 
         if (Window.isThisWindow(event, player, "Кредит-Город")) {
             var town = TownyAPI.getInstance().getTown(player.getLocation());
-            var townObject = PcConomy.GlobalTownWorker.getTownObject(Objects.requireNonNull(town).getName());
+            var currentTown = PcConomy.GlobalTownWorker.getTown(Objects.requireNonNull(town).getName());
             var buttonPosition = event.getSlot();
 
             if (event.getView().getTitle().contains("Город-Взятие")) {
@@ -34,11 +34,11 @@ public class LoanListener implements Listener {
                     boolean isSafe = ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ.");
                     final int maxCreditCount = 5;
 
-                    if (isSafe && townObject.Credit.size() < maxCreditCount) {
-                        if (!townObject.Credit.contains(LoanManager.getLoan(player.getUniqueId(), townObject))) {
+                    if (isSafe && currentTown.getCreditList().size() < maxCreditCount) {
+                        if (!currentTown.getCreditList().contains(LoanManager.getLoan(player.getUniqueId(), currentTown))) {
                             activeInventory.setItem(buttonPosition, ItemManager.setMaterial(item, Material.LIGHT_BLUE_WOOL));
                             LoanManager.createLoan(LoanWindow.getSelectedAmount(activeInventory),
-                                    LoanWindow.getSelectedDuration(activeInventory), player, townObject);
+                                    LoanWindow.getSelectedDuration(activeInventory), player, currentTown);
                             player.closeInventory();
                         }
                     }
@@ -55,7 +55,7 @@ public class LoanListener implements Listener {
             switch (NPCLoanWindow.Panel.click(buttonPosition).getName()) {
                 case "Взять кредит" -> player.openInventory(new LoanWindow().takeWindow(player));
                 case "Погасить кредит" -> {
-                    LoanManager.payOffADebt(player, townObject);
+                    LoanManager.payOffADebt(player, currentTown);
                     player.closeInventory();
                 }
             }

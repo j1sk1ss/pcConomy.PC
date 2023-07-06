@@ -6,10 +6,10 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.IMoney;
 import economy.pcconomy.backend.economy.bank.objects.Loan;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.economy.town.objects.town.NpcTown;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.cash.CashManager;
 
-import economy.pcconomy.backend.economy.town.objects.TownObject;
 import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
@@ -98,12 +98,11 @@ public class Bank implements IMoney {
         var count = 0;
         var bigInflation = 0d;
 
-        for (TownObject town : PcConomy.GlobalTownWorker.townObjects) {
-            if (!town.isNPC) continue;
-
-            count++;
-            bigInflation += town.getLocalInflation();
-        }
+        for (var town : PcConomy.GlobalTownWorker.towns)
+            if (town instanceof NpcTown npcTown) {
+                count++;
+                bigInflation += npcTown.getLocalInflation();
+            }
 
         return bigInflation / count;
     }

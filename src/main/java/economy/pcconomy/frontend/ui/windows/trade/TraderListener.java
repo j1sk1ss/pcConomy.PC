@@ -66,7 +66,7 @@ public class TraderListener implements Listener {
                         if (cash.amountOfCashInInventory(player) < trader.Cost) return;
 
                         cash.takeCashFromInventory(trader.Cost, player);
-                        PcConomy.GlobalTownWorker.getTownObject(trader.homeTown).changeBudget(trader.Cost);
+                        PcConomy.GlobalTownWorker.getTown(trader.homeTown).changeBudget(trader.Cost);
 
                         RantTrader(trader, player);
                         player.closeInventory();
@@ -150,7 +150,7 @@ public class TraderListener implements Listener {
                                     cash.takeCashFromInventory(price, player);
 
                                     var endPrice = price / (1 + trader.Margin);
-                                    PcConomy.GlobalTownWorker.getTownObject(trader.homeTown).changeBudget(price - endPrice);
+                                    PcConomy.GlobalTownWorker.getTown(trader.homeTown).changeBudget(price - endPrice);
                                     trader.Revenue += endPrice;
                                 }
                             }

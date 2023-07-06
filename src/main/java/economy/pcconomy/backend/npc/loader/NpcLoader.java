@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.npc.listener;
+package economy.pcconomy.backend.npc.loader;
 
 import economy.pcconomy.backend.npc.traits.Banker;
 import economy.pcconomy.backend.npc.traits.Loaner;

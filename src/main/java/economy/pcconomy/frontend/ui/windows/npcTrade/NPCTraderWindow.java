@@ -3,6 +3,7 @@ package economy.pcconomy.frontend.ui.windows.npcTrade;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.economy.town.objects.town.NpcTown;
 import economy.pcconomy.backend.scripts.ItemManager;
 
 import net.citizensnpcs.api.npc.NPC;
@@ -17,16 +18,16 @@ import java.util.Objects;
 
 public class NPCTraderWindow {
     public static Inventory generateWindow(Player player, NPC trader) {
-        var town = PcConomy.GlobalTownWorker.getTownObject(Objects.requireNonNull(TownyAPI.getInstance()
+        var town = PcConomy.GlobalTownWorker.getTown(Objects.requireNonNull(TownyAPI.getInstance()
                 .getTown(trader.getStoredLocation())).getName());
         if (town == null) return null;
 
         var window = Bukkit.createInventory(player, 54, Component.text("Магазин " +
-                town.TownName + " " + trader.getId()));
+                town.getName() + " " + trader.getId()));
 
-        var townStorage = town.Storage;
+        var townStorage = ((NpcTown)town).Storage;
 
-        for (ItemStack item : townStorage)
+        for (var item : townStorage)
             window.addItem(ItemManager.setLore(new ItemStack(item.getType()), String.join("\n",
                     ItemManager.getLore(item))));
 

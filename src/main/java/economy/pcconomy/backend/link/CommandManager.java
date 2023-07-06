@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.town.objects.town.NpcTown;
 import economy.pcconomy.backend.npc.traits.Banker;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.npc.traits.NpcLoaner;
@@ -76,12 +77,12 @@ public class CommandManager implements CommandExecutor {
 
         if (command.getName().equals("add_trade_to_town"))
             StorageManager.addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]),
-                    PcConomy.GlobalTownWorker.getTownObject(args[0]).Storage);
+                    ((NpcTown)PcConomy.GlobalTownWorker.getTown(args[0])).Storage);
 
         if (command.getName().equals("full_info")) {
             sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "\n" +
                     "Global VAT: " + PcConomy.GlobalBank.VAT + "\n" +
-                    "Registered towns count: " + PcConomy.GlobalTownWorker.townObjects.size() + "\n" +
+                    "Registered towns count: " + PcConomy.GlobalTownWorker.towns.size() + "\n" +
                     "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
                     "NPC Traders count: " + PcConomy.GlobalNPC.Traders.size());
         }

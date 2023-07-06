@@ -71,7 +71,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
     }
 
     public ItemStack getAmountButton(int position, int chosen, String townName, Player player, boolean canReadHistory) {
-        var townObject = PcConomy.GlobalTownWorker.getTownObject(townName);
+        var townObject = PcConomy.GlobalTownWorker.getTown(townName);
         var maxLoanSize = townObject.getBudget() * .2d;
         boolean isSafe = LoanManager.isSafeLoan(maxLoanSize / (position + 1), durationSteps.get(chosen - 18), player);
 

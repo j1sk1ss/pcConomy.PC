@@ -5,7 +5,7 @@ import economy.pcconomy.backend.economy.bank.scripts.BorrowerManager;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.link.CommandManager;
 import economy.pcconomy.backend.npc.NpcManager;
-import economy.pcconomy.backend.npc.listener.NpcLoader;
+import economy.pcconomy.backend.npc.loader.NpcLoader;
 import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
 import economy.pcconomy.backend.save.Loader;
 import economy.pcconomy.backend.economy.town.listener.TownyListener;
