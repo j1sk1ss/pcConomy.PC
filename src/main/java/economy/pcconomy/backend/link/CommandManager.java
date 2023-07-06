@@ -38,7 +38,7 @@ public class CommandManager implements CommandExecutor {
             new CashManager().giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
 
         if (command.getName().equals("reload_towns"))
-            PcConomy.GlobalTownWorker.reloadTownObjects();
+            PcConomy.GlobalTownManager.reloadTownObjects();
 
         if (command.getName().equals("reload_npc"))
             PcConomy.GlobalNPC.updateNPC();
@@ -68,7 +68,7 @@ public class CommandManager implements CommandExecutor {
             PcConomy.GlobalNPC.createNPC((Player) sender, new Licensor());
 
         if (command.getName().equals("switch_town_to_npc"))
-            PcConomy.GlobalTownWorker.changeNPCStatus(args[0], true);
+            PcConomy.GlobalTownManager.changeNPCStatus(args[0], true);
 
         if (command.getName().equals("town_menu")) {
             if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player) sender)).getMayor().getName().equals((sender).getName())) return true;
@@ -77,12 +77,12 @@ public class CommandManager implements CommandExecutor {
 
         if (command.getName().equals("add_trade_to_town"))
             StorageManager.addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]),
-                    ((NpcTown)PcConomy.GlobalTownWorker.getTown(args[0])).Storage);
+                    ((NpcTown)PcConomy.GlobalTownManager.getTown(args[0])).Storage);
 
         if (command.getName().equals("full_info")) {
             sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "\n" +
                     "Global VAT: " + PcConomy.GlobalBank.VAT + "\n" +
-                    "Registered towns count: " + PcConomy.GlobalTownWorker.towns.size() + "\n" +
+                    "Registered towns count: " + PcConomy.GlobalTownManager.towns.size() + "\n" +
                     "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
                     "NPC Traders count: " + PcConomy.GlobalNPC.Traders.size());
         }

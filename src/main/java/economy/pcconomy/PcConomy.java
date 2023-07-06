@@ -39,8 +39,8 @@ public final class PcConomy extends JavaPlugin {
     public static NpcManager GlobalNPC;
     public static Bank GlobalBank;
     public static BorrowerManager GlobalBorrowerManager;
-    public static TownManager GlobalTownWorker;
-    public static LicenseManager GlobalLicenseWorker;
+    public static TownManager GlobalTownManager;
+    public static LicenseManager GlobalLicenseManager;
 
     @Override
     public void onEnable() {
@@ -50,8 +50,8 @@ public final class PcConomy extends JavaPlugin {
         Config                = PcConomy.getPlugin(PcConomy.class).getConfig();
         GlobalBank            = new Bank();
         GlobalBorrowerManager = new BorrowerManager();
-        GlobalTownWorker      = new TownManager();
-        GlobalLicenseWorker   = new LicenseManager();
+        GlobalTownManager     = new TownManager();
+        GlobalLicenseManager  = new LicenseManager();
 
         try {
             if (new File("npc_data.json").exists())
@@ -59,9 +59,9 @@ public final class PcConomy extends JavaPlugin {
             if (new File("bank_data.json").exists())
                 GlobalBank = Loader.loadBank("bank_data");
             if (new File("towns_data.json").exists())
-                GlobalTownWorker = Loader.loadTowns("towns_data");
+                GlobalTownManager = Loader.loadTowns("towns_data");
             if (new File("license_data.json").exists())
-                GlobalLicenseWorker = Loader.loadLicenses("license_data");
+                GlobalLicenseManager = Loader.loadLicenses("license_data");
             if (new File("borrowers_data.json").exists())
                 GlobalBorrowerManager = Loader.loadBorrowers("borrowers_data");
         } catch (IOException e) {
@@ -101,8 +101,8 @@ public final class PcConomy extends JavaPlugin {
         try {
             GlobalNPC.saveNPC("npc_data");
             GlobalBank.saveBank("bank_data");
-            GlobalTownWorker.saveTown("towns_data");
-            GlobalLicenseWorker.saveLicenses("license_data");
+            GlobalTownManager.saveTown("towns_data");
+            GlobalLicenseManager.saveLicenses("license_data");
             GlobalBorrowerManager.saveBorrowers("borrowers_data");
         } catch (IOException e) {
             throw new RuntimeException(e);

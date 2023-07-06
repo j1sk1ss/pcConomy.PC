@@ -98,7 +98,7 @@ public class Bank implements IMoney {
         var count = 0;
         var bigInflation = 0d;
 
-        for (var town : PcConomy.GlobalTownWorker.towns)
+        for (var town : PcConomy.GlobalTownManager.towns)
             if (town instanceof NpcTown npcTown) {
                 count++;
                 bigInflation += npcTown.getLocalInflation();

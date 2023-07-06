@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class NPCTraderWindow {
     public static Inventory generateWindow(Player player, NPC trader) {
-        var town = PcConomy.GlobalTownWorker.getTown(Objects.requireNonNull(TownyAPI.getInstance()
+        var town = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(TownyAPI.getInstance()
                 .getTown(trader.getStoredLocation())).getName());
         if (town == null) return null;
 

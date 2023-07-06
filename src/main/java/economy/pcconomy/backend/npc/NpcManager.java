@@ -53,7 +53,7 @@ public class NpcManager {
         var cash = new CashManager();
         if (cash.amountOfCashInInventory(buyer) < price) return;
 
-        var license = PcConomy.GlobalLicenseWorker.getLicense(buyer.getUniqueId(), neededLicense);
+        var license = PcConomy.GlobalLicenseManager.getLicense(buyer.getUniqueId(), neededLicense);
         if (license == null) return;
         if (license.isOverdue()) return;
 

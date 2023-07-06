@@ -60,13 +60,13 @@ public class TraderListener implements Listener {
                 if (TraderWindow.RantedPanel.click(option).getName().equals("Арендовать на один день")) {
                     var cash = new CashManager();
                     var playerTradeLicense =
-                            PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), LicenseType.Trade);
+                            PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                     if (playerTradeLicense == null) return;
                     if (!playerTradeLicense.isOverdue()) {
                         if (cash.amountOfCashInInventory(player) < trader.Cost) return;
 
                         cash.takeCashFromInventory(trader.Cost, player);
-                        PcConomy.GlobalTownWorker.getTown(trader.homeTown).changeBudget(trader.Cost);
+                        PcConomy.GlobalTownManager.getTown(trader.homeTown).changeBudget(trader.Cost);
 
                         RantTrader(trader, player);
                         player.closeInventory();
@@ -82,7 +82,7 @@ public class TraderListener implements Listener {
                     case "Установить процент" -> player.openInventory(TraderWindow.getMarginWindow(player, trader));
                     case "Занять" -> {
                         var playerTradeLicense =
-                                PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), LicenseType.Trade);
+                                PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                         if (playerTradeLicense == null) return;
                         if (!playerTradeLicense.isOverdue()) {
                             RantTrader(trader, player);
@@ -150,7 +150,7 @@ public class TraderListener implements Listener {
                                     cash.takeCashFromInventory(price, player);
 
                                     var endPrice = price / (1 + trader.Margin);
-                                    PcConomy.GlobalTownWorker.getTown(trader.homeTown).changeBudget(price - endPrice);
+                                    PcConomy.GlobalTownManager.getTown(trader.homeTown).changeBudget(price - endPrice);
                                     trader.Revenue += endPrice;
                                 }
                             }

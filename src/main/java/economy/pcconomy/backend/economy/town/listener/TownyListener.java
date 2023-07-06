@@ -15,7 +15,7 @@ public class TownyListener implements Listener {
         var town = event.getTown();
 
         PcConomy.GlobalBank.BankBudget += 250.0d;
-        PcConomy.GlobalTownWorker.createTownObject(town, false);
+        PcConomy.GlobalTownManager.createTownObject(town, false);
     }
 
     @EventHandler
@@ -26,13 +26,13 @@ public class TownyListener implements Listener {
     @EventHandler
     public void OnDestroy(DeleteTownEvent event) {
         var town = event.getTownName();
-        PcConomy.GlobalTownWorker.destroyTown(town);
+        PcConomy.GlobalTownManager.destroyTown(town);
     }
 
     @EventHandler
     public void onDied(TownRuinedEvent event) {
         var town = event.getTown().getName();
-        PcConomy.GlobalTownWorker.destroyTown(town);
+        PcConomy.GlobalTownManager.destroyTown(town);
     }
 
     @EventHandler
@@ -41,7 +41,7 @@ public class TownyListener implements Listener {
             PcConomy.GlobalBank.BankBudget += town.getPlotTax();
         }
 
-        for (var town : PcConomy.GlobalTownWorker.towns) {
+        for (var town : PcConomy.GlobalTownManager.towns) {
             town.lifeCycle();
         }
 

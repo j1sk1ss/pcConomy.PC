@@ -35,13 +35,13 @@ public class License {
         var cash = new CashManager();
         if (cash.amountOfCashInInventory(player) < price) return;
 
-        if (PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), licenseType) != null)
-            PcConomy.GlobalLicenseWorker.Licenses.remove(PcConomy.GlobalLicenseWorker.getLicense(player.getUniqueId(), licenseType));
+        if (PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType) != null)
+            PcConomy.GlobalLicenseManager.Licenses.remove(PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType));
 
         cash.takeCashFromInventory(price, player);
         PcConomy.GlobalBank.BankBudget += price;
 
-        PcConomy.GlobalLicenseWorker.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));
+        PcConomy.GlobalLicenseManager.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));
         ItemManager.giveItems(ItemManager.setName(ItemManager.setLore(new ItemStack(Material.PAPER),
                 licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()), "Лицензия"), player);
     }

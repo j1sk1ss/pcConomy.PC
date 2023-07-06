@@ -23,7 +23,7 @@ public class NpcTrader extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        ((NpcTown)PcConomy.GlobalTownWorker.getTown(TownyAPI.getInstance().getTownName(
+        ((NpcTown)PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTownName(
                 this.getNPC().getStoredLocation()))).generateLocalPrices();
         player.openInventory(Objects.requireNonNull(NPCTraderWindow.generateWindow(player, this.getNPC())));
     }
@@ -33,9 +33,9 @@ public class NpcTrader extends Trait {
         var player = event.getClicker();
 
         if (!event.getNPC().equals(this.getNPC())) return;
-        ((NpcTown)PcConomy.GlobalTownWorker.getTown(TownyAPI.getInstance().getTownName(
+        ((NpcTown)PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTownName(
                 this.getNPC().getStoredLocation()))).generateLocalPrices();
-        ((NpcTown)PcConomy.GlobalTownWorker.getTown(TownyAPI.getInstance().getTownName(
+        ((NpcTown)PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTownName(
                 this.getNPC().getStoredLocation()))).sellResourceToStorage(player.getInventory().getItemInMainHand(), player);
     }
 }

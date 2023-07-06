@@ -27,7 +27,7 @@ public class NPCTraderListener implements Listener {
 
             if (!player.getInventory().contains(currentItem))
                 if (event.isLeftClick()) {
-                    ((NpcTown)(PcConomy.GlobalTownWorker.getTown(Objects.requireNonNull(town).getName()))).buyResourceFromStorage(currentItem, player);
+                    ((NpcTown)(PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getName()))).buyResourceFromStorage(currentItem, player);
                     player.openInventory(Objects.requireNonNull(NPCTraderWindow.generateWindow(player,
                             CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2])))));
                 }

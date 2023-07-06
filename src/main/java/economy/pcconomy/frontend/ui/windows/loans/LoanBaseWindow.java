@@ -24,7 +24,7 @@ public abstract class LoanBaseWindow {
      */
     protected static boolean canReadHistory(Player player) {
         var town = TownyAPI.getInstance().getTown(player.getLocation());
-        var licenseHistory = PcConomy.GlobalLicenseWorker
+        var licenseHistory = PcConomy.GlobalLicenseManager
                 .getLicense(Objects.requireNonNull(town).getMayor().getUUID(), LicenseType.LoanHistory);
         if (licenseHistory == null) return false;
 
