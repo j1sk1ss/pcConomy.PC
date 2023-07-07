@@ -76,13 +76,13 @@ After all steps u can set rant price, town margin and leave trader for finding c
 | /create_trader      | Creates trader npc                   |
 | /create_npc_trader  | Creates NPC trader npc               |
 | /create_licensor    | Creates licensor npc                 |
-| /take_cash          | Take cash from player`s inventory    |
-| /create_cash        | Create cash                          |
+| /take_cash [Amount]         | Take cash from player`s inventory    |
+| /create_cash [Amount]        | Create cash                          |
 | /reload_towns       | Reload and save towns                |
 | /save_data          | Save plugin data                     |
-| /switch_town_to_npc | Switch player`s town into NPC town   |
+| /switch_town_to_npc [Town name] | Switch player`s town into NPC town end back   |
 | /town_menu          | Open mayor menu                      |
-| /add_trade_to_town  | Add new trade resource into NPC town |
+| /add_trade_to_town [Town name] [Resource] [Amount] | Add new trade resource into NPC town |
 | /reload_npc         | Reload and save NPC                  |
 | /full_info          | Get all info of plugin               |
 
