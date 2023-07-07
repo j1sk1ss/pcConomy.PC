@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.economy;
 
-import economy.pcconomy.backend.economy.bank.objects.Loan;
+import economy.pcconomy.backend.economy.objects.Loan;
 
 import java.util.List;
 

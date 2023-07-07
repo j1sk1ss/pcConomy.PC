@@ -127,8 +127,6 @@ public class CashManager {
             return;
         }
 
-        if (ItemManager.getEmptySlots(player) < 1) return;
-
         ItemManager.giveItems(CashManager.createCashObject(amount), player);
     }
 
@@ -139,7 +137,6 @@ public class CashManager {
      */
     public void giveSpecialAmountOfCashToPlayer(double amount, Player player) {
         var changeNumeric = ChangeManager.getChange(amount);
-        if (ItemManager.getEmptySlots(player) < changeNumeric.size()) return;
 
         List<ItemStack> change = CashManager.getChangeInCash(changeNumeric);
         ItemManager.giveItems(change, player);
@@ -163,7 +160,6 @@ public class CashManager {
         var playerCashAmount = amountOfCashInInventory(player);
 
         if (playerCashAmount < amount) return;
-        if (ItemManager.getEmptySlots(player) < ChangeManager.getChange(amount).size()) return;
 
         ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
         giveSpecialAmountOfCashToPlayer(playerCashAmount - amount, player);

@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.economy.bank.objects;
+package economy.pcconomy.backend.economy.objects;
 
 import org.bukkit.entity.Player;
 

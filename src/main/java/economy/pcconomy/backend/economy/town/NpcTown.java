@@ -1,13 +1,13 @@
-package economy.pcconomy.backend.economy.town.objects.town;
+package economy.pcconomy.backend.economy.town;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.bank.objects.Loan;
+import economy.pcconomy.backend.economy.objects.Loan;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
-import economy.pcconomy.backend.economy.town.objects.scripts.StorageManager;
+import economy.pcconomy.backend.economy.town.scripts.StorageManager;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import org.bukkit.Material;
@@ -41,13 +41,15 @@ public class NpcTown extends Town {
         lifeCycle();
     }
 
-    public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage");
-    public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget");
+    public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage", .5);
+    public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget", .5);
     public final List<ItemStack> Storage;
     public final String TownName;
     public final List<Loan> Credit;
     private double previousBudget = 10000;
     private final int StartStorageAmount;
+
+    private final int purchaseSize = 8;
 
     /**
      * Buy resources from town storage
@@ -55,22 +57,24 @@ public class NpcTown extends Town {
      * @param buyer  Player who want by this item
      */
     public void buyResourceFromStorage(ItemStack itemStack, Player buyer) {
-        var itemAmount = 8;
-        var price = ItemManager.getPriceFromLore(itemStack, 1) * itemAmount;
+        var price = ItemManager.getPriceFromLore(itemStack, 1) * purchaseSize;
 
-        if (StorageManager.getAmountOfResource(itemStack, Storage) * usefulStorage < itemAmount) {
+        if (StorageManager.getAmountOfResource(itemStack, Storage) * usefulStorage < purchaseSize) {
             buyer.sendMessage("Извините, но данного товара и у нас самих не очень много.");
             return;
         }
 
         var cash = new CashManager();
-        if (cash.amountOfCashInInventory(buyer) < price) return;
+        if (cash.amountOfCashInInventory(buyer) < price) {
+            buyer.sendMessage("Приходи когда мммммммм, будешь немного по богаче.");
+            return;
+        }
 
         cash.takeCashFromInventory(price, buyer);
         changeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
-        ItemManager.giveItems(new ItemStack(itemStack.getType(), itemAmount), buyer);
-        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) - itemAmount, Storage);
+        ItemManager.giveItems(new ItemStack(itemStack.getType(), purchaseSize), buyer);
+        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) - purchaseSize, Storage);
 
         generateLocalPrices();
     }
@@ -111,14 +115,12 @@ public class NpcTown extends Town {
     public void generateLocalPrices() {
         var budget = getBudget();
 
-        for (var itemStack : Storage) {
-            var amount = itemStack.getAmount() + 1;
-            var price = Math.abs(budget / amount);
-
-            ItemManager.setLore(itemStack, "Цена за 1 шт. (Покупка X8):\n" +
-                    Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 100d + CashManager.currencySigh +
+        for (var i = 0; i < Storage.size(); i++) {
+            var price = Math.abs(budget / Storage.get(i).getAmount() + 1);
+            Storage.set(i, ItemManager.setLore(Storage.get(i), "Цена за " + purchaseSize + " шт.:\n" +
+                    (purchaseSize * Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 10d) + CashManager.currencySigh +
                     "\nБез НДС в " + PcConomy.GlobalBank.VAT * 100 + "%:\n" +
-                    Math.round(price * 100d) / 1000d + CashManager.currencySigh);
+                    (purchaseSize * Math.round(price * 100d) / 100d) + CashManager.currencySigh));
         }
     }
 

@@ -4,14 +4,14 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.town.objects.town.NpcTown;
+import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.traits.Banker;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.npc.traits.NpcLoaner;
 import economy.pcconomy.backend.npc.traits.Licensor;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
-import economy.pcconomy.backend.economy.town.objects.scripts.StorageManager;
+import economy.pcconomy.backend.economy.town.scripts.StorageManager;
 import economy.pcconomy.backend.npc.traits.NpcTrader;
 import economy.pcconomy.frontend.ui.windows.Window;
 

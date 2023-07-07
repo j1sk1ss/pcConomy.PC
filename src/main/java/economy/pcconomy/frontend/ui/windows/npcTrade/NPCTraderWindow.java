@@ -3,7 +3,7 @@ package economy.pcconomy.frontend.ui.windows.npcTrade;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.town.objects.town.NpcTown;
+import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
@@ -27,9 +26,8 @@ public class NPCTraderWindow {
                 town.getName() + " " + trader.getId()));
 
         var townStorage = ((NpcTown)town).Storage;
-
         for (var item : townStorage)
-            window.addItem(new Item(item, ItemManager.getName(item), String.join("\n", ItemManager.getLore(item))));
+            window.addItem(ItemManager.setLore(item, String.join("\n", ItemManager.getLore(item))));
 
         return window;
     }

@@ -1,7 +1,7 @@
 package economy.pcconomy.backend.economy.bank.scripts;
 
 import com.google.gson.GsonBuilder;
-import economy.pcconomy.backend.economy.bank.objects.Borrower;
+import economy.pcconomy.backend.economy.objects.Borrower;
 import org.bukkit.entity.Player;
 
 import java.io.FileWriter;

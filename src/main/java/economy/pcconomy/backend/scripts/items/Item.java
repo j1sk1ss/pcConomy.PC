@@ -2,6 +2,7 @@ package economy.pcconomy.backend.scripts.items;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Item extends ItemStack {
     /**
@@ -9,6 +10,7 @@ public class Item extends ItemStack {
      * @param name Name
      */
     public Item(String name) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
@@ -22,6 +24,7 @@ public class Item extends ItemStack {
      * @param lore Lore line (use delimiters)
      */
     public Item(String name, String lore) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
@@ -37,6 +40,7 @@ public class Item extends ItemStack {
      * @param material Material
      */
     public Item(String name, String lore, Material material) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
@@ -53,6 +57,7 @@ public class Item extends ItemStack {
      * @param amount Amount
      */
     public Item(String name, String lore, Material material, int amount) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
@@ -70,6 +75,7 @@ public class Item extends ItemStack {
      * @param dataModel Model data
      */
     public Item(String name, String lore, Material material, int amount, int dataModel) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
@@ -86,14 +92,18 @@ public class Item extends ItemStack {
      * @param name New name
      */
     public Item(ItemStack itemStack, String name) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, String.join(" ",ItemManager.getLore(itemStack))).getItemMeta());
         super.setType(itemStack.getType());
         super.setAmount(itemStack.getAmount());
 
-        super.getItemMeta().setCustomModelData(itemStack.getItemMeta().getCustomModelData());
+        if (cloned.getItemMeta().hasCustomModelData())
+            super.getItemMeta().setCustomModelData(itemStack.getItemMeta().getCustomModelData());
+
+        if (cloned.getItemMeta().hasLore())
+            super.setItemMeta(ItemManager.setLore(cloned, String.join("\n", ItemManager.getLore(itemStack))).getItemMeta());
     }
 
     /**
@@ -103,6 +113,7 @@ public class Item extends ItemStack {
      * @param lore New lore
      */
     public Item(ItemStack itemStack, String name, String lore) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
@@ -110,7 +121,8 @@ public class Item extends ItemStack {
         super.setType(itemStack.getType());
         super.setAmount(itemStack.getAmount());
 
-        super.getItemMeta().setCustomModelData(itemStack.getItemMeta().getCustomModelData());
+        if (cloned.getItemMeta().hasLore())
+            super.setItemMeta(ItemManager.setLore(cloned, String.join("\n", ItemManager.getLore(itemStack))).getItemMeta());
     }
 
     /**
@@ -119,14 +131,18 @@ public class Item extends ItemStack {
      * @param material New material
      */
     public Item(ItemStack itemStack, Material material) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, ItemManager.getName(itemStack)).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, String.join(" ", ItemManager.getLore(itemStack))).getItemMeta());
         super.setType(material);
         super.setAmount(itemStack.getAmount());
 
-        super.getItemMeta().setCustomModelData(itemStack.getItemMeta().getCustomModelData());
+        if (cloned.getItemMeta().hasCustomModelData())
+            super.getItemMeta().setCustomModelData(itemStack.getItemMeta().getCustomModelData());
+
+        if (cloned.getItemMeta().hasLore())
+            super.setItemMeta(ItemManager.setLore(cloned, String.join("\n", ItemManager.getLore(itemStack))).getItemMeta());
     }
 
     /**
@@ -135,13 +151,17 @@ public class Item extends ItemStack {
      * @param dataModel New dataModel
      */
     public Item(ItemStack itemStack, int dataModel) {
+        super(Material.PAPER);
         var cloned = super.clone();
 
         super.setItemMeta(ItemManager.setName(cloned, ItemManager.getName(itemStack)).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, String.join(" ", ItemManager.getLore(itemStack))).getItemMeta());
         super.setType(itemStack.getType());
         super.setAmount(itemStack.getAmount());
 
-        super.getItemMeta().setCustomModelData(dataModel);
+        if (cloned.getItemMeta().hasCustomModelData())
+            super.getItemMeta().setCustomModelData(itemStack.getItemMeta().getCustomModelData());
+
+        if (cloned.getItemMeta().hasLore())
+            super.setItemMeta(ItemManager.setLore(cloned, String.join("\n", ItemManager.getLore(itemStack))).getItemMeta());
     }
 }

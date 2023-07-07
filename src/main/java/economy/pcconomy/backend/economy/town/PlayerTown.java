@@ -1,8 +1,8 @@
-package economy.pcconomy.backend.economy.town.objects.town;
+package economy.pcconomy.backend.economy.town;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
-import economy.pcconomy.backend.economy.bank.objects.Loan;
+import economy.pcconomy.backend.economy.objects.Loan;
 import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
 
 import java.util.ArrayList;

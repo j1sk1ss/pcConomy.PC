@@ -2,8 +2,8 @@ package economy.pcconomy.backend.economy.bank.scripts;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.IMoney;
-import economy.pcconomy.backend.economy.bank.objects.Borrower;
-import economy.pcconomy.backend.economy.bank.objects.Loan;
+import economy.pcconomy.backend.economy.objects.Borrower;
+import economy.pcconomy.backend.economy.objects.Loan;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

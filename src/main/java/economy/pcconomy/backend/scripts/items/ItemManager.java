@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import net.kyori.adventure.text.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +21,11 @@ public class ItemManager {
      */
     public static ItemStack setLore(ItemStack item, String loreLine) {
         var itemMeta = Objects.requireNonNull(item).getItemMeta();
-        List<Component> lore = List.of(Component.text(loreLine));
+        var lore = new ArrayList<Component>();
+
+        var lines = loreLine.split("\n");
+        for (var line : lines)
+            lore.add(Component.text(line));
 
         itemMeta.lore(lore);
         Objects.requireNonNull(item).setItemMeta(itemMeta);
@@ -74,20 +79,19 @@ public class ItemManager {
      * @param player Player that will take this list
      */
     public static void giveItems(List<ItemStack> itemStacks, Player player) {
-        if (getEmptySlots(player) < itemStacks.size()) return;
-
         for (var item : itemStacks)
-            player.getInventory().addItem(item);
+            player.getInventory().addItem(item).forEach((index, itemStack) ->
+                    player.getWorld().dropItem(player.getLocation(), itemStack));
     }
 
     /**
      * Give item to player
-     * @param itemStack Item
+     * @param item Item
      * @param player Player that will take this item
      */
-    public static void giveItems(ItemStack itemStack, Player player) {
-        if (getEmptySlots(player) < 1) return;
-        player.getInventory().addItem(itemStack);
+    public static void giveItems(ItemStack item, Player player) {
+        player.getInventory().addItem(item).forEach((index, itemStack) ->
+                player.getWorld().dropItem(player.getLocation(), itemStack));
     }
 
     /**
@@ -96,20 +100,19 @@ public class ItemManager {
      * @param player Player that will take this list
      */
     public static void giveItemsWithoutLore(List<ItemStack> itemStacks, Player player) {
-        if (getEmptySlots(player) < itemStacks.size()) return;
-
         for (var item : itemStacks)
-            player.getInventory().addItem(ItemManager.setLore(item, ""));
+            player.getInventory().addItem(ItemManager.setLore(item, ""))
+                    .forEach((index, itemStack) -> player.getWorld().dropItem(player.getLocation(), itemStack));;
     }
 
     /**
      * Give item to player without any lore
-     * @param itemStack Item
+     * @param item Item
      * @param player Player that will take this item
      */
-    public static void giveItemsWithoutLore(ItemStack itemStack, Player player) {
-        if (getEmptySlots(player) < 1) return;
-        player.getInventory().addItem(ItemManager.setLore(itemStack, ""));
+    public static void giveItemsWithoutLore(ItemStack item, Player player) {
+        player.getInventory().addItem(ItemManager.setLore(item, ""))
+                .forEach((index, itemStack) -> player.getWorld().dropItem(player.getLocation(), itemStack));
     }
 
     /**
@@ -140,22 +143,6 @@ public class ItemManager {
 
             break;
         }
-    }
-
-    /**
-     * Gets count of empty slots
-     * @param player Player that's inventory will be checked
-     * @return Count of empty slots
-     */
-    public static int getEmptySlots(Player player) {
-        var inventory = player.getInventory();
-        var cont = inventory.getContents();
-        int i = 0;
-
-        for (var item : cont)
-            if (item != null && item.getType() != Material.AIR) i++;
-
-        return 36 - i;
     }
 
     /**
