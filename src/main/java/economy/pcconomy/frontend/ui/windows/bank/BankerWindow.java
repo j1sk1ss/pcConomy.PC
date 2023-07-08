@@ -5,8 +5,6 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.ChangeManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.frontend.ui.objects.Panel;
-import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.windows.IWindow;
 
 import net.kyori.adventure.text.Component;
@@ -15,12 +13,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public class BankerWindow implements IWindow {
-    public Inventory generateWindow(Player player) { // 9 -> 26
+    public Inventory generateWindow(Player player) {
         var window = Bukkit.createInventory(player, 54, Component.text("Банк"));
 
         var enableBalance   = PcConomy.GlobalBank.getUsefulAmountOfBudget();
@@ -28,11 +23,18 @@ public class BankerWindow implements IWindow {
         var cashInInventory = new CashManager().amountOfCashInInventory(player);
 
         var textBalance = playerBalance + "";
-        for (var i = 9; i < Math.min(textBalance.toCharArray().length + 9, 27); i++) {
-            var currentChar = textBalance.toCharArray()[i];
-            if (currentChar == '.') {//TODO: DATA MODEL
-                window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000));
-                continue;
+        var charArray  = textBalance.toCharArray();
+        for (var i = 9; i < Math.min(charArray.length + 9, 27); i++) {
+            var currentChar = charArray[i - 9];
+            switch (currentChar) {
+                case 'E' -> {
+                    window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000));
+                    continue;
+                } //TODO: DATA MODEL
+                case '.' -> {
+                    window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000));
+                    continue;
+                }
             }
 
             window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1,
@@ -60,7 +62,7 @@ public class BankerWindow implements IWindow {
 
     private void printButtons(int position, Inventory window) {
         for (var j = 1; j < 8; j++) //TODO: DATA MODEL
-            window.setItem(j + (position + 5 * (j / 4)), new Item(new ItemStack(Material.RED_WOOL),
-                    (position == 36 ? "-" : "") + ChangeManager.Denomination.get(j) + CashManager.currencySigh));
+            window.setItem(j + (position + 5 * (j / 4)), new Item("Действия",
+                    (position == 36 ? "-" : "") + ChangeManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000));
     }
 }
