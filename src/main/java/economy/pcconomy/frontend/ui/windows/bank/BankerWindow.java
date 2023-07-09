@@ -19,7 +19,7 @@ public class BankerWindow implements IWindow {
 
         var enableBalance   = PcConomy.GlobalBank.getUsefulAmountOfBudget();
         var playerBalance   = new BalanceManager().getBalance(player);
-        var cashInInventory = new CashManager().amountOfCashInInventory(player);
+        var cashInInventory = CashManager.amountOfCashInInventory(player);
 
         var textBalance = playerBalance + "";
         var charArray  = textBalance.toCharArray();

@@ -24,7 +24,8 @@ public class CashManager {
     /**
      * Declination of currency name
      */
-    private static final HashMap<String, String> currencyNameCases = new HashMap<>() { static {
+    private static final HashMap<String, String> currencyNameCases = new HashMap<>();
+    static {
         currencyNameCases.put("is", "Алеф"); // Единственное число
         currencyNameCases.put("rs", "Алефа");
         currencyNameCases.put("ds", "Алефу");
@@ -38,7 +39,7 @@ public class CashManager {
         currencyNameCases.put("vp", "Алефы");
         currencyNameCases.put("tp", "Алефами");
         currencyNameCases.put("pp", "Алефах");
-    }};
+    }
 
     /**
      * List of nominations
@@ -136,33 +137,23 @@ public class CashManager {
      * @param player Player that will take this cash
      */
     public static void giveCashToPlayer(double amount, Player player) {
-        if (!Denomination.contains(amount)) {
-            giveSpecialAmountOfCashToPlayer(amount, player);
-            return;
+        var playerCashAmount = amountOfCashInInventory(player);
+
+        var wallet = Wallet.getWallet(player);
+        var walletAmount = 0d;
+
+        if (wallet != null) {
+            if (Wallet.getWalletAmount(wallet) + amount < 0) {
+                walletAmount = -Wallet.getWalletAmount(wallet);
+                Wallet.changeCashInWallet(player, walletAmount);
+            }
+            else {
+                Wallet.changeCashInWallet(player, amount);
+                return;
+            }
         }
 
-        if (Wallet.getWallet(player) != null) {
-            Wallet.changeCashInWallet(player, amount);
-            return;
-        }
-
-        ItemManager.giveItems(CashManager.createCashObject(amount), player);
-    }
-
-    /**
-     * Gives to player items of cash with special amount
-     * @param amount Amount of cash
-     * @param player Player that will take this cash
-     */
-    public static void giveSpecialAmountOfCashToPlayer(double amount, Player player) {
-        if (Wallet.getWallet(player) != null) {
-            Wallet.changeCashInWallet(player, amount);
-            return;
-        }
-
-        var changeNumeric = getChange(amount);
-        List<ItemStack> change = CashManager.getChangeInCash(changeNumeric);
-        ItemManager.giveItems(change, player);
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount + (amount - walletAmount))), player);
     }
 
     /**
@@ -171,7 +162,7 @@ public class CashManager {
      * @return Change
      */
     public static List<Integer> getChange(double amount) {
-        List<Integer> change = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        var change = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
         for (int i = 0; i < Denomination.size(); i++)
             while (amount - Denomination.get(i) >= 0) {
@@ -207,7 +198,7 @@ public class CashManager {
         if (playerCashAmount < amount) return;
 
         ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-        giveSpecialAmountOfCashToPlayer(playerCashAmount - amount, player);
+        giveCashToPlayer(-amount, player);
     }
     
     public static String getCurrencyNameCase(String currencyName) { // Получение склонённого названия валюты

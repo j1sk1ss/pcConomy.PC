@@ -3,19 +3,20 @@ package economy.pcconomy.backend.cash.items;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Wallet {
-    private static final int walletDataModel = 17000; //TODO: DATA MODEL
+    private static final int walletDataModel = 17050; //TODO: DATA MODEL
 
     /**
      * Create new wallet
      * @param player Player that will take this wallet
      */
     public static void giveWallet(Player player) {
-        ItemManager.giveItems(new Item("Кошелёк", "0 алеф", Material.BOOK, 1, walletDataModel), player);
+        ItemManager.giveItems(new Item("Кошелёк", "0 Алеф", Material.BOOK, 1, walletDataModel), player);
     }
 
     /**
@@ -35,7 +36,8 @@ public class Wallet {
      */
     public static ItemStack getWallet(Player player) {
         for (var item : player.getInventory())
-            if (isWallet(item)) return item;
+            if (item != null)
+                if (isWallet(item)) return item;
 
         return null;
     }
@@ -46,7 +48,7 @@ public class Wallet {
      * @return Wallet status
      */
     public static boolean isWallet(ItemStack itemStack) {
-        return itemStack.getItemMeta().getCustomModelData() == walletDataModel; //TODO: DATA MODEL
+        return StringUtils.containsAny(ItemManager.getLore(itemStack).get(0).toLowerCase(), "алеф");
     }
 
     /**
@@ -55,7 +57,7 @@ public class Wallet {
      * @return Amount
      */
     public static double getWalletAmount(ItemStack wallet) {
-        return Double.parseDouble(ItemManager.getLore(wallet).get(0));
+        return Double.parseDouble(ItemManager.getLore(wallet).get(0).split(" ")[0]);
     }
 
     /**
