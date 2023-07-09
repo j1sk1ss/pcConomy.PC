@@ -3,6 +3,7 @@ package economy.pcconomy.backend.link;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.traits.Banker;
 import economy.pcconomy.backend.npc.traits.Loaner;
@@ -92,6 +93,9 @@ public class CommandManager implements CommandExecutor {
 
         if (command.getName().equals("set_day_bank_budget"))
             PcConomy.GlobalBank.setUsefulBudgetPercent(Double.parseDouble(args[0]));
+
+        if (command.getName().equals("create_wallet"))
+            Wallet.giveWallet((Player) sender);
 
         return true;
     }

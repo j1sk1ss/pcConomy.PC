@@ -11,6 +11,8 @@ commands:
     usage: /take_cash
   create_cash:
     usage: /create_cash
+  create_wallet:
+    usage: /create_wallet
   reload_towns:
     usage: /reload_towns
   save_data:

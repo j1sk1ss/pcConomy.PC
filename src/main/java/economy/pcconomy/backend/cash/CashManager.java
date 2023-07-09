@@ -1,5 +1,6 @@
 package economy.pcconomy.backend.cash;
 
+import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import org.bukkit.Material;
@@ -140,6 +141,11 @@ public class CashManager {
             return;
         }
 
+        if (Wallet.getWallet(player) != null) {
+            Wallet.changeCashInWallet(player, amount);
+            return;
+        }
+
         ItemManager.giveItems(CashManager.createCashObject(amount), player);
     }
 
@@ -149,8 +155,12 @@ public class CashManager {
      * @param player Player that will take this cash
      */
     public static void giveSpecialAmountOfCashToPlayer(double amount, Player player) {
-        var changeNumeric = getChange(amount);
+        if (Wallet.getWallet(player) != null) {
+            Wallet.changeCashInWallet(player, amount);
+            return;
+        }
 
+        var changeNumeric = getChange(amount);
         List<ItemStack> change = CashManager.getChangeInCash(changeNumeric);
         ItemManager.giveItems(change, player);
     }
@@ -179,7 +189,12 @@ public class CashManager {
      * @return Amount of cah in player`s inventory
      */
     public static double amountOfCashInInventory(Player player) {
-        return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
+        var playerCashAmount = CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
+        var wallet = Wallet.getWallet(player);
+        if (wallet != null)
+            playerCashAmount += Wallet.getWalletAmount(wallet);
+
+        return playerCashAmount;
     }
 
     /**
@@ -189,7 +204,6 @@ public class CashManager {
      */
     public static void takeCashFromInventory(double amount, Player player) {
         var playerCashAmount = amountOfCashInInventory(player);
-
         if (playerCashAmount < amount) return;
 
         ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
@@ -199,9 +213,12 @@ public class CashManager {
     public static String getCurrencyNameCase(String currencyName) { // Получение склонённого названия валюты
     	return currencyNameCases.get(currencyName);
     }
-    
-    // TODO заменить везде слова валюты с количеством денег на этот метод
-    // Например ("В кошельке лежит " + amount + CashWorker.getCurrencyNameByNum(amount))
+
+    /**
+     * Get currency name for wallet
+     * @param num Amount of cash
+     * @return Name of currency
+     */
     public static String getCurrencyNameByNum(int num) { // Получение склонённого названия валюты в зависимости от суммы денег (в именительном падеже)
     	if (num % 10 == 1 && num % 100 != 11) return currencyNameCases.get("is");
     	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14)) return currencyNameCases.get("rs");
