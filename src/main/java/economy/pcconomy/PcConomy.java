@@ -2,6 +2,7 @@ package economy.pcconomy;
 
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 
+import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.link.CommandManager;
 import economy.pcconomy.backend.npc.NpcManager;
@@ -43,6 +44,7 @@ public final class PcConomy extends JavaPlugin {
     public static BorrowerManager GlobalBorrowerManager;
     public static TownManager GlobalTownManager;
     public static LicenseManager GlobalLicenseManager;
+    public static ShareManager GlobalShareManager;
 
     @Override
     public void onEnable() {
@@ -54,6 +56,7 @@ public final class PcConomy extends JavaPlugin {
         GlobalBorrowerManager = new BorrowerManager();
         GlobalTownManager     = new TownManager();
         GlobalLicenseManager  = new LicenseManager();
+        GlobalShareManager    = new ShareManager();
 
         try {
             if (new File("npc_data.json").exists())
@@ -64,6 +67,8 @@ public final class PcConomy extends JavaPlugin {
                 GlobalTownManager = Loader.loadTowns("towns_data");
             if (new File("license_data.json").exists())
                 GlobalLicenseManager = Loader.loadLicenses("license_data");
+            if (new File("shares_data.json").exists())
+                GlobalLicenseManager = Loader.loadLicenses("shares_data");
             if (new File("borrowers_data.json").exists())
                 GlobalBorrowerManager = Loader.loadBorrowers("borrowers_data");
         } catch (IOException e) {
@@ -74,7 +79,7 @@ public final class PcConomy extends JavaPlugin {
                 new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
                 new NPCTraderListener(), new NPCLoanerListener());
 
-        for (Listener listener: listeners)
+        for (var listener: listeners)
             Bukkit.getPluginManager().registerEvents(listener, this);
 
         xConomyAPI  = new XConomyAPI();
@@ -105,6 +110,7 @@ public final class PcConomy extends JavaPlugin {
             GlobalBank.saveBank("bank_data");
             GlobalTownManager.saveTown("towns_data");
             GlobalLicenseManager.saveLicenses("license_data");
+            GlobalShareManager.saveShares("shares_data");
             GlobalBorrowerManager.saveBorrowers("borrowers_data");
         } catch (IOException e) {
             throw new RuntimeException(e);

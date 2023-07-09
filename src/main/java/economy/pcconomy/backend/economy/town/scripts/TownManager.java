@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class TownManager {
     public final List<Town> towns = new ArrayList<>();
@@ -37,11 +38,11 @@ public class TownManager {
 
     /**
      * Destroys town from plugin
-     * @param townName Name of town that was destroyed
+     * @param townUUID UUID of town that was destroyed
      */
-    public void destroyTown(String townName) {
+    public void destroyTown(UUID townUUID) {
         for (var townObject : towns)
-            if (townObject.getName().equals(townName)) {
+            if (townObject.getUUID().equals(townUUID)) {
                 towns.remove(townObject);
                 break;
             }
@@ -49,26 +50,26 @@ public class TownManager {
 
     /**
      * Changes town NPS status
-     * @param townName Name of town that change status
+     * @param townUUID Name of town that change status
      * @param isNPC New status
      */
-    public void changeNPCStatus(String townName, boolean isNPC) {
-        var townObject = getTown(townName);
+    public void changeNPCStatus(UUID townUUID, boolean isNPC) {
+        var townObject = getTown(townUUID);
         townObject = isNPC ?
-                new NpcTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getName()))) :
-                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getName())));
+                new NpcTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID()))) :
+                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID())));
 
         setTownObject(townObject);
     }
 
     /**
      * Gets town from list of town in plugin
-     * @param townName Name of town
+     * @param townUUID Name of town
      * @return TownObject
      */
-    public Town getTown(String townName) {
+    public Town getTown(UUID townUUID) {
         for (var townObject : towns)
-            if (townObject.getName().equals(townName))
+            if (townObject.getUUID().equals(townUUID))
                 return townObject;
 
         return null;
@@ -80,10 +81,19 @@ public class TownManager {
      */
     public void setTownObject(Town town) {
         for (var currentTown : towns)
-            if (currentTown.getName().equals(town.getName())) {
+            if (currentTown.getUUID().equals(town.getUUID())) {
                 towns.remove(currentTown);
                 towns.add(town);
             }
+    }
+
+    /**
+     * Get town prefix
+     * @param town Town
+     * @return Prefix
+     */
+    public String getTownPrefix(UUID town) {
+        return Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getPrefix();
     }
 
     /**

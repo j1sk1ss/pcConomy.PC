@@ -19,11 +19,11 @@ import java.util.Objects;
 public class NPCTraderWindow {
     public static Inventory generateWindow(Player player, NPC trader) {
         var town = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(TownyAPI.getInstance()
-                .getTown(trader.getStoredLocation())).getName());
+                .getTown(trader.getStoredLocation())).getUUID());
         if (town == null) return null;
 
         var window = Bukkit.createInventory(player, 54, Component.text("Магазин " +
-                town.getName() + " " + trader.getId()));
+                TownyAPI.getInstance().getTown(town.getUUID()).getName() + " " + trader.getId()));
 
         var townStorage = ((NpcTown)town).Storage;
         for (var item : townStorage)

@@ -3,6 +3,7 @@ package economy.pcconomy.backend.save;
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
+import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
@@ -84,6 +85,20 @@ public class Loader {
                 .disableHtmlEscaping()
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), LicenseManager.class);
+    }
+
+    /***
+     * Loads shares data from .json
+     * @param fileName File name (without format)
+     * @return License manager object
+     * @throws IOException If something goes wrong
+     */
+    public static ShareManager loadShares(String fileName) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), ShareManager.class);
     }
 }
 

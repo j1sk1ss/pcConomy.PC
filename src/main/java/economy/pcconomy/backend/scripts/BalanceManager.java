@@ -5,6 +5,7 @@ import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class BalanceManager {
     private final XConomyAPI xConomyAPI = PcConomy.xConomyAPI;

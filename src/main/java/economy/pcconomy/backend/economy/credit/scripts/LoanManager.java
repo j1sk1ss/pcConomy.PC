@@ -129,8 +129,10 @@ public class LoanManager {
             }
 
             var balanceWorker = new BalanceManager();
-            if (balanceWorker.notSolvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner))))
+            if (balanceWorker.notSolvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
                 loan.expired += 1;
+                continue;
+            }
 
             balanceWorker.takeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
             loan.amount -= loan.dailyPayment;

@@ -16,16 +16,16 @@ public class PlayerTown extends Town {
      * @param town TownyAPI town
      */
     public PlayerTown(com.palmergames.bukkit.towny.object.Town town) {
-        TownName   = town.getName();
+        TownUUID   = town.getUUID();
         Credit     = new ArrayList<>();
     }
 
-    public final String TownName;
+    public final UUID TownUUID;
     public final List<Loan> Credit;
 
     @Override
-    public String getName() {
-        return TownName;
+    public UUID getUUID() {
+        return TownUUID;
     }
 
     @Override
@@ -49,6 +49,6 @@ public class PlayerTown extends Town {
 
     @Override
     public BankAccount getBankAccount() {
-        return Objects.requireNonNull(TownyAPI.getInstance().getTown(TownName)).getAccount();
+        return Objects.requireNonNull(TownyAPI.getInstance().getTown(TownUUID)).getAccount();
     }
 }

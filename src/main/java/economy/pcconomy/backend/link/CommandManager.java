@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromInventory;
@@ -70,7 +71,7 @@ public class CommandManager implements CommandExecutor {
             PcConomy.GlobalNPC.createNPC((Player) sender, new Licensor());
 
         if (command.getName().equals("switch_town_to_npc"))
-            PcConomy.GlobalTownManager.changeNPCStatus(args[0], true);
+            PcConomy.GlobalTownManager.changeNPCStatus(UUID.fromString(args[0]), true);
 
         if (command.getName().equals("town_menu")) {
             if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player) sender)).getMayor().getName().equals((sender).getName())) return true;
@@ -79,7 +80,7 @@ public class CommandManager implements CommandExecutor {
 
         if (command.getName().equals("add_trade_to_town"))
             StorageManager.addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]),
-                    ((NpcTown)PcConomy.GlobalTownManager.getTown(args[0])).Storage);
+                    ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage);
 
         if (command.getName().equals("full_info")) {
             sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "\n" +

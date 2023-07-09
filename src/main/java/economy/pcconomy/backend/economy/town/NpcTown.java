@@ -24,7 +24,7 @@ public class NpcTown extends Town {
      * @param town TownyAPI town
      */
     public NpcTown(com.palmergames.bukkit.towny.object.Town town) {
-        TownName   = town.getName();
+        TownUUID   = town.getUUID();
         Credit     = new ArrayList<>();
 
         Storage = Arrays.asList(
@@ -46,7 +46,7 @@ public class NpcTown extends Town {
     public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage", .5);
     public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget", .5);
     public final List<ItemStack> Storage;
-    public final String TownName;
+    public final UUID TownUUID;
     public final List<Loan> Credit;
     private double previousBudget = 10000;
     private final int StartStorageAmount;
@@ -148,8 +148,8 @@ public class NpcTown extends Town {
     }
 
     @Override
-    public String getName() {
-        return TownName;
+    public UUID getUUID() {
+        return TownUUID;
     }
 
     @Override
@@ -187,6 +187,6 @@ public class NpcTown extends Town {
 
     @Override
     public BankAccount getBankAccount() {
-        return Objects.requireNonNull(TownyAPI.getInstance().getTown(TownName)).getAccount();
+        return Objects.requireNonNull(TownyAPI.getInstance().getTown(TownUUID)).getAccount();
     }
 }

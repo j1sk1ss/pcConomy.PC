@@ -48,7 +48,7 @@ public class TraderListener implements Listener {
                         trader.Storage.clear();
                     }
                     case "Забрать прибыль" -> {
-                        new CashManager().giveCashToPlayer(trader.Revenue, player);
+                        CashManager.giveCashToPlayer(trader.Revenue, player);
                         trader.Revenue = 0;
                     }
                 }
@@ -58,14 +58,13 @@ public class TraderListener implements Listener {
 
             if (title.contains("Торговец-Аренда")) {
                 if (TraderWindow.RantedPanel.click(option).getName().equals("Арендовать на один день")) {
-                    var cash = new CashManager();
                     var playerTradeLicense =
                             PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                     if (playerTradeLicense == null) return;
                     if (!playerTradeLicense.isOverdue()) {
-                        if (cash.amountOfCashInInventory(player) < trader.Cost) return;
+                        if (CashManager.amountOfCashInInventory(player) < trader.Cost) return;
 
-                        cash.takeCashFromInventory(trader.Cost, player);
+                        CashManager.takeCashFromInventory(trader.Cost, player);
                         PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost);
 
                         rantTrader(trader, player);

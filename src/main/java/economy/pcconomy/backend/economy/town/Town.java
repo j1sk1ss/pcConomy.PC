@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class Town implements IMoney {
-    public abstract String getName();
+    public double quarterlyEarnings;
+
+    public void changeBudget(double amount) {
+        quarterlyEarnings += amount;
+        getBankAccount().setBalance(getBudget() + amount, "Economic action");
+    }
+
+    public abstract UUID getUUID();
     public void setBudget(double amount) {
         getBankAccount().setBalance(amount, "Economic action");
-    }
-    public void changeBudget(double amount) {
-        getBankAccount().setBalance(getBudget() + amount, "Economic action");
     }
     public double getBudget() {
         return getBankAccount().getHoldingBalance();

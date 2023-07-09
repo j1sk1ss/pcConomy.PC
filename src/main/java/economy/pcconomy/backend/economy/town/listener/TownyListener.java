@@ -37,7 +37,7 @@ public class TownyListener implements Listener {
      */
     @EventHandler
     public void OnDestroy(DeleteTownEvent event) {
-        var town = event.getTownName();
+        var town = event.getTownUUID();
         PcConomy.GlobalTownManager.destroyTown(town);
     }
 
@@ -47,7 +47,7 @@ public class TownyListener implements Listener {
      */
     @EventHandler
     public void onDied(TownRuinedEvent event) {
-        var town = event.getTown().getName();
+        var town = event.getTown().getUUID();
         PcConomy.GlobalTownManager.destroyTown(town);
     }
 
@@ -63,6 +63,7 @@ public class TownyListener implements Listener {
         for (var town : PcConomy.GlobalTownManager.towns)
             town.lifeCycle();
 
+        PcConomy.GlobalShareManager.dailyPaying();
         PcConomy.GlobalBank.lifeCycle();
     }
 }

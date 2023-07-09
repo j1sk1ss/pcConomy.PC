@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class LoanWindow extends LoanBaseWindow implements IWindow  {
     public LoanWindow(Loaner loaner) {
@@ -50,7 +51,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
 
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, 18,
-                    Objects.requireNonNull(TownyAPI.getInstance().getTown(player.getLocation())).getName(), player, canReadHistory(player)));
+                    Objects.requireNonNull(TownyAPI.getInstance().getTown(player.getLocation())).getUUID(), player, canReadHistory(player)));
 
             if (i == 0) { //TODO: DATA MODEL
                 window.setItem(i + 18, new Item(durationSteps.get(i) + "дней", "", Material.PURPLE_WOOL));
@@ -66,7 +67,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
     public Inventory regenerateWindow(Inventory window, Player player, int option) {
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, option,
-                Objects.requireNonNull(TownyAPI.getInstance().getTown(player.getLocation())).getName(), player, canReadHistory(player)));
+                Objects.requireNonNull(TownyAPI.getInstance().getTown(player.getLocation())).getUUID(), player, canReadHistory(player)));
 
             if (i == option - 18) continue;//TODO: DATA MODEL
             window.setItem(i + 18, new Item(durationSteps.get(i) + "дней", "", Material.GREEN_STAINED_GLASS));
@@ -75,15 +76,17 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
         return window;
     }
 
-    public ItemStack getAmountButton(int position, int chosen, String townName, Player player, boolean canReadHistory) {
+    public ItemStack getAmountButton(int position, int chosen, UUID townName, Player player, boolean canReadHistory) {
         var townObject = PcConomy.GlobalTownManager.getTown(townName);
-        boolean isSafe = LoanManager.isSafeLoan(Loaner.Pull / (position + 1), durationSteps.get(chosen - 18), player);
+        var maxLoan = Math.min(Loaner.Pull, townObject.getBudget());
 
-        ItemStack tempItem = new Item(Math.round(Loaner.Pull / (position + 1) * 100) / 100 + CashManager.currencySigh,
+        boolean isSafe = LoanManager.isSafeLoan(maxLoan / (position + 1), durationSteps.get(chosen - 18), player);
+
+        ItemStack tempItem = new Item(Math.round(maxLoan / (position + 1) * 100) / 100 + CashManager.currencySigh,
                 "Город не одобрит данный займ.", Material.RED_WOOL, 1, 17000); //TODO: DATA MODEL
 
-        if (((isSafe || !canReadHistory) && !townObject.getBorrowers().contains(player.getUniqueId()) && Loaner.Pull > 0))
-            tempItem = creditOptionButton(tempItem, Loaner.Pull, chosen, position);
+        if (((isSafe || !canReadHistory) && !townObject.getBorrowers().contains(player.getUniqueId()) && maxLoan > 0))
+            tempItem = creditOptionButton(tempItem, maxLoan, chosen, position);
 
         return tempItem;
     }

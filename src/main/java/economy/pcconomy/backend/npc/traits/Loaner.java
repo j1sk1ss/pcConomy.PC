@@ -86,7 +86,7 @@ public class Loaner extends Trait {
                     try {
                         var amount = Double.parseDouble(playerMessage.toLowerCase());
                         if (PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(TownyAPI.getInstance()
-                                .getTown(this.getNPC().getStoredLocation())).getName()).getBudget() <= amount) {
+                                .getTown(this.getNPC().getStoredLocation())).getUUID()).getBudget() <= amount) {
                             player.sendMessage("Недостаточно средств в бюджете города");
                             return;
                         }

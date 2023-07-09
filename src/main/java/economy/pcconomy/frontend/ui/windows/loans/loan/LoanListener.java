@@ -30,7 +30,7 @@ public class LoanListener implements Listener {
 
         if (Window.isThisWindow(event, player, "Кредит-Город")) {
             var town = TownyAPI.getInstance().getTown(player.getLocation());
-            var currentTown = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getName());
+            var currentTown = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getUUID());
             var buttonPosition = event.getSlot();
 
             var title = event.getView().getTitle();
