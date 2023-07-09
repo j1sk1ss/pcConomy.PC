@@ -137,13 +137,29 @@ public class CashManager {
      * @param player Player that will take this cash
      */
     public static void giveCashToPlayer(double amount, Player player) {
+        if (Wallet.getWallet(player) != null) {
+            Wallet.changeCashInWallet(player, amount);
+            return;
+        }
+
+        var changeNumeric = getChange(amount);
+        var change = CashManager.getChangeInCash(changeNumeric);
+        ItemManager.giveItems(change, player);
+    }
+
+    /**
+     * Takes cash from player
+     * @param amount Amount of cash
+     * @param player Player that will lose cash
+     */
+    public static void takeCashFromPlayer(double amount, Player player) {
         var playerCashAmount = amountOfCashInInventory(player);
 
         var wallet = Wallet.getWallet(player);
         var walletAmount = 0d;
 
         if (wallet != null) {
-            if (Wallet.getWalletAmount(wallet) + amount < 0) {
+            if (Wallet.getWalletAmount(wallet) - amount < 0) {
                 walletAmount = -Wallet.getWalletAmount(wallet);
                 Wallet.changeCashInWallet(player, walletAmount);
             }
@@ -198,9 +214,14 @@ public class CashManager {
         if (playerCashAmount < amount) return;
 
         ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-        giveCashToPlayer(-amount, player);
+        takeCashFromPlayer(amount, player);
     }
-    
+
+    /**
+     * Get currency name-case
+     * @param currencyName Currency name
+     * @return Name-case
+     */
     public static String getCurrencyNameCase(String currencyName) { // Получение склонённого названия валюты
     	return currencyNameCases.get(currencyName);
     }

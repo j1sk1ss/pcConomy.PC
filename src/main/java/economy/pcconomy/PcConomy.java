@@ -19,6 +19,7 @@ import economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener;
 import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanerListener;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
+import economy.pcconomy.frontend.ui.windows.shareholder.ShareholderListener;
 import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
 
 import me.yic.xconomy.api.XConomyAPI;
@@ -75,22 +76,17 @@ public final class PcConomy extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        var listeners = Arrays.asList(new NpcLoader(), new LoanListener(), new TownyListener(),
+        for (var listener : Arrays.asList(new NpcLoader(), new LoanListener(), new TownyListener(),
                 new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
-                new NPCTraderListener(), new NPCLoanerListener());
-
-        for (var listener: listeners)
+                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener()))
             Bukkit.getPluginManager().registerEvents(listener, this);
 
         xConomyAPI  = new XConomyAPI();
-        var manager = new CommandManager();
 
-        var commands = Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
+        for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
                 "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor", "switch_town_to_npc",
-                "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget", "create_wallet");
-
-        for (var command : commands)
-            Objects.requireNonNull(getCommand(command)).setExecutor(manager);
+                "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget", "create_wallet"))
+            Objects.requireNonNull(getCommand(command)).setExecutor(new CommandManager());
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
         	new PcConomyPAPI().register();
