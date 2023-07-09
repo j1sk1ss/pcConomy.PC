@@ -1,7 +1,7 @@
-package economy.pcconomy.backend.economy.bank.scripts;
+package economy.pcconomy.backend.economy.credit.scripts;
 
 import com.google.gson.GsonBuilder;
-import economy.pcconomy.backend.economy.objects.Borrower;
+import economy.pcconomy.backend.economy.credit.Borrower;
 import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
@@ -18,7 +18,7 @@ public class BorrowerManager {
      * @return Borrower object
      */
     public Borrower getBorrowerObject(Player player) {
-        for (Borrower borrower: borrowers)
+        for (var borrower : borrowers)
             if (borrower.Borrower.equals(player.getUniqueId())) return borrower;
 
         return null;
@@ -29,7 +29,7 @@ public class BorrowerManager {
      * @param borrowerObject New borrower object
      */
     public void setBorrowerObject(Borrower borrowerObject) {
-        for (Borrower borrower: borrowers)
+        for (var borrower: borrowers)
             if (borrower.Borrower.equals(borrowerObject.Borrower)) {
                 borrowers.remove(borrower);
                 borrowers.add(borrowerObject);

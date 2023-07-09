@@ -2,7 +2,7 @@ package economy.pcconomy.backend.save;
 
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.backend.economy.bank.Bank;
-import economy.pcconomy.backend.economy.bank.scripts.BorrowerManager;
+import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;

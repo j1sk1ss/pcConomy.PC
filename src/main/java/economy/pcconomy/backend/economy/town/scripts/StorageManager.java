@@ -7,16 +7,14 @@ import java.util.List;
 import java.util.Random;
 
 public class StorageManager {
-
     /**
      * Create resource in storage
      * @param maxAmount Max amount of random generated count
      * @param Storage Storage that will take new resource
      */
     public static void createResources(int maxAmount, List<ItemStack> Storage) {
-        for (ItemStack item : Storage)
-            setAmountOfResource(item, getAmountOfResource(item, Storage)
-                    + new Random().nextInt() % maxAmount, Storage);
+        for (var item : Storage)
+            setAmountOfResource(item, getAmountOfResource(item, Storage) + new Random().nextInt() % maxAmount, Storage);
     }
 
     /**
@@ -25,10 +23,9 @@ public class StorageManager {
      * @param Storage Storage that will lose new resource
      */
     public static void useResources(int maxAmount, List<ItemStack> Storage) {
-        for (ItemStack item : Storage) {
+        for (var item : Storage) {
             if (item.getAmount() < maxAmount) return;
-            setAmountOfResource(item, getAmountOfResource(item, Storage) - new Random().nextInt() % maxAmount,
-                    Storage);
+            setAmountOfResource(item, getAmountOfResource(item, Storage) - new Random().nextInt() % maxAmount, Storage);
         }
     }
 
@@ -84,10 +81,10 @@ public class StorageManager {
      * @return ItemStack with same characteristics
      */
     public static ItemStack getResource(ItemStack item, List<ItemStack> Storage) {
-        for (var itemStack : Storage) {
+        for (var itemStack : Storage)
             if (itemStack.getType().equals(item.getType()))
                 return itemStack;
-        }
+
         return null;
     }
 

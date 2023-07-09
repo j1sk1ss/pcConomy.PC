@@ -23,7 +23,7 @@ public class TraderListener implements Listener {
 
         if (Window.isThisWindow(event, player, "Торговец")) {
             var title = event.getView().getTitle();
-            var trader = GetTraderFromTitle(title);
+            var trader = getTraderFromTitle(title);
             if (trader == null) return;
 
             var choseItem = event.getCurrentItem();
@@ -66,9 +66,9 @@ public class TraderListener implements Listener {
                         if (cash.amountOfCashInInventory(player) < trader.Cost) return;
 
                         cash.takeCashFromInventory(trader.Cost, player);
-                        PcConomy.GlobalTownManager.getTown(trader.homeTown).changeBudget(trader.Cost);
+                        PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost);
 
-                        RantTrader(trader, player);
+                        rantTrader(trader, player);
                         player.closeInventory();
                     }
                 }
@@ -85,7 +85,7 @@ public class TraderListener implements Listener {
                                 PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                         if (playerTradeLicense == null) return;
                         if (!playerTradeLicense.isOverdue()) {
-                            RantTrader(trader, player);
+                            rantTrader(trader, player);
                             player.closeInventory();
                         }
                     }
@@ -137,20 +137,19 @@ public class TraderListener implements Listener {
             if (title.contains("Торговец-Покупка")) {
                 switch (TraderWindow.AcceptPanel.click(option).getName()) {
                     case "Купить" -> {
-                        var cash = new CashManager();
                         var buyingItem = inventory.getItem(13);
                         var price = ItemManager.getPriceFromLore(buyingItem, 0);
 
-                        if (cash.amountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {
+                        if (CashManager.amountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {
                             if (trader.Storage.contains(buyingItem)) {
                                 trader.Storage.remove(buyingItem);
                                 ItemManager.giveItemsWithoutLore(buyingItem, player);
 
                                 if (!trader.Owner.equals(player.getUniqueId())) {
-                                    cash.takeCashFromInventory(price, player);
+                                    CashManager.takeCashFromInventory(price, player);
 
                                     var endPrice = price / (1 + trader.Margin);
-                                    PcConomy.GlobalTownManager.getTown(trader.homeTown).changeBudget(price - endPrice);
+                                    PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(price - endPrice);
                                     trader.Revenue += endPrice;
                                 }
                             }
@@ -164,7 +163,7 @@ public class TraderListener implements Listener {
         }
     }
 
-    private Trader GetTraderFromTitle(String name) {
+    private Trader getTraderFromTitle(String name) {
         try {
             if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
             return PcConomy.GlobalNPC.getNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Trader.class);
@@ -173,9 +172,9 @@ public class TraderListener implements Listener {
         }
     }
 
-    private void RantTrader(Trader trader, Player ranter) {
+    private void rantTrader(Trader trader, Player ranter) {
         trader.Owner    = ranter.getUniqueId();
-        trader.isRanted = true;
+        trader.IsRanted = true;
         trader.Term     = LocalDateTime.now().plusDays(1).toString();
     }
 }

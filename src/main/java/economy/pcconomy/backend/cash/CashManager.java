@@ -7,30 +7,43 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class CashManager {
+    /**
+     * Currency name that will be used in all plugin
+     */
     public final static String currencyName = "Алеф";
+
+    /**
+     * Currency sigh that will be used in all plugin
+     */
     public final static String currencySigh = "$";
-    private static final HashMap<String, String> currencyNameCases = new HashMap<>();
-    static {
-    	currencyNameCases.put("is", "Алеф"); // Единственное число
-    	currencyNameCases.put("rs", "Алефа");
-    	currencyNameCases.put("ds", "Алефу");
-    	currencyNameCases.put("vs", "Алеф");
-    	currencyNameCases.put("ts", "Алефом");
-    	currencyNameCases.put("ps", "Алефе");
-    	
-    	currencyNameCases.put("ip", "Алефы"); // Множественное число
-    	currencyNameCases.put("rp", "Алефов");
-    	currencyNameCases.put("dp", "Алефам");
-    	currencyNameCases.put("vp", "Алефы");
-    	currencyNameCases.put("tp", "Алефами");
-    	currencyNameCases.put("pp", "Алефах");
-    }
+
+    /**
+     * Declination of currency name
+     */
+    private static final HashMap<String, String> currencyNameCases = new HashMap<>() { static {
+        currencyNameCases.put("is", "Алеф"); // Единственное число
+        currencyNameCases.put("rs", "Алефа");
+        currencyNameCases.put("ds", "Алефу");
+        currencyNameCases.put("vs", "Алеф");
+        currencyNameCases.put("ts", "Алефом");
+        currencyNameCases.put("ps", "Алефе");
+
+        currencyNameCases.put("ip", "Алефы"); // Множественное число
+        currencyNameCases.put("rp", "Алефов");
+        currencyNameCases.put("dp", "Алефам");
+        currencyNameCases.put("vp", "Алефы");
+        currencyNameCases.put("tp", "Алефами");
+        currencyNameCases.put("pp", "Алефах");
+    }};
+
+    /**
+     * List of nominations
+     */
+    public static final List<Double> Denomination =
+            Arrays.asList(5000.0, 2000.0, 1000.0, 500.0, 200.0, 100.0, 50.0, 10.0, 1.0, 0.5, 0.1, 0.05, 0.01);
 
     /**
      * Creates itemStack object
@@ -97,8 +110,8 @@ public class CashManager {
     public static List<ItemStack> getChangeInCash(List<Integer> change) {
         List<ItemStack> moneyStack = new ArrayList<>();
 
-        for (int i = 0; i < ChangeManager.Denomination.size(); i++)
-            moneyStack.add(CashManager.createCashObject(ChangeManager.Denomination.get(i), change.get(i)));
+        for (int i = 0; i < Denomination.size(); i++)
+            moneyStack.add(CashManager.createCashObject(Denomination.get(i), change.get(i)));
 
         return moneyStack;
     }
@@ -121,8 +134,8 @@ public class CashManager {
      * @param amount Amount of cash
      * @param player Player that will take this cash
      */
-    public void giveCashToPlayer(double amount, Player player) {
-        if (!ChangeManager.Denomination.contains(amount)) {
+    public static void giveCashToPlayer(double amount, Player player) {
+        if (!Denomination.contains(amount)) {
             giveSpecialAmountOfCashToPlayer(amount, player);
             return;
         }
@@ -135,19 +148,37 @@ public class CashManager {
      * @param amount Amount of cash
      * @param player Player that will take this cash
      */
-    public void giveSpecialAmountOfCashToPlayer(double amount, Player player) {
-        var changeNumeric = ChangeManager.getChange(amount);
+    public static void giveSpecialAmountOfCashToPlayer(double amount, Player player) {
+        var changeNumeric = getChange(amount);
 
         List<ItemStack> change = CashManager.getChangeInCash(changeNumeric);
         ItemManager.giveItems(change, player);
     }
 
     /**
+     * Get count of every cash by denomination
+     * @param amount Amount
+     * @return Change
+     */
+    public static List<Integer> getChange(double amount) {
+        List<Integer> change = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+        for (int i = 0; i < Denomination.size(); i++)
+            while (amount - Denomination.get(i) >= 0) {
+                amount -= Denomination.get(i);
+                change.set(i, change.get(i) + 1);
+            }
+
+        return change;
+    }
+
+
+    /**
      * Amount of cash in player inventory
      * @param player Player that will be checked
      * @return Amount of cah in player`s inventory
      */
-    public double amountOfCashInInventory(Player player) {
+    public static double amountOfCashInInventory(Player player) {
         return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
     }
 
@@ -156,7 +187,7 @@ public class CashManager {
      * @param amount Amount that will be taken
      * @param player Player that will lose this amount
      */
-    public void takeCashFromInventory(double amount, Player player) {
+    public static void takeCashFromInventory(double amount, Player player) {
         var playerCashAmount = amountOfCashInInventory(player);
 
         if (playerCashAmount < amount) return;

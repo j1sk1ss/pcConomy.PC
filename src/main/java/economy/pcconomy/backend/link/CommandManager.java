@@ -3,7 +3,6 @@ package economy.pcconomy.backend.link;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.traits.Banker;
 import economy.pcconomy.backend.npc.traits.Loaner;
@@ -26,16 +25,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
+import static economy.pcconomy.backend.cash.CashManager.takeCashFromInventory;
+
 public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
 
         if (command.getName().equals("take_cash"))
-            new CashManager().takeCashFromInventory(Double.parseDouble(args[0]), (Player) sender);
+            takeCashFromInventory(Double.parseDouble(args[0]), (Player) sender);
 
         if (command.getName().equals("create_cash"))
-            new CashManager().giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
+            giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
 
         if (command.getName().equals("reload_towns"))
             PcConomy.GlobalTownManager.reloadTownObjects();
@@ -84,7 +86,7 @@ public class CommandManager implements CommandExecutor {
                     "Global VAT: " + PcConomy.GlobalBank.VAT + "\n" +
                     "Registered towns count: " + PcConomy.GlobalTownManager.towns.size() + "\n" +
                     "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
-                    "NPC Traders count: " + PcConomy.GlobalNPC.Traders.size());
+                    "NPC Traders count: " + PcConomy.GlobalNPC.Npc.size());
         }
 
         if (command.getName().equals("set_day_bank_budget"))

@@ -4,7 +4,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
@@ -30,9 +29,9 @@ public class Trader extends Trait {
     public double Revenue;
     public double Margin;
     public double Cost;
-    public boolean isRanted;
+    public boolean IsRanted;
     public String Term = LocalDateTime.now().toString();
-    public String homeTown = "";
+    public String HomeTown = "";
     public UUID Owner;
 
     public Trader() {
@@ -42,12 +41,12 @@ public class Trader extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        if (homeTown.equals("")) homeTown = Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getName();
+        if (HomeTown.equals("")) HomeTown = Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getName();
 
-        if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && isRanted) {
-            PcConomy.GlobalTownManager.getTown(homeTown).changeBudget(Revenue);
+        if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && IsRanted) {
+            PcConomy.GlobalTownManager.getTown(HomeTown).changeBudget(Revenue);
 
-            isRanted = false;
+            IsRanted = false;
             Owner    = null;
             Revenue  = 0;
             Storage.clear();
@@ -58,7 +57,7 @@ public class Trader extends Trait {
         var player = event.getClicker();
 
         try {
-            if (isRanted)
+            if (IsRanted)
                 if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.getOwnerWindow(player, this));
                 else player.openInventory(TraderWindow.getWindow(player, this));
             else
@@ -81,7 +80,7 @@ public class Trader extends Trait {
         var playerUUID = player.getUniqueId();
 
         try {
-            if (isRanted) {
+            if (IsRanted) {
                 if (Owner.equals(playerUUID) && Storage.size() < 27) {
                     player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
                     chat.put(playerUUID, event.getNPC().getId());
@@ -90,7 +89,7 @@ public class Trader extends Trait {
                 return;
             }
 
-            if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
+            if (Objects.requireNonNull(TownyAPI.getInstance().getTown(HomeTown)).getMayor().getUUID().equals(playerUUID)) {
                 player.sendMessage("Удалить торговца? (д/н)");
                 chat.put(playerUUID, event.getNPC().getId());
             }
@@ -111,11 +110,11 @@ public class Trader extends Trait {
 
                 var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
                 if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
-                    if (!Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(player.getUniqueId())) return;
-                    if (isRanted) return;
+                    if (!Objects.requireNonNull(TownyAPI.getInstance().getTown(HomeTown)).getMayor().getUUID().equals(player.getUniqueId())) return;
+                    if (IsRanted) return;
 
                     if (playerMessage.equalsIgnoreCase("д")) {
-                        PcConomy.GlobalNPC.Traders.remove(trader.getId());
+                        PcConomy.GlobalNPC.Npc.remove(trader.getId());
                         trader.destroy();
                     }
 
@@ -141,6 +140,8 @@ public class Trader extends Trait {
                 catch (NumberFormatException exception) {
                     player.sendMessage("Напишите корректную цену.");
                 }
+
+                chat.remove(player);
     		});
     	}
     }

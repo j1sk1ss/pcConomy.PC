@@ -5,8 +5,8 @@ import com.palmergames.bukkit.towny.object.economy.BankAccount;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.objects.Loan;
-import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.Loan;
+import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.scripts.StorageManager;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+
+import static economy.pcconomy.backend.cash.CashManager.*;
 
 public class NpcTown extends Town {
     /**
@@ -64,15 +66,16 @@ public class NpcTown extends Town {
             return;
         }
 
-        var cash = new CashManager();
-        if (cash.amountOfCashInInventory(buyer) < price) {
+        if (CashManager.amountOfCashInInventory(buyer) < price) {
             buyer.sendMessage("Приходи когда мммммммм, будешь немного по богаче.");
             return;
         }
 
-        cash.takeCashFromInventory(price, buyer);
+        CashManager.takeCashFromInventory(price, buyer);
+
         changeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
+
         ItemManager.giveItems(new ItemStack(itemStack.getType(), purchaseSize), buyer);
         StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) - purchaseSize, Storage);
 
@@ -86,6 +89,7 @@ public class NpcTown extends Town {
      */
     public void sellResourceToStorage(ItemStack itemStack, Player seller) {
         var itemAmount = itemStack.getAmount();
+
         var resource = StorageManager.getResource(itemStack, Storage);
         if (resource == null) {
             seller.sendMessage("Такой товар мы не принимаем.");
@@ -98,11 +102,11 @@ public class NpcTown extends Town {
             return;
         }
 
-        var cash  = new CashManager();
-
         seller.getInventory().setItemInMainHand(null);
-        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) + itemAmount, Storage);
-        cash.giveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);
+        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) +
+                itemAmount, Storage);
+
+        giveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
         changeBudget(-price);
 
@@ -155,7 +159,8 @@ public class NpcTown extends Town {
         var changePercent = (getBudget() - previousBudget) / previousBudget;
         var isRecession  = (changePercent <= 0 && getLocalInflation() > 0) ? 1 : -1;
 
-        getMoneyFromBank(1000);
+        if (changePercent < 0 && isRecession == 1)
+            getMoneyFromBank(1000 + Math.abs(changePercent) * 1000);
 
         usefulBudget  = usefulStorage - (usefulBudget * Math.abs(changePercent)) * isRecession;
         usefulStorage = usefulBudget + (usefulStorage * Math.abs(changePercent)) * isRecession;

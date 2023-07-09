@@ -4,8 +4,8 @@ import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.IMoney;
-import economy.pcconomy.backend.economy.objects.Loan;
-import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.Loan;
+import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.cash.CashManager;
@@ -33,7 +33,6 @@ public class Bank implements IMoney {
      */
     public void giveCashToPlayer(double amount, Player player) {
         var balanceWorker = new BalanceManager();
-        var cash          = new CashManager();
 
         if (amount > dayWithdrawBudget) return;
         if (balanceWorker.notSolvent(amount, player)) return;
@@ -41,7 +40,7 @@ public class Bank implements IMoney {
         dayWithdrawBudget -= amount;
 
         balanceWorker.takeMoney(amount, player);
-        cash.giveCashToPlayer(amount, player);
+        CashManager.giveCashToPlayer(amount, player);
 
         BankBudget -= amount;
     }
@@ -55,15 +54,15 @@ public class Bank implements IMoney {
         var amountInventory = CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
         if (amount > amountInventory) return;
 
-        new CashManager().takeCashFromInventory(amount, player);
+        CashManager.takeCashFromInventory(amount, player);
         new BalanceManager().giveMoney(amount, player);
 
         BankBudget += amount;
     }
 
-    double previousBudget = BankBudget;
-    double dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
-    int recessionCount = 0;
+    private double previousBudget = BankBudget;
+    private double dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
+    private int recessionCount = 0;
 
     /**
      * Life cycle of bank working

@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.loans.npcLoan;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
@@ -56,7 +56,7 @@ public class NPCLoanWindow extends LoanBaseWindow implements IWindow {
     }
 
     @Override
-    public Inventory regenerateWindow(Inventory window, Player player, int option, boolean isNPC) {
+    public Inventory regenerateWindow(Inventory window, Player player, int option) {
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, option, player));
 

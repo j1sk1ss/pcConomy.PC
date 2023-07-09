@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Objects;
 
 public abstract class LoanBaseWindow {
-    public abstract Inventory regenerateWindow(Inventory window, Player player, int option, boolean isNPC);
+    public abstract Inventory regenerateWindow(Inventory window, Player player, int option);
 
     /***
      * Checks license of reading credit history

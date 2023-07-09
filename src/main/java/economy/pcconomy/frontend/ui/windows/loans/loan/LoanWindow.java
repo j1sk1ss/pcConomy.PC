@@ -2,8 +2,9 @@ package economy.pcconomy.frontend.ui.windows.loans.loan;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.Panel;
@@ -22,6 +23,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class LoanWindow extends LoanBaseWindow implements IWindow  {
+    public LoanWindow(Loaner loaner) {
+        Loaner = loaner;
+    }
+
+    private final Loaner Loaner;
+
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
@@ -56,7 +63,7 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
     }
 
     @Override
-    public Inventory regenerateWindow(Inventory window, Player player, int option, boolean isNPC) {
+    public Inventory regenerateWindow(Inventory window, Player player, int option) {
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, option,
                 Objects.requireNonNull(TownyAPI.getInstance().getTown(player.getLocation())).getName(), player, canReadHistory(player)));
@@ -70,14 +77,13 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
 
     public ItemStack getAmountButton(int position, int chosen, String townName, Player player, boolean canReadHistory) {
         var townObject = PcConomy.GlobalTownManager.getTown(townName);
-        var maxLoanSize = townObject.getBudget() * .2d;
-        boolean isSafe = LoanManager.isSafeLoan(maxLoanSize / (position + 1), durationSteps.get(chosen - 18), player);
+        boolean isSafe = LoanManager.isSafeLoan(Loaner.Pull / (position + 1), durationSteps.get(chosen - 18), player);
 
-        ItemStack tempItem = new Item(Math.round(maxLoanSize / (position + 1) * 100) / 100 + CashManager.currencySigh,
+        ItemStack tempItem = new Item(Math.round(Loaner.Pull / (position + 1) * 100) / 100 + CashManager.currencySigh,
                 "Город не одобрит данный займ.", Material.RED_WOOL, 1, 17000); //TODO: DATA MODEL
 
-        if (((isSafe || !canReadHistory) && !townObject.getBorrowers().contains(player.getUniqueId()) && maxLoanSize > 0))
-            tempItem = creditOptionButton(tempItem, maxLoanSize, chosen, position);
+        if (((isSafe || !canReadHistory) && !townObject.getBorrowers().contains(player.getUniqueId()) && Loaner.Pull > 0))
+            tempItem = creditOptionButton(tempItem, Loaner.Pull, chosen, position);
 
         return tempItem;
     }

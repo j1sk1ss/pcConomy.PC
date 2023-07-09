@@ -3,6 +3,8 @@ package economy.pcconomy.backend.npc;
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.npc.objects.INpcObject;
+import economy.pcconomy.backend.npc.objects.LoanerObject;
 import economy.pcconomy.backend.npc.traits.Banker;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.npc.traits.NpcLoaner;
@@ -12,7 +14,7 @@ import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.npc.traits.NpcTrader;
 import economy.pcconomy.backend.npc.traits.Trader;
 
-import economy.pcconomy.backend.trade.TraderObject;
+import economy.pcconomy.backend.npc.objects.TraderObject;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
 
@@ -26,7 +28,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class NpcManager {
-    public final Map<Integer, TraderObject> Traders = new Hashtable<>();
+    public final Map<Integer, INpcObject> Npc = new Hashtable<>();
 
     /***
      * Create NPC with special trait
@@ -50,14 +52,13 @@ public class NpcManager {
      * @param price Price of NPC
      */
     public void buyNPC(Player buyer, LicenseType neededLicense, double price) {
-        var cash = new CashManager();
-        if (cash.amountOfCashInInventory(buyer) < price) return;
+        if (CashManager.amountOfCashInInventory(buyer) < price) return;
 
         var license = PcConomy.GlobalLicenseManager.getLicense(buyer.getUniqueId(), neededLicense);
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        cash.takeCashFromInventory(price, buyer);
+        CashManager.takeCashFromInventory(price, buyer);
         PcConomy.GlobalBank.BankBudget += price;
 
         var npcList = Map.of(
@@ -106,20 +107,29 @@ public class NpcManager {
      * Load traders and their stuff
      */
     public void loadTraders() {
-        for (int id: Traders.keySet()) {
-            var trait = new Trader();
-            var saveTrait = Traders.get(id);
+        for (int id: Npc.keySet()) {
+            var traderTrait = new Trader();
+            var loanerTrait = new Loaner();
 
-            trait.Owner    = saveTrait.Owner;
-            trait.Storage  = saveTrait.Storage;
-            trait.Revenue  = saveTrait.Revenue;
-            trait.Cost     = saveTrait.Cost;
-            trait.Margin   = saveTrait.Margin;
-            trait.homeTown = saveTrait.homeTown;
-            trait.isRanted = saveTrait.isRanted;
-            trait.Term     = saveTrait.Term;
+            var saveTrait = Npc.get(id).getBaseClass();
 
-            CitizensAPI.getNPCRegistry().getById(id).addTrait(trait);
+            if (saveTrait instanceof TraderObject traderObject) {
+                traderTrait.Owner    = traderObject.Owner;
+                traderTrait.Storage  = traderObject.Storage;
+                traderTrait.Revenue  = traderObject.Revenue;
+                traderTrait.Cost     = traderObject.Cost;
+                traderTrait.Margin   = traderObject.Margin;
+                traderTrait.HomeTown = traderObject.HomeTown;
+                traderTrait.IsRanted = traderObject.IsRanted;
+                traderTrait.Term     = traderObject.Term;
+
+                CitizensAPI.getNPCRegistry().getById(id).addTrait(traderTrait);
+            } else if (saveTrait instanceof LoanerObject loanerObject) {
+                loanerTrait.Pull     = loanerObject.Pull;
+                loanerTrait.HomeTown = loanerObject.HomeTown;
+
+                CitizensAPI.getNPCRegistry().getById(id).addTrait(loanerTrait);
+            }
         }
     }
 
@@ -133,8 +143,8 @@ public class NpcManager {
             if (npc.hasTrait(Trader.class)) {
                 var traderTrait = npc.getOrAddTrait(Trader.class);
 
-                Traders.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
-                        traderTrait.Cost, traderTrait.isRanted, traderTrait.homeTown, traderTrait.Owner, traderTrait.Term));
+                Npc.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
+                        traderTrait.Cost, traderTrait.IsRanted, traderTrait.HomeTown, traderTrait.Owner, traderTrait.Term));
             }
 
         FileWriter writer = new FileWriter(fileName + ".json", false);

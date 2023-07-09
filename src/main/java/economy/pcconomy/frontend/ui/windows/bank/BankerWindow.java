@@ -2,7 +2,6 @@ package economy.pcconomy.frontend.ui.windows.bank;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.cash.ChangeManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.frontend.ui.windows.IWindow;
@@ -32,7 +31,7 @@ public class BankerWindow implements IWindow {
                     continue;
                 } //TODO: DATA MODEL
                 case '.' -> {
-                    window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000));
+                    window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17001));
                     continue;
                 }
             }
@@ -46,14 +45,14 @@ public class BankerWindow implements IWindow {
                 window.setItem(41, new Item("Снять максимум", //TODO: DATA MODEL
                         Math.round(playerBalance * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000));
 
-            if (enableBalance >= ChangeManager.Denomination.get(i) && playerBalance >= ChangeManager.Denomination.get(i))
+            if (enableBalance >= CashManager.Denomination.get(i) && playerBalance >= CashManager.Denomination.get(i))
                 printButtons(41, window);
 
             if (i == 0)
                 window.setItem(36, new Item("Положить все средства", //TODO: DATA MODEL
                         "-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000));
 
-            if (cashInInventory >= ChangeManager.Denomination.get(i))
+            if (cashInInventory >= CashManager.Denomination.get(i))
                 printButtons(36, window);
         }
 
@@ -63,6 +62,6 @@ public class BankerWindow implements IWindow {
     private void printButtons(int position, Inventory window) {
         for (var j = 1; j < 8; j++) //TODO: DATA MODEL
             window.setItem(j + (position + 5 * (j / 4)), new Item("Действия",
-                    (position == 36 ? "-" : "") + ChangeManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000));
+                    (position == 36 ? "-" : "") + CashManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000));
     }
 }

@@ -27,11 +27,12 @@ public class LicenseManager {
      * @param player Player that should be checked
      * @return License body
      */
-    public LicenseBody getLicense(Player player) {
-        for (LicenseBody lic: Licenses)
-            if (lic.Owner.equals(player.getUniqueId())) return lic;
+    public List<LicenseBody> getLicenses(Player player) {
+        var list = new ArrayList<LicenseBody>();
+        for (var lic : Licenses)
+            if (lic.Owner.equals(player.getUniqueId())) list.add(lic);
 
-        return null;
+        return list;
     }
 
     /**
@@ -41,7 +42,7 @@ public class LicenseManager {
      * @return License body
      */
     public LicenseBody getLicense(UUID player, LicenseType licenseType) {
-        for (LicenseBody lic : Licenses)
+        for (var lic : Licenses)
             if (lic.Owner.equals(player))
                 if (lic.LicenseType.equals(licenseType)) return lic;
 

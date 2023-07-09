@@ -2,6 +2,7 @@ package economy.pcconomy.backend.npc.traits;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.loans.loan.LoanWindow;
 import net.citizensnpcs.api.CitizensAPI;
@@ -27,12 +28,15 @@ public class Loaner extends Trait {
         super("Loaner");
     }
 
+    public double Pull;
+    public String HomeTown;
+
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
         var player = event.getClicker();
 
-        Window.OpenWindow(player, new LoanWindow());
+        Window.OpenWindow(player, new LoanWindow(this));
     }
 
     @EventHandler
@@ -44,6 +48,19 @@ public class Loaner extends Trait {
 
         if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
             player.sendMessage("Удалить кредитора? (д/н)");
+            chat.put(playerUUID, event.getNPC().getId());
+        }
+    }
+
+    @EventHandler
+    public void onInteraction(NPCRightClickEvent event) {
+        if (!event.getNPC().equals(this.getNPC())) return;
+        var player = event.getClicker();
+        var playerUUID = player.getUniqueId();
+        var homeTown = TownyAPI.getInstance().getTownName(player.getLocation());
+
+        if (Objects.requireNonNull(TownyAPI.getInstance().getTown(homeTown)).getMayor().getUUID().equals(playerUUID)) {
+            player.sendMessage("Напишите денежный пулл, который будет использован для кредитования");
             chat.put(playerUUID, event.getNPC().getId());
         }
     }
@@ -65,6 +82,21 @@ public class Loaner extends Trait {
     	                    loaner.destroy();
     	                }
     	            }
+
+                    try {
+                        var amount = Double.parseDouble(playerMessage.toLowerCase());
+                        if (PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(TownyAPI.getInstance()
+                                .getTown(this.getNPC().getStoredLocation())).getName()).getBudget() <= amount) {
+                            player.sendMessage("Недостаточно средств в бюджете города");
+                            return;
+                        }
+
+                        loaner.getOrAddTrait(Loaner.class).Pull = amount;
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage("Впишите коррекное число");
+                    }
+
+                    chat.remove(player);
     	        }
     		});
     	}

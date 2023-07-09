@@ -12,6 +12,7 @@ public class Banker extends Trait {
     public Banker() {
         super("Banker");
     }
+
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         var player = event.getClicker();

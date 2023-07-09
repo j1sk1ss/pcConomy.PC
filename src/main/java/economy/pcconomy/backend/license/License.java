@@ -1,17 +1,18 @@
 package economy.pcconomy.backend.license;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
-import org.bukkit.Material;
+
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+
+import static economy.pcconomy.backend.cash.CashManager.amountOfCashInInventory;
+import static economy.pcconomy.backend.cash.CashManager.takeCashFromInventory;
 
 public class License {
     public final static double marketLicensePrice = PcConomy.Config.getDouble("license.market_license_price", 2400d);
@@ -33,13 +34,12 @@ public class License {
      * @param price Price of license
      */
     public static void getLicense(Player player, LicenseType licenseType, double price) {
-        var cash = new CashManager();
-        if (cash.amountOfCashInInventory(player) < price) return;
+        if (amountOfCashInInventory(player) < price) return;
 
         if (PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType) != null)
             PcConomy.GlobalLicenseManager.Licenses.remove(PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType));
 
-        cash.takeCashFromInventory(price, player);
+        takeCashFromInventory(price, player);
         PcConomy.GlobalBank.BankBudget += price;
         //TODO: DATA MODEL
         PcConomy.GlobalLicenseManager.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));

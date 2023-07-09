@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.ui.windows.loans.npcLoan;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.bank.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
@@ -38,7 +38,7 @@ public class NPCLoanerListener implements Listener {
                         }
                 } else {
                     activeInventory.setItem(buttonPosition, new Item(item, Material.PURPLE_WOOL));
-                    player.openInventory(new NPCLoanWindow().regenerateWindow(activeInventory, player, buttonPosition, true));
+                    player.openInventory(new NPCLoanWindow().regenerateWindow(activeInventory, player, buttonPosition));
                 }
 
                 return;

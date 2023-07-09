@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 
 @TraitName("Licensor")
 public class Licensor extends Trait {
-
     public Licensor() {
         super("Licensor");
     }

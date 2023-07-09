@@ -1,6 +1,6 @@
 package economy.pcconomy;
 
-import economy.pcconomy.backend.economy.bank.scripts.BorrowerManager;
+import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.link.CommandManager;
@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+
+//TODO: Think about local storage for cash (may contains a moneys via text in lore)
 
 public final class PcConomy extends JavaPlugin {
     public static FileConfiguration Config;
