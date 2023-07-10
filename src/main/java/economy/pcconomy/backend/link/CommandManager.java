@@ -5,14 +5,10 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.npc.traits.Banker;
-import economy.pcconomy.backend.npc.traits.Loaner;
-import economy.pcconomy.backend.npc.traits.NpcLoaner;
-import economy.pcconomy.backend.npc.traits.Licensor;
+import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.economy.town.scripts.StorageManager;
-import economy.pcconomy.backend.npc.traits.NpcTrader;
 import economy.pcconomy.frontend.ui.windows.Window;
 
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
@@ -63,7 +59,7 @@ public class CommandManager implements CommandExecutor {
             PcConomy.GlobalNPC.createNPC((Player) sender, new Loaner());
 
         if (command.getName().equals("create_trader"))
-            PcConomy.GlobalNPC.buyNPC((Player) sender, LicenseType.Market, NpcManager.traderCost);
+            PcConomy.GlobalNPC.createNPC((Player) sender, new Trader());
 
         if (command.getName().equals("create_npc_trader"))
             PcConomy.GlobalNPC.createNPC((Player) sender, new NpcTrader());
@@ -96,6 +92,9 @@ public class CommandManager implements CommandExecutor {
 
         if (command.getName().equals("create_wallet"))
             Wallet.giveWallet((Player) sender);
+
+        if (command.getName().equals("create_shareholder"))
+            PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
 
         return true;
     }

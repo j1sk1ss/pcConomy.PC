@@ -122,7 +122,7 @@ public class TraderListener implements Listener {
                         slider.place(event.getInventory());
                     }
                     case "Установить" -> {
-                        var slider = new Slider(TraderWindow.MarginPanel.getSliders().get(0));
+                        var slider = new Slider(TraderWindow.MarginPanel.getSliders("Slider"));
 
                         trader.Margin = Double.parseDouble(ItemManager.getName(slider.getChose()).replace("%", ""));
                         player.sendMessage("Процент установлен!");

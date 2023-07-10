@@ -88,6 +88,20 @@ public class Panel {
     }
 
     /**
+     * Get slider from panel by name
+     * @param name Name of slider
+     * @return Slider
+     */
+    public Slider getSliders(String name) {
+        for (var component : iComponents)
+            if (component instanceof Slider slider)
+                if (slider.getName().equals(name))
+                    return slider;
+
+        return null;
+    }
+
+    /**
      * Get sliders from panel
      * @return Sliders
      */
@@ -97,6 +111,20 @@ public class Panel {
             if (component instanceof Slider slider) sliders.add(slider);
 
         return sliders;
+    }
+
+    /**
+     * Get button from panel by name
+     * @param name Name of button
+     * @return Button
+     */
+    public Button getButtons(String name) {
+        for (var component : iComponents)
+            if (component instanceof Button button)
+                if (button.getName().equals(name))
+                    return button;
+
+        return null;
     }
 
     /**

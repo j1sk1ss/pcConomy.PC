@@ -85,7 +85,8 @@ public final class PcConomy extends JavaPlugin {
 
         for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
                 "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor", "switch_town_to_npc",
-                "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget", "create_wallet"))
+                "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget", "create_wallet",
+                "create_shareholder"))
             Objects.requireNonNull(getCommand(command)).setExecutor(new CommandManager());
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)

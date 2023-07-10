@@ -95,7 +95,7 @@ public class TraderWindow {
                     new Item("6000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
                     new Item("8000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000),
                     new Item("10000" + CashManager.currencySigh, "", Material.GLASS, 1, 17000)
-            ), 17000, 17000),
+            ), 17000, 17000, "Slider"),
             new Button(Arrays.asList(
                 9, 10, 11, 12, 18, 19, 20, 21
             ), "Установить", ""),
@@ -122,7 +122,7 @@ public class TraderWindow {
                     new Item("65%", "", Material.GLASS, 1, 17000),
                     new Item("75%", "", Material.GLASS, 1, 17000),
                     new Item("80%", "", Material.GLASS, 1, 17000)
-            ), 17000, 17000),
+            ), 17000, 17000, "Slider"),
             new Button(Arrays.asList(
                     9, 10, 11, 12, 18, 19, 20, 21
             ), "Установить", ""),

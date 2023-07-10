@@ -13,6 +13,8 @@ commands:
     usage: /create_cash
   create_wallet:
     usage: /create_wallet
+  create_shareholder:
+    usage: /create_shareholder
   reload_towns:
     usage: /reload_towns
   save_data:

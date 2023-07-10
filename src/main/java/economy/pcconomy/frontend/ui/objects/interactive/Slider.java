@@ -16,11 +16,13 @@ public class Slider implements IComponent {
      * @param defaultOption Material of default option
      */
     public Slider(List<Integer> coordinates, List<ItemStack> slider,
-                  int chosenOption, int defaultOption) {
+                  int chosenOption, int defaultOption, String name) {
         this.coordinates   = coordinates;
         this.slider        = slider;
         this.chosenOption  = chosenOption;
         this.defaultOption = defaultOption;
+
+        this.name = name;
     }
 
     /**
@@ -33,15 +35,18 @@ public class Slider implements IComponent {
 
         this.chosenOption  = slider.chosenOption;
         this.defaultOption = slider.defaultOption;
+
+        this.name = slider.getName();
     }
 
     private final List<Integer> coordinates;
     private final List<ItemStack> slider;
     private final int chosenOption;
     private final int defaultOption;
+    private final String name;
 
     public String getName() {
-        return "Slider";
+        return name;
     }
 
     public String getLore() {

@@ -72,6 +72,19 @@ public class ShareManager {
     }
 
     /**
+     * Get share without owner
+     * @param town Town
+     * @return Share without owner
+     */
+    public Share getEmptyTownShare(UUID town) {
+        for (var share : Shares.get(town))
+            if (share.Owner == null)
+                return share;
+
+        return null;
+    }
+
+    /**
      * Set shares of town
      * @param town Town
      * @param shares Shares
