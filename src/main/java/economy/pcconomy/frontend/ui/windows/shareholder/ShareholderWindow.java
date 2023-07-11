@@ -22,10 +22,10 @@ import java.util.UUID;
 public class ShareholderWindow implements IWindow {
     public static Panel actionsMenuPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
-
+                    0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Покупка/продажа акций", ""),
             new Button(Arrays.asList(
-
+                    5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26
             ), "Выставление акций", "")
     ));
 
@@ -39,15 +39,15 @@ public class ShareholderWindow implements IWindow {
         var actions = PcConomy.GlobalShareManager.Shares.keySet().toArray();
 
         for (var i = windowNumber * 27; i < actions.length; i++)
-            for (var j = i; j < i + Math.min(actions.length - 27, 27); j++) {
+            for (var j = i; j < i + Math.min(Math.max(actions.length - 27, 1), 27); j++) {
                 var share = PcConomy.GlobalShareManager.getTownShares((UUID) actions[j]).get(0);
                 window.setItem(j, new Item(
-                        "Акция города " + TownyAPI.getInstance().getTown((UUID) actions[j]).getName(),
+                        "Акции города " + TownyAPI.getInstance().getTown((UUID) actions[j]).getName(),
                         "Цена: " + share.Price + CashManager.currencySigh + "\n" +
                         "Доля собственности: " + share.Equality + "%\n" +
                         "Тип ценной бумаги: " + share.ShareType + "\n" +
                         "ID: " + share.TownUUID,
-                        Material.PAPER, 17000)); // TODO: DATA MODEL
+                        Material.PAPER, 1, 17000)); // TODO: DATA MODEL
             }
 
         return window;
@@ -55,40 +55,40 @@ public class ShareholderWindow implements IWindow {
 
     public static Panel acceptPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
-
+                    0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Продать одну акцию", ""),
             new Button(Arrays.asList(
-
+                    5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26
             ), "Купить одну акцию", "")
     ));
 
     public static Inventory acceptWindow(Player player, UUID town) {
-        return acceptPanel.placeComponents(Bukkit.createInventory(player, 9,
+        return acceptPanel.placeComponents(Bukkit.createInventory(player, 27,
                 Component.text("Акции-Города " + TownyAPI.getInstance().getTown(town).getName())));
     }
 
     public static Panel townSharesPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
-
+                9, 10, 11, 12, 18, 19, 20, 21
             ), "Выставить на продажу", ""),
             new Button(Arrays.asList(
-
+                14, 15, 16, 17, 23, 24, 25, 26
             ), "Снять с продажи", ""),
             new Slider(Arrays.asList(
-
+                27, 28, 29, 30, 31, 32, 33, 34, 35
             ), Arrays.asList( //TODO: DATA MODEL
-                    new Item("1 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("10 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("50 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("100 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("150 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("200 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("250 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("500 шт.", "Кол-во", Material.GLASS, 1, 17000),
-                    new Item("1000 шт.", "Кол-во", Material.GLASS, 1, 17000)
+                    new Item("1шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("10шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("50шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("100шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("150шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("200шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("250шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("500шт.", "Кол-во", Material.GLASS, 1, 17000),
+                    new Item("1000шт.", "Кол-во", Material.GLASS, 1, 17000)
             ), 17000, 17000, "SliderCount"),
             new Slider(Arrays.asList(
-
+                36, 37, 38, 39, 40, 41, 42, 43, 44
             ), Arrays.asList( //TODO: DATA MODEL
                     new Item("10%", "Процент", Material.GLASS, 1, 17000),
                     new Item("15%", "Процент", Material.GLASS, 1, 17000),
@@ -101,7 +101,7 @@ public class ShareholderWindow implements IWindow {
                     new Item("75%", "Процент", Material.GLASS, 1, 17000)
             ), 17000, 17000, "SliderPercent"),
             new Slider(Arrays.asList(
-
+                45, 46, 47, 48, 49, 50, 51, 52, 53
             ), Arrays.asList( //TODO: DATA MODEL
                     new Item("100" + CashManager.currencySigh, "Цена", Material.GLASS, 1, 17000),
                     new Item("400" + CashManager.currencySigh, "Цена", Material.GLASS, 1, 17000),
@@ -114,7 +114,7 @@ public class ShareholderWindow implements IWindow {
                     new Item("10000" + CashManager.currencySigh, "Цена", Material.GLASS, 1, 17000)
             ), 17000, 17000, "SliderCost"),
             new Slider(Arrays.asList(
-
+                13, 22
             ), Arrays.asList( //TODO: DATA MODEL
                     new Item("Дивиденты", "Тип", Material.GLASS, 1, 17000),
                     new Item("Доля", "Тип", Material.GLASS, 1, 17000)

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class ShareManager {
-    public Map<UUID, List<Share>> Shares;
+    public Map<UUID, List<Share>> Shares = new HashMap<>();
 
     /**
      * Expose shares
@@ -28,6 +28,12 @@ public class ShareManager {
      */
     public void exposeShares(UUID town, double price, int count, double size, ShareType shareType) {
         var shares = new ArrayList<Share>();
+
+        if (getTownShares(town) != null)
+            for (var share : getTownShares(town))
+                if (share.Owner != null)
+                    shares.add(share);
+
         for (var i = 0; i < count; i++)
             shares.add(new Share(town, shareType, null, price, size / (double) count));
 
@@ -110,6 +116,8 @@ public class ShareManager {
 
                     share.Owner = buyer.getUniqueId();
                 }
+
+                break;
             }
     }
 
@@ -134,6 +142,8 @@ public class ShareManager {
 
                     share.Owner = null;
                 }
+
+                break;
             }
     }
 

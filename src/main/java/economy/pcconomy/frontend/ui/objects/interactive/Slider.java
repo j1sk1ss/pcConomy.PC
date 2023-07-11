@@ -1,6 +1,7 @@
 package economy.pcconomy.frontend.ui.objects.interactive;
 
 import economy.pcconomy.backend.scripts.items.Item;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -70,8 +71,10 @@ public class Slider implements IComponent {
      * @param chose Coordinate of chose
      */
     public void setChose(int chose) {
-        for (var i = 0; i < coordinates.size(); i++)
-            slider.set(i, new Item(slider.get(i), i == chose ? chosenOption : defaultOption));
+        for (var i = 0; i < coordinates.size(); i++) {
+            //slider.set(i, new Item(slider.get(i), i == chose ? chosenOption : defaultOption));
+            slider.get(i).setType(coordinates.get(i) == chose ? Material.PURPLE_WOOL : Material.GLASS);
+        }
     }
 
     /**
@@ -90,7 +93,7 @@ public class Slider implements IComponent {
      */
     public Inventory place(Inventory inventory) {
         for (var coordinate = 0; coordinate < coordinates.size(); coordinate++)
-            inventory.setItem(coordinate, slider.get(coordinate));
+            inventory.setItem(coordinates.get(coordinate), slider.get(coordinate));
 
         return inventory;
     }
@@ -101,7 +104,9 @@ public class Slider implements IComponent {
      */
     public ItemStack getChose() {
         for (var item : slider)
-            if (item.getItemMeta().getCustomModelData() == chosenOption) return item;
+            if (item.getType() == Material.PURPLE_WOOL)
+                //if (item.getItemMeta().getCustomModelData() == chosenOption)
+                return item;
 
         return null;
     }

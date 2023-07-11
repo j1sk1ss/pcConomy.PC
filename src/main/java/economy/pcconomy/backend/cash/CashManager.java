@@ -164,7 +164,7 @@ public class CashManager {
                 Wallet.changeCashInWallet(player, walletAmount);
             }
             else {
-                Wallet.changeCashInWallet(player, amount);
+                Wallet.changeCashInWallet(player, -amount);
                 return;
             }
         }
