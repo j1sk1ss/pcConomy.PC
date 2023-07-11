@@ -85,9 +85,7 @@ public class CashManager {
      */
     public static double getAmountFromCash(List<ItemStack> money) {
         var amount = 0.0;
-
         for (var item : money) if (isCash(item)) amount += getAmountFromCash(item);
-
         return amount;
     }
 
@@ -98,9 +96,7 @@ public class CashManager {
      */
     public static List<ItemStack> getCashFromInventory(PlayerInventory inventory) {
         List<ItemStack> moneys = new ArrayList<>();
-
         for (var item : inventory) if (isCash(item)) moneys.add(item);
-
         return moneys;
     }
 
@@ -111,7 +107,6 @@ public class CashManager {
      */
     public static List<ItemStack> getChangeInCash(List<Integer> change) {
         List<ItemStack> moneyStack = new ArrayList<>();
-
         for (int i = 0; i < Denomination.size(); i++)
             moneyStack.add(CashManager.createCashObject(Denomination.get(i), change.get(i)));
 
@@ -126,7 +121,7 @@ public class CashManager {
     public static boolean isCash(ItemStack item) {
         if (item == null) return false;
         if (ItemManager.getName(item).contains(currencyName))
-            return !Objects.equals(ItemManager.getLore(item).get(0), "");
+            return ItemManager.getLore(item).get(0).contains(currencySigh);
 
         return false;
     }
@@ -137,7 +132,24 @@ public class CashManager {
      * @param player Player that will take this cash
      */
     public static void giveCashToPlayer(double amount, Player player) {
-        if (Wallet.getWallet(player) != null) {
+        if (Wallet.getWallets(player).size() != 0) {
+            Wallet.changeCashInWallet(player, amount);
+            return;
+        }
+
+        var changeNumeric = getChange(amount);
+        var change = CashManager.getChangeInCash(changeNumeric);
+        ItemManager.giveItems(change, player);
+    }
+
+    /**
+     * Gives to player items of cash
+     * @param amount Amount of cash
+     * @param player Player that will take this cash
+     * @param ignoreWallet Ignoring of wallet status
+     */
+    public static void giveCashToPlayer(double amount, Player player, boolean ignoreWallet) {
+        if (Wallet.getWallets(player).size() != 0 && !ignoreWallet) {
             Wallet.changeCashInWallet(player, amount);
             return;
         }
@@ -154,13 +166,14 @@ public class CashManager {
      */
     public static void takeCashFromPlayer(double amount, Player player) {
         var playerCashAmount = amountOfCashInInventory(player);
+        ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
 
-        var wallet = Wallet.getWallet(player);
+        var wallets = Wallet.getWallets(player);
         var walletAmount = 0d;
 
-        if (wallet != null) {
-            if (Wallet.getWalletAmount(wallet) - amount < 0) {
-                walletAmount = -Wallet.getWalletAmount(wallet);
+        if (wallets.size() != 0) {
+            if (Wallet.getWalletAmount(wallets) - amount < 0) {
+                walletAmount = -Wallet.getWalletAmount(wallets);
                 Wallet.changeCashInWallet(player, walletAmount);
             }
             else {
@@ -169,7 +182,7 @@ public class CashManager {
             }
         }
 
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount + (amount - walletAmount))), player);
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount - (amount - walletAmount))), player);
     }
 
     /**
@@ -196,12 +209,8 @@ public class CashManager {
      * @return Amount of cah in player`s inventory
      */
     public static double amountOfCashInInventory(Player player) {
-        var playerCashAmount = CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()));
-        var wallet = Wallet.getWallet(player);
-        if (wallet != null)
-            playerCashAmount += Wallet.getWalletAmount(wallet);
-
-        return playerCashAmount;
+        return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()))
+                + Wallet.getWalletAmount(Wallet.getWallets(player));
     }
 
     /**
@@ -213,7 +222,6 @@ public class CashManager {
         var playerCashAmount = amountOfCashInInventory(player);
         if (playerCashAmount < amount) return;
 
-        ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
         takeCashFromPlayer(amount, player);
     }
 

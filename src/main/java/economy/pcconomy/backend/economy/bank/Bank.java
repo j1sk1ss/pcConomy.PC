@@ -34,7 +34,7 @@ public class Bank implements IMoney {
     public void giveCashToPlayer(double amount, Player player) {
         var balanceWorker = new BalanceManager();
 
-        if (amount > dayWithdrawBudget) return;
+        if (amount >= dayWithdrawBudget) return;
         if (balanceWorker.notSolvent(amount, player)) return;
 
         dayWithdrawBudget -= amount;
@@ -58,6 +58,7 @@ public class Bank implements IMoney {
         new BalanceManager().giveMoney(amount, player);
 
         BankBudget += amount;
+        dayWithdrawBudget += amount;
     }
 
     private double previousBudget = BankBudget;

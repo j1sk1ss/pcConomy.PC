@@ -37,7 +37,7 @@ public class BankerWindow implements IWindow {
             }
 
             window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1,
-                    17000 + Integer.parseInt(currentChar+""))); //TODO: DATA MODEL
+                    17000 + Integer.parseInt(currentChar + ""))); //TODO: DATA MODEL
         }
 
         for (var i = 0; i < 8; i++) {

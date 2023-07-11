@@ -121,14 +121,11 @@ public class ItemManager {
      * @param player Player that will lose this list of items
      */
     public static void takeItems(List<ItemStack> itemStacks, Player player) {
-        for (var item : itemStacks) {
-            if (item == null) continue;
-
-            for (var playerItem: player.getInventory()) {
-                if (playerItem == null) continue;
-                takeItems(item, player);
-            }
-        }
+        for (var item : itemStacks)
+            if (item != null)
+                for (var playerItem : player.getInventory())
+                    if (playerItem != null)
+                        if (playerItem.equals(item)) player.getInventory().removeItem(playerItem);
     }
 
     /**

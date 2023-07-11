@@ -1,6 +1,7 @@
 package economy.pcconomy.frontend.ui.objects.interactive;
 
 import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +33,12 @@ public class Slider implements IComponent {
      */
     public Slider(Slider slider) {
         this.coordinates   = new ArrayList<>(slider.coordinates);
-        this.slider        = new ArrayList<>(slider.slider);
+
+        this.slider = new ArrayList<>();
+        for (var item : slider.slider) {
+            this.slider.add(new Item(ItemManager.getName(item), String.join("\n",
+                    ItemManager.getLore(item)), item.getType(),1,17000));
+        }
 
         this.chosenOption  = slider.chosenOption;
         this.defaultOption = slider.defaultOption;

@@ -1,5 +1,6 @@
 package economy.pcconomy;
 
+import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 
 import economy.pcconomy.backend.economy.share.ShareManager;
@@ -78,7 +79,7 @@ public final class PcConomy extends JavaPlugin {
 
         for (var listener : Arrays.asList(new NpcLoader(), new LoanListener(), new TownyListener(),
                 new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
-                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener()))
+                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener(), new Wallet()))
             Bukkit.getPluginManager().registerEvents(listener, this);
 
         xConomyAPI  = new XConomyAPI();
