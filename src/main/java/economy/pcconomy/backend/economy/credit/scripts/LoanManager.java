@@ -4,7 +4,6 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.IMoney;
 import economy.pcconomy.backend.economy.credit.Borrower;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -47,7 +46,7 @@ public class LoanManager {
         if (borrower == null) return ((duration / 100d)) /
                 (expired + (amount / PcConomy.GlobalBank.getUsefulAmountOfBudget()));
 
-        for (var loan: borrower.CreditHistory)
+        for (var loan : borrower.CreditHistory)
             expired += loan.expired;
 
         return (borrower.CreditHistory.size() + (duration / 100d)) /
@@ -97,7 +96,7 @@ public class LoanManager {
         moneyGiver.getCreditList().add(new Loan(amount + amount * percentage, percentage, duration, dailyPayment, player));
         moneyGiver.changeBudget(-amount);
 
-        new BalanceManager().giveMoney(amount, player);
+        PcConomy.GlobalBalanceManager.giveMoney(amount, player);
     }
 
     /***
@@ -106,13 +105,12 @@ public class LoanManager {
      * @param creditOwner Credit owner
      */
     public static void payOffADebt(Player player, IMoney creditOwner) {
-        var balance = new BalanceManager();
         var loan = getLoan(player.getUniqueId(), creditOwner);
 
         if (loan == null) return;
-        if (balance.notSolvent(loan.amount, player)) return;
+        if (PcConomy.GlobalBalanceManager.notSolvent(loan.amount, player)) return;
 
-        balance.takeMoney(loan.amount, player);
+        PcConomy.GlobalBalanceManager.takeMoney(loan.amount, player);
         creditOwner.changeBudget(loan.amount);
         destroyLoan(player.getUniqueId(), creditOwner);
     }
@@ -128,13 +126,12 @@ public class LoanManager {
                 return;
             }
 
-            var balanceWorker = new BalanceManager();
-            if (balanceWorker.notSolvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
+            if (PcConomy.GlobalBalanceManager.notSolvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
                 loan.expired += 1;
                 continue;
             }
 
-            balanceWorker.takeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
+            PcConomy.GlobalBalanceManager.takeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
             loan.amount -= loan.dailyPayment;
 
             moneyTaker.changeBudget(loan.dailyPayment);

@@ -2,7 +2,6 @@ package economy.pcconomy;
 
 import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
-
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.link.CommandManager;
@@ -13,7 +12,7 @@ import economy.pcconomy.backend.save.Loader;
 import economy.pcconomy.backend.economy.town.listener.TownyListener;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.town.scripts.TownManager;
-
+import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
 import economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener;
@@ -23,12 +22,9 @@ import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
 import economy.pcconomy.frontend.ui.windows.shareholder.ShareholderListener;
 import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
 
-import me.yic.xconomy.api.XConomyAPI;
-
 import org.bukkit.Bukkit;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -36,11 +32,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-//TODO: Think about local storage for cash (may contains a moneys via text in lore)
-
 public final class PcConomy extends JavaPlugin {
     public static FileConfiguration Config;
-    public static XConomyAPI xConomyAPI;
+    public static BalanceManager GlobalBalanceManager;
     public static NpcManager GlobalNPC;
     public static Bank GlobalBank;
     public static BorrowerManager GlobalBorrowerManager;
@@ -59,6 +53,7 @@ public final class PcConomy extends JavaPlugin {
         GlobalTownManager     = new TownManager();
         GlobalLicenseManager  = new LicenseManager();
         GlobalShareManager    = new ShareManager();
+        GlobalBalanceManager  = new BalanceManager();
 
         try {
             if (new File("npc_data.json").exists())
@@ -82,12 +77,10 @@ public final class PcConomy extends JavaPlugin {
                 new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener(), new Wallet()))
             Bukkit.getPluginManager().registerEvents(listener, this);
 
-        xConomyAPI  = new XConomyAPI();
-
         for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
                 "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor", "switch_town_to_npc",
                 "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget", "create_wallet",
-                "create_shareholder"))
+                "create_shareholder", "transfer_share"))
             Objects.requireNonNull(getCommand(command)).setExecutor(new CommandManager());
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)

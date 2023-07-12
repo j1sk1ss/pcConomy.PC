@@ -8,7 +8,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.jetbrains.annotations.NotNull;
 
 public class PcConomyPAPI extends PlaceholderExpansion {
-	
 	@Override
 	public @NotNull String getAuthor() { // Реализация API
 		return "PotolotCraft Team";

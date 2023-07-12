@@ -7,7 +7,6 @@ import economy.pcconomy.backend.economy.IMoney;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.cash.CashManager;
 
 import org.bukkit.entity.Player;
@@ -32,14 +31,12 @@ public class Bank implements IMoney {
      * @param player Player that will take cash
      */
     public void giveCashToPlayer(double amount, Player player) {
-        var balanceWorker = new BalanceManager();
-
         if (amount >= dayWithdrawBudget) return;
-        if (balanceWorker.notSolvent(amount, player)) return;
+        if (PcConomy.GlobalBalanceManager.notSolvent(amount, player)) return;
 
         dayWithdrawBudget -= amount;
 
-        balanceWorker.takeMoney(amount, player);
+        PcConomy.GlobalBalanceManager.takeMoney(amount, player);
         CashManager.giveCashToPlayer(amount, player);
 
         BankBudget -= amount;
@@ -55,7 +52,7 @@ public class Bank implements IMoney {
         if (amount > amountInventory) return;
 
         CashManager.takeCashFromInventory(amount, player);
-        new BalanceManager().giveMoney(amount, player);
+        PcConomy.GlobalBalanceManager.giveMoney(amount, player);
 
         BankBudget += amount;
         dayWithdrawBudget += amount;

@@ -1,16 +1,16 @@
 name: PcConomy
 version: '${project.version}'
 main: economy.pcconomy.PcConomy
-api-version: 1.16
+api-version: 1.20
 authors: [ j1sk1ss ]
 description: Main economy plugin for Potolot Craft made by j1sk1ss
 website: https://potolotcraft.net
 
 commands:
   take_cash:
-    usage: /take_cash
+    usage: /take_cash [amount]
   create_cash:
-    usage: /create_cash
+    usage: /create_cash [amount]
   create_wallet:
     usage: /create_wallet
   create_shareholder:
@@ -20,7 +20,7 @@ commands:
   save_data:
     usage: /save_data
   put_cash_to_bank:
-    usage: /put_cash_to_bank
+    usage: /put_cash_to_bank [amount]
   create_banker:
     usage: /create_banker
   create_loaner:
@@ -34,17 +34,19 @@ commands:
   create_licensor:
     usage: /create_licensor
   switch_town_to_npc:
-    usage: /switch_town_to_npc
+    usage: /switch_town_to_npc [town name] [status]
   town_menu:
     usage: /town_menu
   add_trade_to_town:
-    usage: /add_trade_to_town
+    usage: /add_trade_to_town [town name] [material] [amount]
   reload_npc:
     usage: /reload_npc
   full_info:
     usage: /full_info
   set_day_bank_budget:
-    usage: /set_day_bank_budget
+    usage: /set_day_bank_budget [amount]
+  transfer_share:
+    usage: /transfer_share [town name] [player name]
 
 bank:
   start_budget: 15000

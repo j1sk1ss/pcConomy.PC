@@ -75,19 +75,6 @@ public class Wallet implements Listener {
      * @param player Player
      * @return Wallet
      */
-    public static ItemStack getWallet(Player player) {
-        for (var item : player.getInventory())
-            if (item != null)
-                if (isWallet(item)) return item;
-
-        return null;
-    }
-
-    /**
-     * Get wallet from inventory
-     * @param player Player
-     * @return Wallet
-     */
     public static List<ItemStack> getWallets(Player player) {
         var list = new ArrayList<ItemStack>();
         for (var item : player.getInventory())

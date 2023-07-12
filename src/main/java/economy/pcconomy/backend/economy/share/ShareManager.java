@@ -6,7 +6,6 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-import economy.pcconomy.backend.scripts.BalanceManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -60,7 +59,7 @@ public class ShareManager {
             if (share.Owner != null && Bukkit.getPlayer(share.Owner) != null) {
                 PcConomy.GlobalTownManager.getTown(town).changeBudget(-averagePrice);
 
-                new BalanceManager().giveMoney(averagePrice - averagePrice * PcConomy.GlobalBank.VAT,
+                PcConomy.GlobalBalanceManager.giveMoney(averagePrice - averagePrice * PcConomy.GlobalBank.VAT,
                         Objects.requireNonNull(Bukkit.getPlayer(share.Owner)));
                 PcConomy.GlobalBank.BankBudget += averagePrice * PcConomy.GlobalBank.VAT;
             }
@@ -119,6 +118,21 @@ public class ShareManager {
 
                 break;
             }
+    }
+
+    /**
+     * Change owner of share
+     * @param town Town
+     * @param oldOwner Old owner of share
+     * @param newOwner New owner of share
+     */
+    public void changeShareOwner(UUID town, Player oldOwner, Player newOwner) {
+        var currentTown = PcConomy.GlobalTownManager.getTown(town);
+        if (currentTown == null) return;
+
+        for (var share : Shares.get(town))
+            if (share.Owner == oldOwner.getUniqueId())
+                share.Owner = newOwner.getUniqueId();
     }
 
     /**
@@ -189,7 +203,7 @@ public class ShareManager {
             townObject.changeBudget(-pay);
 
             PcConomy.GlobalBank.BankBudget += pay * PcConomy.GlobalBank.VAT;
-            new BalanceManager().giveMoney(pay - pay * PcConomy.GlobalBank.VAT, player);
+            PcConomy.GlobalBalanceManager.giveMoney(pay - pay * PcConomy.GlobalBank.VAT, player);
         }
 
         townObject.quarterlyEarnings = 0;

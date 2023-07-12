@@ -1,14 +1,12 @@
 package economy.pcconomy.backend.scripts;
 
-import economy.pcconomy.PcConomy;
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class BalanceManager {
-    private final XConomyAPI xConomyAPI = PcConomy.xConomyAPI;
+    private static final XConomyAPI xConomyAPI = new XConomyAPI();
 
     /**
      * Give value of balance of Player

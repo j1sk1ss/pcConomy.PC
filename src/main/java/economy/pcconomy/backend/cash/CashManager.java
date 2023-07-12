@@ -50,15 +50,6 @@ public class CashManager {
     /**
      * Creates itemStack object
      * @param amount Amount of cash object
-     * @return ItemStack object
-     */
-    public static ItemStack createCashObject(double amount) {
-        return new Item(currencyName, "" + amount + currencySigh, Material.PAPER, 1, 17000); //TODO: DATA MODEL
-    }
-
-    /**
-     * Creates itemStack object
-     * @param amount Amount of cash object
      * @param count Count of objects
      * @return ItemStack object
      */
@@ -95,7 +86,7 @@ public class CashManager {
      * @return List of cash objects from inventory
      */
     public static List<ItemStack> getCashFromInventory(PlayerInventory inventory) {
-        List<ItemStack> moneys = new ArrayList<>();
+        var moneys = new ArrayList<ItemStack>();
         for (var item : inventory) if (isCash(item)) moneys.add(item);
         return moneys;
     }
@@ -106,7 +97,7 @@ public class CashManager {
      * @return List of cash objects
      */
     public static List<ItemStack> getChangeInCash(List<Integer> change) {
-        List<ItemStack> moneyStack = new ArrayList<>();
+        var moneyStack = new ArrayList<ItemStack>();
         for (int i = 0; i < Denomination.size(); i++)
             moneyStack.add(CashManager.createCashObject(Denomination.get(i), change.get(i)));
 
@@ -137,9 +128,7 @@ public class CashManager {
             return;
         }
 
-        var changeNumeric = getChange(amount);
-        var change = CashManager.getChangeInCash(changeNumeric);
-        ItemManager.giveItems(change, player);
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(amount)), player);
     }
 
     /**
@@ -154,9 +143,7 @@ public class CashManager {
             return;
         }
 
-        var changeNumeric = getChange(amount);
-        var change = CashManager.getChangeInCash(changeNumeric);
-        ItemManager.giveItems(change, player);
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(amount)), player);
     }
 
     /**
@@ -239,9 +226,13 @@ public class CashManager {
      * @param num Amount of cash
      * @return Name of currency
      */
-    public static String getCurrencyNameByNum(int num) { // Получение склонённого названия валюты в зависимости от суммы денег (в именительном падеже)
-    	if (num % 10 == 1 && num % 100 != 11) return currencyNameCases.get("is");
-    	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14)) return currencyNameCases.get("rs");
+    public static String getCurrencyNameByNum(int num) {
+    	if (num % 10 == 1 && num % 100 != 11)
+            return currencyNameCases.get("is");
+
+    	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14))
+            return currencyNameCases.get("rs");
+
     	return currencyNameCases.get("rp");
     }
 }

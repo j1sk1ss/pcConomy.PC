@@ -16,5 +16,5 @@ public class Borrower {
     }
 
     public final UUID Borrower;
-    public final List<Loan> CreditHistory;
+    public List<Loan> CreditHistory;
 }
