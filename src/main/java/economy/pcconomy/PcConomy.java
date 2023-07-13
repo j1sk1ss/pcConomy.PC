@@ -21,9 +21,9 @@ import economy.pcconomy.frontend.ui.windows.mayor.MayorListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
 import economy.pcconomy.frontend.ui.windows.shareholder.ShareholderListener;
 import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
+import economy.pcconomy.frontend.ui.windows.wallet.WalletListener;
 
 import org.bukkit.Bukkit;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -74,13 +74,14 @@ public final class PcConomy extends JavaPlugin {
 
         for (var listener : Arrays.asList(new NpcLoader(), new LoanListener(), new TownyListener(),
                 new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
-                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener(), new Wallet()))
+                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener(), new Wallet(),
+                new WalletListener()))
             Bukkit.getPluginManager().registerEvents(listener, this);
 
         for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
-                "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor", "switch_town_to_npc",
-                "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget", "create_wallet",
-                "create_shareholder", "transfer_share"))
+                "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor",
+                "switch_town_to_npc", "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget",
+                "create_wallet", "create_shareholder", "transfer_share"))
             Objects.requireNonNull(getCommand(command)).setExecutor(new CommandManager());
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
@@ -100,8 +101,8 @@ public final class PcConomy extends JavaPlugin {
             GlobalNPC.saveNPC("npc_data");
             GlobalBank.saveBank("bank_data");
             GlobalTownManager.saveTown("towns_data");
-            GlobalLicenseManager.saveLicenses("license_data");
             GlobalShareManager.saveShares("shares_data");
+            GlobalLicenseManager.saveLicenses("license_data");
             GlobalBorrowerManager.saveBorrowers("borrowers_data");
         } catch (IOException e) {
             throw new RuntimeException(e);

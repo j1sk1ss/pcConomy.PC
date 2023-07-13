@@ -71,7 +71,7 @@ public class NpcTown extends Town {
             return;
         }
 
-        CashManager.takeCashFromInventory(price, buyer);
+        CashManager.takeCashFromPlayer(price, buyer);
 
         changeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);

@@ -27,18 +27,4 @@ public class Window {
 
         return false;
     }
-
-    /**
-     * Method for checking owning of this window
-     * @param event Click event in some inventory
-     * @param player Player that generate event
-     * @return Status of owning this window
-     */
-    public static boolean isThisWindow(InventoryClickEvent event, Player player){
-        if (event.getCurrentItem() != null)
-            if (event.getInventory().getHolder() instanceof Player currentPlayer)
-                return currentPlayer.equals(player);
-
-        return false;
-    }
 }

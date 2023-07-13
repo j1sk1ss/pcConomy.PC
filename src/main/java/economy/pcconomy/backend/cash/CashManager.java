@@ -153,12 +153,43 @@ public class CashManager {
      */
     public static void takeCashFromPlayer(double amount, Player player) {
         var playerCashAmount = amountOfCashInInventory(player);
+        if (playerCashAmount < amount) return;
+
         ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
 
         var wallets = Wallet.getWallets(player);
         var walletAmount = 0d;
 
         if (wallets.size() != 0) {
+            if (Wallet.getWalletAmount(wallets) - amount < 0) {
+                walletAmount = -Wallet.getWalletAmount(wallets);
+                Wallet.changeCashInWallet(player, walletAmount);
+            }
+            else {
+                Wallet.changeCashInWallet(player, -amount);
+                return;
+            }
+        }
+
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount - (amount - walletAmount))), player);
+    }
+
+    /**
+     * Takes cash from player
+     * @param amount Amount of cash
+     * @param player Player that will lose cash
+     * @param ignoreWallet Ignoring wallet status
+     */
+    public static void takeCashFromPlayer(double amount, Player player, boolean ignoreWallet) {
+        var playerCashAmount = amountOfCashInInventory(player);
+        if (playerCashAmount < amount) return;
+
+        ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
+
+        var wallets = Wallet.getWallets(player);
+        var walletAmount = 0d;
+
+        if (wallets.size() != 0 && !ignoreWallet) {
             if (Wallet.getWalletAmount(wallets) - amount < 0) {
                 walletAmount = -Wallet.getWalletAmount(wallets);
                 Wallet.changeCashInWallet(player, walletAmount);
@@ -189,7 +220,6 @@ public class CashManager {
         return change;
     }
 
-
     /**
      * Amount of cash in player inventory
      * @param player Player that will be checked
@@ -201,15 +231,14 @@ public class CashManager {
     }
 
     /**
-     * Take cash from player
-     * @param amount Amount that will be taken
-     * @param player Player that will lose this amount
+     * Amount of cash in player inventory
+     * @param player Player that will be checked
+     * @param ignoreWallet Ignore wallet during calculations
+     * @return Amount of cah in player`s inventory
      */
-    public static void takeCashFromInventory(double amount, Player player) {
-        var playerCashAmount = amountOfCashInInventory(player);
-        if (playerCashAmount < amount) return;
-
-        takeCashFromPlayer(amount, player);
+    public static double amountOfCashInInventory(Player player, boolean ignoreWallet) {
+        return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()))
+                + (ignoreWallet ? 0 : Wallet.getWalletAmount(Wallet.getWallets(player)));
     }
 
     /**

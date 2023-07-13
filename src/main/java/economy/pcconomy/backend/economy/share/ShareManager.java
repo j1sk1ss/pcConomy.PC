@@ -108,7 +108,7 @@ public class ShareManager {
             if (share.Owner == null) {
                 var price = share.Price;
                 if (CashManager.amountOfCashInInventory(buyer) >= price + price * PcConomy.GlobalBank.VAT) {
-                    CashManager.takeCashFromInventory(price + price * PcConomy.GlobalBank.VAT, buyer);
+                    CashManager.takeCashFromPlayer(price + price * PcConomy.GlobalBank.VAT, buyer);
 
                     PcConomy.GlobalBank.BankBudget += price * PcConomy.GlobalBank.VAT;
                     PcConomy.GlobalTownManager.getTown(town).changeBudget(price);

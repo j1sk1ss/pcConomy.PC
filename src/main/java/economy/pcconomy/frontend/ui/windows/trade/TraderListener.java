@@ -64,7 +64,7 @@ public class TraderListener implements Listener {
                     if (!playerTradeLicense.isOverdue()) {
                         if (CashManager.amountOfCashInInventory(player) < trader.Cost) return;
 
-                        CashManager.takeCashFromInventory(trader.Cost, player);
+                        CashManager.takeCashFromPlayer(trader.Cost, player);
                         PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost);
 
                         rantTrader(trader, player);
@@ -145,7 +145,7 @@ public class TraderListener implements Listener {
                                 ItemManager.giveItemsWithoutLore(buyingItem, player);
 
                                 if (!trader.Owner.equals(player.getUniqueId())) {
-                                    CashManager.takeCashFromInventory(price, player);
+                                    CashManager.takeCashFromPlayer(price, player);
 
                                     var endPrice = price / (1 + trader.Margin);
                                     PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(price - endPrice);

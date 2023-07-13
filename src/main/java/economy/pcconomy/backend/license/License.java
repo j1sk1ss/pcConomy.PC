@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import static economy.pcconomy.backend.cash.CashManager.amountOfCashInInventory;
-import static economy.pcconomy.backend.cash.CashManager.takeCashFromInventory;
+import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
 public class License {
     public final static double marketLicensePrice = PcConomy.Config.getDouble("license.market_license_price", 2400d);
@@ -39,7 +39,7 @@ public class License {
         if (PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType) != null)
             PcConomy.GlobalLicenseManager.Licenses.remove(PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType));
 
-        takeCashFromInventory(price, player);
+        takeCashFromPlayer(price, player);
         PcConomy.GlobalBank.BankBudget += price;
         //TODO: DATA MODEL
         PcConomy.GlobalLicenseManager.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));

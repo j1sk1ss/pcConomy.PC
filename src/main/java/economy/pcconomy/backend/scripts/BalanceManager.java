@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 
-public class BalanceManager {
+public class BalanceManager { // TODO: Think about writing own abstract economy overrider instead xConomy
     private static final XConomyAPI xConomyAPI = new XConomyAPI();
 
     /**

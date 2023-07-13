@@ -3,7 +3,10 @@ package economy.pcconomy.backend.cash.items;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
+import economy.pcconomy.frontend.ui.windows.wallet.WalletWindow;
+
 import org.apache.commons.lang.StringUtils;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,18 +35,10 @@ public class Wallet implements Listener {
 
         if (isWallet(wallet)) {
             switch (event.getAction()) {
-                case LEFT_CLICK_AIR -> {
-                    var cash = getWalletAmount(wallet);
-                    Wallet.changeCashInWallet(player, -cash);
-                    CashManager.giveCashToPlayer(cash, player, true);
-                }
-                case RIGHT_CLICK_AIR -> {
-                    var cash = CashManager.amountOfCashInInventory(player);
-                    ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-                    ItemManager.takeItems(wallet, player);
-
-                    giveWallet(player, cash);
-                }
+                case LEFT_CLICK_AIR ->
+                    player.openInventory(WalletWindow.putWindow(player));
+                case RIGHT_CLICK_AIR ->
+                    player.openInventory(WalletWindow.withdrawWindow(player, wallet));
             }
 
             event.setCancelled(true);
@@ -132,5 +127,16 @@ public class Wallet implements Listener {
         giveWallet(player, getWalletAmount(wallets) + amount);
         for (var i = 1; i < count; i++)
             giveWallet(player);
+    }
+
+    /**
+     * Put cash into players wallet
+     * @param wallet Wallet
+     * @param player Player
+     * @param amount Amount
+     */
+    public static void changeCashInWallet(ItemStack wallet, Player player, double amount) {
+        ItemManager.takeItems(wallet, player);
+        giveWallet(player, getWalletAmount(wallet) + amount);
     }
 }

@@ -23,8 +23,7 @@ public class ItemManager {
         var itemMeta = Objects.requireNonNull(item).getItemMeta();
         var lore = new ArrayList<Component>();
 
-        var lines = loreLine.split("\n");
-        for (var line : lines)
+        for (var line : loreLine.split("\n"))
             lore.add(Component.text(line));
 
         itemMeta.lore(lore);
@@ -40,6 +39,7 @@ public class ItemManager {
      */
     public static ItemStack setName(ItemStack item, String name) {
         var itemMeta = Objects.requireNonNull(item).getItemMeta();
+
         itemMeta.displayName(Component.text(name));
         Objects.requireNonNull(item).setItemMeta(itemMeta);
 
@@ -101,8 +101,8 @@ public class ItemManager {
      */
     public static void giveItemsWithoutLore(List<ItemStack> itemStacks, Player player) {
         for (var item : itemStacks)
-            player.getInventory().addItem(ItemManager.setLore(item, ""))
-                    .forEach((index, itemStack) -> player.getWorld().dropItem(player.getLocation(), itemStack));;
+            player.getInventory().addItem(ItemManager.setLore(item, "")).forEach((index, itemStack) ->
+                    player.getWorld().dropItem(player.getLocation(), itemStack));;
     }
 
     /**
@@ -111,8 +111,8 @@ public class ItemManager {
      * @param player Player that will take this item
      */
     public static void giveItemsWithoutLore(ItemStack item, Player player) {
-        player.getInventory().addItem(ItemManager.setLore(item, ""))
-                .forEach((index, itemStack) -> player.getWorld().dropItem(player.getLocation(), itemStack));
+        player.getInventory().addItem(ItemManager.setLore(item, "")).forEach((index, itemStack) ->
+                player.getWorld().dropItem(player.getLocation(), itemStack));
     }
 
     /**

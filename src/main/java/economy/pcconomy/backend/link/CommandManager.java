@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
-import static economy.pcconomy.backend.cash.CashManager.takeCashFromInventory;
+import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
 public class CommandManager implements CommandExecutor {
     @Override
@@ -31,10 +31,10 @@ public class CommandManager implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
 
         switch (command.getName()) {
-            case "take_cash"          -> takeCashFromInventory(Double.parseDouble(args[0]), (Player) sender);
+            case "take_cash"          -> takeCashFromPlayer(Double.parseDouble(args[0]), (Player) sender);
             case "create_cash"        -> giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
             case "reload_towns"       -> PcConomy.GlobalTownManager.reloadTownObjects();
-            case "reload_npc"         -> PcConomy.GlobalNPC.updateNPC();
+            case "reload_npc"         -> PcConomy.GlobalNPC.reloadNPC();
             case "save_data"          -> PcConomy.SaveData();
             case "put_cash_to_bank"   -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player) sender);
             case "create_banker"      -> PcConomy.GlobalNPC.createNPC((Player) sender, new Banker());

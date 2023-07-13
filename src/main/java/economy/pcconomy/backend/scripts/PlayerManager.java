@@ -20,9 +20,8 @@ public class PlayerManager {
         var town = TownyAPI.getInstance().getTown(player);
         if (town == null) return new ArrayList<>();
 
-        var list = town.getResidents();
         var players = new ArrayList<Player>();
-        for (var resident : list)
+        for (var resident : town.getResidents())
             players.add(resident.getPlayer());
 
         return players;
@@ -37,9 +36,8 @@ public class PlayerManager {
         var town = TownyAPI.getInstance().getTown(player);
         if (town == null) return new ArrayList<>();
 
-        var list = town.getResidents();
         var players = new ArrayList<UUID>();
-        for (var resident : list)
+        for (var resident : town.getResidents())
             players.add(Objects.requireNonNull(resident.getPlayer()).getUniqueId());
 
         return players;

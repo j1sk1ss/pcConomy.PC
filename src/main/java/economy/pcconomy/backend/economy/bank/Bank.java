@@ -51,7 +51,7 @@ public class Bank implements IMoney {
         var amountInventory = CashManager.amountOfCashInInventory(player);
         if (amount > amountInventory) return;
 
-        CashManager.takeCashFromInventory(amount, player);
+        CashManager.takeCashFromPlayer(amount, player);
         PcConomy.GlobalBalanceManager.giveMoney(amount, player);
 
         BankBudget += amount;

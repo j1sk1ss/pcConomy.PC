@@ -5,14 +5,9 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.objects.INpcObject;
 import economy.pcconomy.backend.npc.objects.LoanerObject;
-import economy.pcconomy.backend.npc.traits.Banker;
-import economy.pcconomy.backend.npc.traits.Loaner;
-import economy.pcconomy.backend.npc.traits.NpcLoaner;
-import economy.pcconomy.backend.npc.traits.Licensor;
+import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
-import economy.pcconomy.backend.npc.traits.NpcTrader;
-import economy.pcconomy.backend.npc.traits.Trader;
 
 import economy.pcconomy.backend.npc.objects.TraderObject;
 import net.citizensnpcs.api.CitizensAPI;
@@ -58,7 +53,7 @@ public class NpcManager {
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        CashManager.takeCashFromInventory(price, buyer);
+        CashManager.takeCashFromPlayer(price, buyer);
         PcConomy.GlobalBank.BankBudget += price;
 
         var npcList = Map.of(
@@ -74,15 +69,16 @@ public class NpcManager {
     /***
      * Update list of available NPC
      */
-    public void updateNPC() {
+    public void reloadNPC() {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
-                case "npcloaner" -> npc.addTrait(NpcLoaner.class);
-                case "loaner"    -> npc.addTrait(Loaner.class);
-                case "banker"    -> npc.addTrait(Banker.class);
-                case "licensor"  -> npc.addTrait(Licensor.class);
-                case "npctrader" -> npc.addTrait(NpcTrader.class);
-                case "trader"    -> npc.addTrait(Trader.class);
+                case "npcloaner"   -> npc.addTrait(NpcLoaner.class);
+                case "loaner"      -> npc.addTrait(Loaner.class);
+                case "banker"      -> npc.addTrait(Banker.class);
+                case "licensor"    -> npc.addTrait(Licensor.class);
+                case "npctrader"   -> npc.addTrait(NpcTrader.class);
+                case "trader"      -> npc.addTrait(Trader.class);
+                case "shareholder" -> npc.addTrait(Shareholder.class);
             }
         }
 
