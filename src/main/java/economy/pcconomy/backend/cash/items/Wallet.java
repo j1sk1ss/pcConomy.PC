@@ -36,7 +36,7 @@ public class Wallet implements Listener {
         if (isWallet(wallet)) {
             switch (event.getAction()) {
                 case LEFT_CLICK_AIR ->
-                    player.openInventory(WalletWindow.putWindow(player));
+                    player.openInventory(WalletWindow.putWindow(player, wallet));
                 case RIGHT_CLICK_AIR ->
                     player.openInventory(WalletWindow.withdrawWindow(player, wallet));
             }
@@ -45,6 +45,7 @@ public class Wallet implements Listener {
         }
     }
 
+    public static final double WalletCapacity = 10000;
     private static final int walletDataModel = 17050; //TODO: DATA MODEL
 
     /**
