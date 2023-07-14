@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ShareholderWindow implements IWindow {
@@ -42,7 +43,7 @@ public class ShareholderWindow implements IWindow {
             for (var j = i; j < i + Math.min(Math.max(actions.length - 27, 1), 27); j++) {
                 var share = PcConomy.GlobalShareManager.getTownShares((UUID) actions[j]).get(0);
                 window.setItem(j, new Item(
-                        "Акции города " + TownyAPI.getInstance().getTown((UUID) actions[j]).getName(),
+                        "Акции города " + Objects.requireNonNull(TownyAPI.getInstance().getTown((UUID) actions[j])).getName(),
                         "Цена: " + share.Price + CashManager.currencySigh + "\n" +
                         "Доля собственности: " + share.Equality + "%\n" +
                         "Тип ценной бумаги: " + share.ShareType + "\n" +
@@ -64,15 +65,15 @@ public class ShareholderWindow implements IWindow {
 
     public static Inventory acceptWindow(Player player, UUID town) {
         return acceptPanel.placeComponents(Bukkit.createInventory(player, 27,
-                Component.text("Акции-Города " + TownyAPI.getInstance().getTown(town).getName())));
+                Component.text("Акции-Города " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName())));
     }
 
     public static Panel townSharesPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
-                9, 10, 11, 12, 18, 19, 20, 21
+                0, 1, 2, 9, 10, 11, 18, 19, 20
             ), "Выставить на продажу", ""),
             new Button(Arrays.asList(
-                14, 15, 16, 17, 23, 24, 25, 26
+                3, 4, 5, 12, 13, 14, 21, 22, 23
             ), "Снять с продажи", ""),
             new Slider(Arrays.asList(
                 27, 28, 29, 30, 31, 32, 33, 34, 35
@@ -114,7 +115,7 @@ public class ShareholderWindow implements IWindow {
                     new Item("10000" + CashManager.currencySigh, "Цена", Material.GLASS, 1, 17000)
             ), 17000, 17000, "SliderCost"),
             new Slider(Arrays.asList(
-                13, 22
+                16, 17
             ), Arrays.asList( //TODO: DATA MODEL
                     new Item("Дивиденты", "Тип", Material.GLASS, 1, 17000),
                     new Item("Доля", "Тип", Material.GLASS, 1, 17000)
@@ -123,6 +124,6 @@ public class ShareholderWindow implements IWindow {
 
     public static Inventory townSharesWindow(Player player, UUID town) {
         return townSharesPanel.placeComponents(Bukkit.createInventory(player, 54, Component.text("Акции-Выставление "
-        + TownyAPI.getInstance().getTown(town).getName())));
+        + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName())));
     }
 }

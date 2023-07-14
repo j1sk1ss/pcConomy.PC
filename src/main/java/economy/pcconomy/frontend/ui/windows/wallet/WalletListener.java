@@ -19,19 +19,11 @@ public class WalletListener implements Listener {
         var wallet = player.getInventory().getItemInMainHand();
 
         if (Window.isThisWindow(event, player, "Кошелёк")) {
-            var option = Objects.requireNonNull(event.getCurrentItem());
-            var amount = ItemManager.getPriceFromLore(option, 0);
+            var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(event.getCurrentItem()), 0);
 
-            if (amount > 0) {
-                Wallet.changeCashInWallet(wallet, player, -amount);
-                CashManager.giveCashToPlayer(amount, player, true);
-            }
-            else {
-                CashManager.takeCashFromPlayer(amount, player, true);
-                ItemManager.takeItems(wallet, player);
-
-                Wallet.changeCashInWallet(wallet, player, amount);
-            }
+            Wallet.changeCashInWallet(wallet, player, -amount);
+            if (amount > 0) CashManager.giveCashToPlayer(amount, player, true);
+            else CashManager.takeCashFromPlayer(Math.abs(amount), player, true);
 
             player.closeInventory();
             event.setCancelled(true);

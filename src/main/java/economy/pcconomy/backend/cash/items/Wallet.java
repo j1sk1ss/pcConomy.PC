@@ -27,7 +27,7 @@ public class Wallet implements Listener {
     @EventHandler
     public void onWalletUse(PlayerInteractEvent event){
         if (event.getHand() != EquipmentSlot.HAND) return;
-        if (event.getAction() != Action.LEFT_CLICK_AIR ||
+        if (event.getAction() != Action.LEFT_CLICK_AIR &&
                 event.getAction() != Action.RIGHT_CLICK_AIR) return;
 
         var player = event.getPlayer();
