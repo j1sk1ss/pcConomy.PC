@@ -5,7 +5,6 @@ import economy.pcconomy.PcConomy;
 
 import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.town.scripts.TownManager;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
@@ -38,7 +37,7 @@ public class LoanListener implements Listener {
 
             if (title.contains("Город-Взятие")) {
                 if (ItemManager.getName(Objects.requireNonNull(item)).contains(CashManager.currencySigh)) {
-                    boolean isSafe = ItemManager.getLore(item).get(0).contains("Город одобрит данный займ.");
+                    var isSafe = ItemManager.getLore(item).get(0).contains("Город одобрит данный займ.");
                     final int maxCreditCount = 5;
 
                     if (isSafe && currentTown.getCreditList().size() < maxCreditCount) {

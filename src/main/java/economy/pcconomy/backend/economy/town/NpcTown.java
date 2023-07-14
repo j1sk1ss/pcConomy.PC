@@ -45,13 +45,16 @@ public class NpcTown extends Town {
 
     public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage", .5);
     public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget", .5);
+    public double townVAT = .01d;
     public final List<ItemStack> Storage;
     public final UUID TownUUID;
     public final List<Loan> Credit;
     private double previousBudget = 10000;
-    private final int StartStorageAmount;
+    private int StartStorageAmount;
 
     private final int purchaseSize = 8;
+    private int dayStorage = (int)(StartStorageAmount * usefulStorage);
+    private double dayBudget = previousBudget * usefulBudget;
 
     /**
      * Buy resources from town storage
@@ -61,17 +64,20 @@ public class NpcTown extends Town {
     public void buyResourceFromStorage(ItemStack itemStack, Player buyer) {
         var price = ItemManager.getPriceFromLore(itemStack, 1) * purchaseSize;
 
-        if (StorageManager.getAmountOfResource(itemStack, Storage) * usefulStorage < purchaseSize) {
+        if (dayStorage < purchaseSize) {
             buyer.sendMessage("Извините, но данного товара и у нас самих не очень много.");
             return;
         }
 
-        if (CashManager.amountOfCashInInventory(buyer) < price) {
+        if (CashManager.amountOfCashInInventory(buyer, false) < price) {
             buyer.sendMessage("Приходи когда мммммммм, будешь немного по богаче.");
             return;
         }
 
-        CashManager.takeCashFromPlayer(price, buyer);
+        dayStorage -= purchaseSize;
+        dayBudget  += price;
+
+        CashManager.takeCashFromPlayer(price, buyer, false);
 
         changeBudget(price / PcConomy.GlobalBank.VAT);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
@@ -97,16 +103,19 @@ public class NpcTown extends Town {
         }
 
         var price = ItemManager.getPriceFromLore(resource, 1) * itemAmount;
-        if (price > getBudget() * usefulBudget) {
+        if (price > dayBudget) {
             seller.sendMessage("Слишком дорого для нашего города.");
             return;
         }
+
+        dayStorage += itemAmount;
+        dayBudget  -= price;
 
         seller.getInventory().setItemInMainHand(null);
         StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) +
                 itemAmount, Storage);
 
-        giveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller);
+        giveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller, false);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
         changeBudget(-price);
 
@@ -122,8 +131,8 @@ public class NpcTown extends Town {
         for (var i = 0; i < Storage.size(); i++) {
             var price = Math.abs(budget / Storage.get(i).getAmount() + 1);
             Storage.set(i, ItemManager.setLore(Storage.get(i), "Цена за " + purchaseSize + " шт.:\n" +
-                    (purchaseSize * Math.round(price + (price * PcConomy.GlobalBank.VAT) * 100d) / 10d) + CashManager.currencySigh +
-                    "\nБез НДС в " + PcConomy.GlobalBank.VAT * 100 + "%:\n" +
+                    (purchaseSize * Math.round(price + (price * (PcConomy.GlobalBank.VAT + townVAT)) * 100d) / 10d) + CashManager.currencySigh +
+                    "\nБез НДС в " + (PcConomy.GlobalBank.VAT + townVAT) * 100 + "%:\n" +
                     (purchaseSize * Math.round(price * 100d) / 100d) + CashManager.currencySigh));
         }
     }
@@ -162,11 +171,15 @@ public class NpcTown extends Town {
         if (changePercent < 0 && isRecession == 1)
             getMoneyFromBank(1000 + Math.abs(changePercent) * 1000);
 
-        usefulBudget  = usefulStorage - (usefulBudget * Math.abs(changePercent)) * isRecession;
-        usefulStorage = usefulBudget + (usefulStorage * Math.abs(changePercent)) * isRecession;
+        townVAT       += (townVAT * Math.abs(changePercent) / 2) * isRecession;
+        usefulBudget  -= (usefulBudget * Math.abs(changePercent)) * isRecession;
+        usefulStorage += (usefulStorage * Math.abs(changePercent)) * isRecession;
 
         StorageManager.createResources(500, Storage);
         StorageManager.useResources(100, Storage);
+
+        dayStorage = (int)(StartStorageAmount * usefulStorage);
+        dayBudget  = previousBudget * usefulBudget;
 
         previousBudget = getBudget();
     }

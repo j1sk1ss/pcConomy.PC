@@ -1,6 +1,7 @@
 package economy.pcconomy.backend.npc;
 
 import com.google.gson.GsonBuilder;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.objects.INpcObject;
@@ -8,8 +9,8 @@ import economy.pcconomy.backend.npc.objects.LoanerObject;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
-
 import economy.pcconomy.backend.npc.objects.TraderObject;
+
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
 
@@ -47,13 +48,13 @@ public class NpcManager {
      * @param price Price of NPC
      */
     public void buyNPC(Player buyer, LicenseType neededLicense, double price) {
-        if (CashManager.amountOfCashInInventory(buyer) < price) return;
+        if (CashManager.amountOfCashInInventory(buyer, false) < price) return;
 
         var license = PcConomy.GlobalLicenseManager.getLicense(buyer.getUniqueId(), neededLicense);
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        CashManager.takeCashFromPlayer(price, buyer);
+        CashManager.takeCashFromPlayer(price, buyer, false);
         PcConomy.GlobalBank.BankBudget += price;
 
         var npcList = Map.of(
@@ -103,7 +104,7 @@ public class NpcManager {
      * Load traders and their stuff
      */
     public void loadTraders() {
-        for (int id: Npc.keySet()) {
+        for (var id : Npc.keySet()) {
             var traderTrait = new Trader();
             var loanerTrait = new Loaner();
 
@@ -143,7 +144,7 @@ public class NpcManager {
                         traderTrait.Cost, traderTrait.IsRanted, traderTrait.HomeTown, traderTrait.Owner, traderTrait.Term));
             }
 
-        FileWriter writer = new FileWriter(fileName + ".json", false);
+        var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()

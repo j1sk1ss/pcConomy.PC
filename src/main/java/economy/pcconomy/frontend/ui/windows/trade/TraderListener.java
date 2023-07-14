@@ -48,7 +48,7 @@ public class TraderListener implements Listener {
                         trader.Storage.clear();
                     }
                     case "Забрать прибыль" -> {
-                        CashManager.giveCashToPlayer(trader.Revenue, player);
+                        CashManager.giveCashToPlayer(trader.Revenue, player, false);
                         trader.Revenue = 0;
                     }
                 }
@@ -62,9 +62,9 @@ public class TraderListener implements Listener {
                             PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                     if (playerTradeLicense == null) return;
                     if (!playerTradeLicense.isOverdue()) {
-                        if (CashManager.amountOfCashInInventory(player) < trader.Cost) return;
+                        if (CashManager.amountOfCashInInventory(player, false) < trader.Cost) return;
 
-                        CashManager.takeCashFromPlayer(trader.Cost, player);
+                        CashManager.takeCashFromPlayer(trader.Cost, player, false);
                         PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost);
 
                         rantTrader(trader, player);
@@ -139,13 +139,13 @@ public class TraderListener implements Listener {
                         var buyingItem = inventory.getItem(13);
                         var price = ItemManager.getPriceFromLore(buyingItem, 0);
 
-                        if (CashManager.amountOfCashInInventory(player) >= price || trader.Owner.equals(player.getUniqueId())) {
+                        if (CashManager.amountOfCashInInventory(player, false) >= price || trader.Owner.equals(player.getUniqueId())) {
                             if (trader.Storage.contains(buyingItem)) {
                                 trader.Storage.remove(buyingItem);
                                 ItemManager.giveItemsWithoutLore(buyingItem, player);
 
                                 if (!trader.Owner.equals(player.getUniqueId())) {
-                                    CashManager.takeCashFromPlayer(price, player);
+                                    CashManager.takeCashFromPlayer(price, player, false);
 
                                     var endPrice = price / (1 + trader.Margin);
                                     PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(price - endPrice);

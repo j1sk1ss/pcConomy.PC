@@ -11,11 +11,11 @@ public class Share {
         Equality  = equality;
     }
 
-    public UUID TownUUID;
-    public ShareType ShareType;
+    public final UUID TownUUID;
+    public final ShareType ShareType;
     public UUID Owner;
 
-    public double Price;
-    public double Equality;
+    public final double Price;
+    public final double Equality;
 }
 

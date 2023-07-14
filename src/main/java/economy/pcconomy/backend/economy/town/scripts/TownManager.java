@@ -102,7 +102,7 @@ public class TownManager {
      * @throws IOException If something goes wrong
      */
     public void saveTown(String fileName) throws IOException {
-        FileWriter writer = new FileWriter(fileName + ".json", false);
+        var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()

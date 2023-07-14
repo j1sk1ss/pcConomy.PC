@@ -4,7 +4,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import net.citizensnpcs.api.npc.NPC;
@@ -23,7 +22,7 @@ public class NPCTraderWindow {
         if (town == null) return null;
 
         var window = Bukkit.createInventory(player, 54, Component.text("Магазин " +
-                TownyAPI.getInstance().getTown(town.getUUID()).getName() + " " + trader.getId()));
+                Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId()));
 
         var townStorage = ((NpcTown)town).Storage;
         for (var item : townStorage)

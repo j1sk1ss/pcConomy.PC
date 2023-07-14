@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class ShareManager {
-    public Map<UUID, List<Share>> Shares = new HashMap<>();
+    public final Map<UUID, List<Share>> Shares = new HashMap<>();
 
     /**
      * Expose shares
@@ -107,8 +107,8 @@ public class ShareManager {
         for (var share : Shares.get(town))
             if (share.Owner == null) {
                 var price = share.Price;
-                if (CashManager.amountOfCashInInventory(buyer) >= price + price * PcConomy.GlobalBank.VAT) {
-                    CashManager.takeCashFromPlayer(price + price * PcConomy.GlobalBank.VAT, buyer);
+                if (CashManager.amountOfCashInInventory(buyer, false) >= price + price * PcConomy.GlobalBank.VAT) {
+                    CashManager.takeCashFromPlayer(price + price * PcConomy.GlobalBank.VAT, buyer, false);
 
                     PcConomy.GlobalBank.BankBudget += price * PcConomy.GlobalBank.VAT;
                     PcConomy.GlobalTownManager.getTown(town).changeBudget(price);
@@ -149,7 +149,7 @@ public class ShareManager {
                 var price = getMedianSharePrice(town);
 
                 if (currentTown.getBudget() >= price) {
-                    CashManager.giveCashToPlayer(price - price * PcConomy.GlobalBank.VAT, seller);
+                    CashManager.giveCashToPlayer(price - price * PcConomy.GlobalBank.VAT, seller, false);
 
                     PcConomy.GlobalBank.BankBudget += price * PcConomy.GlobalBank.VAT;
                     PcConomy.GlobalTownManager.getTown(town).changeBudget(-price);

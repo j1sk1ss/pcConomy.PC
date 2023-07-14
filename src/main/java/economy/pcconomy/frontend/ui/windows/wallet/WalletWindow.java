@@ -10,13 +10,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public class WalletWindow {
-    public static Inventory putWindow(Player player, ItemStack wallet) {
+    public static Inventory putWindow(Player player, Wallet wallet) {
         var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк"));
         var cashInInventory = Math.min(CashManager.amountOfCashInInventory(player, true),
-                Wallet.WalletCapacity - Wallet.getWalletAmount(wallet));
+                wallet.Capacity - wallet.Amount);
 
         for (var i = 0; i < 8; i++) {
             if (i == 0)
@@ -30,9 +29,9 @@ public class WalletWindow {
         return window;
     }
 
-    public static Inventory withdrawWindow(Player player, ItemStack wallet) {
+    public static Inventory withdrawWindow(Player player, Wallet wallet) {
         var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк"));
-        var cashInWallet = Wallet.getWalletAmount(wallet);
+        var cashInWallet = wallet.Amount;
 
         for (var i = 0; i < 8; i++) {
             if (i == 0)

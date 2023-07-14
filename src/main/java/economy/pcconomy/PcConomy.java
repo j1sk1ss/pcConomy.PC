@@ -74,8 +74,7 @@ public final class PcConomy extends JavaPlugin {
 
         for (var listener : Arrays.asList(new NpcLoader(), new LoanListener(), new TownyListener(),
                 new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
-                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener(), new Wallet(),
-                new WalletListener()))
+                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener(), new WalletListener()))
             Bukkit.getPluginManager().registerEvents(listener, this);
 
         for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",

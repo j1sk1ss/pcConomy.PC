@@ -1,14 +1,12 @@
 package economy.pcconomy.frontend.ui.objects;
 
 import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.objects.interactive.IComponent;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +14,7 @@ import java.util.List;
 /**
  * Buttons panel for working with advanced UI
  */
+@SuppressWarnings("ConstantConditions")
 public class Panel {
     /**
      * Buttons panel

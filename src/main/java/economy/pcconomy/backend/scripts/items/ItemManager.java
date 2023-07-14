@@ -102,7 +102,7 @@ public class ItemManager {
     public static void giveItemsWithoutLore(List<ItemStack> itemStacks, Player player) {
         for (var item : itemStacks)
             player.getInventory().addItem(ItemManager.setLore(item, "")).forEach((index, itemStack) ->
-                    player.getWorld().dropItem(player.getLocation(), itemStack));;
+                    player.getWorld().dropItem(player.getLocation(), itemStack));
     }
 
     /**

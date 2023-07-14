@@ -1,10 +1,8 @@
 package economy.pcconomy.frontend.ui.objects.interactive;
 
 import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 

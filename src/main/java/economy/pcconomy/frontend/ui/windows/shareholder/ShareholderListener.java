@@ -9,12 +9,12 @@ import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import economy.pcconomy.frontend.ui.windows.Window;
 
-import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class ShareholderListener implements Listener {
@@ -28,7 +28,7 @@ public class ShareholderListener implements Listener {
                 case "Покупка/продажа акций" -> player.openInventory(ShareholderWindow.sharesWindow(player, 0));
                 case "Выставление акций" -> {
                     var town = TownyAPI.getInstance().getTown(player);
-                    if (player.equals(town.getMayor().getPlayer()))
+                    if (player.equals(Objects.requireNonNull(town).getMayor().getPlayer()))
                         player.openInventory(ShareholderWindow.townSharesWindow(player, town.getUUID()));
                 }
             }
@@ -61,7 +61,7 @@ public class ShareholderListener implements Listener {
                     PcConomy.GlobalShareManager.sellShare(town.getUUID(), player);
                 }
                 case "Купить одну акцию" -> {
-                    if (share.Price + share.Price * PcConomy.GlobalBank.VAT > CashManager.amountOfCashInInventory(player)) return;
+                    if (share.Price + share.Price * PcConomy.GlobalBank.VAT > CashManager.amountOfCashInInventory(player, false)) return;
                     PcConomy.GlobalShareManager.buyShare(town.getUUID(), player);
                 }
             }
@@ -90,10 +90,8 @@ public class ShareholderListener implements Listener {
                             Double.parseDouble(ItemManager.getName(costSlider.getChose()).replace(CashManager.currencySigh, "")),
                             Integer.parseInt(ItemManager.getName(countSlider.getChose()).replace("шт.", "")),
                             Double.parseDouble(ItemManager.getName(percentSlider.getChose()).replace("%", "")),
-                            switch (ItemManager.getName(typeSlider.getChose())){
-                                case "Дивиденты" -> ShareType.Dividends;
-                                default -> ShareType.Equity;
-                            });
+                            (ItemManager.getName(typeSlider.getChose()).equals("Дивиденты") ? ShareType.Dividends : ShareType.Equity));
+
                 }
                 case "Снять с продажи" -> {
                     var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);

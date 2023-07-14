@@ -31,8 +31,8 @@ public class CommandManager implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
 
         switch (command.getName()) {
-            case "take_cash"          -> takeCashFromPlayer(Double.parseDouble(args[0]), (Player) sender);
-            case "create_cash"        -> giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender);
+            case "take_cash"          -> takeCashFromPlayer(Double.parseDouble(args[0]), (Player) sender, true);
+            case "create_cash"        -> giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender, true);
             case "reload_towns"       -> PcConomy.GlobalTownManager.reloadTownObjects();
             case "reload_npc"         -> PcConomy.GlobalNPC.reloadNPC();
             case "save_data"          -> PcConomy.SaveData();
@@ -58,7 +58,7 @@ public class CommandManager implements CommandExecutor {
                         "NPC Traders count: " + PcConomy.GlobalNPC.Npc.size());
 
             case "set_day_bank_budget" -> PcConomy.GlobalBank.setUsefulBudgetPercent(Double.parseDouble(args[0]));
-            case "create_wallet"       -> Wallet.giveWallet((Player) sender);
+            case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "create_shareholder"  -> PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
             case "transfer_share"      -> PcConomy.GlobalShareManager.changeShareOwner(Objects.requireNonNull(
                     TownyAPI.getInstance().getTown(args[0])).getUUID(), (Player) sender, Bukkit.getPlayer(args[1]));

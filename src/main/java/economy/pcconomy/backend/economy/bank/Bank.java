@@ -37,7 +37,7 @@ public class Bank implements IMoney {
         dayWithdrawBudget -= amount;
 
         PcConomy.GlobalBalanceManager.takeMoney(amount, player);
-        CashManager.giveCashToPlayer(amount, player);
+        CashManager.giveCashToPlayer(amount, player, false);
 
         BankBudget -= amount;
     }
@@ -48,10 +48,10 @@ public class Bank implements IMoney {
      * @param player Player that will lose cash
      */
     public void takeCashFromPlayer(double amount, Player player) {
-        var amountInventory = CashManager.amountOfCashInInventory(player);
+        var amountInventory = CashManager.amountOfCashInInventory(player, false);
         if (amount > amountInventory) return;
 
-        CashManager.takeCashFromPlayer(amount, player);
+        CashManager.takeCashFromPlayer(amount, player, false);
         PcConomy.GlobalBalanceManager.giveMoney(amount, player);
 
         BankBudget += amount;
@@ -69,8 +69,8 @@ public class Bank implements IMoney {
         var changePercent = (BankBudget - previousBudget) / previousBudget;
         var isRecession  = (changePercent <= 0 && getGlobalInflation() > 0) ? 1 : -1;
 
-        VAT += (VAT * Math.abs(changePercent) / 2) * isRecession;
-        UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
+        VAT                          += (VAT * Math.abs(changePercent) / 2) * isRecession;
+        UsefulBudgetPercent          -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
         LoanManager.trustCoefficient -= LoanManager.trustCoefficient * Math.abs(changePercent) * isRecession;
 
         if (isRecession > 0) recessionCount++;
@@ -153,7 +153,7 @@ public class Bank implements IMoney {
      * @throws IOException If something goes wrong
      */
     public void saveBank(String fileName) throws IOException {
-        FileWriter writer = new FileWriter(fileName + ".json", false);
+        var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()

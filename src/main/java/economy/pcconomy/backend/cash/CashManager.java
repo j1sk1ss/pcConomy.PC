@@ -3,6 +3,7 @@ package economy.pcconomy.backend.cash;
 import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -123,57 +124,20 @@ public class CashManager {
      * Gives to player items of cash
      * @param amount Amount of cash
      * @param player Player that will take this cash
-     */
-    public static void giveCashToPlayer(double amount, Player player) {
-        if (Wallet.getWallets(player).size() != 0) {
-            Wallet.changeCashInWallet(player, amount);
-            return;
-        }
-
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(amount)), player);
-    }
-
-    /**
-     * Gives to player items of cash
-     * @param amount Amount of cash
-     * @param player Player that will take this cash
      * @param ignoreWallet Ignoring of wallet status
      */
     public static void giveCashToPlayer(double amount, Player player, boolean ignoreWallet) {
+        var wallets = Wallet.getWallets(player);
+        var freeSpace = Wallet.getFreeSpace(wallets);
+        var cashAmount = amount;
+
         if (Wallet.getWallets(player).size() != 0 && !ignoreWallet) {
             Wallet.changeCashInWallet(player, amount);
-            return;
+            cashAmount -= freeSpace;
         }
 
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(amount)), player);
-    }
-
-    /**
-     * Takes cash from player
-     * @param amount Amount of cash
-     * @param player Player that will lose cash
-     */
-    public static void takeCashFromPlayer(double amount, Player player) {
-        var playerCashAmount = amountOfCashInInventory(player);
-        if (playerCashAmount < amount) return;
-
-        ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-
-        var wallets = Wallet.getWallets(player);
-        var walletAmount = 0d;
-
-        if (wallets.size() != 0) {
-            if (Wallet.getWalletAmount(wallets) - amount < 0) {
-                walletAmount = -Wallet.getWalletAmount(wallets);
-                Wallet.changeCashInWallet(player, walletAmount);
-            }
-            else {
-                Wallet.changeCashInWallet(player, -amount);
-                return;
-            }
-        }
-
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount - (amount - walletAmount))), player);
+        if (cashAmount <= 0) return;
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(cashAmount)), player);
     }
 
     /**
@@ -221,16 +185,6 @@ public class CashManager {
             }
 
         return change;
-    }
-
-    /**
-     * Amount of cash in player inventory
-     * @param player Player that will be checked
-     * @return Amount of cah in player`s inventory
-     */
-    public static double amountOfCashInInventory(Player player) {
-        return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()))
-                + Wallet.getWalletAmount(Wallet.getWallets(player));
     }
 
     /**

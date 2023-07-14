@@ -34,12 +34,12 @@ public class License {
      * @param price Price of license
      */
     public static void getLicense(Player player, LicenseType licenseType, double price) {
-        if (amountOfCashInInventory(player) < price) return;
+        if (amountOfCashInInventory(player, false) < price) return;
 
         if (PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType) != null)
             PcConomy.GlobalLicenseManager.Licenses.remove(PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType));
 
-        takeCashFromPlayer(price, player);
+        takeCashFromPlayer(price, player, false);
         PcConomy.GlobalBank.BankBudget += price;
         //TODO: DATA MODEL
         PcConomy.GlobalLicenseManager.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));

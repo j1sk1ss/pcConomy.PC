@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ShareholderWindow implements IWindow {
-    public static Panel actionsMenuPanel = new Panel(Arrays.asList(
+    public static final Panel actionsMenuPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Покупка/продажа акций", ""),
@@ -54,7 +54,7 @@ public class ShareholderWindow implements IWindow {
         return window;
     }
 
-    public static Panel acceptPanel = new Panel(Arrays.asList(
+    public static final Panel acceptPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                     0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
             ), "Продать одну акцию", ""),
@@ -68,7 +68,7 @@ public class ShareholderWindow implements IWindow {
                 Component.text("Акции-Города " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName())));
     }
 
-    public static Panel townSharesPanel = new Panel(Arrays.asList(
+    public static final Panel townSharesPanel = new Panel(Arrays.asList(
             new Button(Arrays.asList(
                 0, 1, 2, 9, 10, 11, 18, 19, 20
             ), "Выставить на продажу", ""),

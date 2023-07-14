@@ -3,67 +3,56 @@ package economy.pcconomy.backend.cash.items;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
-import economy.pcconomy.frontend.ui.windows.wallet.WalletWindow;
 
 import org.apache.commons.lang.StringUtils;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Wallet implements Listener {
+public class Wallet {
     /**
-     * Event for working with wallet
-     * @param event Event
+     * New empty wallet
      */
-    @EventHandler
-    public void onWalletUse(PlayerInteractEvent event){
-        if (event.getHand() != EquipmentSlot.HAND) return;
-        if (event.getAction() != Action.LEFT_CLICK_AIR &&
-                event.getAction() != Action.RIGHT_CLICK_AIR) return;
+    public Wallet() {
+        Amount = 0;
+        Level  = 1;
 
-        var player = event.getPlayer();
-        var wallet = player.getInventory().getItemInMainHand();
+        Capacity = Level * 500;
 
-        if (isWallet(wallet)) {
-            switch (event.getAction()) {
-                case LEFT_CLICK_AIR ->
-                    player.openInventory(WalletWindow.putWindow(player, wallet));
-                case RIGHT_CLICK_AIR ->
-                    player.openInventory(WalletWindow.withdrawWindow(player, wallet));
-            }
-
-            event.setCancelled(true);
-        }
+        Body = new Item("Кошелёк", "0.0 Алеф\nВместимость: 1" + Level, Material.BOOK, 1, walletDataModel);
     }
 
-    public static final double WalletCapacity = 10000;
+    /**
+     * Wallet from wallet item
+     * @param wallet Wallet itemStack
+     */
+    public Wallet(ItemStack wallet) {
+        Amount = Double.parseDouble(ItemManager.getLore(wallet).get(0).split(" ")[0]);
+        Level  = Integer.parseInt(ItemManager.getLore(wallet).get(1).split(" ")[1]);
+
+        Capacity = Level * 500;
+
+        Body = wallet;
+    }
+
+    public double Amount;
+    public double Capacity;
+    public int Level;
+
+    private final ItemStack Body;
     private static final int walletDataModel = 17050; //TODO: DATA MODEL
 
     /**
      * Create new wallet
      * @param player Player that will take this wallet
      */
-    public static void giveWallet(Player player) {
-        ItemManager.giveItems(new Item("Кошелёк", "0.0 Алеф", Material.BOOK, 1, walletDataModel), player);
-    }
-
-    /**
-     * Create wallet with special amount of cash
-     * @param player Player that will take this wallet
-     * @param amount Special amount
-     */
-    public static void giveWallet(Player player, double amount) {
-        ItemManager.giveItems(new Item("Кошелёк", amount + " " + CashManager.getCurrencyNameByNum((int)amount),
-                Material.BOOK, 1, walletDataModel), player);
+    public void giveWallet(Player player) {
+        ItemManager.giveItems(new Item("Кошелёк", Amount + " " + CashManager.getCurrencyNameByNum((int)Amount)
+                + "\nВместимость: " + Level, Material.BOOK, 1, walletDataModel), player);
     }
 
     /**
@@ -71,13 +60,26 @@ public class Wallet implements Listener {
      * @param player Player
      * @return Wallet
      */
-    public static List<ItemStack> getWallets(Player player) {
-        var list = new ArrayList<ItemStack>();
+    public static List<Wallet> getWallets(Player player) {
+        var list = new ArrayList<Wallet>();
         for (var item : player.getInventory())
             if (item != null)
-                if (isWallet(item)) list.add(item);
+                if (isWallet(item)) list.add(new Wallet(item));
 
         return list;
+    }
+
+    /**
+     * Get free space in wallets
+     * @param wallets Wallets
+     * @return Free space
+     */
+    public static double getFreeSpace(List<Wallet> wallets) {
+        var amount = 0d;
+        for (var wallet : wallets)
+            amount += wallet.Capacity - wallet.Amount;
+
+        return amount;
     }
 
     /**
@@ -87,16 +89,8 @@ public class Wallet implements Listener {
      */
     public static boolean isWallet(ItemStack itemStack) {
         return StringUtils.containsAny(ItemManager.getLore(itemStack).get(0).toLowerCase(), "алеф") &&
+                    StringUtils.containsAny(ItemManager.getLore(itemStack).get(1).toLowerCase(), "вместимость") &&
                 ItemManager.getName(itemStack).contains("Кошелёк");
-    }
-
-    /**
-     * Gets amount of wallet
-     * @param wallet Wallet
-     * @return Amount
-     */
-    public static double getWalletAmount(ItemStack wallet) {
-        return Double.parseDouble(ItemManager.getLore(wallet).get(0).split(" ")[0]);
     }
 
     /**
@@ -104,10 +98,10 @@ public class Wallet implements Listener {
      * @param wallets Wallets
      * @return Amount
      */
-    public static double getWalletAmount(List<ItemStack> wallets) {
+    public static double getWalletAmount(List<Wallet> wallets) {
         var amount = 0;
         for (var wallet : wallets)
-            amount += Double.parseDouble(ItemManager.getLore(wallet).get(0).split(" ")[0]);
+            amount += wallet.Amount;
 
         return amount;
     }
@@ -119,25 +113,30 @@ public class Wallet implements Listener {
      */
     public static void changeCashInWallet(Player player, double amount) {
         var wallets = getWallets(player);
-        ItemManager.takeItems(wallets, player);
+        var cashAmount = amount;
 
-        var count = 0;
-        for (var wallet : wallets)
-            count += wallet.getAmount();
+        for (var wallet : wallets) {
+            ItemManager.takeItems(wallet.Body, player);
 
-        giveWallet(player, getWalletAmount(wallets) + amount);
-        for (var i = 1; i < count; i++)
-            giveWallet(player);
-    }
+            if (cashAmount == 0) wallet.giveWallet(player);
+            if (amount > 0)
+                if (wallet.Amount + cashAmount > wallet.Capacity) {
+                    wallet.Amount = wallet.Capacity;
+                    cashAmount -= wallet.Capacity;
+                } else {
+                    wallet.Amount += cashAmount;
+                    cashAmount = 0;
+                }
+            else
+                if (wallet.Amount + cashAmount > 0) {
+                    wallet.Amount -= cashAmount;
+                    cashAmount = 0;
+                } else {
+                    cashAmount += wallet.Amount;
+                    wallet.Amount += 0;
+                }
 
-    /**
-     * Put cash into players wallet
-     * @param wallet Wallet
-     * @param player Player
-     * @param amount Amount
-     */
-    public static void changeCashInWallet(ItemStack wallet, Player player, double amount) {
-        ItemManager.takeItems(wallet, player);
-        giveWallet(player, getWalletAmount(wallet) + amount);
+            wallet.giveWallet(player);
+        }
     }
 }

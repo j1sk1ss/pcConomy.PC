@@ -5,7 +5,7 @@ public class LoanerObject implements INpcObject {
         Pull = pull;
     }
 
-    public double Pull;
+    public final double Pull;
     public String HomeTown;
 
     @Override
