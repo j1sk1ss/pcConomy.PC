@@ -5,7 +5,8 @@ import org.bukkit.inventory.Inventory;
 import java.util.List;
 
 public interface IComponent {
-    Inventory place(Inventory inventory);
+    void place(Inventory inventory);
+    void displace(Inventory inventory);
     boolean isClicked(int click);
 
     String getName();

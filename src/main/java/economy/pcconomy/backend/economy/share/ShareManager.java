@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class ShareManager {
+    public final List<UUID> ActionsList = new ArrayList<>();
     public final Map<UUID, List<Share>> Shares = new HashMap<>();
 
     /**
@@ -37,6 +38,7 @@ public class ShareManager {
             shares.add(new Share(town, shareType, null, price, size / (double) count));
 
         setTownShares(town, shares);
+        ActionsList.add(town);
     }
 
     /**
@@ -65,6 +67,7 @@ public class ShareManager {
             }
 
         Shares.remove(town);
+        ActionsList.add(town);
     }
 
     /**

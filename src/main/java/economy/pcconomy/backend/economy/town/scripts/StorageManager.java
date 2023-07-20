@@ -40,15 +40,6 @@ public class StorageManager {
     }
 
     /**
-     * Delete resource in storage
-     * @param item Type of item
-     * @param Storage Storage that will take new resource
-     */
-    public static void deleteResource(Material item, List<ItemStack> Storage) {
-        Storage.removeIf(itemStack -> itemStack.getType().equals(item));
-    }
-
-    /**
      * Set amount of specified item
      * @param item Specified item
      * @param amount New amount

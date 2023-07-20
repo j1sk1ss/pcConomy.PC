@@ -34,9 +34,7 @@ public class Loaner extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        var player = event.getClicker();
-
-        Window.OpenWindow(player, new LoanWindow(this));
+        Window.OpenWindow(event.getClicker(), new LoanWindow(this));
     }
 
     @EventHandler

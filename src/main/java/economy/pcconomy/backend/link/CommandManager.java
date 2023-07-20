@@ -3,10 +3,12 @@ package economy.pcconomy.backend.link;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.economy.town.scripts.StorageManager;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
 
@@ -17,10 +19,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
@@ -63,6 +65,32 @@ public class CommandManager implements CommandExecutor {
             case "transfer_share"      -> PcConomy.GlobalShareManager.changeShareOwner(Objects.requireNonNull(
                     TownyAPI.getInstance().getTown(args[0])).getUUID(), (Player) sender, Bukkit.getPlayer(args[1]));
 
+            case "shares_rate" -> {
+                var message = "";
+                for (var town : PcConomy.GlobalShareManager.Shares.keySet())
+                    if (TownyAPI.getInstance().getTown(town) != null)
+                        message += Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName() + ": " +
+                                PcConomy.GlobalShareManager.getMedianSharePrice(town) + CashManager.currencySigh;
+
+                sender.sendMessage(message);
+            }
+            case "global_market_prices" -> {
+                var message = "";
+                var prices = new HashMap<ItemStack, Double>();
+
+                for (var trader : PcConomy.GlobalNPC.Npc.keySet())
+                    if (PcConomy.GlobalNPC.Npc.get(trader) instanceof Trader currentTrader)
+                        for (var resource : currentTrader.Storage)
+                            if (!prices.containsKey(resource))
+                                prices.put(resource, ItemManager.getPriceFromLore(resource, 0));
+                            else prices.put(resource,
+                                    (prices.get(resource) + ItemManager.getPriceFromLore(resource, 0)) / 2);
+
+                for (var resource : prices.keySet())
+                    message += "Товар: " + resource + ", цена: " + prices.get(resource) + CashManager.currencySigh;
+
+                sender.sendMessage(message);
+            }
         }
 
         return true;

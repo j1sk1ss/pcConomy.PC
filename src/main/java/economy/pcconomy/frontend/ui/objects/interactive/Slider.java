@@ -8,23 +8,23 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Slider implements IComponent {
     /**
      * Slider component
      * @param coordinates Coordinates of slider
-     * @param slider Slider default body
-     * @param chosenOption Material of chosen option
-     * @param defaultOption Material of default option
+     * @param options List of options
      */
-    public Slider(List<Integer> coordinates, List<ItemStack> slider,
-                  int chosenOption, int defaultOption, String name) {
-        this.coordinates   = coordinates;
-        this.slider        = slider;
-        this.chosenOption  = chosenOption;
-        this.defaultOption = defaultOption;
-
+    public Slider(List<Integer> coordinates, List<String> options, String lore, String name) {
+        this.coordinates = coordinates;
+        this.options = options;
         this.name = name;
+        this.lore = lore;
+
+        slider = new ArrayList<>();
+        for (var option : options)
+            slider.add(new Item(option, lore, Material.GLASS, 1, 17000));
     }
 
     /**
@@ -32,24 +32,18 @@ public class Slider implements IComponent {
      * @param slider Slider that will be copied
      */
     public Slider(Slider slider) {
-        this.coordinates   = new ArrayList<>(slider.coordinates);
-
-        this.slider = new ArrayList<>();
-        for (var item : slider.slider) {
-            this.slider.add(new Item(ItemManager.getName(item), String.join("\n",
-                    ItemManager.getLore(item)), item.getType(),1,17000));
-        }
-
-        this.chosenOption  = slider.chosenOption;
-        this.defaultOption = slider.defaultOption;
-
+        this.coordinates = new ArrayList<>(slider.coordinates);
+        this.options = new ArrayList<>(slider.options);
         this.name = slider.getName();
+        this.lore = slider.lore;
+
+        this.slider = slider.slider;
     }
 
     private final List<Integer> coordinates;
+    private final List<String> options;
     private final List<ItemStack> slider;
-    private final int chosenOption;
-    private final int defaultOption;
+    private final String lore;
     private final String name;
 
     public String getName() {
@@ -65,21 +59,13 @@ public class Slider implements IComponent {
     }
 
     /**
-     * Get default slider
-     * @return Slider
-     */
-    public List<ItemStack> getSlider() {
-        return slider;
-    }
-
-    /**
      * Set slider with chose
      * @param chose Coordinate of chose
      */
     public void setChose(int chose) {
         for (var i = 0; i < coordinates.size(); i++) {
-            //slider.set(i, new Item(slider.get(i), i == chose ? chosenOption : defaultOption));
-            slider.get(i).setType(coordinates.get(i) == chose ? Material.PURPLE_WOOL : Material.GLASS);
+            slider.get(i).setType(coordinates.get(i) == chose ? Material.PURPLE_WOOL : Material.GLASS); //TODO: DATA MODEL
+            slider.set(i, new Item(slider.get(i), coordinates.get(i) == chose ? 17000 : 17050));
         }
     }
 
@@ -95,13 +81,21 @@ public class Slider implements IComponent {
     /**
      * Place slider into inventory
      * @param inventory Inventory where should be placed slider
-     * @return Inventory with slider
      */
-    public Inventory place(Inventory inventory) {
+    public void place(Inventory inventory) {
         for (var coordinate = 0; coordinate < coordinates.size(); coordinate++)
             inventory.setItem(coordinates.get(coordinate), slider.get(coordinate));
+    }
 
-        return inventory;
+    /**
+     * Displace slider in inventory
+     * @param inventory Inventory where should be displaced slider
+     */
+    public void displace(Inventory inventory) {
+        for (var coordinate = 0; coordinate < coordinates.size(); coordinate++)
+            if (inventory.getItem(coordinate) != null)
+                if (ItemManager.getName(Objects.requireNonNull(inventory.getItem(coordinate))).equals(getName()))
+                    inventory.setItem(coordinate, null);
     }
 
     /**
@@ -111,7 +105,6 @@ public class Slider implements IComponent {
     public ItemStack getChose() {
         for (var item : slider)
             if (item.getType() == Material.PURPLE_WOOL)
-                //if (item.getItemMeta().getCustomModelData() == chosenOption)
                 return item;
 
         return null;

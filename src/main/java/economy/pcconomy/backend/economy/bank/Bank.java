@@ -3,7 +3,7 @@ package economy.pcconomy.backend.economy.bank;
 import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.IMoney;
+import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.NpcTown;
@@ -15,7 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class Bank implements IMoney {
+public class Bank extends Capitalist {
     public Bank() {
         Credit = new ArrayList<>();
     }
@@ -23,6 +23,7 @@ public class Bank implements IMoney {
     public double BankBudget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
     public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
     public double VAT = PcConomy.Config.getDouble("bank.start_VAT", .1d);
+
     public final List<Loan> Credit;
 
     /**
@@ -65,7 +66,9 @@ public class Bank implements IMoney {
     /**
      * Life cycle of bank working
      */
-    public void lifeCycle() {
+    @Override
+    public void newDay() {
+        LoanManager.takePercentFromBorrowers(this);
         var changePercent = (BankBudget - previousBudget) / previousBudget;
         var isRecession  = (changePercent <= 0 && getGlobalInflation() > 0) ? 1 : -1;
 
@@ -81,7 +84,6 @@ public class Bank implements IMoney {
             recessionCount = 0;
         }
 
-        LoanManager.takePercentFromBorrowers(this);
         previousBudget = BankBudget;
 
         dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
@@ -116,13 +118,14 @@ public class Bank implements IMoney {
      * Set useful amount of budget
      */
     public void setUsefulBudgetPercent(double amount) {
-        dayWithdrawBudget += amount;
+        dayWithdrawBudget = amount;
     }
 
     /**
      * Change bank budget
      * @param amount Amount of changing
      */
+    @Override
     public void changeBudget(double amount) {
         BankBudget += amount;
     }
@@ -131,20 +134,9 @@ public class Bank implements IMoney {
      * Gets list of loans
      * @return List of loans
      */
+    @Override
     public List<Loan> getCreditList() {
         return Credit;
-    }
-
-    /**
-     * Get UUID of all borrowers
-     * @return List of borrowers UUID
-     */
-    public List<UUID> getBorrowers() {
-        var list = new ArrayList<UUID>();
-        for (var loan : Credit)
-            list.add(loan.Owner);
-
-        return list;
     }
 
     /**

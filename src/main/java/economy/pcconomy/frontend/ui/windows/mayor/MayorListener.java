@@ -16,14 +16,10 @@ public class MayorListener implements Listener {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player, "Меню")) {
-            var option = event.getSlot();
-
-            switch (MayorWindow.Panel.click(option).getName()) {
-                case "Установить торговца" ->
-                        PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market,
+            switch (MayorWindow.Panel.click(event.getSlot()).getName()) {
+                case "Установить торговца" -> PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market,
                                 NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT);
-                case "Установить кредитора" ->
-                        PcConomy.GlobalNPC.buyNPC(player, LicenseType.Loan,
+                case "Установить кредитора" -> PcConomy.GlobalNPC.buyNPC(player, LicenseType.Loan,
                                 NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT);
             }
 

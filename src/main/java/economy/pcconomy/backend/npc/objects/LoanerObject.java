@@ -7,9 +7,4 @@ public class LoanerObject implements INpcObject {
 
     public final double Pull;
     public String HomeTown;
-
-    @Override
-    public INpcObject getBaseClass() {
-        return this;
-    }
 }

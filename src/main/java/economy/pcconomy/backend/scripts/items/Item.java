@@ -156,9 +156,7 @@ public class Item extends ItemStack {
         super.setItemMeta(ItemManager.setName(cloned, ItemManager.getName(itemStack)).getItemMeta());
         super.setType(itemStack.getType());
         super.setAmount(itemStack.getAmount());
-
-        if (cloned.getItemMeta().hasCustomModelData())
-            super.getItemMeta().setCustomModelData(itemStack.getItemMeta().getCustomModelData());
+        super.getItemMeta().setCustomModelData(dataModel);
 
         if (cloned.getItemMeta().hasLore())
             super.setItemMeta(ItemManager.setLore(cloned, String.join("\n", ItemManager.getLore(itemStack))).getItemMeta());

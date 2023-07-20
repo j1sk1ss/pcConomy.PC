@@ -40,8 +40,8 @@ public class Wallet {
     }
 
     public double Amount;
-    public double Capacity;
-    public int Level;
+    public final double Capacity;
+    public final int Level;
 
     private final ItemStack Body;
     private static final int walletDataModel = 17050; //TODO: DATA MODEL

@@ -2,14 +2,22 @@ package economy.pcconomy.frontend.ui.windows;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 
-public class Window {
+public abstract class Window {
+    /**
+     * Method for getting inventory window
+     * @param player Player is an object, that call generation
+     * @return Inventory object
+     */
+    public abstract Inventory generateWindow(Player player);
+
     /**
      * Open window method for opening custom inventories
      * @param player Player that should see this window
      * @param window Window type
      */
-    public static void OpenWindow(Player player, IWindow window) {
+    public static void OpenWindow(Player player, Window window) {
         player.openInventory(window.generateWindow(player));
     }
 

@@ -1,5 +1,6 @@
 package economy.pcconomy.frontend.ui.windows.trade;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
@@ -15,6 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class TraderListener implements Listener {
     @EventHandler
@@ -41,7 +43,7 @@ public class TraderListener implements Listener {
                 }
 
             if (title.contains("Торговец-Управление")) {
-                switch (TraderWindow.OwnerPanel.click(option).getName()) {
+                switch (TraderWindow.TraderMenu.getPanel("Торговец-Управление").click(option).getName()) {
                     case "Перейти в товары" -> player.openInventory(TraderWindow.getWindow(player, trader));
                     case "Забрать все товары" -> {
                         ItemManager.giveItemsWithoutLore(trader.Storage, player);
@@ -57,36 +59,40 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Аренда")) {
-                if (TraderWindow.RantedPanel.click(option).getName().equals("Арендовать на один день")) {
+                if (TraderWindow.TraderMenu.getPanel("Торговец-Аренда").click(option).getName().equals("Арендовать на один день")) {
                     var playerTradeLicense =
                             PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                     if (playerTradeLicense == null) return;
-                    if (!playerTradeLicense.isOverdue()) {
-                        if (CashManager.amountOfCashInInventory(player, false) < trader.Cost) return;
-
-                        CashManager.takeCashFromPlayer(trader.Cost, player, false);
-                        PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost);
-
-                        rantTrader(trader, player);
-                        player.closeInventory();
-                    }
+                    if (!playerTradeLicense.isOverdue())
+                        player.openInventory(TraderWindow.getExtendedRantedWindow(player, trader));
                 }
 
                 return;
             }
 
+            if (title.contains("Торговец-Аренда-Время")) {
+                var days = Integer.parseInt(ItemManager.getName(choseItem).split(" ")[0]);
+                if (CashManager.amountOfCashInInventory(player, false) < trader.Cost * days) return;
+
+                CashManager.takeCashFromPlayer(trader.Cost * days, player, false);
+                PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost * days);
+
+                rantTrader(trader, days, player);
+                player.closeInventory();
+
+                return;
+            }
+
             if (title.contains("Торговец-Владелец")) {
-                switch (TraderWindow.MayorPanel.click(option).getName()) {
+                switch (TraderWindow.TraderMenu.getPanel("Торговец-Владелец").click(option).getName()) {
                     case "Установить цену" -> player.openInventory(TraderWindow.getPricesWindow(player, trader));
                     case "Установить процент" -> player.openInventory(TraderWindow.getMarginWindow(player, trader));
                     case "Занять" -> {
                         var playerTradeLicense =
                                 PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                         if (playerTradeLicense == null) return;
-                        if (!playerTradeLicense.isOverdue()) {
-                            rantTrader(trader, player);
-                            player.closeInventory();
-                        }
+                        if (!playerTradeLicense.isOverdue())
+                            rantTrader(trader, 1, player);
                     }
                 }
 
@@ -94,15 +100,15 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Цена")) {
-                switch (TraderWindow.PricePanel.click(option).getName()) {
+                switch (TraderWindow.TraderMenu.getPanel("Торговец-Цена").click(option).getName()) {
                     case "Slider" -> {
-                        var slider = new Slider((Slider)TraderWindow.PricePanel.click(option));
+                        var slider = new Slider((Slider)TraderWindow.TraderMenu.getPanel("Торговец-Цена").click(option));
 
                         slider.setChose(option);
                         slider.place(event.getInventory());
                     }
                     case "Установить" -> {
-                        var slider = new Slider(TraderWindow.PricePanel.getSliders().get(0));
+                        var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders().get(0));
 
                         trader.Cost = Double.parseDouble(ItemManager.getName(slider.getChose()).replace(CashManager.currencySigh, ""));
                         player.sendMessage("Цена установлена!");
@@ -114,15 +120,15 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Процент")) {
-                switch (TraderWindow.MarginPanel.click(option).getName()) {
+                switch (TraderWindow.TraderMenu.getPanel("Торговец-Процент").click(option).getName()) {
                     case "Slider" -> {
-                        var slider = new Slider((Slider)TraderWindow.MarginPanel.click(option));
+                        var slider = new Slider((Slider)TraderWindow.TraderMenu.getPanel("Торговец-Процент").click(option));
 
                         slider.setChose(option);
                         slider.place(event.getInventory());
                     }
                     case "Установить" -> {
-                        var slider = new Slider(TraderWindow.MarginPanel.getSliders("Slider"));
+                        var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Процент").getSliders("Slider"));
 
                         trader.Margin = Double.parseDouble(ItemManager.getName(slider.getChose()).replace("%", ""));
                         player.sendMessage("Процент установлен!");
@@ -134,7 +140,7 @@ public class TraderListener implements Listener {
             }
 
             if (title.contains("Торговец-Покупка")) {
-                switch (TraderWindow.AcceptPanel.click(option).getName()) {
+                switch (TraderWindow.TraderMenu.getPanel("Торговец-Покупка").click(option).getName()) {
                     case "Купить" -> {
                         var buyingItem = inventory.getItem(13);
                         var price = ItemManager.getPriceFromLore(buyingItem, 0);
@@ -150,6 +156,14 @@ public class TraderListener implements Listener {
                                     var endPrice = price / (1 + trader.Margin);
                                     PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(price - endPrice);
                                     trader.Revenue += endPrice;
+
+                                    if (TownyAPI.getInstance().getTown(player) != null)
+                                        if (trader.SpecialList.contains(Objects.requireNonNull(TownyAPI.getInstance().getTown(player)).getUUID())) {
+                                            CashManager.giveCashToPlayer(price - endPrice, player, false);
+                                            PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(-(price - endPrice));
+                                            player.sendMessage("Так как вы состоите в торговом союзе, пошлина была " +
+                                                    "компенсированна городом");
+                                        }
                                 }
                             }
                         }
@@ -171,9 +185,9 @@ public class TraderListener implements Listener {
         }
     }
 
-    private void rantTrader(Trader trader, Player ranter) {
+    private void rantTrader(Trader trader, int days, Player ranter) {
         trader.Owner    = ranter.getUniqueId();
         trader.IsRanted = true;
-        trader.Term     = LocalDateTime.now().plusDays(1).toString();
+        trader.Term     = LocalDateTime.now().plusDays(days).toString();
     }
 }

@@ -18,7 +18,8 @@ public class Loan {
         this.percentage   = percentage;
         this.duration     = duration;
         this.dailyPayment = dayPayment;
-        Owner             = player.getUniqueId();
+
+        Owner = player.getUniqueId();
     }
 
     public final UUID Owner;

@@ -3,8 +3,8 @@ package economy.pcconomy.frontend.ui.windows.bank;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.frontend.ui.windows.IWindow;
 
+import economy.pcconomy.frontend.ui.windows.Window;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
@@ -12,7 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class BankerWindow implements IWindow {
+public class BankerWindow extends Window {
     public Inventory generateWindow(Player player) {
         var window = Bukkit.createInventory(player, 54, Component.text("Банк"));
 

@@ -5,7 +5,6 @@ import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.Window;
 
-import org.bukkit.block.data.type.Wall;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

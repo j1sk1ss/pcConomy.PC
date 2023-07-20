@@ -18,12 +18,14 @@ import java.util.List;
 public class Panel {
     /**
      * Buttons panel
-     * @param buttons Buttons of panel
+     * @param components Components of panel
      */
-    public Panel(List<IComponent> buttons) {
-        this.iComponents = buttons;
+    public Panel(List<IComponent> components, String name) {
+        Name        = name;
+        iComponents = components;
     }
 
+    public final String Name;
     private final List<IComponent> iComponents;
 
     /**
@@ -39,34 +41,22 @@ public class Panel {
     }
 
     /**
-     * Place buttons body to new inventory
-     * @param inventory Inventory where should be placed buttons
-     * @return Inventory with buttons body
+     * Place components body to new inventory
+     * @param inventory Inventory where should be placed components
+     * @return Inventory with components body
      */
     public Inventory placeComponents(Inventory inventory) {
-        for (var component : iComponents) {
-            var coordinates = component.getCoordinates();
-
-            if (component instanceof Button button) {
-                var text = button.getName();
-                var lore = button.getLore();
-
-                for (var coordinate : coordinates)
-                    inventory.setItem(coordinate, new Item(text, lore, Material.PAPER, 1, 17000)); //TODO: DATA MODEL
-            } else if (component instanceof Slider slider) {
-                for (var i = 0; i < coordinates.size(); i++)
-                    inventory.setItem(coordinates.get(i), slider.getSlider().get(i));
-            }
-        }
+        for (var component : iComponents)
+            component.place(inventory);
 
         return inventory;
     }
 
     /**
-     * Place buttons body to new inventory
-     * @param inventory Inventory where should be placed buttons
+     * Place components body to new inventory
+     * @param inventory Inventory where should be placed components
      * @param customLore If u need to use custom lore
-     * @return Inventory with buttons body
+     * @return Inventory with components body
      */
     public Inventory placeComponents(Inventory inventory, List<String> customLore) {
         for (var component = 0; component < iComponents.size(); component++) {
@@ -77,11 +67,21 @@ public class Panel {
 
                 for (var coordinate : coordinates)
                     inventory.setItem(coordinate, new Item(text, customLore.get(component), Material.PAPER, 1, 17000)); //TODO: DATA MODEL
-            } else if (iComponents.get(component) instanceof Slider slider) {
-                for (var i = 0; i < coordinates.size(); i++)
-                    inventory.setItem(coordinates.get(i), slider.getSlider().get(i));
-            }
+            } else if (iComponents.get(component) instanceof Slider slider)
+                slider.place(inventory);
         }
+
+        return inventory;
+    }
+
+    /**
+     * Displace components body to new inventory
+     * @param inventory Inventory where should be displaced components
+     * @return Inventory with components body
+     */
+    public Inventory displaceComponents(Inventory inventory) {
+        for (var component : iComponents)
+            component.displace(inventory);
 
         return inventory;
     }

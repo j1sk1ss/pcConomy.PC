@@ -108,9 +108,7 @@ public class NpcManager {
             var traderTrait = new Trader();
             var loanerTrait = new Loaner();
 
-            var saveTrait = Npc.get(id).getBaseClass();
-
-            if (saveTrait instanceof TraderObject traderObject) {
+            if (Npc.get(id) instanceof TraderObject traderObject) {
                 traderTrait.Owner    = traderObject.Owner;
                 traderTrait.Storage  = traderObject.Storage;
                 traderTrait.Revenue  = traderObject.Revenue;
@@ -121,7 +119,7 @@ public class NpcManager {
                 traderTrait.Term     = traderObject.Term;
 
                 CitizensAPI.getNPCRegistry().getById(id).addTrait(traderTrait);
-            } else if (saveTrait instanceof LoanerObject loanerObject) {
+            } else if (Npc.get(id) instanceof LoanerObject loanerObject) {
                 loanerTrait.Pull     = loanerObject.Pull;
                 loanerTrait.HomeTown = loanerObject.HomeTown;
 

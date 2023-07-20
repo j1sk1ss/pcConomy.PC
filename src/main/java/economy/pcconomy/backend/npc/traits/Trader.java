@@ -26,6 +26,7 @@ import java.util.*;
 @TraitName("Trader")
 public class Trader extends Trait {
     public List<ItemStack> Storage = new ArrayList<>();
+    public List<UUID> SpecialList = new ArrayList<>();
     public double Revenue;
     public double Margin;
     public double Cost;
@@ -131,7 +132,8 @@ public class Trader extends Trait {
                 try {
                     var cost = Double.parseDouble(playerMessage);
                     trader.getOrAddTrait(Trader.class).Storage.add(ItemManager.setLore(sellingItem,
-                            cost + cost * Margin + CashManager.currencySigh));
+                            cost + cost * Margin + CashManager.currencySigh +
+                                    "\nБез пошлины: " + cost + CashManager.currencySigh));
                     player.getInventory().setItemInMainHand(null);
                     chat.remove(player.getUniqueId());
 

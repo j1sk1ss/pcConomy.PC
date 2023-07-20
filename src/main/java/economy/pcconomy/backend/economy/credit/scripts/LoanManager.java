@@ -1,7 +1,7 @@
 package economy.pcconomy.backend.economy.credit.scripts;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.IMoney;
+import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Borrower;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.scripts.PlayerManager;
@@ -89,7 +89,7 @@ public class LoanManager {
      * @param player Player who takes loan
      * @param moneyGiver Money giver
      */
-    public static void createLoan(double amount, int duration, Player player, IMoney moneyGiver) {
+    public static void createLoan(double amount, int duration, Player player, Capitalist moneyGiver) {
         var percentage = LoanManager.getPercent(amount, duration);
         var dailyPayment = LoanManager.getDailyPayment(amount, duration, percentage);
 
@@ -104,7 +104,7 @@ public class LoanManager {
      * @param player Player who close loan
      * @param creditOwner Credit owner
      */
-    public static void payOffADebt(Player player, IMoney creditOwner) {
+    public static void payOffADebt(Player player, Capitalist creditOwner) {
         var loan = getLoan(player.getUniqueId(), creditOwner);
 
         if (loan == null) return;
@@ -119,7 +119,7 @@ public class LoanManager {
      * Take percent from all borrowers
      * @param moneyTaker Money taker
      */
-    public static void takePercentFromBorrowers(IMoney moneyTaker) {
+    public static void takePercentFromBorrowers(Capitalist moneyTaker) {
         for (Loan loan: moneyTaker.getCreditList()) {
             if (loan.amount <= 0) {
                 destroyLoan(loan.Owner, moneyTaker);
@@ -144,7 +144,7 @@ public class LoanManager {
      * @param creditOwner Credit owner
      * @return Loan object
      */
-    public static Loan getLoan(UUID player, IMoney creditOwner) {
+    public static Loan getLoan(UUID player, Capitalist creditOwner) {
         for (Loan loan: creditOwner.getCreditList())
             if (loan.Owner.equals(player)) return loan;
 
@@ -156,7 +156,7 @@ public class LoanManager {
      * @param player Player UUID
      * @param creditOwner Credit owner
      */
-    public static void destroyLoan(UUID player, IMoney creditOwner) {
+    public static void destroyLoan(UUID player, Capitalist creditOwner) {
         var credit = creditOwner.getCreditList();
         var loan = getLoan(player, creditOwner);
         var borrower = PcConomy.GlobalBorrowerManager.getBorrowerObject(Bukkit.getPlayer(player));

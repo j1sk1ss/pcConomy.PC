@@ -26,9 +26,4 @@ public class TraderObject implements INpcObject {
     public final UUID HomeTown;
     public final UUID Owner;
     public final String Term;
-
-    @Override
-    public INpcObject getBaseClass() {
-        return this;
-    }
 }

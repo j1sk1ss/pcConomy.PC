@@ -18,7 +18,7 @@ public class TownyListener implements Listener {
     public void OnCreation(NewTownEvent event) {
         var town = event.getTown();
 
-        PcConomy.GlobalBank.BankBudget += 250.0d;
+        PcConomy.GlobalBank.BankBudget += 250d; //TODO: Towny API connect correct price
         PcConomy.GlobalTownManager.createTownObject(town, false);
     }
 
@@ -61,9 +61,10 @@ public class TownyListener implements Listener {
             PcConomy.GlobalBank.BankBudget += town.getPlotTax();
 
         for (var town : PcConomy.GlobalTownManager.towns)
-            town.lifeCycle();
+            town.newDay();
 
         PcConomy.GlobalShareManager.dailyPaying();
-        PcConomy.GlobalBank.lifeCycle();
+        PcConomy.GlobalBank.newDay();
+        PcConomy.GlobalShareManager.ActionsList.clear();
     }
 }

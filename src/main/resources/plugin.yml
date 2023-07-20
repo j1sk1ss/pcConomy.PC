@@ -47,6 +47,10 @@ commands:
     usage: /set_day_bank_budget [amount]
   transfer_share:
     usage: /transfer_share [town name] [player name]
+  shares_rate:
+    usage: /shares_rate
+  global_market_prices:
+    usage: /global_market_prices
 
 bank:
   start_budget: 15000
@@ -63,4 +67,5 @@ npc:
 town:
   start_useful_budget: 0.35
   start_useful_storage: 0.30
+  start_vat: 0.05
 

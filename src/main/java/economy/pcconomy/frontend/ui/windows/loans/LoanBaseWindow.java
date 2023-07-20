@@ -7,6 +7,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
+import economy.pcconomy.frontend.ui.windows.Window;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -14,7 +15,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
-public abstract class LoanBaseWindow {
+public abstract class LoanBaseWindow extends Window {
+    /**
+     * Regenerate window with new info
+     * @param window Past window
+     * @param player Player
+     * @param option New option
+     * @return New window
+     */
     public abstract Inventory regenerateWindow(Inventory window, Player player, int option);
 
     /***
@@ -31,6 +39,14 @@ public abstract class LoanBaseWindow {
         return !licenseHistory.isOverdue();
     }
 
+    /**
+     * Credit option buttons placement
+     * @param itemStack Chosen option
+     * @param maxLoanSize Max loan size
+     * @param chosen Chosen option
+     * @param position Position of day
+     * @return Button with status of credit
+     */
     public abstract ItemStack creditOptionButton(ItemStack itemStack, double maxLoanSize, int chosen, int position);
 
     /***

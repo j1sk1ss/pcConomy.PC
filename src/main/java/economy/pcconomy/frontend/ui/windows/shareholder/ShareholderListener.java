@@ -24,10 +24,16 @@ public class ShareholderListener implements Listener {
         var option = event.getSlot();
 
         if (Window.isThisWindow(event, player, "Акции-Меню")) {
-            switch (ShareholderWindow.actionsMenuPanel.click(option).getName()) {
+            switch (ShareholderWindow.ShareHolderMenu.getPanel("Акции-Меню").click(option).getName()) {
                 case "Покупка/продажа акций" -> player.openInventory(ShareholderWindow.sharesWindow(player, 0));
                 case "Выставление акций" -> {
                     var town = TownyAPI.getInstance().getTown(player);
+                    if (town != null)
+                        if (PcConomy.GlobalShareManager.ActionsList.contains(town.getUUID())) {
+                            player.sendMessage("Ваш город уже работал с акциями сегодня");
+                            return;
+                        }
+
                     if (player.equals(Objects.requireNonNull(town).getMayor().getPlayer()))
                         player.openInventory(ShareholderWindow.townSharesWindow(player, town.getUUID()));
                 }
@@ -55,7 +61,7 @@ public class ShareholderListener implements Listener {
 
             event.setCancelled(true);
 
-            switch (ShareholderWindow.acceptPanel.click(option).getName()) {
+            switch (ShareholderWindow.ShareHolderMenu.getPanel("Акции-Города").click(option).getName()) {
                 case "Продать одну акцию" -> {
                     if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
                     PcConomy.GlobalShareManager.sellShare(town.getUUID(), player);
@@ -68,22 +74,23 @@ public class ShareholderListener implements Listener {
         }
 
         if (Window.isThisWindow(event, player, "Акции-Выставление")) {
-            if (ShareholderWindow.townSharesPanel.click(option).getName().contains("Slider")) {
-                var slider = new Slider((Slider)ShareholderWindow.townSharesPanel.click(option));
+            var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
+            if (townSharesPanel.click(option).getName().contains("Slider")) {
+                var slider = new Slider((Slider)townSharesPanel.click(option));
 
                 slider.setChose(option);
                 slider.place(event.getInventory());
             }
 
-            switch (ShareholderWindow.townSharesPanel.click(option).getName()) {
+            switch (townSharesPanel.click(option).getName()) {
                 case "Выставить на продажу" -> {
                     var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                     if (town == null) return;
 
-                    var countSlider = new Slider(ShareholderWindow.townSharesPanel.getSliders("SliderCount"));
-                    var percentSlider = new Slider(ShareholderWindow.townSharesPanel.getSliders("SliderPercent"));
-                    var costSlider = new Slider(ShareholderWindow.townSharesPanel.getSliders("SliderCost"));
-                    var typeSlider = new Slider(ShareholderWindow.townSharesPanel.getSliders("SliderType"));
+                    var countSlider = new Slider(townSharesPanel.getSliders("SliderCount"));
+                    var percentSlider = new Slider(townSharesPanel.getSliders("SliderPercent"));
+                    var costSlider = new Slider(townSharesPanel.getSliders("SliderCost"));
+                    var typeSlider = new Slider(townSharesPanel.getSliders("SliderType"));
 
                     PcConomy.GlobalShareManager.exposeShares(
                             town.getUUID(),

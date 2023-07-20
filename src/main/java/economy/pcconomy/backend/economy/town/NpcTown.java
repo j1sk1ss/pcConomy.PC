@@ -1,8 +1,5 @@
 package economy.pcconomy.backend.economy.town;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.economy.BankAccount;
-
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.credit.Loan;
@@ -40,21 +37,22 @@ public class NpcTown extends Town {
         StartStorageAmount = StorageManager.getAmountOfStorage(Storage);
 
         setBudget(previousBudget);
-        lifeCycle();
+        newDay();
     }
 
     public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage", .5);
     public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget", .5);
-    public double townVAT = .01d;
-    public final List<ItemStack> Storage;
-    public final UUID TownUUID;
-    public final List<Loan> Credit;
-    private double previousBudget = 10000;
-    private int StartStorageAmount;
+    public double townVAT = PcConomy.Config.getDouble("town.start_vat", .05d);
 
+    public final List<ItemStack> Storage;
+    public final List<Loan> Credit;
+    public final UUID TownUUID;
     private final int purchaseSize = 8;
-    private int dayStorage = (int)(StartStorageAmount * usefulStorage);
+
+    private double previousBudget = 10000;
     private double dayBudget = previousBudget * usefulBudget;
+    private int StartStorageAmount = 0;
+    private int dayStorage = (int)(StartStorageAmount * usefulStorage);
 
     /**
      * Buy resources from town storage
@@ -162,7 +160,7 @@ public class NpcTown extends Town {
     }
 
     @Override
-    public void lifeCycle() {
+    public void newDay() {
         LoanManager.takePercentFromBorrowers(this);
 
         var changePercent = (getBudget() - previousBudget) / previousBudget;
@@ -187,19 +185,5 @@ public class NpcTown extends Town {
     @Override
     public List<Loan> getCreditList() {
         return Credit;
-    }
-
-    @Override
-    public List<UUID> getBorrowers() {
-        var list = new ArrayList<UUID>();
-        for (var loan : Credit)
-            list.add(loan.Owner);
-
-        return list;
-    }
-
-    @Override
-    public BankAccount getBankAccount() {
-        return Objects.requireNonNull(TownyAPI.getInstance().getTown(TownUUID)).getAccount();
     }
 }

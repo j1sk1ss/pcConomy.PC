@@ -29,26 +29,12 @@ public class PlayerTown extends Town {
     }
 
     @Override
-    public void lifeCycle() {
+    public void newDay() {
         LoanManager.takePercentFromBorrowers(this);
     }
 
     @Override
     public List<Loan> getCreditList() {
         return Credit;
-    }
-
-    @Override
-    public List<UUID> getBorrowers() {
-        var list = new ArrayList<UUID>();
-        for (var loan : Credit)
-            list.add(loan.Owner);
-
-        return list;
-    }
-
-    @Override
-    public BankAccount getBankAccount() {
-        return Objects.requireNonNull(TownyAPI.getInstance().getTown(TownUUID)).getAccount();
     }
 }

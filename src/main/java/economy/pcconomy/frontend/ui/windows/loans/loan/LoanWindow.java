@@ -9,7 +9,6 @@ import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.Panel;
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
-import economy.pcconomy.frontend.ui.windows.IWindow;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class LoanWindow extends LoanBaseWindow implements IWindow  {
+public class LoanWindow extends LoanBaseWindow {
     public LoanWindow(Loaner loaner) {
         Loaner = loaner;
     }
@@ -34,13 +33,9 @@ public class LoanWindow extends LoanBaseWindow implements IWindow  {
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
     public static final economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
-            new Button(Arrays.asList(
-                    0, 1, 2, 3, 9, 10, 11, 12, 18, 19, 20, 21
-            ), "Взять кредит", ""),
-            new Button(Arrays.asList(
-                    5, 6, 7, 8, 14, 15, 16, 17, 23, 24, 25, 26
-            ), "Погасить кредит", "")
-    ));
+            new Button(0, 21, "Взять кредит", ""),
+            new Button(5, 26, "Погасить кредит", "")
+    ), "Panel");
 
     public Inventory generateWindow(Player player) {
         return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит-Город")));
