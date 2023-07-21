@@ -9,6 +9,7 @@ import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.cash.CashManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
@@ -65,10 +66,20 @@ public class Bank extends Capitalist {
 
     /**
      * Life cycle of bank working
+     * First part - pay for deposit from moneys, that was taken from loans percent
+     * Second part - calculate change percent of budget and recession status
+     * Third part - changing VAT, useful budget and trust coefficient
+     * Fourth part - updating day budget
      */
     @Override
     public void newDay() {
-        LoanManager.takePercentFromBorrowers(this);
+        var amount = LoanManager.takePercentFromBorrowers(this) * UsefulBudgetPercent;
+        var players = Bukkit.getOnlinePlayers();
+        for (var player : players) {
+            PcConomy.GlobalBalanceManager.giveMoney(amount / players.size(), player);
+            BankBudget -= amount / players.size();
+        }
+
         var changePercent = (BankBudget - previousBudget) / previousBudget;
         var isRecession  = (changePercent <= 0 && getGlobalInflation() > 0) ? 1 : -1;
 
@@ -84,8 +95,7 @@ public class Bank extends Capitalist {
             recessionCount = 0;
         }
 
-        previousBudget = BankBudget;
-
+        previousBudget    = BankBudget;
         dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
     }
 

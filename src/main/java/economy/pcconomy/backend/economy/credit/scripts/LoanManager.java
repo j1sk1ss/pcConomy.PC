@@ -119,11 +119,12 @@ public class LoanManager {
      * Take percent from all borrowers
      * @param moneyTaker Money taker
      */
-    public static void takePercentFromBorrowers(Capitalist moneyTaker) {
-        for (Loan loan: moneyTaker.getCreditList()) {
+    public static double takePercentFromBorrowers(Capitalist moneyTaker) {
+        var amount = 0d;
+        for (var loan: moneyTaker.getCreditList()) {
             if (loan.amount <= 0) {
                 destroyLoan(loan.Owner, moneyTaker);
-                return;
+                return 0d;
             }
 
             if (PcConomy.GlobalBalanceManager.notSolvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
@@ -135,7 +136,10 @@ public class LoanManager {
             loan.amount -= loan.dailyPayment;
 
             moneyTaker.changeBudget(loan.dailyPayment);
+            amount += loan.dailyPayment;
         }
+
+        return amount;
     }
 
     /***
