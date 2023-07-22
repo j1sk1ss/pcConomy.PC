@@ -7,7 +7,6 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.traits.*;
-import economy.pcconomy.backend.economy.town.scripts.StorageManager;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
@@ -49,21 +48,23 @@ public class CommandManager implements CommandExecutor {
 
             case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player) sender)).getMayor().getName().equals((sender).getName())) return true;
-                Window.OpenWindow((Player) sender, new MayorWindow());
+                Window.openWindow((Player) sender, new MayorWindow());
             }
-            case "add_trade_to_town" -> StorageManager.addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]),
-                    ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage);
-            case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "\n" +
-                        "Global VAT: " + PcConomy.GlobalBank.VAT + "\n" +
+            case "add_trade_to_town" -> ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage
+                    .addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]));
+            case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "$\n" +
+                        "Global VAT: " + PcConomy.GlobalBank.VAT + "%\n" +
+                        "Deposit percent: " + PcConomy.GlobalBank.DepositPercent + "%\n" +
                         "Registered towns count: " + PcConomy.GlobalTownManager.towns.size() + "\n" +
                         "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
                         "NPC Traders count: " + PcConomy.GlobalNPC.Npc.size());
 
-            case "set_day_bank_budget" -> PcConomy.GlobalBank.setUsefulBudgetPercent(Double.parseDouble(args[0]));
+            case "set_day_bank_budget" -> PcConomy.GlobalBank.DayWithdrawBudget = (Double.parseDouble(args[0]));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "create_shareholder"  -> PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
             case "transfer_share"      -> PcConomy.GlobalShareManager.changeShareOwner(Objects.requireNonNull(
-                    TownyAPI.getInstance().getTown(args[0])).getUUID(), (Player) sender, Bukkit.getPlayer(args[1]));
+                    TownyAPI.getInstance().getTown(args[0])).getUUID(), Integer.parseInt(args[2]), (Player) sender,
+                    Bukkit.getPlayer(args[1]));
 
             case "shares_rate" -> {
                 var message = "";

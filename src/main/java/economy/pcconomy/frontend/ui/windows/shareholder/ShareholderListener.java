@@ -29,7 +29,7 @@ public class ShareholderListener implements Listener {
                 case "Выставление акций" -> {
                     var town = TownyAPI.getInstance().getTown(player);
                     if (town != null)
-                        if (PcConomy.GlobalShareManager.ActionsList.contains(town.getUUID())) {
+                        if (PcConomy.GlobalShareManager.InteractionList.contains(town.getUUID())) {
                             player.sendMessage("Ваш город уже работал с акциями сегодня");
                             return;
                         }
@@ -57,17 +57,18 @@ public class ShareholderListener implements Listener {
             if (town == null) return;
 
             var share = PcConomy.GlobalShareManager.getEmptyTownShare(town.getUUID());
-            if (share == null) return;
+            if (share.size() == 0) return;
 
             event.setCancelled(true);
 
             switch (ShareholderWindow.ShareHolderMenu.getPanel("Акции-Города").click(option).getName()) {
                 case "Продать одну акцию" -> {
-                    if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
+                    if (share.get(0).Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
                     PcConomy.GlobalShareManager.sellShare(town.getUUID(), player);
                 }
                 case "Купить одну акцию" -> {
-                    if (share.Price + share.Price * PcConomy.GlobalBank.VAT > CashManager.amountOfCashInInventory(player, false)) return;
+                    if (share.get(0).Price + share.get(0).Price *
+                            PcConomy.GlobalBank.VAT > CashManager.amountOfCashInInventory(player, false)) return;
                     PcConomy.GlobalShareManager.buyShare(town.getUUID(), player);
                 }
             }

@@ -16,6 +16,6 @@ public class Banker extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenWindow(event.getClicker(), new BankerWindow());
+        Window.openWindow(event.getClicker(), new BankerWindow());
     }
 }

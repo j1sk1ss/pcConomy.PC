@@ -29,12 +29,15 @@ public class Loaner extends Trait {
     }
 
     public double Pull;
-    public String HomeTown;
+    public UUID HomeTown;
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenWindow(event.getClicker(), new LoanWindow(this));
+        if (HomeTown == null)
+            HomeTown = Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getUUID();
+
+        Window.openWindow(event.getClicker(), new LoanWindow(this));
     }
 
     @EventHandler
@@ -53,6 +56,8 @@ public class Loaner extends Trait {
     @EventHandler
     public void onInteraction(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
+        if (!event.getClicker().isSneaking()) return;
+
         var player = event.getClicker();
         var playerUUID = player.getUniqueId();
         var homeTown = TownyAPI.getInstance().getTownName(player.getLocation());
@@ -99,5 +104,4 @@ public class Loaner extends Trait {
     		});
     	}
     }
-
 }

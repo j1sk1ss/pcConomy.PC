@@ -68,16 +68,10 @@ public abstract class LoanBaseWindow extends Window {
 
     /***
      * Get selected credit size from window
-     * @param window Window
+     * @param button Pressed button
      * @return Credit size
      */
-    public static double getSelectedAmount(Inventory window) {
-        for (ItemStack button : window) {
-            if (button == null) return 0;
-            if (ItemManager.getMaterial(button).equals(Material.LIGHT_BLUE_WOOL))
-                return Double.parseDouble(ItemManager.getName(button).replace(CashManager.currencySigh, ""));
-        }
-
-        return 0;
+    public static double getSelectedAmount(ItemStack button) {
+        return Double.parseDouble(ItemManager.getName(button).replace(CashManager.currencySigh, ""));
     }
 }

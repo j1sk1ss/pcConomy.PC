@@ -31,8 +31,7 @@ public class NPCLoanerListener implements Listener {
 
                     if (isSafe)
                         if (!PcConomy.GlobalBank.Credit.contains(LoanManager.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
-                            activeInventory.setItem(buttonPosition, new Item(item, Material.LIGHT_BLUE_WOOL));
-                            LoanManager.createLoan(NPCLoanWindow.getSelectedAmount(activeInventory),
+                            LoanManager.createLoan(NPCLoanWindow.getSelectedAmount(activeInventory.getItem(buttonPosition)),
                                     NPCLoanWindow.getSelectedDuration(activeInventory), player, PcConomy.GlobalBank);
                             player.closeInventory();
                         }

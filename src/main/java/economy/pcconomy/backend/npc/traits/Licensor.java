@@ -16,6 +16,6 @@ public class Licensor extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenWindow(event.getClicker(), new LicensorWindow());
+        Window.openWindow(event.getClicker(), new LicensorWindow());
     }
 }

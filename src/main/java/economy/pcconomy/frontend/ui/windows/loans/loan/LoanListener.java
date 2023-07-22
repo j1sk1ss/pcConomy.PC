@@ -38,19 +38,16 @@ public class LoanListener implements Listener {
             if (title.contains("Город-Взятие")) {
                 if (ItemManager.getName(Objects.requireNonNull(item)).contains(CashManager.currencySigh)) {
                     var isSafe = ItemManager.getLore(item).get(0).contains("Город одобрит данный займ.");
-                    final int maxCreditCount = 5;
 
-                    if (isSafe && currentTown.getCreditList().size() < maxCreditCount) {
-                        if (!currentTown.getCreditList().contains(LoanManager.getLoan(player.getUniqueId(), currentTown))) {
-                            activeInventory.setItem(buttonPosition, new Item(item, Material.LIGHT_BLUE_WOOL));
-                            var amount = LoanWindow.getSelectedAmount(activeInventory);
+                    if (isSafe && !currentTown.getCreditList().contains(LoanManager.getLoan(player.getUniqueId(), currentTown))) {
+                        var amount = LoanWindow.getSelectedAmount(activeInventory.getItem(buttonPosition));
 
-                            Objects.requireNonNull(loaner).Pull -= amount;
-                            LoanManager.createLoan(amount, LoanWindow.getSelectedDuration(activeInventory), player, currentTown);
+                        Objects.requireNonNull(loaner).Pull -= amount;
+                        LoanManager.createLoan(amount, LoanWindow.getSelectedDuration(activeInventory), player, currentTown);
 
-                            player.closeInventory();
-                        }
+                        player.closeInventory();
                     }
+
                 } else {
                     activeInventory.setItem(buttonPosition, new Item(item, Material.PURPLE_WOOL));
                     player.openInventory(new LoanWindow(loaner).regenerateWindow(activeInventory, player, buttonPosition));

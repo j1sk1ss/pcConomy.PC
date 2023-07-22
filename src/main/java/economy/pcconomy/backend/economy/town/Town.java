@@ -2,6 +2,7 @@ package economy.pcconomy.backend.economy.town;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
+
 import economy.pcconomy.backend.economy.Capitalist;
 
 import java.util.Objects;

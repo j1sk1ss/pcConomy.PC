@@ -23,7 +23,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param player Player
      * @return Status
      */
-    public boolean notSolvent(double value, Player player) {
+    public boolean solvent(double value, Player player) {
         return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(value)) < 0;
     }
 
@@ -42,7 +42,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param player Player that will lose moneys
      */
     public void takeMoney(double amount, Player player) {
-        if (notSolvent(amount, player)) return;
+        if (solvent(amount, player)) return;
         xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), false);
     }
 }

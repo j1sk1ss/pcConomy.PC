@@ -83,7 +83,7 @@ public class NpcManager {
             }
         }
 
-        loadTraders();
+        loadNpc();
     }
 
     /***
@@ -103,7 +103,7 @@ public class NpcManager {
     /***
      * Load traders and their stuff
      */
-    public void loadTraders() {
+    public void loadNpc() {
         for (var id : Npc.keySet()) {
             var traderTrait = new Trader();
             var loanerTrait = new Loaner();
@@ -140,6 +140,10 @@ public class NpcManager {
 
                 Npc.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
                         traderTrait.Cost, traderTrait.IsRanted, traderTrait.HomeTown, traderTrait.Owner, traderTrait.Term));
+            } else if (npc.hasTrait(Loaner.class)) {
+                var loanerTrait = npc.getOrAddTrait(Loaner.class);
+
+                Npc.put(npc.getId(), new LoanerObject(loanerTrait.Pull, loanerTrait.HomeTown));
             }
 
         var writer = new FileWriter(fileName + ".json", false);

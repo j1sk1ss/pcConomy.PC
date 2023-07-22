@@ -33,7 +33,7 @@ public class License {
      * @param licenseType License type
      * @param price Price of license
      */
-    public static void getLicense(Player player, LicenseType licenseType, double price) {
+    public static void giveLicenseToPlayer(Player player, LicenseType licenseType, double price) {
         if (amountOfCashInInventory(player, false) < price) return;
 
         if (PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType) != null)

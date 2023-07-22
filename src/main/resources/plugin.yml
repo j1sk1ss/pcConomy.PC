@@ -46,7 +46,7 @@ commands:
   set_day_bank_budget:
     usage: /set_day_bank_budget [amount]
   transfer_share:
-    usage: /transfer_share [town name] [player name]
+    usage: /transfer_share [town name] [player name] [shares count]
   shares_rate:
     usage: /shares_rate
   global_market_prices:
@@ -56,6 +56,7 @@ bank:
   start_budget: 15000
   start_useful_budget: 0.25
   start_VAT: 0.10
+  start_deposit_percent: 0.05
 license:
   market_license_price: 1200
   trade_license_price: 500

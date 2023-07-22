@@ -22,7 +22,7 @@ public class LoanManager {
      * @return Percent of this loan
      */
     public static double getPercent(double amount, double duration) {
-        return Math.round((PcConomy.GlobalBank.getUsefulAmountOfBudget() / (amount * duration)) * 1000d) / 1000d;
+        return Math.round((PcConomy.GlobalBank.DayWithdrawBudget / (amount * duration)) * 1000d) / 1000d;
     }
 
     /***
@@ -44,13 +44,13 @@ public class LoanManager {
     public static double getSafetyFactor(double amount, int duration, Borrower borrower) {
         var expired = 0;
         if (borrower == null) return ((duration / 100d)) /
-                (expired + (amount / PcConomy.GlobalBank.getUsefulAmountOfBudget()));
+                (expired + (amount / PcConomy.GlobalBank.DayWithdrawBudget));
 
         for (var loan : borrower.CreditHistory)
             expired += loan.expired;
 
         return (borrower.CreditHistory.size() + (duration / 100d)) /
-                (expired + (amount / PcConomy.GlobalBank.getUsefulAmountOfBudget()));
+                (expired + (amount / PcConomy.GlobalBank.DayWithdrawBudget));
     }
 
     /***
@@ -108,7 +108,7 @@ public class LoanManager {
         var loan = getLoan(player.getUniqueId(), creditOwner);
 
         if (loan == null) return;
-        if (PcConomy.GlobalBalanceManager.notSolvent(loan.amount, player)) return;
+        if (PcConomy.GlobalBalanceManager.solvent(loan.amount, player)) return;
 
         PcConomy.GlobalBalanceManager.takeMoney(loan.amount, player);
         creditOwner.changeBudget(loan.amount);
@@ -119,15 +119,14 @@ public class LoanManager {
      * Take percent from all borrowers
      * @param moneyTaker Money taker
      */
-    public static double takePercentFromBorrowers(Capitalist moneyTaker) {
-        var amount = 0d;
+    public static void takePercentFromBorrowers(Capitalist moneyTaker) {
         for (var loan: moneyTaker.getCreditList()) {
             if (loan.amount <= 0) {
                 destroyLoan(loan.Owner, moneyTaker);
-                return 0d;
+                return;
             }
 
-            if (PcConomy.GlobalBalanceManager.notSolvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
+            if (PcConomy.GlobalBalanceManager.solvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
                 loan.expired += 1;
                 continue;
             }
@@ -136,10 +135,7 @@ public class LoanManager {
             loan.amount -= loan.dailyPayment;
 
             moneyTaker.changeBudget(loan.dailyPayment);
-            amount += loan.dailyPayment;
         }
-
-        return amount;
     }
 
     /***

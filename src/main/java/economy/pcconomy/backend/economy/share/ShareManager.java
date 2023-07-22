@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class ShareManager {
-    public final List<UUID> ActionsList = new ArrayList<>();
+    public final List<UUID> InteractionList = new ArrayList<>();
     public final Map<UUID, List<Share>> Shares = new HashMap<>();
 
     /**
@@ -29,8 +29,9 @@ public class ShareManager {
     public void exposeShares(UUID town, double price, int count, double size, ShareType shareType) {
         var shares = new ArrayList<Share>();
 
-        if (getTownShares(town) != null)
-            for (var share : getTownShares(town))
+        var townShares = getTownShares(town);
+        if (townShares != null)
+            for (var share : townShares)
                 if (share.Owner != null)
                     shares.add(share);
 
@@ -38,7 +39,7 @@ public class ShareManager {
             shares.add(new Share(town, shareType, null, price, size / (double) count));
 
         setTownShares(town, shares);
-        ActionsList.add(town);
+        InteractionList.add(town);
     }
 
     /**
@@ -46,15 +47,8 @@ public class ShareManager {
      * @param town Town who take off shares
      */
     public void takeOffShares(UUID town) {
-        var capitalization = 0;
         var averagePrice = getMedianSharePrice(town);
-
-        for (var share : getTownShares(town))
-            if (share.Owner != null)
-                capitalization++;
-
-        capitalization *= averagePrice;
-
+        var capitalization = (getTownShares(town).size() - getEmptyTownShare(town).size()) * averagePrice;
         if (capitalization > PcConomy.GlobalTownManager.getTown(town).getBudget()) return;
 
         for (var share : getTownShares(town))
@@ -67,7 +61,7 @@ public class ShareManager {
             }
 
         Shares.remove(town);
-        ActionsList.add(town);
+        InteractionList.add(town);
     }
 
     /**
@@ -84,12 +78,13 @@ public class ShareManager {
      * @param town Town
      * @return Share without owner
      */
-    public Share getEmptyTownShare(UUID town) {
+    public List<Share> getEmptyTownShare(UUID town) {
+        var list = new ArrayList<Share>();
         for (var share : Shares.get(town))
             if (share.Owner == null)
-                return share;
+                list.add(share);
 
-        return null;
+        return list;
     }
 
     /**
@@ -107,35 +102,35 @@ public class ShareManager {
      * @param buyer Player who buy share
      */
     public void buyShare(UUID town, Player buyer) {
-        for (var share : Shares.get(town))
-            if (share.Owner == null) {
-                var price = share.Price;
-                if (CashManager.amountOfCashInInventory(buyer, false) >= price + price * PcConomy.GlobalBank.VAT) {
-                    CashManager.takeCashFromPlayer(price + price * PcConomy.GlobalBank.VAT, buyer, false);
+         var shares = getEmptyTownShare(town);
+         if (shares.size() == 0) return;
 
-                    PcConomy.GlobalBank.BankBudget += price * PcConomy.GlobalBank.VAT;
-                    PcConomy.GlobalTownManager.getTown(town).changeBudget(price);
+         var share = shares.get(0);
+         if (CashManager.amountOfCashInInventory(buyer, false) >= share.Price + share.Price * PcConomy.GlobalBank.VAT) {
+             CashManager.takeCashFromPlayer(share.Price + share.Price * PcConomy.GlobalBank.VAT, buyer, false);
 
-                    share.Owner = buyer.getUniqueId();
-                }
+             PcConomy.GlobalBank.BankBudget += share.Price * PcConomy.GlobalBank.VAT;
+             PcConomy.GlobalTownManager.getTown(town).changeBudget(share.Price);
 
-                break;
-            }
+             share.Owner = buyer.getUniqueId();
+         }
     }
 
     /**
      * Change owner of share
      * @param town Town
+     * @param count Shares count
      * @param oldOwner Old owner of share
      * @param newOwner New owner of share
      */
-    public void changeShareOwner(UUID town, Player oldOwner, Player newOwner) {
+    public void changeShareOwner(UUID town, int count, Player oldOwner, Player newOwner) {
         var currentTown = PcConomy.GlobalTownManager.getTown(town);
         if (currentTown == null) return;
 
-        for (var share : Shares.get(town))
-            if (share.Owner == oldOwner.getUniqueId())
-                share.Owner = newOwner.getUniqueId();
+        for (var i = 0; i < count; i++)
+            for (var share : Shares.get(town))
+                if (share.Owner == oldOwner.getUniqueId())
+                    share.Owner = newOwner.getUniqueId();
     }
 
     /**

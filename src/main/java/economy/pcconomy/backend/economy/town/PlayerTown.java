@@ -16,8 +16,8 @@ public class PlayerTown extends Town {
      * @param town TownyAPI town
      */
     public PlayerTown(com.palmergames.bukkit.towny.object.Town town) {
-        TownUUID   = town.getUUID();
-        Credit     = new ArrayList<>();
+        TownUUID = town.getUUID();
+        Credit   = new ArrayList<>();
     }
 
     public final UUID TownUUID;

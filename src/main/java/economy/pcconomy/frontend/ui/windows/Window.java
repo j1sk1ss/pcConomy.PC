@@ -17,7 +17,7 @@ public abstract class Window {
      * @param player Player that should see this window
      * @param window Window type
      */
-    public static void OpenWindow(Player player, Window window) {
+    public static void openWindow(Player player, Window window) {
         player.openInventory(window.generateWindow(player));
     }
 

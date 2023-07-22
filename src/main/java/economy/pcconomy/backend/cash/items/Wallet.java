@@ -27,6 +27,21 @@ public class Wallet {
     }
 
     /**
+     * New wallet with custom preset
+     * @param amount Amount
+     * @param level Level
+     */
+    public Wallet(double amount, int level) {
+        Amount = amount;
+        Level  = level;
+
+        Capacity = Level * 500;
+
+        Body = new Item("Кошелёк", amount + " " + CashManager.getCurrencyNameByNum((int)amount)
+                + "\nВместимость: " + level, Material.BOOK, 1, walletDataModel);
+    }
+
+    /**
      * Wallet from wallet item
      * @param wallet Wallet itemStack
      */
@@ -110,8 +125,9 @@ public class Wallet {
      * Put cash into players wallet
      * @param player Player
      * @param amount Amount
+     * @return Amount of cash that can't be stored
      */
-    public static void changeCashInWallet(Player player, double amount) {
+    public static double changeCashInWallet(Player player, double amount) {
         var wallets = getWallets(player);
         var cashAmount = amount;
 
@@ -128,15 +144,17 @@ public class Wallet {
                     cashAmount = 0;
                 }
             else
-                if (wallet.Amount + cashAmount > 0) {
-                    wallet.Amount -= cashAmount;
-                    cashAmount = 0;
-                } else {
+                if (wallet.Amount + cashAmount <= 0) {
+                    wallet.Amount = 0;
                     cashAmount += wallet.Amount;
-                    wallet.Amount += 0;
+                } else {
+                    wallet.Amount += cashAmount;
+                    cashAmount = 0;
                 }
 
             wallet.giveWallet(player);
         }
+
+        return cashAmount;
     }
 }

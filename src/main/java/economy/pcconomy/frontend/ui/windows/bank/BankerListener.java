@@ -17,13 +17,10 @@ public class BankerListener implements Listener {
         var player = (Player) event.getWhoClicked();
 
         if (Window.isThisWindow(event, player, "Банк")) {
-            var option = Objects.requireNonNull(event.getCurrentItem());
-            var amount = ItemManager.getPriceFromLore(option, 0);
+            var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(event.getCurrentItem()), 0);
 
-            if (amount > 0)
-                PcConomy.GlobalBank.giveCashToPlayer(amount, player);
-            else
-                PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);
+            if (amount > 0) PcConomy.GlobalBank.giveCashToPlayer(amount, player);
+            else PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);
 
             event.setCancelled(true);
         }

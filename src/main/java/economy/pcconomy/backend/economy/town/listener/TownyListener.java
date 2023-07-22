@@ -65,6 +65,6 @@ public class TownyListener implements Listener {
 
         PcConomy.GlobalShareManager.dailyPaying();
         PcConomy.GlobalBank.newDay();
-        PcConomy.GlobalShareManager.ActionsList.clear();
+        PcConomy.GlobalShareManager.InteractionList.clear();
     }
 }

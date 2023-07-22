@@ -127,17 +127,8 @@ public class CashManager {
      * @param ignoreWallet Ignoring of wallet status
      */
     public static void giveCashToPlayer(double amount, Player player, boolean ignoreWallet) {
-        var wallets = Wallet.getWallets(player);
-        var freeSpace = Wallet.getFreeSpace(wallets);
-        var cashAmount = amount;
-
-        if (Wallet.getWallets(player).size() != 0 && !ignoreWallet) {
-            Wallet.changeCashInWallet(player, amount);
-            cashAmount -= freeSpace;
-        }
-
-        if (cashAmount <= 0) return;
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(cashAmount)), player);
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount :
+                Wallet.changeCashInWallet(player, amount))), player);
     }
 
     /**
@@ -151,23 +142,8 @@ public class CashManager {
         if (playerCashAmount < amount) return;
 
         ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-
-        var wallets = Wallet.getWallets(player);
-        var walletAmount = 0d;
-
-        if (!ignoreWallet)
-            if (wallets.size() != 0) {
-                if (Wallet.getWalletAmount(wallets) - amount < 0) {
-                    walletAmount = -Wallet.getWalletAmount(wallets);
-                    Wallet.changeCashInWallet(player, walletAmount);
-                }
-                else {
-                    Wallet.changeCashInWallet(player, -amount);
-                    return;
-                }
-            }
-
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount - (amount - walletAmount))), player);
+        ItemManager.giveItems(CashManager.getChangeInCash(getChange(
+                playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallet(player, -amount)))), player);
     }
 
     /**

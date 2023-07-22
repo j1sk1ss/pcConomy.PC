@@ -16,6 +16,6 @@ public class NpcLoaner extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        Window.OpenWindow(event.getClicker(), new NPCLoanWindow());
+        Window.openWindow(event.getClicker(), new NPCLoanWindow());
     }
 }

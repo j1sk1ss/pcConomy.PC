@@ -25,5 +25,4 @@ public class MayorWindow extends Window {
     public Inventory generateWindow(Player mayor) {
         return Panel.placeComponents(Bukkit.createInventory(mayor, 27, Component.text("Меню")));
     }
-
 }

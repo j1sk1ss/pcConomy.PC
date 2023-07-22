@@ -24,6 +24,8 @@ public class Bank extends Capitalist {
     public double BankBudget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
     public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
     public double VAT = PcConomy.Config.getDouble("bank.start_VAT", .1d);
+    public double DepositPercent = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
+    public double DayWithdrawBudget = BankBudget * UsefulBudgetPercent;
 
     public final List<Loan> Credit;
 
@@ -33,15 +35,14 @@ public class Bank extends Capitalist {
      * @param player Player that will take cash
      */
     public void giveCashToPlayer(double amount, Player player) {
-        if (amount >= dayWithdrawBudget) return;
-        if (PcConomy.GlobalBalanceManager.notSolvent(amount, player)) return;
-
-        dayWithdrawBudget -= amount;
+        if (amount >= DayWithdrawBudget) return;
+        if (PcConomy.GlobalBalanceManager.solvent(amount, player)) return;
 
         PcConomy.GlobalBalanceManager.takeMoney(amount, player);
         CashManager.giveCashToPlayer(amount, player, false);
 
         BankBudget -= amount;
+        DayWithdrawBudget -= amount;
     }
 
     /**
@@ -50,60 +51,59 @@ public class Bank extends Capitalist {
      * @param player Player that will lose cash
      */
     public void takeCashFromPlayer(double amount, Player player) {
-        var amountInventory = CashManager.amountOfCashInInventory(player, false);
-        if (amount > amountInventory) return;
+        if (amount > CashManager.amountOfCashInInventory(player, false)) return;
 
         CashManager.takeCashFromPlayer(amount, player, false);
         PcConomy.GlobalBalanceManager.giveMoney(amount, player);
 
         BankBudget += amount;
-        dayWithdrawBudget += amount;
+        DayWithdrawBudget += amount;
     }
 
     private double previousBudget = BankBudget;
-    private double dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
     private int recessionCount = 0;
 
     /**
      * Life cycle of bank working
-     * First part - pay for deposit from moneys, that was taken from loans percent
+     * First part - pay for deposit (Online players)
      * Second part - calculate change percent of budget and recession status
      * Third part - changing VAT, useful budget and trust coefficient
      * Fourth part - updating day budget
      */
     @Override
     public void newDay() {
-        var amount = LoanManager.takePercentFromBorrowers(this) * UsefulBudgetPercent;
-        var players = Bukkit.getOnlinePlayers();
-        for (var player : players) {
-            PcConomy.GlobalBalanceManager.giveMoney(amount / players.size(), player);
-            BankBudget -= amount / players.size();
-        }
-
         var changePercent = (BankBudget - previousBudget) / previousBudget;
-        var isRecession  = (changePercent <= 0 && getGlobalInflation() > 0) ? 1 : -1;
+        var isRecession  = (changePercent <= 0 || getAverageInflation() > 0) ? 1 : -1;
 
-        VAT                          += (VAT * Math.abs(changePercent) / 2) * isRecession;
-        UsefulBudgetPercent          -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
+        LoanManager.takePercentFromBorrowers(this);
+        if (isRecession < 0)
+            for (var player : Bukkit.getOnlinePlayers()) {
+                var amount = (PcConomy.GlobalBalanceManager.getBalance(player) * DepositPercent) / 12;
+                PcConomy.GlobalBalanceManager.giveMoney(amount, player);
+                BankBudget -= amount;
+            }
+
+        VAT += (VAT * Math.abs(changePercent) / 2) * isRecession;
+        UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
+        DepositPercent -= DepositPercent * Math.abs(changePercent) / 2 * isRecession;
         LoanManager.trustCoefficient -= LoanManager.trustCoefficient * Math.abs(changePercent) * isRecession;
 
-        if (isRecession > 0) recessionCount++;
-        else recessionCount = 0;
-
-        if (recessionCount >= 5) {
-            BankBudget += BankBudget * (changePercent * recessionCount);
-            recessionCount = 0;
-        }
+        if (isRecession > 0) {
+            if (recessionCount++ >= 5) {
+                BankBudget += BankBudget * (changePercent * recessionCount);
+                recessionCount = 0;
+            }
+        } else recessionCount = 0;
 
         previousBudget    = BankBudget;
-        dayWithdrawBudget = BankBudget * UsefulBudgetPercent;
+        DayWithdrawBudget = BankBudget * UsefulBudgetPercent;
     }
 
     /**
      * Gets global inflation of all towns
      * @return Inflation rate
      */
-    public double getGlobalInflation() {
+    public double getAverageInflation() {
         var count = 0;
         var bigInflation = 0d;
 
@@ -114,21 +114,6 @@ public class Bank extends Capitalist {
             }
 
         return bigInflation / count;
-    }
-
-    /**
-     * Get useful amount of budget
-     * @return Useful amount of budget
-     */
-    public double getUsefulAmountOfBudget() {
-        return dayWithdrawBudget;
-    }
-
-    /**
-     * Set useful amount of budget
-     */
-    public void setUsefulBudgetPercent(double amount) {
-        dayWithdrawBudget = amount;
     }
 
     /**

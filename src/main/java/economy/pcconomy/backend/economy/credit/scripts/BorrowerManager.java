@@ -29,11 +29,9 @@ public class BorrowerManager {
      * @param borrowerObject New borrower object
      */
     public void setBorrowerObject(Borrower borrowerObject) {
-        for (var borrower : borrowers)
-            if (borrower.Borrower.equals(borrowerObject.Borrower)) {
-                borrowers.remove(borrower);
-                borrowers.add(borrowerObject);
-            }
+        for (var borrower = 0; borrower < borrowers.size(); borrower++)
+            if (borrowers.get(borrower).Borrower.equals(borrowerObject.Borrower))
+                borrowers.set(borrower, borrowerObject);
     }
 
     /***

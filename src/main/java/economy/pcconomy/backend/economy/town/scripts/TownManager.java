@@ -58,11 +58,9 @@ public class TownManager {
      */
     public void changeNPCStatus(UUID townUUID, boolean isNPC) {
         var townObject = getTown(townUUID);
-        townObject = isNPC ?
+        setTownObject(isNPC ?
                 new NpcTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID()))) :
-                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID())));
-
-        setTownObject(townObject);
+                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID()))));
     }
 
     /**

@@ -4,7 +4,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
-import economy.pcconomy.backend.economy.town.scripts.StorageManager;
+import economy.pcconomy.backend.economy.town.objects.Storage;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import org.bukkit.Material;
@@ -24,7 +24,7 @@ public class NpcTown extends Town {
         TownUUID   = town.getUUID();
         Credit     = new ArrayList<>();
 
-        Storage = Arrays.asList(
+        Storage = new Storage(Arrays.asList(
                 new ItemStack(Material.SPRUCE_WOOD, 100),
                 new ItemStack(Material.STONE, 250),
                 new ItemStack(Material.GLASS, 170),
@@ -32,9 +32,9 @@ public class NpcTown extends Town {
                 new ItemStack(Material.BEEF, 200),
                 new ItemStack(Material.IRON_INGOT, 165),
                 new ItemStack(Material.COBBLESTONE, 500)
-        );
+        ));
 
-        StartStorageAmount = StorageManager.getAmountOfStorage(Storage);
+        StartStorageAmount = Storage.getAmountOfStorage();
 
         setBudget(previousBudget);
         newDay();
@@ -44,14 +44,14 @@ public class NpcTown extends Town {
     public double usefulBudget = PcConomy.Config.getDouble("town.start_useful_budget", .5);
     public double townVAT = PcConomy.Config.getDouble("town.start_vat", .05d);
 
-    public final List<ItemStack> Storage;
+    public final economy.pcconomy.backend.economy.town.objects.Storage Storage;
     public final List<Loan> Credit;
     public final UUID TownUUID;
     private final int purchaseSize = 8;
 
     private double previousBudget = 10000;
     private double dayBudget = previousBudget * usefulBudget;
-    private int StartStorageAmount = 0;
+    private int StartStorageAmount;
     private int dayStorage = (int)(StartStorageAmount * usefulStorage);
 
     /**
@@ -81,7 +81,7 @@ public class NpcTown extends Town {
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
 
         ItemManager.giveItems(new ItemStack(itemStack.getType(), purchaseSize), buyer);
-        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) - purchaseSize, Storage);
+        Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) - purchaseSize);
 
         generateLocalPrices();
     }
@@ -94,7 +94,7 @@ public class NpcTown extends Town {
     public void sellResourceToStorage(ItemStack itemStack, Player seller) {
         var itemAmount = itemStack.getAmount();
 
-        var resource = StorageManager.getResource(itemStack, Storage);
+        var resource = Storage.getResource(itemStack);
         if (resource == null) {
             seller.sendMessage("Такой товар мы не принимаем.");
             return;
@@ -110,8 +110,7 @@ public class NpcTown extends Town {
         dayBudget  -= price;
 
         seller.getInventory().setItemInMainHand(null);
-        StorageManager.setAmountOfResource(itemStack, StorageManager.getAmountOfResource(itemStack, Storage) +
-                itemAmount, Storage);
+        Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) + itemAmount);
 
         giveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller, false);
         PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
@@ -126,9 +125,9 @@ public class NpcTown extends Town {
     public void generateLocalPrices() {
         var budget = getBudget();
 
-        for (var i = 0; i < Storage.size(); i++) {
-            var price = Math.abs(budget / Storage.get(i).getAmount() + 1);
-            Storage.set(i, ItemManager.setLore(Storage.get(i), "Цена за " + purchaseSize + " шт.:\n" +
+        for (var i = 0; i < Storage.StorageBody.size(); i++) {
+            var price = Math.abs(budget / Storage.StorageBody.get(i).getAmount() + 1);
+            Storage.StorageBody.set(i, ItemManager.setLore(Storage.StorageBody.get(i), "Цена за " + purchaseSize + " шт.:\n" +
                     (purchaseSize * Math.round(price + (price * (PcConomy.GlobalBank.VAT + townVAT)) * 100d) / 10d) + CashManager.currencySigh +
                     "\nБез НДС в " + (PcConomy.GlobalBank.VAT + townVAT) * 100 + "%:\n" +
                     (purchaseSize * Math.round(price * 100d) / 100d) + CashManager.currencySigh));
@@ -140,7 +139,7 @@ public class NpcTown extends Town {
      * @return Local inflation
      */
     public double getLocalInflation() {
-        return (getBudget() / previousBudget) - ((double) StorageManager.getAmountOfStorage(Storage) / StartStorageAmount);
+        return (getBudget() / previousBudget) - ((double) Storage.getAmountOfStorage() / StartStorageAmount);
     }
 
     /**
@@ -148,7 +147,7 @@ public class NpcTown extends Town {
      * @param amount Amount of taken moneys
      */
     public void getMoneyFromBank(double amount) {
-        if (amount > PcConomy.GlobalBank.getUsefulAmountOfBudget()) return;
+        if (amount > PcConomy.GlobalBank.DayWithdrawBudget) return;
 
         PcConomy.GlobalBank.BankBudget -= amount;
         changeBudget(amount);
@@ -169,12 +168,12 @@ public class NpcTown extends Town {
         if (changePercent < 0 && isRecession == 1)
             getMoneyFromBank(1000 + Math.abs(changePercent) * 1000);
 
-        townVAT       += (townVAT * Math.abs(changePercent) / 2) * isRecession;
-        usefulBudget  -= (usefulBudget * Math.abs(changePercent)) * isRecession;
+        townVAT += (townVAT * Math.abs(changePercent) / 2) * isRecession;
+        usefulBudget -= (usefulBudget * Math.abs(changePercent)) * isRecession;
         usefulStorage += (usefulStorage * Math.abs(changePercent)) * isRecession;
 
-        StorageManager.createResources(500, Storage);
-        StorageManager.useResources(100, Storage);
+        Storage.createResources(500);
+        Storage.useResources(100);
 
         dayStorage = (int)(StartStorageAmount * usefulStorage);
         dayBudget  = previousBudget * usefulBudget;

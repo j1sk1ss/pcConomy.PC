@@ -8,14 +8,14 @@ import java.util.UUID;
 public class TraderObject implements INpcObject {
     public TraderObject(List<ItemStack> storage, double revenue, double margin, double cost, boolean isRanted,
                         UUID homeTown, UUID owner, String term) {
-        Storage       = storage;
-        Revenue       = revenue;
-        Margin        = margin;
-        Cost          = cost;
-        this.IsRanted = isRanted;
-        this.HomeTown = homeTown;
-        Owner         = owner;
-        Term          = term;
+        Storage  = storage;
+        Revenue  = revenue;
+        Margin   = margin;
+        Cost     = cost;
+        IsRanted = isRanted;
+        HomeTown = homeTown;
+        Owner    = owner;
+        Term     = term;
     }
 
     public final List<ItemStack> Storage;

@@ -64,7 +64,7 @@ public class NPCLoanWindow extends LoanBaseWindow {
     }
 
     public ItemStack getAmountButton(int position, int chosen, Player player) {
-        var maxLoanSize = PcConomy.GlobalBank.getUsefulAmountOfBudget() * 2;
+        var maxLoanSize = PcConomy.GlobalBank.DayWithdrawBudget * 2;
         boolean isSafe = LoanManager.isSafeLoan(maxLoanSize / (position + 1), durationSteps.get(chosen - 18), player);
 
         ItemStack tempItem = new Item(Math.round(maxLoanSize / (position + 1) * 100) / 100 + CashManager.currencySigh,
