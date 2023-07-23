@@ -88,11 +88,13 @@ public class ShareholderListener implements Listener {
                     var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                     if (town == null) return;
 
-                    var countSlider = new Slider(townSharesPanel.getSliders("SliderCount"));
-                    var percentSlider = new Slider(townSharesPanel.getSliders("SliderPercent"));
-                    var costSlider = new Slider(townSharesPanel.getSliders("SliderCost"));
-                    var typeSlider = new Slider(townSharesPanel.getSliders("SliderType"));
+                    var countSlider = new Slider(townSharesPanel.getSliders("SliderCount"), event.getInventory());
+                    var percentSlider = new Slider(townSharesPanel.getSliders("SliderPercent"), event.getInventory());
+                    var costSlider = new Slider(townSharesPanel.getSliders("SliderCost"), event.getInventory());
+                    var typeSlider = new Slider(townSharesPanel.getSliders("SliderType"), event.getInventory());
 
+                    if (costSlider.getChose() == null || countSlider.getChose() == null ||
+                            percentSlider.getChose() == null || typeSlider.getChose() == null) return;
                     PcConomy.GlobalShareManager.exposeShares(
                             town.getUUID(),
                             Double.parseDouble(ItemManager.getName(costSlider.getChose()).replace(CashManager.currencySigh, "")),

@@ -114,6 +114,8 @@ public class CashManager {
      */
     public static boolean isCash(ItemStack item) {
         if (item == null) return false;
+        if (ItemManager.getLore(item).size() == 0) return false;
+
         if (ItemManager.getName(item).contains(currencyName))
             return ItemManager.getLore(item).get(0).contains(currencySigh);
 

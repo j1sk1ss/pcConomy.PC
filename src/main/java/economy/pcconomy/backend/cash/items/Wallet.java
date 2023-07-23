@@ -103,6 +103,7 @@ public class Wallet {
      * @return Wallet status
      */
     public static boolean isWallet(ItemStack itemStack) {
+        if (ItemManager.getLore(itemStack).size() == 0) return false;
         return StringUtils.containsAny(ItemManager.getLore(itemStack).get(0).toLowerCase(), "алеф") &&
                     StringUtils.containsAny(ItemManager.getLore(itemStack).get(1).toLowerCase(), "вместимость") &&
                 ItemManager.getName(itemStack).contains("Кошелёк");
@@ -125,11 +126,44 @@ public class Wallet {
      * Put cash into players wallet
      * @param player Player
      * @param amount Amount
+     * @param wallet Specified wallet
+     * @return Amount of cash that can't be stored
+     */
+    public static double changeCashInWallet(Player player, double amount, Wallet wallet) {
+        var cashAmount = Math.abs(amount);
+        ItemManager.takeItems(wallet.Body, player);
+
+        if (amount > 0)
+            if (wallet.Amount + cashAmount > wallet.Capacity) {
+                wallet.Amount = wallet.Capacity;
+                cashAmount -= wallet.Capacity;
+            } else {
+                wallet.Amount += cashAmount;
+                cashAmount = 0;
+            }
+        else
+            if (wallet.Amount - cashAmount <= 0) {
+                wallet.Amount = 0;
+                cashAmount -= wallet.Amount;
+            } else {
+                wallet.Amount -= cashAmount;
+                cashAmount = 0;
+            }
+
+        wallet.giveWallet(player);
+
+        return cashAmount;
+    }
+
+    /**
+     * Put cash into players wallet
+     * @param player Player
+     * @param amount Amount
      * @return Amount of cash that can't be stored
      */
     public static double changeCashInWallet(Player player, double amount) {
         var wallets = getWallets(player);
-        var cashAmount = amount;
+        var cashAmount = Math.abs(amount);
 
         for (var wallet : wallets) {
             ItemManager.takeItems(wallet.Body, player);
@@ -144,11 +178,11 @@ public class Wallet {
                     cashAmount = 0;
                 }
             else
-                if (wallet.Amount + cashAmount <= 0) {
+                if (wallet.Amount - cashAmount <= 0) {
                     wallet.Amount = 0;
-                    cashAmount += wallet.Amount;
+                    cashAmount -= wallet.Amount;
                 } else {
-                    wallet.Amount += cashAmount;
+                    wallet.Amount -= cashAmount;
                     cashAmount = 0;
                 }
 

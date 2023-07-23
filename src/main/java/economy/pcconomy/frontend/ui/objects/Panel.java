@@ -37,7 +37,7 @@ public class Panel {
         for (var component : iComponents)
             if (component.isClicked(click)) return component;
 
-        return null;
+        return new Button(0, 0, "", "");
     }
 
     /**

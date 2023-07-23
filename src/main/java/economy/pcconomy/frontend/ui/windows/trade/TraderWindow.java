@@ -81,7 +81,7 @@ public class TraderWindow {
     public static Inventory getRanterWindow(Player player, Trader trader) {
         return TraderMenu.getPanel("Торговец-Аренда").placeComponents(Bukkit.createInventory(player, 27,
                 Component.text("Торговец-Аренда " + trader.getNPC().getId())), Arrays.asList(
-                trader.Cost + CashManager.currencySigh, trader.Margin + "%"
+                "", trader.Margin + "%"
         ));
     }
 

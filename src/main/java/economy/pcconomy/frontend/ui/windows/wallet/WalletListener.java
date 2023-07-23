@@ -29,10 +29,8 @@ public class WalletListener implements Listener {
 
         if (wallet != null) {
             switch (event.getAction()) {
-                case LEFT_CLICK_AIR ->
-                        player.openInventory(WalletWindow.putWindow(player, wallet));
-                case RIGHT_CLICK_AIR ->
-                        player.openInventory(WalletWindow.withdrawWindow(player, wallet));
+                case LEFT_CLICK_AIR -> player.openInventory(WalletWindow.putWindow(player, wallet));
+                case RIGHT_CLICK_AIR -> player.openInventory(WalletWindow.withdrawWindow(player, wallet));
             }
 
             event.setCancelled(true);
@@ -42,14 +40,21 @@ public class WalletListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
-        var wallet = new Wallet(player.getInventory().getItemInMainHand());
+        var wallet = Wallet.isWallet(player.getInventory().getItemInMainHand()) ?
+                new Wallet(player.getInventory().getItemInMainHand()) : null;
+        if (wallet == null) return;
 
         if (Window.isThisWindow(event, player, "Кошелёк")) {
             var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(event.getCurrentItem()), 0);
 
-            wallet.Amount -= amount;
-            if (amount > 0) CashManager.giveCashToPlayer(amount, player, true);
-            else CashManager.takeCashFromPlayer(Math.abs(amount), player, true);
+            if (amount > 0) {
+                CashManager.giveCashToPlayer(Math.abs(amount), player, true);
+                Wallet.changeCashInWallet(player, -Math.abs(amount), wallet);
+            }
+            else {
+                CashManager.takeCashFromPlayer(Math.abs(amount), player,true);
+                Wallet.changeCashInWallet(player, Math.abs(amount), wallet);
+            }
 
             player.closeInventory();
             event.setCancelled(true);

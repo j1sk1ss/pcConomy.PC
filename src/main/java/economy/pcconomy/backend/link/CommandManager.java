@@ -71,7 +71,8 @@ public class CommandManager implements CommandExecutor {
                 for (var town : PcConomy.GlobalShareManager.Shares.keySet())
                     if (TownyAPI.getInstance().getTown(town) != null)
                         message += Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName() + ": " +
-                                PcConomy.GlobalShareManager.getMedianSharePrice(town) + CashManager.currencySigh;
+                                (PcConomy.GlobalShareManager.getMedianSharePrice(town) / PcConomy.GlobalShareManager.getTownShares(town).size())
+                                + CashManager.currencySigh;
 
                 sender.sendMessage(message);
             }

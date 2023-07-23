@@ -45,22 +45,22 @@ public class BankerWindow extends Window {
                         Math.round(playerBalance * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000));
 
             if (enableBalance >= CashManager.Denomination.get(i) && playerBalance >= CashManager.Denomination.get(i))
-                printButtons(41, window);
+                printButtons(41, i, window);
 
             if (i == 0)
                 window.setItem(36, new Item("Положить все средства", //TODO: DATA MODEL
                         "-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000));
 
             if (cashInInventory >= CashManager.Denomination.get(i))
-                printButtons(36, window);
+                printButtons(36, i, window);
         }
 
         return window;
     }
 
-    private void printButtons(int position, Inventory window) {
-        for (var j = 1; j < 8; j++) //TODO: DATA MODEL
-            window.setItem(j + (position + 5 * (j / 4)), new Item("Действия",
+    private void printButtons(int position, int enabled, Inventory window) {
+        for (var j = enabled; j < 8; j++) //TODO: DATA MODEL
+            window.setItem(j + (position + 5 * (j / 4)), new Item("Действие",
                     (position == 36 ? "-" : "") + CashManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000));
     }
 }

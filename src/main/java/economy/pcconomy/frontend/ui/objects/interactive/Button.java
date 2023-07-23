@@ -35,12 +35,13 @@ public record Button(int firstSlot, int secondSlot, String name, String lore) im
 
     public List<Integer> getCoordinates() {
         var list = new ArrayList<Integer>();
+        var secondCoordinate = secondSlot() - firstSlot();
 
-        var height = firstSlot() / 9;
-        var weight = secondSlot() % 9;
-        for (var i = 0; i < height; i++)
-            for (var j = 0; j < weight; j++)
-                list.add(height * i + j);
+        var height = (secondCoordinate / 9) + 1;
+        var weight = (secondCoordinate % 9) + 1;
+        for (var i = firstSlot() / 9; i < firstSlot() / 9 + height; i++)
+            for (var j = firstSlot() % 9; j < firstSlot() % 9 + weight; j++)
+                list.add(9 * i + j);
 
         return list;
     }

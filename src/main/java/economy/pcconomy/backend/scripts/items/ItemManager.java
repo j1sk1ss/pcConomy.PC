@@ -61,6 +61,9 @@ public class ItemManager {
      * @return Lore of itemStack
      */
     public static List<String> getLore(ItemStack item) {
+        if (item.getItemMeta() == null) return new ArrayList<>();
+        if (item.getItemMeta().getLore() == null) return new ArrayList<>();
+        
         return item.getItemMeta().getLore();
     }
 

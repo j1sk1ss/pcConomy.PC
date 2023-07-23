@@ -13,14 +13,30 @@ import java.util.Objects;
 public class Slider implements IComponent {
     /**
      * Slider component
+     * @param slider Base of slider
+     * @param inventory Inventory where placed slider
+     */
+    public Slider(Slider slider, Inventory inventory) {
+        this.coordinates = new ArrayList<>(slider.coordinates);
+        this.options     = new ArrayList<>(slider.options);
+        this.name        = slider.name;
+        this.lore        = slider.lore;
+
+        this.slider = new ArrayList<>();
+        for (var coordinate : coordinates)
+            this.slider.add(inventory.getItem(coordinate));
+    }
+
+    /**
+     * Slider component
      * @param coordinates Coordinates of slider
      * @param options List of options
      */
     public Slider(List<Integer> coordinates, List<String> options, String lore, String name) {
         this.coordinates = coordinates;
-        this.options = options;
-        this.name = name;
-        this.lore = lore;
+        this.options     = options;
+        this.name        = name;
+        this.lore        = lore;
 
         slider = new ArrayList<>();
         for (var option : options)
@@ -33,11 +49,13 @@ public class Slider implements IComponent {
      */
     public Slider(Slider slider) {
         this.coordinates = new ArrayList<>(slider.coordinates);
-        this.options = new ArrayList<>(slider.options);
-        this.name = slider.getName();
-        this.lore = slider.lore;
+        this.options     = new ArrayList<>(slider.options);
+        this.name        = slider.getName();
+        this.lore        = slider.lore;
 
-        this.slider = slider.slider;
+        this.slider = new ArrayList<>();
+        for (var option = 0; option < slider.coordinates.size(); option++)
+            this.slider.add(new Item(slider.options.get(option), lore, slider.slider.get(option).getType(), 1, 17000));
     }
 
     private final List<Integer> coordinates;

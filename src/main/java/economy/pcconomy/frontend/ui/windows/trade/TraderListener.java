@@ -58,6 +58,20 @@ public class TraderListener implements Listener {
                 return;
             }
 
+            if (title.contains("Торговец-Аренда-Время")) {
+                var days = Integer.parseInt(ItemManager.getName(choseItem).split(" ")[0]);
+                System.out.println("vb");
+                if (CashManager.amountOfCashInInventory(player, false) < trader.Cost * days) return;
+                System.out.println("a");
+                CashManager.takeCashFromPlayer(trader.Cost * days, player, false);
+                PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost * days);
+
+                rantTrader(trader, days, player);
+                player.closeInventory();
+
+                return;
+            }
+
             if (title.contains("Торговец-Аренда")) {
                 if (TraderWindow.TraderMenu.getPanel("Торговец-Аренда").click(option).getName().equals("Арендовать на один день")) {
                     var playerTradeLicense =
@@ -66,19 +80,6 @@ public class TraderListener implements Listener {
                     if (!playerTradeLicense.isOverdue())
                         player.openInventory(TraderWindow.getExtendedRantedWindow(player, trader));
                 }
-
-                return;
-            }
-
-            if (title.contains("Торговец-Аренда-Время")) {
-                var days = Integer.parseInt(ItemManager.getName(choseItem).split(" ")[0]);
-                if (CashManager.amountOfCashInInventory(player, false) < trader.Cost * days) return;
-
-                CashManager.takeCashFromPlayer(trader.Cost * days, player, false);
-                PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost * days);
-
-                rantTrader(trader, days, player);
-                player.closeInventory();
 
                 return;
             }
@@ -108,8 +109,9 @@ public class TraderListener implements Listener {
                         slider.place(event.getInventory());
                     }
                     case "Установить" -> {
-                        var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders().get(0));
+                        var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders().get(0), event.getInventory());
 
+                        if (slider.getChose() == null) return;
                         trader.Cost = Double.parseDouble(ItemManager.getName(slider.getChose()).replace(CashManager.currencySigh, ""));
                         player.sendMessage("Цена установлена!");
                     }
@@ -128,8 +130,9 @@ public class TraderListener implements Listener {
                         slider.place(event.getInventory());
                     }
                     case "Установить" -> {
-                        var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Процент").getSliders("Slider"));
+                        var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Процент").getSliders("Slider"), event.getInventory());
 
+                        if (slider.getChose() == null) return;
                         trader.Margin = Double.parseDouble(ItemManager.getName(slider.getChose()).replace("%", ""));
                         player.sendMessage("Процент установлен!");
                     }
