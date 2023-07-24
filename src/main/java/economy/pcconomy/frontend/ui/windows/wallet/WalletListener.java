@@ -40,12 +40,23 @@ public class WalletListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
-        var wallet = Wallet.isWallet(player.getInventory().getItemInMainHand()) ?
-                new Wallet(player.getInventory().getItemInMainHand()) : null;
+        var currentItem = player.getInventory().getItemInMainHand();
+        if (currentItem.getAmount() > 1 && Wallet.isWallet(currentItem)) {
+            player.sendMessage("Выберите один кошелёк");
+            event.setCancelled(true);
+            return;
+        }
+
+        var wallet = Wallet.isWallet(currentItem) ? new Wallet(player.getInventory().getItemInMainHand()) : null;
         if (wallet == null) return;
 
         if (Window.isThisWindow(event, player, "Кошелёк")) {
-            var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(event.getCurrentItem()), 0);
+            var option = event.getCurrentItem();
+            if (option == null) return;
+
+            if (ItemManager.getLore(option).size() < 2) return;
+            var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(option), 1);
+            player.getInventory().setItemInMainHand(null);
 
             if (amount > 0) {
                 CashManager.giveCashToPlayer(Math.abs(amount), player, true);

@@ -9,15 +9,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import java.util.Objects;
-
 public class BankerListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
+        var option = event.getCurrentItem();
+        if (option == null) return;
 
         if (Window.isThisWindow(event, player, "Банк")) {
-            var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(event.getCurrentItem()), 0);
+            if (ItemManager.getLore(option).size() < 2) return;
+            var amount = ItemManager.getPriceFromLore(option, 1);
 
             if (amount > 0) PcConomy.GlobalBank.giveCashToPlayer(amount, player);
             else PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);

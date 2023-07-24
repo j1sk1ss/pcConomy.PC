@@ -20,10 +20,10 @@ public class WalletWindow {
         for (var i = 0; i < 8; i++) {
             if (i == 0)
                 window.setItem(0, new Item("Положить все средства", //TODO: DATA MODEL
-                        "-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000));
+                        "\n-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000));
 
             if (cashInInventory >= CashManager.Denomination.get(i))
-                printButtons("-", window);
+                printButtons("\n-", window);
         }
 
         return window;
@@ -36,10 +36,10 @@ public class WalletWindow {
         for (var i = 0; i < 8; i++) {
             if (i == 0)
                 window.setItem(0, new Item("Снять максимум", //TODO: DATA MODEL
-                        Math.round(cashInWallet * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000));
+                        "\n" + Math.round(cashInWallet * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000));
 
             if (cashInWallet >= CashManager.Denomination.get(i))
-                printButtons("", window);
+                printButtons("\n", window);
         }
 
         return window;

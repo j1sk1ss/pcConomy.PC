@@ -27,21 +27,6 @@ public class Wallet {
     }
 
     /**
-     * New wallet with custom preset
-     * @param amount Amount
-     * @param level Level
-     */
-    public Wallet(double amount, int level) {
-        Amount = amount;
-        Level  = level;
-
-        Capacity = Level * 500;
-
-        Body = new Item("Кошелёк", amount + " " + CashManager.getCurrencyNameByNum((int)amount)
-                + "\nВместимость: " + level, Material.BOOK, 1, walletDataModel);
-    }
-
-    /**
      * Wallet from wallet item
      * @param wallet Wallet itemStack
      */
@@ -62,12 +47,20 @@ public class Wallet {
     private static final int walletDataModel = 17050; //TODO: DATA MODEL
 
     /**
-     * Create new wallet
+     * Give this wallet to player
      * @param player Player that will take this wallet
      */
     public void giveWallet(Player player) {
         ItemManager.giveItems(new Item("Кошелёк", Amount + " " + CashManager.getCurrencyNameByNum((int)Amount)
                 + "\nВместимость: " + Level, Material.BOOK, 1, walletDataModel), player);
+    }
+
+    /**
+     * Take this wallet from player
+     * @param player Player that will take this wallet
+     */
+    public void takeWallet(Player player) {
+        ItemManager.takeItems(Body, player);
     }
 
     /**
@@ -79,22 +72,11 @@ public class Wallet {
         var list = new ArrayList<Wallet>();
         for (var item : player.getInventory())
             if (item != null)
-                if (isWallet(item)) list.add(new Wallet(item));
+                if (isWallet(item))
+                    for (var i = 0; i < item.getAmount(); i++)
+                        list.add(new Wallet(item));
 
         return list;
-    }
-
-    /**
-     * Get free space in wallets
-     * @param wallets Wallets
-     * @return Free space
-     */
-    public static double getFreeSpace(List<Wallet> wallets) {
-        var amount = 0d;
-        for (var wallet : wallets)
-            amount += wallet.Capacity - wallet.Amount;
-
-        return amount;
     }
 
     /**
@@ -165,29 +147,31 @@ public class Wallet {
         var wallets = getWallets(player);
         var cashAmount = Math.abs(amount);
 
-        for (var wallet : wallets) {
-            ItemManager.takeItems(wallet.Body, player);
+        for (var wallet : wallets)
+            wallet.takeWallet(player);
 
-            if (cashAmount == 0) wallet.giveWallet(player);
+        for (var wallet : wallets) {
+            if (cashAmount == 0) break;
             if (amount > 0)
                 if (wallet.Amount + cashAmount > wallet.Capacity) {
+                    cashAmount -= wallet.Capacity - wallet.Amount;
                     wallet.Amount = wallet.Capacity;
-                    cashAmount -= wallet.Capacity;
                 } else {
                     wallet.Amount += cashAmount;
                     cashAmount = 0;
                 }
             else
                 if (wallet.Amount - cashAmount <= 0) {
-                    wallet.Amount = 0;
                     cashAmount -= wallet.Amount;
+                    wallet.Amount = 0;
                 } else {
                     wallet.Amount -= cashAmount;
                     cashAmount = 0;
                 }
-
-            wallet.giveWallet(player);
         }
+
+        for (var wallet : wallets)
+            wallet.giveWallet(player);
 
         return cashAmount;
     }
