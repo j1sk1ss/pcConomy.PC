@@ -18,12 +18,12 @@ public class Wallet {
      * New empty wallet
      */
     public Wallet() {
-        Amount = 0;
+        Amount = 0.0d;
         Level  = 1;
 
         Capacity = Level * 500;
 
-        Body = new Item("Кошелёк", "0.0 Алеф\nВместимость: 1" + Level, Material.BOOK, 1, walletDataModel);
+        Body = new Item("Кошелёк", Amount + " Алеф\nВместимость: " + Level, Material.BOOK, 1, walletDataModel);
     }
 
     /**
