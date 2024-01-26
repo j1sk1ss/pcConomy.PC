@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class WalletListener implements Listener {
     @EventHandler
-    public void onWalletUse(PlayerInteractEvent event){
+    public void onWalletUse(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (event.getAction() != Action.LEFT_CLICK_AIR &&
                 event.getAction() != Action.RIGHT_CLICK_AIR) return;
@@ -37,8 +37,7 @@ public class WalletListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onClick(InventoryClickEvent event) {
+    public static void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var currentItem = player.getInventory().getItemInMainHand();
         if (currentItem.getAmount() > 1 && Wallet.isWallet(currentItem)) {

@@ -10,20 +10,18 @@ import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import economy.pcconomy.frontend.ui.windows.Window;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class ShareholderListener implements Listener {
-    @EventHandler
-    public void onClick(InventoryClickEvent event) {
+public class ShareholderListener {
+    public static void onClick(InventoryClickEvent event) {
+        var windowTitle = event.getView().getTitle();
         var player = (Player) event.getWhoClicked();
         var option = event.getSlot();
 
-        if (Window.isThisWindow(event, player, "Акции-Меню")) {
+        if (windowTitle.contains("Акции-Меню")) {
             switch (ShareholderWindow.ShareHolderMenu.getPanel("Акции-Меню").click(option).getName()) {
                 case "Покупка/продажа акций" -> player.openInventory(ShareholderWindow.sharesWindow(player, 0));
                 case "Выставление акций" -> {
@@ -42,7 +40,7 @@ public class ShareholderListener implements Listener {
             event.setCancelled(true);
         }
 
-        if (Window.isThisWindow(event, player, "Акции-Список")) {
+        if (windowTitle.contains("Акции-Список")) {
             var item = event.getCurrentItem();
             if (item == null) return;
 
@@ -52,7 +50,7 @@ public class ShareholderListener implements Listener {
             event.setCancelled(true);
         }
 
-        if (Window.isThisWindow(event, player, "Акции-Города")) {
+        if (windowTitle.contains("Акции-Города")) {
             var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
             if (town == null) return;
 
@@ -74,7 +72,7 @@ public class ShareholderListener implements Listener {
             }
         }
 
-        if (Window.isThisWindow(event, player, "Акции-Выставление")) {
+        if (windowTitle.contains("Акции-Выставление")) {
             var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
             if (townSharesPanel.click(option).getName().contains("Slider")) {
                 var slider = new Slider((Slider)townSharesPanel.click(option));

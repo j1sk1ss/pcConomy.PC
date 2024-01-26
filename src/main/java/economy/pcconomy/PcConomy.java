@@ -12,14 +12,7 @@ import economy.pcconomy.backend.economy.town.listener.TownyListener;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.town.scripts.TownManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
-import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
-import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
-import economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener;
-import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanerListener;
-import economy.pcconomy.frontend.ui.windows.mayor.MayorListener;
-import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
-import economy.pcconomy.frontend.ui.windows.shareholder.ShareholderListener;
-import economy.pcconomy.frontend.ui.windows.trade.TraderListener;
+import economy.pcconomy.frontend.ui.PlayerListener;
 import economy.pcconomy.frontend.ui.windows.wallet.WalletListener;
 
 import org.bukkit.Bukkit;
@@ -68,12 +61,10 @@ public final class PcConomy extends JavaPlugin {
             if (new File("borrowers_data.json").exists())
                 GlobalBorrowerManager = Loader.loadBorrowers("borrowers_data");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
 
-        for (var listener : Arrays.asList(new NpcLoader(), new LoanListener(), new TownyListener(),
-                new MayorListener(), new BankerListener(), new TraderListener(), new LicensorListener(),
-                new NPCTraderListener(), new NPCLoanerListener(), new ShareholderListener(), new WalletListener()))
+        for (var listener : Arrays.asList(new NpcLoader(), new TownyListener(), new PlayerListener(), new WalletListener()))
             Bukkit.getPluginManager().registerEvents(listener, this);
 
         for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
@@ -91,7 +82,7 @@ public final class PcConomy extends JavaPlugin {
         SaveData();
     }
 
-    /***
+    /**
      * Save all data into files
      */
     public static void SaveData() {
@@ -103,7 +94,7 @@ public final class PcConomy extends JavaPlugin {
             GlobalLicenseManager.saveLicenses("license_data");
             GlobalBorrowerManager.saveBorrowers("borrowers_data");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 }
