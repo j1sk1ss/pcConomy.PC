@@ -191,11 +191,8 @@ public class CashManager {
      * @return Name of currency
      */
     public static String getCurrencyNameByNum(int num) {
-    	if (num % 10 == 1 && num % 100 != 11)
-            return currencyNameCases.get("is");
-
-    	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14))
-            return currencyNameCases.get("rs");
+    	if (num % 10 == 1 && num % 100 != 11) return currencyNameCases.get("is");
+    	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14)) return currencyNameCases.get("rs");
 
     	return currencyNameCases.get("rp");
     }

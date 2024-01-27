@@ -55,9 +55,9 @@ public class ShareManager {
             if (share.Owner != null && Bukkit.getPlayer(share.Owner) != null) {
                 PcConomy.GlobalTownManager.getTown(town).changeBudget(-averagePrice);
 
-                PcConomy.GlobalBalanceManager.giveMoney(averagePrice - averagePrice * PcConomy.GlobalBank.VAT,
+                PcConomy.GlobalBalanceManager.giveMoney(PcConomy.GlobalBank.applyVAT(averagePrice),
                         Objects.requireNonNull(Bukkit.getPlayer(share.Owner)));
-                PcConomy.GlobalBank.BankBudget += averagePrice * PcConomy.GlobalBank.VAT;
+                Bukkit.getPlayer(share.Owner).sendMessage("Акция была выкуплена владельцем за: " + averagePrice);
             }
 
         Shares.remove(town);
@@ -102,18 +102,22 @@ public class ShareManager {
      * @param buyer Player who buy share
      */
     public void buyShare(UUID town, Player buyer) {
-         var shares = getEmptyTownShare(town);
-         if (shares.size() == 0) return;
+        var shares = getEmptyTownShare(town);
+        if (shares.size() == 0) return;
 
-         var share = shares.get(0);
-         if (CashManager.amountOfCashInInventory(buyer, false) >= share.Price + share.Price * PcConomy.GlobalBank.VAT) {
-             CashManager.takeCashFromPlayer(share.Price + share.Price * PcConomy.GlobalBank.VAT, buyer, false);
-
-             PcConomy.GlobalBank.BankBudget += share.Price * PcConomy.GlobalBank.VAT;
-             PcConomy.GlobalTownManager.getTown(town).changeBudget(share.Price);
-
-             share.Owner = buyer.getUniqueId();
-         }
+        //=============================
+        //  What's happens here:
+        //      - We take first "open" share of current town
+        //      - We check player's balance. If he can buy this share with VAT, we continue
+        //      - We take share price and VAT from player balance
+        //      - We give to Bank VAT and a part of price to Town
+        //=============================
+        var share = shares.get(0);
+        if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(share.Price)) {
+            CashManager.takeCashFromPlayer(PcConomy.GlobalBank.priceVat(share.Price), buyer, false);
+            PcConomy.GlobalTownManager.getTown(town).changeBudget(share.Price);
+            share.Owner = buyer.getUniqueId();
+        }
     }
 
     /**
@@ -147,11 +151,8 @@ public class ShareManager {
                 var price = getMedianSharePrice(town);
 
                 if (currentTown.getBudget() >= price) {
-                    CashManager.giveCashToPlayer(price - price * PcConomy.GlobalBank.VAT, seller, false);
-
-                    PcConomy.GlobalBank.BankBudget += price * PcConomy.GlobalBank.VAT;
+                    CashManager.giveCashToPlayer(PcConomy.GlobalBank.applyVAT(price), seller, false);
                     PcConomy.GlobalTownManager.getTown(town).changeBudget(-price);
-
                     share.Owner = null;
                 }
 
@@ -199,9 +200,7 @@ public class ShareManager {
             if (player == null) continue;
 
             townObject.changeBudget(-pay);
-
-            PcConomy.GlobalBank.BankBudget += pay * PcConomy.GlobalBank.VAT;
-            PcConomy.GlobalBalanceManager.giveMoney(pay - pay * PcConomy.GlobalBank.VAT, player);
+            PcConomy.GlobalBalanceManager.giveMoney(PcConomy.GlobalBank.applyVAT(pay), player);
         }
 
         townObject.quarterlyEarnings = 0;

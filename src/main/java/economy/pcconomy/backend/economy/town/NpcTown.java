@@ -77,9 +77,7 @@ public class NpcTown extends Town {
 
         CashManager.takeCashFromPlayer(price, buyer, false);
 
-        changeBudget(price / PcConomy.GlobalBank.VAT);
-        PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
-
+        changeBudget(PcConomy.GlobalBank.applyVAT(price));
         ItemManager.giveItems(new ItemStack(itemStack.getType(), purchaseSize), buyer);
         Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) - purchaseSize);
 
@@ -112,8 +110,7 @@ public class NpcTown extends Town {
         seller.getInventory().setItemInMainHand(null);
         Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) + itemAmount);
 
-        giveCashToPlayer(price / PcConomy.GlobalBank.VAT, seller, false);
-        PcConomy.GlobalBank.BankBudget += (price - price / PcConomy.GlobalBank.VAT);
+        giveCashToPlayer(PcConomy.GlobalBank.applyVAT(price), seller, false);
         changeBudget(-price);
 
         generateLocalPrices();

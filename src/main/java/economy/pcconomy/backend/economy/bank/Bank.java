@@ -21,11 +21,11 @@ public class Bank extends Capitalist {
         Credit = new ArrayList<>();
     }
 
-    public double BankBudget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
+    public double BankBudget          = PcConomy.Config.getDouble("bank.start_budget", 15000d);
     public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
-    public double VAT = PcConomy.Config.getDouble("bank.start_VAT", .1d);
-    public double DepositPercent = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
-    public double DayWithdrawBudget = BankBudget * UsefulBudgetPercent;
+    public double VAT                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
+    public double DepositPercent      = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
+    public double DayWithdrawBudget   = BankBudget * UsefulBudgetPercent;
 
     public final List<Loan> Credit;
 
@@ -61,7 +61,7 @@ public class Bank extends Capitalist {
     }
 
     private double previousBudget = BankBudget;
-    private int recessionCount = 0;
+    private int recessionCount    = 0;
 
     /**
      * Life cycle of bank working
@@ -114,6 +114,23 @@ public class Bank extends Capitalist {
             }
 
         return bigInflation / count;
+    }
+
+    // This function take value, change it with VAT, and return
+    public double applyVAT(double value) {
+        BankBudget += value * VAT;
+        return value - (value * VAT);
+    }
+
+    // This function take value, add VAT and return
+    public double priceVat(double oldValue) {
+        BankBudget += oldValue * VAT;
+        return oldValue + oldValue * VAT;
+    }
+
+    // This value return value with VAT (not change BankBudget)
+    public double checkVat(double value) {
+        return value + value * VAT;
     }
 
     /**

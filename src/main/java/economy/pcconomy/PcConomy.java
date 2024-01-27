@@ -39,39 +39,71 @@ public final class PcConomy extends JavaPlugin {
         saveConfig();
         saveDefaultConfig();
 
-        Config                = PcConomy.getPlugin(PcConomy.class).getConfig();
-        GlobalBank            = new Bank();
-        GlobalBorrowerManager = new BorrowerManager();
-        GlobalTownManager     = new TownManager();
-        GlobalLicenseManager  = new LicenseManager();
-        GlobalShareManager    = new ShareManager();
-        GlobalBalanceManager  = new BalanceManager();
+        //============================================
+        //  Init global objects
+        //============================================
 
-        try {
-            if (new File("npc_data.json").exists())
-                GlobalNPC = Loader.loadNPC("npc_data");
-            if (new File("bank_data.json").exists())
-                GlobalBank = Loader.loadBank("bank_data");
-            if (new File("towns_data.json").exists())
-                GlobalTownManager = Loader.loadTowns("towns_data");
-            if (new File("license_data.json").exists())
-                GlobalLicenseManager = Loader.loadLicenses("license_data");
-            if (new File("shares_data.json").exists())
-                GlobalLicenseManager = Loader.loadLicenses("shares_data");
-            if (new File("borrowers_data.json").exists())
-                GlobalBorrowerManager = Loader.loadBorrowers("borrowers_data");
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+            Config                = PcConomy.getPlugin(PcConomy.class).getConfig();
+            GlobalBank            = new Bank();
+            GlobalBorrowerManager = new BorrowerManager();
+            GlobalTownManager     = new TownManager();
+            GlobalLicenseManager  = new LicenseManager();
+            GlobalShareManager    = new ShareManager();
+            GlobalBalanceManager  = new BalanceManager();
 
-        for (var listener : Arrays.asList(new NpcLoader(), new TownyListener(), new PlayerListener(), new WalletListener()))
-            Bukkit.getPluginManager().registerEvents(listener, this);
+        //============================================
+        //  Init global objects
+        //============================================
+        //  Load objects
+        //============================================
 
-        for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
-                "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor",
-                "switch_town_to_npc", "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget",
-                "create_wallet", "create_shareholder", "transfer_share", "shares_rate", "global_market_prices"))
-            Objects.requireNonNull(getCommand(command)).setExecutor(new CommandManager());
+            try {
+                if (new File("npc_data.json").exists())
+                    GlobalNPC = Loader.loadNPC("npc_data");
+                if (new File("bank_data.json").exists())
+                    GlobalBank = Loader.loadBank("bank_data");
+                if (new File("towns_data.json").exists())
+                    GlobalTownManager = Loader.loadTowns("towns_data");
+                if (new File("license_data.json").exists())
+                    GlobalLicenseManager = Loader.loadLicenses("license_data");
+                if (new File("shares_data.json").exists())
+                    GlobalLicenseManager = Loader.loadLicenses("shares_data");
+                if (new File("borrowers_data.json").exists())
+                    GlobalBorrowerManager = Loader.loadBorrowers("borrowers_data");
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+        //============================================
+        //  Load objects
+        //============================================
+        //  Register listeners
+        //      - NpcLoader - load traits for NPC when Citizens enabled
+        //      - TownyListener - listen all Towny events (like taxes, creating town etc.)
+        //      - PlayerListener - listen all players actions in inventory (for windows)
+        //      - WalletListener - listen all player actions with wallet object
+        //============================================
+
+            for (var listener : Arrays.asList(new NpcLoader(), new TownyListener(),
+                    new PlayerListener(), new WalletListener()))
+                Bukkit.getPluginManager().registerEvents(listener, this);
+
+        //============================================
+        //  Register listeners
+        //============================================
+        //  Register commands
+        //============================================
+
+            var command_manager = new CommandManager();
+            for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "save_data", "put_cash_to_bank",
+                    "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor",
+                    "switch_town_to_npc", "town_menu", "add_trade_to_town", "reload_npc", "full_info", "set_day_bank_budget",
+                    "create_wallet", "create_shareholder", "transfer_share", "shares_rate", "global_market_prices"))
+                Objects.requireNonNull(getCommand(command)).setExecutor(command_manager);
+
+        //============================================
+        //  Register commands
+        //============================================
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
         	new PcConomyPAPI().register();

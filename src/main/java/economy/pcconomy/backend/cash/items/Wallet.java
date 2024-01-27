@@ -18,12 +18,11 @@ public class Wallet {
      * New empty wallet
      */
     public Wallet() {
-        Amount = 0.0d;
-        Level  = 1;
-
+        Amount   = 0.0d;
+        Level    = 1;
         Capacity = Level * 500;
-
-        Body = new Item("Кошелёк", Amount + " Алеф\nВместимость: " + Level, Material.BOOK, 1, walletDataModel);
+        Body     = new Item("Кошелёк", Amount + " Алеф\nВместимость: " + Level,
+                     Material.BOOK, 1, walletDataModel);
     }
 
     /**
@@ -31,19 +30,17 @@ public class Wallet {
      * @param wallet Wallet itemStack
      */
     public Wallet(ItemStack wallet) {
-        Amount = Double.parseDouble(ItemManager.getLore(wallet).get(0).split(" ")[0]);
-        Level  = Integer.parseInt(ItemManager.getLore(wallet).get(1).split(" ")[1]);
-
+        Amount   = Double.parseDouble(ItemManager.getLore(wallet).get(0).split(" ")[0]);
+        Level    = Integer.parseInt(ItemManager.getLore(wallet).get(1).split(" ")[1]);
         Capacity = Level * 500;
-
-        Body = wallet;
+        Body     = wallet;
     }
 
     public double Amount;
     public final double Capacity;
     public final int Level;
-
     private final ItemStack Body;
+
     private static final int walletDataModel = 17050; //TODO: DATA MODEL
 
     /**
