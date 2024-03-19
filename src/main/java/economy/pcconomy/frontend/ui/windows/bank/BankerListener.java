@@ -3,11 +3,13 @@ package economy.pcconomy.frontend.ui.windows.bank;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
+import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class BankerListener {
-    public static void onClick(InventoryClickEvent event) {
+
+public class BankerListener implements IWindowListener {
+    public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var option = event.getCurrentItem();
         if (option == null) return;

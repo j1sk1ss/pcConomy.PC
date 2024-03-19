@@ -3,11 +3,13 @@ package economy.pcconomy.frontend.ui.windows.license;
 import economy.pcconomy.backend.license.License;
 import economy.pcconomy.backend.license.objects.LicenseType;
 
+import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class LicensorListener {
-    public static void onClick(InventoryClickEvent event) {
+
+public class LicensorListener implements IWindowListener {
+    public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         switch (LicensorWindow.Panel.click(event.getSlot()).getName()) {
             case "Лицензия на создание торговой зоны" ->

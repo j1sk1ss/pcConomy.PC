@@ -6,6 +6,7 @@ authors: [ j1sk1ss ]
 description: Main economy plugin for Potolot Craft made by j1sk1ss
 website: https://potolotcraft.net
 
+
 commands:
   take_cash:
     usage: /take_cash [amount]
@@ -51,6 +52,7 @@ commands:
     usage: /shares_rate
   global_market_prices:
     usage: /global_market_prices
+
 
 bank:
   start_budget: 15000

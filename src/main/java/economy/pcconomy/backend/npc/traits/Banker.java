@@ -7,6 +7,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.event.EventHandler;
 
+
 @TraitName("Banker")
 public class Banker extends Trait {
     public Banker() {

@@ -18,7 +18,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+
 public class TownManager {
+    // TODO: Gson can`t save abstract classes, but we have npc and non npc towns, that`s why i think we need to save them separately
+    // P.S. Don`t just delete abstraction, it will lead to junk-coding :)
     public final List<Town> towns = new ArrayList<>();
 
     /**

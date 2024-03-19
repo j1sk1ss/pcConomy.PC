@@ -4,11 +4,13 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 
@@ -23,21 +25,41 @@ import org.bukkit.inventory.ItemStack;
 import java.time.LocalDateTime;
 import java.util.*;
 
+
 @TraitName("Trader")
 public class Trader extends Trait {
-    public List<ItemStack> Storage = new ArrayList<>();
-    public List<UUID> SpecialList = new ArrayList<>();
+    public Trader() {
+        super("Trader");
+
+        Storage     = new ArrayList<>();
+        SpecialList = new ArrayList<>();
+        Term        = LocalDateTime.now().toString();
+        HomeTown    = null;
+    }
+
+    public Trader(TraderObject traderObject) {
+        super("Trader");
+
+        Owner    = traderObject.Owner;
+        Storage  = traderObject.Storage;
+        Revenue  = traderObject.Revenue;
+        Cost     = traderObject.Cost;
+        Margin   = traderObject.Margin;
+        HomeTown = traderObject.HomeTown;
+        IsRanted = traderObject.IsRanted;
+        Term     = traderObject.Term;
+    }
+
+    public List<ItemStack> Storage;
+    public List<UUID> SpecialList;
     public double Revenue;
     public double Margin;
     public double Cost;
     public boolean IsRanted;
-    public String Term = LocalDateTime.now().toString();
+    public String Term;
     public UUID HomeTown;
     public UUID Owner;
-
-    public Trader() {
-        super("Trader");
-    }
+    private final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
@@ -57,7 +79,6 @@ public class Trader extends Trait {
         }
 
         var player = event.getClicker();
-
         try {
             if (IsRanted)
                 if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.getOwnerWindow(player, this));
@@ -71,8 +92,6 @@ public class Trader extends Trait {
             player.sendMessage("Что-то пошло не так (1).");
         }
     }
-
-    private final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
     public void onInteraction(NPCLeftClickEvent event) {

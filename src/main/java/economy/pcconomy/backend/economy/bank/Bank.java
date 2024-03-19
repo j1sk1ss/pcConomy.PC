@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class Bank extends Capitalist {
@@ -164,5 +166,19 @@ public class Bank extends Capitalist {
                 .create()
                 .toJson(this, writer);
         writer.close();
+    }
+
+    /***
+     * Loads bank data from .json
+     * @param fileName File name (without format)
+     * @return Bank object
+     * @throws IOException If something goes wrong
+     */
+    public static Bank loadBank(String fileName) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), Bank.class);
     }
 }

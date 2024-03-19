@@ -7,6 +7,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.event.EventHandler;
 
+
 @TraitName("NPCLoaner")
 public class NpcLoaner extends Trait {
     public NpcLoaner() {

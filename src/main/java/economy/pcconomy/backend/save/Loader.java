@@ -1,33 +1,24 @@
 package economy.pcconomy.backend.save;
 
 import com.google.gson.GsonBuilder;
-import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
+import economy.pcconomy.backend.economy.town.Town;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.npc.NpcManager;
+import economy.pcconomy.backend.npc.objects.NpcObject;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.economy.town.scripts.TownManager;
+import economy.pcconomy.backend.save.adaptors.NpcObjectTypeAdaptor;
+import economy.pcconomy.backend.save.adaptors.TownTypeAdaptor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
 public class Loader {
-    /***
-     * Loads bank data from .json
-     * @param fileName File name (without format)
-     * @return Bank object
-     * @throws IOException If something goes wrong
-     */
-    public static Bank loadBank(String fileName) throws IOException {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), Bank.class);
-    }
 
     /***
      * Loads NPC data from .json
@@ -35,11 +26,12 @@ public class Loader {
      * @return NPC object
      * @throws IOException If something goes wrong
      */
-    public static NpcManager loadNPC(String fileName) throws IOException { // TODO: Adaptor or something like this. Saving don`t work correctly
+    public static NpcManager loadNPC(String fileName) throws IOException { // TODO: Check NPC adaptor
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
+                .registerTypeHierarchyAdapter(NpcObject.class, new NpcObjectTypeAdaptor())
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), NpcManager.class);
     }
@@ -69,6 +61,7 @@ public class Loader {
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
+                .registerTypeHierarchyAdapter(Town.class, new TownTypeAdaptor())
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), TownManager.class);
     }

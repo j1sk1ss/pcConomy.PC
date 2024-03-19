@@ -4,14 +4,15 @@ import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.npc.objects.INpcObject;
 import economy.pcconomy.backend.npc.objects.LoanerObject;
+import economy.pcconomy.backend.npc.objects.NpcObject;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -23,8 +24,11 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 
+
 public class NpcManager {
-    public final Map<Integer, INpcObject> Npc = new Hashtable<>();
+    public final Map<Integer, NpcObject> Npc = new Hashtable<>();
+    public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
+    public static final double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost", 2000d);
 
     /***
      * Create NPC with special trait
@@ -34,12 +38,10 @@ public class NpcManager {
     public void createNPC(Player creator, Trait trait) {
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, trait.getName());
 
+        trait.linkToNPC(npc);
         npc.addTrait(trait);
         npc.spawn(creator.getLocation());
     }
-
-    public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
-    public static final double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost", 2000d);
 
     /***
      * Buy NPC
@@ -63,6 +65,7 @@ public class NpcManager {
         );
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());
+        npcList.get(neededLicense).linkToNPC(npc);
         npc.spawn(buyer.getLocation());
         npc.addTrait(npcList.get(neededLicense));
     }
@@ -94,8 +97,7 @@ public class NpcManager {
     public net.citizensnpcs.api.npc.NPC getNPC(int id) {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class))
-                if (npc.getId() == id)
-                    return npc;
+                if (npc.getId() == id) return npc;
 
         return null;
     }
@@ -105,25 +107,20 @@ public class NpcManager {
      */
     public void loadNpc() {
         for (var id : Npc.keySet()) {
-            var traderTrait = new Trader();
-            var loanerTrait = new Loaner();
-
             if (Npc.get(id) instanceof TraderObject traderObject) {
-                traderTrait.Owner    = traderObject.Owner;
-                traderTrait.Storage  = traderObject.Storage;
-                traderTrait.Revenue  = traderObject.Revenue;
-                traderTrait.Cost     = traderObject.Cost;
-                traderTrait.Margin   = traderObject.Margin;
-                traderTrait.HomeTown = traderObject.HomeTown;
-                traderTrait.IsRanted = traderObject.IsRanted;
-                traderTrait.Term     = traderObject.Term;
+                var npc = CitizensAPI.getNPCRegistry().getById(id);
+                var trait = new Trader(traderObject);
 
-                CitizensAPI.getNPCRegistry().getById(id).addTrait(traderTrait);
-            } else if (Npc.get(id) instanceof LoanerObject loanerObject) {
-                loanerTrait.Pull     = loanerObject.Pull;
-                loanerTrait.HomeTown = loanerObject.HomeTown;
+                trait.linkToNPC(npc);
+                npc.addTrait(trait);
+            }
 
-                CitizensAPI.getNPCRegistry().getById(id).addTrait(loanerTrait);
+            else if (Npc.get(id) instanceof LoanerObject loanerObject) {
+                var npc = CitizensAPI.getNPCRegistry().getById(id);
+                var trait = new Loaner(loanerObject);
+
+                trait.linkToNPC(npc);
+                npc.addTrait(trait);
             }
         }
     }
@@ -135,16 +132,10 @@ public class NpcManager {
      */
     public void saveNPC(String fileName) throws IOException {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
-            if (npc.hasTrait(Trader.class)) {
-                var traderTrait = npc.getOrAddTrait(Trader.class);
-
-                Npc.put(npc.getId(), new TraderObject(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
-                        traderTrait.Cost, traderTrait.IsRanted, traderTrait.HomeTown, traderTrait.Owner, traderTrait.Term));
-            } else if (npc.hasTrait(Loaner.class)) {
-                var loanerTrait = npc.getOrAddTrait(Loaner.class);
-
-                Npc.put(npc.getId(), new LoanerObject(loanerTrait.Pull, loanerTrait.HomeTown));
-            }
+            if (npc.hasTrait(Trader.class))
+                Npc.put(npc.getId(), new TraderObject(npc.getOrAddTrait(Trader.class)));
+            else if (npc.hasTrait(Loaner.class))
+                Npc.put(npc.getId(), new LoanerObject(npc.getOrAddTrait(Loaner.class)));
 
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()

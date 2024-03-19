@@ -1,13 +1,15 @@
 package economy.pcconomy.backend.npc.objects;
 
+import economy.pcconomy.backend.npc.traits.Loaner;
+
 import java.util.UUID;
 
-public class LoanerObject implements INpcObject {
+public class LoanerObject extends NpcObject {
     public LoanerObject(double pull, UUID homeTown) {
-        Pull     = pull;
-        HomeTown = homeTown;
+        super(null, pull, 0, 0, false, homeTown, null, null);
     }
 
-    public final double Pull;
-    public UUID HomeTown;
+    public LoanerObject(Loaner loaner) {
+        super(null, loaner.Pull, 0, 0, false, loaner.HomeTown, null, null);
+    }
 }

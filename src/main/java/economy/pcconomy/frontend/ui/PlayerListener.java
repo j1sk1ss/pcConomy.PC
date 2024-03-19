@@ -1,5 +1,6 @@
 package economy.pcconomy.frontend.ui;
 
+import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
 import economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener;
@@ -15,38 +16,48 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class PlayerListener implements Listener {
+    public PlayerListener() {
+        windows = new HashMap<>();
+        windows.put("Кредит-Город", new LoanListener());
+        windows.put("Меню", new MayorListener());
+        windows.put("Банк", new BankerListener());
+        windows.put("Торговец", new TraderListener());
+        windows.put("Лицензии", new LicensorListener());
+        windows.put("Магазин", new NPCTraderListener());
+        windows.put("Кредит-Банк", new NPCLoanerListener());
+        windows.put("Кошелёк", new WalletListener());
+
+        var share = new ShareholderListener();
+        windows.put("Акции-Меню", share);
+        windows.put("Акции-Список", share);
+        windows.put("Акции-Города", share);
+        windows.put("Акции-Выставление", share);
+    }
+
+    private final Map<String, IWindowListener> windows;
+
     @EventHandler
     public void EventHandled(InventoryClickEvent event) {
         if (event.getCurrentItem() != null)
             if (event.getInventory().getHolder() instanceof Player currentPlayer) {
                 String windowTitle = event.getView().getTitle();
-                if (!currentPlayer.equals((Player) event.getWhoClicked())) return;
+                if (!currentPlayer.equals(event.getWhoClicked())) return;
 
-                if (windowTitle.contains("Кредит-Город"))
-                    LoanListener.onClick(event);
-                else if (windowTitle.contains("Меню"))
-                    MayorListener.onClick(event);
-                else if (windowTitle.contains("Банк"))
-                    BankerListener.onClick(event);
-                else if (windowTitle.contains("Торговец"))
-                    TraderListener.onClick(event);
-                else if (windowTitle.contains("Лицензии"))
-                    LicensorListener.onClick(event);
-                else if (windowTitle.contains("Магазин"))
-                    NPCTraderListener.onClick(event);
-                else if (windowTitle.contains("Кредит-Банк"))
-                    NPCLoanerListener.onClick(event);
-                else if (windowTitle.contains("Акции-Меню") ||
-                         windowTitle.contains("Акции-Список") ||
-                         windowTitle.contains("Акции-Города") ||
-                         windowTitle.contains("Акции-Выставление"))
-                    ShareholderListener.onClick(event);
-                else if (windowTitle.contains("Кошелёк"))
-                    WalletListener.onClick(event);
-                else return;
+                for (var key : windows.keySet()) {
+                    if (windowTitle.contains(key)) {
+                        var listener = windows.get(key);
+                        if (listener == null) return;
 
-                event.setCancelled(true);
+                        listener.onClick(event);
+                        event.setCancelled(true);
+                        break;
+                    }
+                }
             }
     }
 }

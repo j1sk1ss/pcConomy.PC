@@ -6,6 +6,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
+import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.Window;
@@ -32,23 +33,22 @@ public class CommandManager implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
 
         switch (command.getName()) {
-            case "take_cash"          -> takeCashFromPlayer(Double.parseDouble(args[0]), (Player) sender, true);
-            case "create_cash"        -> giveCashToPlayer(Double.parseDouble(args[0]), (Player) sender, true);
+            case "take_cash"          -> takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender, true);
+            case "create_cash"        -> giveCashToPlayer(Double.parseDouble(args[0]), (Player)sender, true);
             case "reload_towns"       -> PcConomy.GlobalTownManager.reloadTownObjects();
             case "reload_npc"         -> PcConomy.GlobalNPC.reloadNPC();
-            case "save_data"          -> PcConomy.SaveData();
-            case "put_cash_to_bank"   -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player) sender);
-            case "create_banker"      -> PcConomy.GlobalNPC.createNPC((Player) sender, new Banker());
-            case "create_npc_loaner"  -> PcConomy.GlobalNPC.createNPC((Player) sender, new NpcLoaner());
-            case "create_loaner"      -> PcConomy.GlobalNPC.createNPC((Player) sender, new Loaner());
-            case "create_trader"      -> PcConomy.GlobalNPC.createNPC((Player) sender, new Trader());
-            case "create_npc_trader"  -> PcConomy.GlobalNPC.createNPC((Player) sender, new NpcTrader());
-            case "create_licensor"    -> PcConomy.GlobalNPC.createNPC((Player) sender, new Licensor());
+            case "put_cash_to_bank"   -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
+            case "create_banker"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Banker());
+            case "create_npc_loaner"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcLoaner());
+            case "create_loaner"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Loaner());
+            case "create_trader"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Trader());
+            case "create_npc_trader"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcTrader());
+            case "create_licensor"    -> PcConomy.GlobalNPC.createNPC((Player)sender, new Licensor());
             case "switch_town_to_npc" -> PcConomy.GlobalTownManager.changeNPCStatus(UUID.fromString(args[0]), true);
 
             case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player) sender)).getMayor().getName().equals((sender).getName())) return true;
-                Window.openWindow((Player) sender, new MayorWindow());
+                Window.openWindow((Player)sender, new MayorWindow());
             }
 
             case "add_trade_to_town" -> ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage
@@ -84,7 +84,7 @@ public class CommandManager implements CommandExecutor {
                 var prices = new HashMap<ItemStack, Double>();
 
                 for (var trader : PcConomy.GlobalNPC.Npc.keySet())
-                    if (PcConomy.GlobalNPC.Npc.get(trader) instanceof Trader currentTrader)
+                    if (PcConomy.GlobalNPC.Npc.get(trader) instanceof TraderObject currentTrader)
                         for (var resource : currentTrader.Storage)
                             if (!prices.containsKey(resource))
                                 prices.put(resource, ItemManager.getPriceFromLore(resource, 0));

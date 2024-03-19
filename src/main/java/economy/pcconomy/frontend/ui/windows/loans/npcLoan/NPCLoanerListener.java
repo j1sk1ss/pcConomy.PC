@@ -6,12 +6,14 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
+import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class NPCLoanerListener {
-    public static void onClick(InventoryClickEvent event) {
+
+public class NPCLoanerListener implements IWindowListener {
+    public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var activeInventory = event.getInventory();
         var item = event.getCurrentItem();

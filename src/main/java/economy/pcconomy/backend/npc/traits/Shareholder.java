@@ -9,6 +9,7 @@ import net.citizensnpcs.api.trait.TraitName;
 
 import org.bukkit.event.EventHandler;
 
+
 @TraitName("Trader")
 public class Shareholder extends Trait {
     public Shareholder() {

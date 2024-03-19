@@ -8,6 +8,7 @@ import economy.pcconomy.backend.economy.Capitalist;
 import java.util.Objects;
 import java.util.UUID;
 
+
 public abstract class Town extends Capitalist {
     /**
      * Quarterly earnings

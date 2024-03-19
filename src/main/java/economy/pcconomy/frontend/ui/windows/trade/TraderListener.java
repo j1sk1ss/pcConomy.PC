@@ -9,6 +9,7 @@ import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 
+import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -16,8 +17,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class TraderListener {
-    public static void onClick(InventoryClickEvent event) {
+
+public class TraderListener implements IWindowListener {
+    public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var title = event.getView().getTitle();
         var trader = getTraderFromTitle(title);

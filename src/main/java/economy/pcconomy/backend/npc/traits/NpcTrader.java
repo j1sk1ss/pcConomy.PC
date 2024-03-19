@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 
 import java.util.Objects;
 
+
 @TraitName("NPCTrader")
 public class NpcTrader extends Trait {
     public NpcTrader() {

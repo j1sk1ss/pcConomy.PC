@@ -3,6 +3,7 @@ package economy.pcconomy.backend.npc.traits;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.npc.objects.LoanerObject;
 import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.loans.loan.LoanWindow;
 import net.citizensnpcs.api.CitizensAPI;
@@ -22,10 +23,20 @@ import java.util.Hashtable;
 import java.util.Objects;
 import java.util.UUID;
 
+
 @TraitName("Loaner")
 public class Loaner extends Trait {
     public Loaner() {
         super("Loaner");
+
+        HomeTown = null;
+    }
+
+    public Loaner(LoanerObject loanerObject) {
+        super("Loaner");
+
+        Pull     = loanerObject.Revenue;
+        HomeTown = loanerObject.HomeTown;
     }
 
     public double Pull;

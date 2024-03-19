@@ -3,6 +3,7 @@ package economy.pcconomy.frontend.ui.windows.wallet;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.scripts.items.ItemManager;
+import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import economy.pcconomy.frontend.ui.windows.Window;
 
 import org.bukkit.entity.Player;
@@ -15,7 +16,8 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Objects;
 
-public class WalletListener implements Listener {
+
+public class WalletListener implements Listener, IWindowListener {
     @EventHandler
     public void onWalletUse(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -37,7 +39,7 @@ public class WalletListener implements Listener {
         }
     }
 
-    public static void onClick(InventoryClickEvent event) {
+    public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var currentItem = player.getInventory().getItemInMainHand();
         if (currentItem.getAmount() > 1 && Wallet.isWallet(currentItem)) {

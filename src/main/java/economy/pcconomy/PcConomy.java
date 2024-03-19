@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+
 public final class PcConomy extends JavaPlugin {
     public static FileConfiguration Config;
     public static BalanceManager GlobalBalanceManager;
@@ -33,6 +34,7 @@ public final class PcConomy extends JavaPlugin {
     public static TownManager GlobalTownManager;
     public static LicenseManager GlobalLicenseManager;
     public static ShareManager GlobalShareManager;
+    private final String pluginPath = "plugins\\PcConomy\\";
 
     @Override
     public void onEnable() {
@@ -44,6 +46,7 @@ public final class PcConomy extends JavaPlugin {
         //============================================
 
             Config                = PcConomy.getPlugin(PcConomy.class).getConfig();
+            GlobalNPC             = new NpcManager();
             GlobalBank            = new Bank();
             GlobalBorrowerManager = new BorrowerManager();
             GlobalTownManager     = new TownManager();
@@ -58,20 +61,20 @@ public final class PcConomy extends JavaPlugin {
         //============================================
 
             try {
-                if (new File("npc_data.json").exists())
-                    GlobalNPC = Loader.loadNPC("npc_data");
-                if (new File("bank_data.json").exists())
-                    GlobalBank = Loader.loadBank("bank_data");
-                if (new File("towns_data.json").exists())
-                    GlobalTownManager = Loader.loadTowns("towns_data");
-                if (new File("license_data.json").exists())
-                    GlobalLicenseManager = Loader.loadLicenses("license_data");
-                if (new File("shares_data.json").exists())
-                    GlobalLicenseManager = Loader.loadLicenses("shares_data");
-                if (new File("borrowers_data.json").exists())
-                    GlobalBorrowerManager = Loader.loadBorrowers("borrowers_data");
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+                if (new File(pluginPath + "npc_data.json").exists())
+                    GlobalNPC = Loader.loadNPC(pluginPath + "npc_data");
+                if (new File(pluginPath + "bank_data.json").exists())
+                    GlobalBank = Bank.loadBank(pluginPath + "bank_data");
+                if (new File(pluginPath + "towns_data.json").exists())
+                    GlobalTownManager = Loader.loadTowns(pluginPath + "towns_data");
+                if (new File(pluginPath + "license_data.json").exists())
+                    GlobalLicenseManager = Loader.loadLicenses(pluginPath + "license_data");
+                if (new File(pluginPath + "shares_data.json").exists())
+                    GlobalLicenseManager = Loader.loadLicenses(pluginPath + "shares_data");
+                if (new File(pluginPath + "borrowers_data.json").exists())
+                    GlobalBorrowerManager = Loader.loadBorrowers(pluginPath + "borrowers_data");
+            } catch (IOException error) {
+                System.out.println(error.getMessage());
             }
 
         //============================================
@@ -111,20 +114,20 @@ public final class PcConomy extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        SaveData();
+        saveData();
     }
 
     /**
      * Save all data into files
      */
-    public static void SaveData() {
+    public void saveData() {
         try {
-            GlobalNPC.saveNPC("npc_data");
-            GlobalBank.saveBank("bank_data");
-            GlobalTownManager.saveTown("towns_data");
-            GlobalShareManager.saveShares("shares_data");
-            GlobalLicenseManager.saveLicenses("license_data");
-            GlobalBorrowerManager.saveBorrowers("borrowers_data");
+            GlobalNPC.saveNPC(pluginPath + "npc_data");
+            GlobalBank.saveBank(pluginPath + "bank_data");
+            GlobalTownManager.saveTown(pluginPath + "towns_data");
+            GlobalShareManager.saveShares(pluginPath + "shares_data");
+            GlobalLicenseManager.saveLicenses(pluginPath + "license_data");
+            GlobalBorrowerManager.saveBorrowers(pluginPath + "borrowers_data");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

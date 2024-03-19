@@ -4,11 +4,13 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 
+import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class MayorListener {
-    public static void onClick(InventoryClickEvent event) {
+
+public class MayorListener implements IWindowListener {
+    public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         switch (MayorWindow.Panel.click(event.getSlot()).getName()) {
             case "Установить торговца" -> PcConomy.GlobalNPC.buyNPC(player, LicenseType.Market,

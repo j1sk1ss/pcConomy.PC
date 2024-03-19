@@ -1,29 +1,14 @@
 package economy.pcconomy.backend.npc.objects;
 
+import economy.pcconomy.backend.npc.traits.Trader;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
 
-public class TraderObject implements INpcObject {
-    public TraderObject(List<ItemStack> storage, double revenue, double margin, double cost, boolean isRanted,
-                        UUID homeTown, UUID owner, String term) {
-        Storage  = storage;
-        Revenue  = revenue;
-        Margin   = margin;
-        Cost     = cost;
-        IsRanted = isRanted;
-        HomeTown = homeTown;
-        Owner    = owner;
-        Term     = term;
+public class TraderObject extends NpcObject {
+    public TraderObject(Trader traderTrait) {
+        super(traderTrait.Storage, traderTrait.Revenue, traderTrait.Margin,
+                traderTrait.Cost, traderTrait.IsRanted, traderTrait.HomeTown, traderTrait.Owner, traderTrait.Term);
     }
-
-    public final List<ItemStack> Storage;
-    public final double Revenue;
-    public final double Margin;
-    public final double Cost;
-    public final boolean IsRanted;
-    public final UUID HomeTown;
-    public final UUID Owner;
-    public final String Term;
 }

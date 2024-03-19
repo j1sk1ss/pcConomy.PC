@@ -17,11 +17,14 @@ import org.bukkit.event.Listener;
 
 import static economy.pcconomy.PcConomy.GlobalNPC;
 
+
 public class NpcLoader implements Listener {
+    /**
+     * When Citizens plugin enables - this plugin register all traits
+     * @param event Citizens enable event
+     */
     @EventHandler
     public void loadNPC(CitizensEnableEvent event) {
-        if (GlobalNPC == null) GlobalNPC = new NpcManager();
-
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("Trader"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NpcLoaner.class).withName("npcloaner"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("loaner"));

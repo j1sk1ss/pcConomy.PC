@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+
 public class BankerWindow extends Window {
     public Inventory generateWindow(Player player) {
         var window = Bukkit.createInventory(player, 54, Component.text("Банк"));
