@@ -25,6 +25,24 @@ import java.util.Arrays;
 import java.util.Objects;
 
 
+// TODO List:
+// 1) Refactoring
+//   1.1) Change project structure
+//   1.2) Cleanup junk code (If it exists)
+// 2) Debugging
+//   2.1) Wallet debugging
+//   2.2) Shares debugging
+//   2.3) Money transfer debugging
+// 3) Load \ Save
+//   3.1) Finish Town adaptor
+//   3.2) Check save \ loading
+// 4) Models
+//   4.1) Set all model data where it needed
+// 5) Bank
+//   5.1) Check bank and credit working (Maybe change loan class structure?)
+//
+//  P.S. Don't forgot about TODO
+
 public final class PcConomy extends JavaPlugin {
     public static FileConfiguration Config;
     public static BalanceManager GlobalBalanceManager;

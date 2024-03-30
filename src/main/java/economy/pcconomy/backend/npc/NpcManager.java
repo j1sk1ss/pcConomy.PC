@@ -131,11 +131,10 @@ public class NpcManager {
      * @throws IOException If something goes wrong
      */
     public void saveNPC(String fileName) throws IOException {
+        // Check all server NPC
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
-            if (npc.hasTrait(Trader.class))
-                Npc.put(npc.getId(), new TraderObject(npc.getOrAddTrait(Trader.class)));
-            else if (npc.hasTrait(Loaner.class))
-                Npc.put(npc.getId(), new LoanerObject(npc.getOrAddTrait(Loaner.class)));
+            if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), new TraderObject(npc.getOrAddTrait(Trader.class)));
+            else if (npc.hasTrait(Loaner.class)) Npc.put(npc.getId(), new LoanerObject(npc.getOrAddTrait(Loaner.class)));
 
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()

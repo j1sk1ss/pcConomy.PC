@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.UUID;
 
 
+// TODO: Maybe delete this? I moved NPC parent class from interface to default class
+
 public class NpcObjectTypeAdaptor implements JsonSerializer<NpcObject>, JsonDeserializer<NpcObject> {
     @Override
     public JsonElement serialize(NpcObject src, Type typeOfSrc, JsonSerializationContext context) {

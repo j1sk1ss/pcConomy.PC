@@ -1,34 +1,53 @@
 package economy.pcconomy.backend.save.adaptors;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import economy.pcconomy.backend.economy.town.NpcTown;
+import economy.pcconomy.backend.economy.town.PlayerTown;
 import economy.pcconomy.backend.economy.town.Town;
+import economy.pcconomy.backend.economy.town.objects.Storage;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 
 public class TownTypeAdaptor implements JsonSerializer<Town>, JsonDeserializer<Town> {
     @Override
     public JsonElement serialize(Town src, Type typeOfSrc, JsonSerializationContext context) {
-        var parameters = new ArrayList<String>();
-        parameters.add(src.getClass() == NpcTown.class ? "npc-town" : "player-town");
+        var jsonObject = new JsonObject();
+        jsonObject.addProperty("uuid", src.getUUID().toString());
+        jsonObject.addProperty("budget", src.getBudget());
+        // jsonObject.addProperty("credit", src.getCreditList()); TODO: Save credit
 
-        parameters.add(src.getUUID().toString()); // Save UUID
-        parameters.add(src.getBudget() + ""); // Save budget
-        for (var credit : src.getCreditList())
-            parameters.add(credit.toString()); // TODO: To string?
+        if (src instanceof NpcTown) {
+            NpcTown npcTown = (NpcTown)src;
+            jsonObject.addProperty("usefulStorage", npcTown.usefulStorage);
+            jsonObject.addProperty("usefulBudget", npcTown.usefulBudget);
+            jsonObject.addProperty("townVAT", npcTown.townVAT);
+            // jsonObject.addProperty("storage", npcTown.Storage); TODO: Save storage
+        }
 
-        for (var borrower : src.getBorrowers())
-            parameters.add(borrower.toString()); // Save borrowers
-
-        return new JsonParser().parse( new Gson().toJson(parameters, new TypeToken<List<String>>(){}.getType()) );
+        return jsonObject;
     }
 
     @Override
     public Town deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-        return null; // TODO: Return from JSON Town
+        var jsonObject = json.getAsJsonObject();
+        var uuid = UUID.fromString(jsonObject.get("uuid").getAsString());
+        var budget = jsonObject.get("budget").getAsDouble();
+
+        // TODO: Load credit
+
+        if (jsonObject.has("usefulStorage")) {
+            var usefulStorage = jsonObject.get("usefulStorage").getAsDouble();
+            var usefulBudget = jsonObject.get("usefulBudget").getAsDouble();
+            var townVAT = jsonObject.get("townVAT").getAsDouble();
+
+            // TODO: Load storage
+
+            return new NpcTown(uuid, new ArrayList<>(), new Storage(null), budget, usefulStorage, usefulBudget, townVAT);
+        }
+
+        return new PlayerTown(uuid, new ArrayList<>());
     }
 }

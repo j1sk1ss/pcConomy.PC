@@ -9,6 +9,7 @@ import economy.pcconomy.backend.economy.town.PlayerTown;
 import economy.pcconomy.backend.economy.town.Town;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 
+import economy.pcconomy.backend.save.adaptors.TownTypeAdaptor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.FileWriter;
@@ -111,6 +112,7 @@ public class TownManager {
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
+                .registerTypeHierarchyAdapter(Town.class, new TownTypeAdaptor())
                 .create()
                 .toJson(this, writer);
         writer.close();

@@ -112,6 +112,7 @@ public class ShareManager {
         //      - We take share price and VAT from player balance
         //      - We give to Bank VAT and a part of price to Town
         //=============================
+
         var share = shares.get(0);
         if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(share.Price)) {
             CashManager.takeCashFromPlayer(PcConomy.GlobalBank.priceVat(share.Price), buyer, false);
