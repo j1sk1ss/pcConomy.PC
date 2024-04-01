@@ -1,10 +1,6 @@
 package economy.pcconomy.backend.npc.objects;
 
 import economy.pcconomy.backend.npc.traits.Trader;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
-import java.util.UUID;
 
 public class TraderObject extends NpcObject {
     public TraderObject(Trader traderTrait) {

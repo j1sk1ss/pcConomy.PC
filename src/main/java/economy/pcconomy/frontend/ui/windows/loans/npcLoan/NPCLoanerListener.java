@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 
 public class NPCLoanerListener implements IWindowListener {
+    @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var activeInventory = event.getInventory();

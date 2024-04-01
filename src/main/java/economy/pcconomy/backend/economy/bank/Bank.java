@@ -9,6 +9,7 @@ import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.cash.CashManager;
 
+import economy.pcconomy.backend.scripts.BalanceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -38,9 +39,9 @@ public class Bank extends Capitalist {
      */
     public void giveCashToPlayer(double amount, Player player) {
         if (amount >= DayWithdrawBudget) return;
-        if (PcConomy.GlobalBalanceManager.solvent(amount, player)) return;
+        if (BalanceManager.solvent(amount, player)) return;
 
-        PcConomy.GlobalBalanceManager.takeMoney(amount, player);
+        BalanceManager.takeMoney(amount, player);
         CashManager.giveCashToPlayer(amount, player, false);
 
         BankBudget -= amount;
@@ -56,7 +57,7 @@ public class Bank extends Capitalist {
         if (amount > CashManager.amountOfCashInInventory(player, false)) return;
 
         CashManager.takeCashFromPlayer(amount, player, false);
-        PcConomy.GlobalBalanceManager.giveMoney(amount, player);
+        BalanceManager.giveMoney(amount, player);
 
         BankBudget += amount;
         DayWithdrawBudget += amount;
@@ -80,8 +81,8 @@ public class Bank extends Capitalist {
         LoanManager.takePercentFromBorrowers(this);
         if (isRecession < 0)
             for (var player : Bukkit.getOnlinePlayers()) {
-                var amount = (PcConomy.GlobalBalanceManager.getBalance(player) * DepositPercent) / 12;
-                PcConomy.GlobalBalanceManager.giveMoney(amount, player);
+                var amount = (BalanceManager.getBalance(player) * DepositPercent) / 12;
+                BalanceManager.giveMoney(amount, player);
                 BankBudget -= amount;
             }
 
@@ -109,7 +110,7 @@ public class Bank extends Capitalist {
         var count = 0;
         var bigInflation = 0d;
 
-        for (var town : PcConomy.GlobalTownManager.towns)
+        for (var town : PcConomy.GlobalTownManager.Towns)
             if (town instanceof NpcTown npcTown) {
                 count++;
                 bigInflation += npcTown.getLocalInflation();

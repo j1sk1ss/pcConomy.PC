@@ -12,7 +12,6 @@ import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;

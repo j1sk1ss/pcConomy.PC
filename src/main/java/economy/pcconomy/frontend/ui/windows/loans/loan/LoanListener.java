@@ -10,7 +10,6 @@ import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
-import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanWindow;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,6 +19,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class LoanListener implements IWindowListener {
+    @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var activeInventory = event.getInventory();

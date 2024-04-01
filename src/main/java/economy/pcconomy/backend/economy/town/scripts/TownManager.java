@@ -21,15 +21,13 @@ import java.util.UUID;
 
 
 public class TownManager {
-    // TODO: Gson can`t save abstract classes, but we have npc and non npc towns, that`s why i think we need to save them separately
-    // P.S. Don`t just delete abstraction, it will lead to junk-coding :)
-    public final List<Town> towns = new ArrayList<>();
+    public final List<Town> Towns = new ArrayList<>();
 
     /**
-     * Reload and save all towns from server
+     * Reload and save all Towns from server
      */
     public void reloadTownObjects() {
-        towns.clear();
+        Towns.clear();
         for (com.palmergames.bukkit.towny.object.Town town : TownyAPI.getInstance().getTowns())
             createTownObject(town, false);
     }
@@ -40,7 +38,7 @@ public class TownManager {
      * @param isNPC Is this town belongs NPC
      */
     public void createTownObject(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
-        towns.add(isNPC ? new NpcTown(town) : new PlayerTown(town));
+        Towns.add(isNPC ? new NpcTown(town) : new PlayerTown(town));
     }
 
     /**
@@ -48,9 +46,9 @@ public class TownManager {
      * @param townUUID UUID of town that was destroyed
      */
     public void destroyTown(UUID townUUID) {
-        for (var townObject : towns)
+        for (var townObject : Towns)
             if (townObject.getUUID().equals(townUUID)) {
-                towns.remove(townObject);
+                Towns.remove(townObject);
                 break;
             }
     }
@@ -73,7 +71,7 @@ public class TownManager {
      * @return TownObject
      */
     public Town getTown(UUID townUUID) {
-        for (var townObject : towns)
+        for (var townObject : Towns)
             if (townObject.getUUID().equals(townUUID))
                 return townObject;
 
@@ -85,10 +83,10 @@ public class TownManager {
      * @param town New townObject
      */
     public void setTownObject(Town town) {
-        for (var currentTown : towns)
+        for (var currentTown : Towns)
             if (currentTown.getUUID().equals(town.getUUID())) {
-                towns.remove(currentTown);
-                towns.add(town);
+                Towns.remove(currentTown);
+                Towns.add(town);
             }
     }
 
@@ -102,7 +100,7 @@ public class TownManager {
     }
 
     /**
-     * Saves towns into .json file
+     * Saves Towns into .json file
      * @param fileName File name
      * @throws IOException If something goes wrong
      */

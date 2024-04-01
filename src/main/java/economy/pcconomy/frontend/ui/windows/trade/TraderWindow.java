@@ -19,46 +19,54 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 
 public class TraderWindow {
-    public static Menu TraderMenu = new Menu(Arrays.asList(
-            new Panel(Arrays.asList(
-                    new Button(0, 20, "Перейти в товары", ""),
-                    new Button(3, 23, "Забрать все товары", ""),
-                    new Button(6, 26, "Забрать прибыль", "")
-            ), "Торговец-Управление"),
-            new Panel(Arrays.asList(
-                    new Button(0, 21, "Арендовать на один день", ""),
-                    new Button(5, 26, "НДС города:", "")
-            ), "Торговец-Аренда"),
-            new Panel(Arrays.asList(
-                    new Button(0, 20, "Установить цену", ""),
-                    new Button(3, 23, "Установить процент", ""),
-                    new Button(6, 26, "Занять", "")
-            ), "Торговец-Владелец"),
-            new Panel(Arrays.asList(
-                    new Slider(Arrays.asList(
-                            0, 1, 2, 3, 4, 5, 6, 7, 8
-                    ), Arrays.asList(
-                            "100" + CashManager.currencySigh, "500" + CashManager.currencySigh, "1000" + CashManager.currencySigh,
-                            "1500" + CashManager.currencySigh, "2000" + CashManager.currencySigh, "2500" + CashManager.currencySigh,
-                            "5000" + CashManager.currencySigh, "10000" + CashManager.currencySigh, "20000" + CashManager.currencySigh
-                    ), "", "Slider"),
-                    new Button(9, 21, "Установить", ""),
-                    new Button(14, 26, "Отмена", "")
-            ), "Торговец-Цена"),
-            new Panel(Arrays.asList(
-                    new Slider(Arrays.asList(
-                            0, 1, 2, 3, 4, 5, 6, 7, 8
-                    ), Arrays.asList(
-                            "5%", "10%", "20%", "30%", "40%", "50%", "60%", "90%", "100%"
-                    ), "", "Slider"),
-                    new Button(9, 21, "Установить", ""),
-                    new Button(14, 26, "Отмена", "")
-            ), "Торговец-Процент"),
-            new Panel(Arrays.asList(
-                    new Button(0, 21, "Купить", ""),
-                    new Button(5, 26, "Отмена", "")
-            ), "Торговец-Покупка")
-    ));
+    public static Menu TraderMenu = 
+        new Menu(Arrays.asList(
+                new Panel(Arrays.asList(
+                        new Button(0, 20, "Перейти в товары", ""),
+                        new Button(3, 23, "Забрать все товары", ""),
+                        new Button(6, 26, "Забрать прибыль", "")
+                ), "Торговец-Управление"),
+
+                new Panel(Arrays.asList(
+                        new Button(0, 21, "Арендовать на один день", ""),
+                        new Button(5, 26, "НДС города:", "")
+                ), "Торговец-Аренда"),
+
+                new Panel(Arrays.asList(
+                        new Button(0, 20, "Установить цену", ""),
+                        new Button(3, 23, "Установить процент", ""),
+                        new Button(6, 26, "Занять", "")
+                ), "Торговец-Владелец"),
+
+                new Panel(Arrays.asList(
+                        new Slider(Arrays.asList(
+                                0, 1, 2, 3, 4, 5, 6, 7, 8
+                        ), Arrays.asList(
+                                "100" + CashManager.currencySigh, "500" + CashManager.currencySigh, "1000" + CashManager.currencySigh,
+                                "1500" + CashManager.currencySigh, "2000" + CashManager.currencySigh, "2500" + CashManager.currencySigh,
+                                "5000" + CashManager.currencySigh, "10000" + CashManager.currencySigh, "20000" + CashManager.currencySigh
+                        ), "", "Slider"),
+
+                        new Button(9, 21, "Установить", ""),
+                        new Button(14, 26, "Отмена", "")
+                ), "Торговец-Цена"),
+
+                new Panel(Arrays.asList(
+                        new Slider(Arrays.asList(
+                                0, 1, 2, 3, 4, 5, 6, 7, 8
+                        ), Arrays.asList(
+                                "5%", "10%", "20%", "30%", "40%", "50%", "60%", "90%", "100%"
+                        ), "", "Slider"),
+                        
+                        new Button(9, 21, "Установить", ""),
+                        new Button(14, 26, "Отмена", "")
+                ), "Торговец-Процент"),
+
+                new Panel(Arrays.asList(
+                        new Button(0, 21, "Купить", ""),
+                        new Button(5, 26, "Отмена", "")
+                ), "Торговец-Покупка")
+        ));
 
     public static Inventory getWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 27,

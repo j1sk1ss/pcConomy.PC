@@ -60,6 +60,7 @@ public class ItemManager {
      * @param item ItemStack
      * @return Lore of itemStack
      */
+    @SuppressWarnings("deprecation")
     public static List<String> getLore(ItemStack item) {
         if (item.getItemMeta() == null) return new ArrayList<>();
         if (item.getItemMeta().getLore() == null) return new ArrayList<>();
@@ -72,6 +73,7 @@ public class ItemManager {
      * @param item ItemStack
      * @return Name of itemStack
      */
+    @SuppressWarnings("deprecation")
     public static String getName(ItemStack item){
         return Objects.requireNonNull(item.getItemMeta().getDisplayName());
     }

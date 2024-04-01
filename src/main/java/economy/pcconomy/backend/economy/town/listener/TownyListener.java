@@ -61,7 +61,7 @@ public class TownyListener implements Listener {
         for (var town : TownyAPI.getInstance().getTowns())
             PcConomy.GlobalBank.BankBudget += town.getPlotTax();
 
-        for (var town : PcConomy.GlobalTownManager.towns)
+        for (var town : PcConomy.GlobalTownManager.Towns)
             town.newDay();
 
         PcConomy.GlobalShareManager.dailyPaying();

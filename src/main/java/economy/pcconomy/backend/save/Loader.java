@@ -31,7 +31,7 @@ public class Loader {
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
-                .registerTypeHierarchyAdapter(NpcObject.class, new NpcObjectTypeAdaptor())
+                // .registerTypeHierarchyAdapter(NpcObject.class, new NpcObjectTypeAdaptor())
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), NpcManager.class);
     }

@@ -7,6 +7,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
 
+import economy.pcconomy.backend.scripts.BalanceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -55,9 +56,9 @@ public class ShareManager {
             if (share.Owner != null && Bukkit.getPlayer(share.Owner) != null) {
                 PcConomy.GlobalTownManager.getTown(town).changeBudget(-averagePrice);
 
-                PcConomy.GlobalBalanceManager.giveMoney(PcConomy.GlobalBank.applyVAT(averagePrice),
+                BalanceManager.giveMoney(PcConomy.GlobalBank.applyVAT(averagePrice),
                         Objects.requireNonNull(Bukkit.getPlayer(share.Owner)));
-                Bukkit.getPlayer(share.Owner).sendMessage("Акция была выкуплена владельцем за: " + averagePrice);
+                Objects.requireNonNull(Bukkit.getPlayer(share.Owner)).sendMessage("Акция была выкуплена владельцем за: " + averagePrice);
             }
 
         Shares.remove(town);
@@ -201,7 +202,7 @@ public class ShareManager {
             if (player == null) continue;
 
             townObject.changeBudget(-pay);
-            PcConomy.GlobalBalanceManager.giveMoney(PcConomy.GlobalBank.applyVAT(pay), player);
+            BalanceManager.giveMoney(PcConomy.GlobalBank.applyVAT(pay), player);
         }
 
         townObject.quarterlyEarnings = 0;

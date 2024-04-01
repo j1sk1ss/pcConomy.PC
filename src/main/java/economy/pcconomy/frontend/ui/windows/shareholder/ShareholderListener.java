@@ -8,7 +8,6 @@ import economy.pcconomy.backend.economy.share.objects.ShareType;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
-import economy.pcconomy.frontend.ui.windows.Window;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,6 +17,7 @@ import java.util.UUID;
 
 
 public class ShareholderListener implements IWindowListener {
+    @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
         var windowTitle = event.getView().getTitle();
         var player = (Player) event.getWhoClicked();

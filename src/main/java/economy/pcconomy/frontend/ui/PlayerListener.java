@@ -41,6 +41,7 @@ public class PlayerListener implements Listener {
 
     private final Map<String, IWindowListener> windows;
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     public void EventHandled(InventoryClickEvent event) {
         if (event.getCurrentItem() != null)

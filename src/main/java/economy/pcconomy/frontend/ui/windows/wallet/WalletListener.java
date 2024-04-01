@@ -33,6 +33,7 @@ public class WalletListener implements Listener, IWindowListener {
             switch (event.getAction()) {
                 case LEFT_CLICK_AIR -> player.openInventory(WalletWindow.putWindow(player, wallet));
                 case RIGHT_CLICK_AIR -> player.openInventory(WalletWindow.withdrawWindow(player, wallet));
+                default -> throw new IllegalArgumentException("Unexpected value: " + event.getAction());
             }
 
             event.setCancelled(true);

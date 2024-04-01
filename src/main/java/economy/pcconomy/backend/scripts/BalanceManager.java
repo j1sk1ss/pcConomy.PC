@@ -13,7 +13,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param player Player that balance should be revealed
      * @return Balance
      */
-    public double getBalance(Player player) {
+    public static double getBalance(Player player) {
         return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().doubleValue();
     }
 
@@ -23,7 +23,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param player Player
      * @return Status
      */
-    public boolean solvent(double value, Player player) {
+    public static boolean solvent(double value, Player player) {
         return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(value)) < 0;
     }
 
@@ -32,7 +32,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param amount Amount of giving
      * @param player Player that will take this amount
      */
-    public void giveMoney(double amount, Player player) {
+    public static void giveMoney(double amount, Player player) {
         xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), true);
     }
 
@@ -41,7 +41,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param amount Amount of taken money
      * @param player Player that will lose moneys
      */
-    public void takeMoney(double amount, Player player) {
+    public static void takeMoney(double amount, Player player) {
         if (solvent(amount, player)) return;
         xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), false);
     }

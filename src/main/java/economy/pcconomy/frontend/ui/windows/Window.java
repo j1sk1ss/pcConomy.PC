@@ -28,6 +28,7 @@ public abstract class Window {
      * @param windowName Window name
      * @return Status of owning this window
      */
+    @SuppressWarnings("deprecation")
     public static boolean isThisWindow(InventoryClickEvent event, Player player, String windowName){
         if (event.getCurrentItem() != null)
             if (event.getInventory().getHolder() instanceof Player currentPlayer)

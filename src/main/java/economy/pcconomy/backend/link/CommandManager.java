@@ -57,7 +57,7 @@ public class CommandManager implements CommandExecutor {
             case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "$\n" +
                         "Global VAT: " + PcConomy.GlobalBank.VAT + "%\n" +
                         "Deposit percent: " + PcConomy.GlobalBank.DepositPercent + "%\n" +
-                        "Registered towns count: " + PcConomy.GlobalTownManager.towns.size() + "\n" +
+                        "Registered towns count: " + PcConomy.GlobalTownManager.Towns.size() + "\n" +
                         "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
                         "NPC Traders count: " + PcConomy.GlobalNPC.Npc.size());
 

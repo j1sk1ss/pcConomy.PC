@@ -19,15 +19,16 @@ import java.util.Objects;
 
 
 public class TraderListener implements IWindowListener {
+    @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
-        var title = event.getView().getTitle();
+        var title  = event.getView().getTitle();
         var trader = getTraderFromTitle(title);
         if (trader == null) return;
 
         var choseItem = event.getCurrentItem();
         var inventory = event.getInventory();
-        var option = event.getSlot();
+        var option    = event.getSlot();
         if (choseItem == null) return;
 
         if (title.contains("Торговец-Ассортимент"))

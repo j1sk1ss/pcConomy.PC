@@ -2,6 +2,7 @@ package economy.pcconomy.frontend.ui.windows.bank;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.items.Item;
 
 import economy.pcconomy.frontend.ui.windows.Window;
@@ -18,7 +19,7 @@ public class BankerWindow extends Window {
         var window = Bukkit.createInventory(player, 54, Component.text("Банк"));
 
         var enableBalance   = PcConomy.GlobalBank.DayWithdrawBudget;
-        var playerBalance   = PcConomy.GlobalBalanceManager.getBalance(player);
+        var playerBalance   = BalanceManager.getBalance(player);
         var cashInInventory = CashManager.amountOfCashInInventory(player, false);
 
         var textBalance = playerBalance + "";

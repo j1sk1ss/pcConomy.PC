@@ -4,7 +4,6 @@ import economy.pcconomy.backend.npc.traits.Banker;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.npc.traits.NpcLoaner;
 import economy.pcconomy.backend.npc.traits.Licensor;
-import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.NpcTrader;
 import economy.pcconomy.backend.npc.traits.Trader;
 

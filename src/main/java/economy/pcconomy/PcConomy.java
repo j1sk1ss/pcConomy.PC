@@ -11,7 +11,6 @@ import economy.pcconomy.backend.save.Loader;
 import economy.pcconomy.backend.economy.town.listener.TownyListener;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.town.scripts.TownManager;
-import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.frontend.ui.PlayerListener;
 import economy.pcconomy.frontend.ui.windows.wallet.WalletListener;
 
@@ -41,17 +40,17 @@ import java.util.Objects;
 // 5) Bank
 //   5.1) Check bank and credit working (Maybe change loan class structure?)
 //
-//  P.S. Don't forgot about TODO
+//  P.S. Don't forget about TODO
 
 public final class PcConomy extends JavaPlugin {
     public static FileConfiguration Config;
-    public static BalanceManager GlobalBalanceManager;
     public static NpcManager GlobalNPC;
     public static Bank GlobalBank;
     public static BorrowerManager GlobalBorrowerManager;
     public static TownManager GlobalTownManager;
     public static LicenseManager GlobalLicenseManager;
     public static ShareManager GlobalShareManager;
+    
     private final String pluginPath = "plugins\\PcConomy\\";
 
     @Override
@@ -70,7 +69,6 @@ public final class PcConomy extends JavaPlugin {
             GlobalTownManager     = new TownManager();
             GlobalLicenseManager  = new LicenseManager();
             GlobalShareManager    = new ShareManager();
-            GlobalBalanceManager  = new BalanceManager();
 
         //============================================
         //  Init global objects

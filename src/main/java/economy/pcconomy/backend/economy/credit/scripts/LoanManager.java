@@ -4,6 +4,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Borrower;
 import economy.pcconomy.backend.economy.credit.Loan;
+import economy.pcconomy.backend.scripts.BalanceManager;
 import economy.pcconomy.backend.scripts.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -96,7 +97,7 @@ public class LoanManager {
         moneyGiver.getCreditList().add(new Loan(amount + amount * percentage, percentage, duration, dailyPayment, player));
         moneyGiver.changeBudget(-amount);
 
-        PcConomy.GlobalBalanceManager.giveMoney(amount, player);
+        BalanceManager.giveMoney(amount, player);
     }
 
     /***
@@ -108,9 +109,9 @@ public class LoanManager {
         var loan = getLoan(player.getUniqueId(), creditOwner);
 
         if (loan == null) return;
-        if (PcConomy.GlobalBalanceManager.solvent(loan.amount, player)) return;
+        if (BalanceManager.solvent(loan.amount, player)) return;
 
-        PcConomy.GlobalBalanceManager.takeMoney(loan.amount, player);
+        BalanceManager.takeMoney(loan.amount, player);
         creditOwner.changeBudget(loan.amount);
         destroyLoan(player.getUniqueId(), creditOwner);
     }
@@ -126,12 +127,12 @@ public class LoanManager {
                 return;
             }
 
-            if (PcConomy.GlobalBalanceManager.solvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
+            if (BalanceManager.solvent(loan.dailyPayment, Objects.requireNonNull(Bukkit.getPlayer(loan.Owner)))) {
                 loan.expired += 1;
                 continue;
             }
 
-            PcConomy.GlobalBalanceManager.takeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
+            BalanceManager.takeMoney(loan.dailyPayment, Bukkit.getPlayer(loan.Owner));
             loan.amount -= loan.dailyPayment;
 
             moneyTaker.changeBudget(loan.dailyPayment);
