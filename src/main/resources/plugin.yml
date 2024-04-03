@@ -20,8 +20,8 @@ commands:
     usage: /reload_towns
   save_data:
     usage: /save_data
-  put_cash_to_bank:
-    usage: /put_cash_to_bank [amount]
+  put_cash2bank:
+    usage: /put_cash2bank [amount]
   create_banker:
     usage: /create_banker
   create_loaner:
@@ -34,12 +34,12 @@ commands:
     usage: /create_npc_trader
   create_licensor:
     usage: /create_licensor
-  switch_town_to_npc:
-    usage: /switch_town_to_npc [town name] [status]
+  switch_town2npc:
+    usage: /switch_town2npc [town name] [status]
   town_menu:
     usage: /town_menu
-  add_trade_to_town:
-    usage: /add_trade_to_town [town name] [material] [amount]
+  add_trade2town:
+    usage: /add_trade2town [town name] [material] [amount]
   reload_npc:
     usage: /reload_npc
   full_info:
