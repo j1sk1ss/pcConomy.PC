@@ -18,8 +18,6 @@ commands:
     usage: /create_shareholder
   reload_towns:
     usage: /reload_towns
-  save_data:
-    usage: /save_data
   put_cash2bank:
     usage: /put_cash2bank [amount]
   create_banker:
@@ -35,7 +33,9 @@ commands:
   create_licensor:
     usage: /create_licensor
   switch_town2npc:
-    usage: /switch_town2npc [town name] [status]
+    usage: /switch_town2npc
+  switch_town2player:
+    usage: /switch_town2player
   town_menu:
     usage: /town_menu
   add_trade2town:
