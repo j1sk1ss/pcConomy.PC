@@ -37,21 +37,22 @@ public class CommandManager implements CommandExecutor {
             case "create_cash"        -> giveCashToPlayer(Double.parseDouble(args[0]), (Player)sender, true);
             case "reload_towns"       -> PcConomy.GlobalTownManager.reloadTownObjects();
             case "reload_npc"         -> PcConomy.GlobalNPC.reloadNPC();
-            case "put_cash_to_bank"   -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
+            case "put_cash2bank"      -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
             case "create_banker"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Banker());
             case "create_npc_loaner"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcLoaner());
             case "create_loaner"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Loaner());
             case "create_trader"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Trader());
             case "create_npc_trader"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcTrader());
             case "create_licensor"    -> PcConomy.GlobalNPC.createNPC((Player)sender, new Licensor());
-            case "switch_town_to_npc" -> PcConomy.GlobalTownManager.changeNPCStatus(UUID.fromString(args[0]), true);
-
+            case "switch_town2npc"    -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), true);
+            case "switch_town2player" -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), false);
+            
             case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player) sender)).getMayor().getName().equals((sender).getName())) return true;
                 Window.openWindow((Player)sender, new MayorWindow());
             }
 
-            case "add_trade_to_town" -> ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage
+            case "add_trade2town" -> ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage
                     .addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]));
 
             case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "$\n" +

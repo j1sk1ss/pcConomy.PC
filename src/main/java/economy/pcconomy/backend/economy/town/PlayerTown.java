@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 public class PlayerTown extends Town {
     /**
      * Player town
@@ -27,9 +28,11 @@ public class PlayerTown extends Town {
         Credit = credit;
     }
 
+
     public final UUID TownUUID;
     public final List<Loan> Credit;
 
+    
     @Override
     public UUID getUUID() {
         return TownUUID;

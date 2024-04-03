@@ -55,7 +55,7 @@ public class TownManager {
 
     /**
      * Changes town NPS status
-     * @param townUUID Name of town that change status
+     * @param townUUID UUID of town that change status
      * @param isNPC New status
      */
     public void changeNPCStatus(UUID townUUID, boolean isNPC) {
