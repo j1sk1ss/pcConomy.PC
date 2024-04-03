@@ -31,9 +31,11 @@ public class TraderListener implements IWindowListener {
         var option    = event.getSlot();
         if (choseItem == null) return;
 
-        if (title.contains("Торговец-Ассортимент"))
+
+        if (title.contains("Торговец-Ассортимент")) {
             if (!player.getInventory().contains(choseItem))
                 player.openInventory(TraderWindow.getAcceptWindow(player, choseItem, trader));
+        }
 
         else if (title.contains("Торговец-Управление")) {
             switch (TraderWindow.TraderMenu.getPanel("Торговец-Управление").click(option).getName()) {
@@ -74,8 +76,7 @@ public class TraderListener implements IWindowListener {
                 case "Установить цену" -> player.openInventory(TraderWindow.getPricesWindow(player, trader));
                 case "Установить процент" -> player.openInventory(TraderWindow.getMarginWindow(player, trader));
                 case "Занять" -> {
-                    var playerTradeLicense =
-                            PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
+                    var playerTradeLicense = PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                     if (playerTradeLicense == null) return;
                     if (!playerTradeLicense.isOverdue()) rantTrader(trader, 1, player);
                 }

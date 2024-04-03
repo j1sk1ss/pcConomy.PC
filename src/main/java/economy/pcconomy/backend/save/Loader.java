@@ -6,10 +6,8 @@ import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.town.Town;
 import economy.pcconomy.backend.license.scripts.LicenseManager;
 import economy.pcconomy.backend.npc.NpcManager;
-import economy.pcconomy.backend.npc.objects.NpcObject;
 import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.economy.town.scripts.TownManager;
-import economy.pcconomy.backend.save.adaptors.NpcObjectTypeAdaptor;
 import economy.pcconomy.backend.save.adaptors.TownTypeAdaptor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -20,7 +18,7 @@ import java.nio.file.Paths;
 
 public class Loader {
 
-    /***
+    /**
      * Loads NPC data from .json
      * @param fileName File name (without format)
      * @return NPC object
@@ -36,7 +34,7 @@ public class Loader {
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), NpcManager.class);
     }
 
-    /***
+    /**
      * Loads borrowers data from .json
      * @param fileName File name (without format)
      * @return Borrowers manager object
@@ -50,7 +48,7 @@ public class Loader {
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), BorrowerManager.class);
     }
 
-    /***
+    /**
      * Loads towns data from .json
      * @param fileName File name (without format)
      * @return Town manager object
@@ -66,7 +64,7 @@ public class Loader {
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), TownManager.class);
     }
 
-    /***
+    /**
      * Loads license data from .json
      * @param fileName File name (without format)
      * @return License manager object
@@ -80,7 +78,7 @@ public class Loader {
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), LicenseManager.class);
     }
 
-    /***
+    /**
      * Loads shares data from .json
      * @param fileName File name (without format)
      * @return License manager object

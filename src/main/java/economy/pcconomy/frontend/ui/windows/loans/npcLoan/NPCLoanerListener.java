@@ -15,13 +15,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 public class NPCLoanerListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
-        var player = (Player) event.getWhoClicked();
+        var player = (Player)event.getWhoClicked();
         var activeInventory = event.getInventory();
         var item = event.getCurrentItem();
         if (item == null) return;
 
         var buttonPosition = event.getSlot();
-
         if (event.getView().getTitle().contains("Банк-Взятие")) {
             if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
                 if (ItemManager.getLore(item).get(0).contains("Банк одобрит данный займ."))

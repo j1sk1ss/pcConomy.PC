@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+
 public class LoanWindow extends LoanBaseWindow {
     public LoanWindow(Loaner loaner) {
         Loaner = loaner;
     }
+
 
     private final Loaner Loaner;
 
@@ -37,6 +39,7 @@ public class LoanWindow extends LoanBaseWindow {
             new Button(5, 26, "Погасить кредит", "")
     ), "Panel");
 
+    
     public Inventory generateWindow(Player player) {
         return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит-Город")));
     }

@@ -23,6 +23,6 @@ public class LicensorWindow extends Window {
     ), "Panel");
 
     public Inventory generateWindow(Player player) {
-        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Лицензии")));
+        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Мир-Лицензии")));
     }
 }

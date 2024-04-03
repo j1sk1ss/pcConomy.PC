@@ -23,6 +23,6 @@ public class MayorWindow extends Window {
     ), "Panel");
 
     public Inventory generateWindow(Player mayor) {
-        return Panel.placeComponents(Bukkit.createInventory(mayor, 27, Component.text("Меню")));
+        return Panel.placeComponents(Bukkit.createInventory(mayor, 27, Component.text("Город-Меню")));
     }
 }

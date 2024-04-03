@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Buttons panel for working with advanced UI
  */
@@ -25,9 +26,11 @@ public class Panel {
         iComponents = components;
     }
 
+
     public final String Name;
     private final List<IComponent> iComponents;
 
+    
     /**
      * Get button what was clicked
      * @param click Slot of inventory what was clicked

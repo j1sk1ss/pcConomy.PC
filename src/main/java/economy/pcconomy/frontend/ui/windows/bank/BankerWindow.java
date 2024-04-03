@@ -16,7 +16,7 @@ import org.bukkit.inventory.Inventory;
 
 public class BankerWindow extends Window {
     public Inventory generateWindow(Player player) {
-        var window = Bukkit.createInventory(player, 54, Component.text("Банк"));
+        var window = Bukkit.createInventory(player, 54, Component.text("Мир-Банк"));
 
         var enableBalance   = PcConomy.GlobalBank.DayWithdrawBudget;
         var playerBalance   = BalanceManager.getBalance(player);

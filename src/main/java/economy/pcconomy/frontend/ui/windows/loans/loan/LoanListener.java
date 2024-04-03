@@ -18,25 +18,29 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.util.Arrays;
 import java.util.Objects;
 
+
 public class LoanListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var activeInventory = event.getInventory();
         var item = event.getCurrentItem();
-        var town = TownyAPI.getInstance().getTown(player.getLocation());
-        var currentTown = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getUUID());
-        var buttonPosition = event.getSlot();
-        var title = event.getView().getTitle();
-        var loaner = getLoanerFromTitle(title);
+        if (item == null) return;
 
-        if (title.contains("Город-Взятие")) {
-            if (ItemManager.getName(Objects.requireNonNull(item)).contains(CashManager.currencySigh)) {
+        var town = TownyAPI.getInstance().getTown(player.getLocation());
+        var currentTown    = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getUUID());
+        var buttonPosition = event.getSlot();
+        var title  = event.getView().getTitle();
+        var loaner = getLoanerFromTitle(title);
+        if (loaner == null) return;
+
+        if (title.contains("Кредит-Город-Взятие")) {
+            if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
                 var isSafe = ItemManager.getLore(item).get(0).contains("Город одобрит данный займ.");
                 if (isSafe && !currentTown.getCreditList().contains(LoanManager.getLoan(player.getUniqueId(), currentTown))) {
                     var amount = LoanWindow.getSelectedAmount(activeInventory.getItem(buttonPosition));
 
-                    Objects.requireNonNull(loaner).Pull -= amount;
+                    loaner.Pull -= amount;
                     LoanManager.createLoan(amount, LoanWindow.getSelectedDuration(activeInventory), player, currentTown);
 
                     player.closeInventory();

@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class NPCLoanWindow extends LoanBaseWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
@@ -33,18 +34,14 @@ public class NPCLoanWindow extends LoanBaseWindow {
 
     public Inventory takeWindow(Player player) {
         var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Банк-Взятие"));
-
         for (var i = 0; i < countOfAmountSteps; i++) {
             window.setItem(i, getAmountButton(i, 18, player));
-
             if (i == 0) {
-                window.setItem(i + 18, new Item(new ItemStack(Material.PURPLE_WOOL),
-                        durationSteps.get(i) + "дней"));
+                window.setItem(i + 18, new Item(new ItemStack(Material.PURPLE_WOOL), durationSteps.get(i) + "дней"));
                 continue;
             }
 
-            window.setItem(i + 18, new Item(new ItemStack(Material.GREEN_STAINED_GLASS),
-                    durationSteps.get(i) + "дней"));
+            window.setItem(i + 18, new Item(new ItemStack(Material.GREEN_STAINED_GLASS), durationSteps.get(i) + "дней"));
         }
 
         return window;

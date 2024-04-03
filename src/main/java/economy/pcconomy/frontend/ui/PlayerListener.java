@@ -24,12 +24,12 @@ public class PlayerListener implements Listener {
     public PlayerListener() {
         windows = new HashMap<>();
         windows.put("Кредит-Город", new LoanListener());
-        windows.put("Меню", new MayorListener());
-        windows.put("Банк", new BankerListener());
-        windows.put("Торговец", new TraderListener());
-        windows.put("Лицензии", new LicensorListener());
-        windows.put("Магазин", new NPCTraderListener());
         windows.put("Кредит-Банк", new NPCLoanerListener());
+        windows.put("Город-Меню", new MayorListener());
+        windows.put("Мир-Банк", new BankerListener());
+        windows.put("Торговец", new TraderListener());
+        windows.put("Мир-Лицензии", new LicensorListener());
+        windows.put("Магазин", new NPCTraderListener());
         windows.put("Кошелёк", new WalletListener());
 
         var share = new ShareholderListener();
@@ -39,26 +39,26 @@ public class PlayerListener implements Listener {
         windows.put("Акции-Выставление", share);
     }
 
+
     private final Map<String, IWindowListener> windows;
+
 
     @SuppressWarnings("deprecation")
     @EventHandler
     public void EventHandled(InventoryClickEvent event) {
-        if (event.getCurrentItem() != null)
-            if (event.getInventory().getHolder() instanceof Player currentPlayer) {
-                String windowTitle = event.getView().getTitle();
-                if (!currentPlayer.equals(event.getWhoClicked())) return;
+        if (event.getCurrentItem() == null) return;
 
-                for (var key : windows.keySet()) {
-                    if (windowTitle.contains(key)) {
-                        var listener = windows.get(key);
-                        if (listener == null) return;
-
-                        listener.onClick(event);
-                        event.setCancelled(true);
-                        break;
-                    }
+        if (event.getInventory().getHolder() instanceof Player currentPlayer) {
+            String windowTitle = event.getView().getTitle();
+            if (!currentPlayer.equals(event.getWhoClicked())) return;
+            for (var key : windows.keySet()) {
+                if (windowTitle.contains(key)) {
+                    var listener = windows.get(key);
+                    listener.onClick(event);
+                    event.setCancelled(true);
+                    break;
                 }
             }
+        }
     }
 }
