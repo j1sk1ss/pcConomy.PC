@@ -47,8 +47,8 @@ public class CommandManager implements CommandExecutor {
             case "switch_town2npc"    -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), true);
             case "switch_town2player" -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), false);
             
-            case "town_menu" -> {
-                if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player) sender)).getMayor().getName().equals((sender).getName())) return true;
+            case "town_menu" -> { // TODO: Try catch
+                if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player)sender)).getMayor().getName().equals((sender).getName())) return true;
                 Window.openWindow((Player)sender, new MayorWindow());
             }
 

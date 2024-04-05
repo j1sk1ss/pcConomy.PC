@@ -19,5 +19,7 @@ public class BankerListener implements IWindowListener {
 
         if (amount > 0) PcConomy.GlobalBank.giveCashToPlayer(amount, player);
         else PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);
+
+        BankerWindow.regenerateWindow(player, event.getInventory());
     }
 }

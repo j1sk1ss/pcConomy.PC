@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class LoanManager {
-    public static double trustCoefficient = 1.5d;
+    public static double trustCoefficient = .5d; // 1.5f
 
     /***
      * Gets percent of current loan
@@ -63,8 +63,8 @@ public class LoanManager {
      */
     public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
         return (getSafetyFactor(loanAmount, duration, PcConomy.GlobalBorrowerManager.getBorrowerObject(borrower)) >= trustCoefficient
-                && blackTown(PlayerManager.getCountryMens(borrower.getUniqueId()))
-                && PlayerManager.getPlayerServerDuration(borrower) > 100);
+                || blackTown(PlayerManager.getCountryMens(borrower.getUniqueId()))
+                || PlayerManager.getPlayerServerDuration(borrower) > 100); // TODO: Return && &&
     }
 
     /**

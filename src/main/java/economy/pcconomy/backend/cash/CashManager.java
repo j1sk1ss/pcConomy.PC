@@ -130,7 +130,7 @@ public class CashManager {
      */
     public static void giveCashToPlayer(double amount, Player player, boolean ignoreWallet) {
         ItemManager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount :
-                Wallet.changeCashInWallet(player, amount))), player);
+                Wallet.changeCashInWallets(player, amount))), player);
     }
 
     /**
@@ -145,7 +145,7 @@ public class CashManager {
 
         ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
         ItemManager.giveItems(CashManager.getChangeInCash(getChange(
-                playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallet(player, -amount)))), player);
+                playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallets(player, -amount)))), player);
     }
 
     /**

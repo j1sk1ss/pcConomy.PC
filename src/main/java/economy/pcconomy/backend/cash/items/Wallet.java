@@ -5,7 +5,7 @@ import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import org.apache.commons.lang.StringUtils;
-
+import org.apache.commons.math3.util.Precision;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -48,7 +48,7 @@ public class Wallet {
      * @param player Player that will take this wallet
      */
     public void giveWallet(Player player) {
-        ItemManager.giveItems(new Item("Кошелёк", Amount + " " + CashManager.getCurrencyNameByNum((int)Amount)
+        ItemManager.giveItems(new Item("Кошелёк", Precision.round(Amount, 3) + " " + CashManager.getCurrencyNameByNum((int)Amount)
                 + "\nВместимость: " + Level, Material.BOOK, 1, walletDataModel), player);
     }
 
@@ -102,73 +102,85 @@ public class Wallet {
     }
 
     /**
-     * Put cash into players wallet
-     * @param player Player
-     * @param amount Amount
-     * @param wallet Specified wallet
+     * Change cash in players wallet
+     * @param amount Amount (If amount lower than 0 - we take money from wallet)
      * @return Amount of cash that can't be stored
      */
-    public static double changeCashInWallet(Player player, double amount, Wallet wallet) {
+    public double changeCashInWallet(double amount) {
         var cashAmount = Math.abs(amount);
-        ItemManager.takeItems(wallet.Body, player);
 
-        if (amount > 0)
-            if (wallet.Amount + cashAmount > wallet.Capacity) {
-                wallet.Amount = wallet.Capacity;
-                cashAmount -= wallet.Capacity;
+        if (amount > 0) {
+            if (Amount + cashAmount > Capacity) {
+                Amount = Capacity;
+                cashAmount -= Capacity;
             } else {
-                wallet.Amount += cashAmount;
+                Amount += cashAmount;
                 cashAmount = 0;
             }
-        else
-            if (wallet.Amount - cashAmount <= 0) {
-                wallet.Amount = 0;
-                cashAmount -= wallet.Amount;
+        }
+        else {
+            if (Amount - cashAmount <= 0) {
+                Amount = 0;
+                cashAmount -= Amount;
             } else {
-                wallet.Amount -= cashAmount;
+                Amount -= cashAmount;
                 cashAmount = 0;
             }
-
-        wallet.giveWallet(player);
+        }
 
         return cashAmount;
     }
 
     /**
-     * Put cash into players wallet
+     * Change cash in players wallet
      * @param player Player
-     * @param amount Amount
+     * @param amount Amount (If amount lower than 0 - we take money from wallet)
      * @return Amount of cash that can't be stored
      */
-    public static double changeCashInWallet(Player player, double amount) {
+    public static double changeCashInWallets(Player player, double amount) {
+
+        // ==============================
+        // Found all wallets in inventory
+        // ==============================
+
         var wallets = getWallets(player);
         var cashAmount = Math.abs(amount);
+
+        // ==============================
+        // Found all wallets in inventory
+        // ==============================
+        // Take them from inventory
+        // ==============================
 
         for (var wallet : wallets)
             wallet.takeWallet(player);
 
+        // ==============================
+        // Take them from inventory
+        // ==============================
+        // Change value from all wallets
+        // ==============================
+
         for (var wallet : wallets) {
-            if (cashAmount == 0) break;
-            if (amount > 0)
-                if (wallet.Amount + cashAmount > wallet.Capacity) {
-                    cashAmount -= wallet.Capacity - wallet.Amount;
-                    wallet.Amount = wallet.Capacity;
-                } else {
-                    wallet.Amount += cashAmount;
-                    cashAmount = 0;
-                }
-            else
-                if (wallet.Amount - cashAmount <= 0) {
-                    cashAmount -= wallet.Amount;
-                    wallet.Amount = 0;
-                } else {
-                    wallet.Amount -= cashAmount;
-                    cashAmount = 0;
-                }
+            if (cashAmount <= 0) break;
+
+            wallet.takeWallet(player);
+            cashAmount = wallet.changeCashInWallet(cashAmount);
+            wallet.giveWallet(player);
         }
+
+        // ==============================
+        // Change value from all wallets
+        // ==============================
+        // Give wallets to player
+        // ==============================
 
         for (var wallet : wallets)
             wallet.giveWallet(player);
+
+        // ==============================
+        // Give wallets to player
+        // ==============================
 
         return cashAmount;
     }

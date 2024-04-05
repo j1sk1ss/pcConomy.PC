@@ -52,24 +52,25 @@ public class WalletListener implements Listener, IWindowListener {
         var wallet = Wallet.isWallet(currentItem) ? new Wallet(player.getInventory().getItemInMainHand()) : null;
         if (wallet == null) return;
 
+        player.getInventory().setItemInMainHand(null);
         if (Window.isThisWindow(event, player, "Кошелёк")) {
             var option = event.getCurrentItem();
             if (option == null) return;
 
             if (ItemManager.getLore(option).size() < 2) return;
             var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(option), 1);
-            player.getInventory().setItemInMainHand(null);
 
             if (amount > 0) {
                 CashManager.giveCashToPlayer(Math.abs(amount), player, true);
-                Wallet.changeCashInWallet(player, -Math.abs(amount), wallet);
+                wallet.changeCashInWallet(-amount);
             }
             else {
-                CashManager.takeCashFromPlayer(Math.abs(amount), player,true);
-                Wallet.changeCashInWallet(player, Math.abs(amount), wallet);
+                CashManager.takeCashFromPlayer(Math.abs(amount), player, true);
+                wallet.changeCashInWallet(Math.abs(amount));
             }
 
             player.closeInventory();
+            wallet.giveWallet(player);
             event.setCancelled(true);
         }
     }

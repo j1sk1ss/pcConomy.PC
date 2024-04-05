@@ -7,6 +7,7 @@ import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.objects.Storage;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
+import org.apache.commons.math3.util.Precision;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -142,11 +143,16 @@ public class NpcTown extends Town {
         var budget = getBudget();
 
         for (var i = 0; i < Storage.StorageBody.size(); i++) {
-            var price = Math.abs(budget / Storage.StorageBody.get(i).getAmount() + 1);
-            Storage.StorageBody.set(i, ItemManager.setLore(Storage.StorageBody.get(i), "Цена за " + purchaseSize + " шт.:\n" +
-                    (purchaseSize * Math.round(price + (price * (PcConomy.GlobalBank.VAT + townVAT)) * 100d) / 10d) + CashManager.currencySigh +
-                    "\nБез НДС в " + (PcConomy.GlobalBank.VAT + townVAT) * 100 + "%:\n" +
-                    (purchaseSize * Math.round(price * 100d) / 100d) + CashManager.currencySigh));
+            var price  = Precision.round(Math.abs(budget / Storage.StorageBody.get(i).getAmount() + 1), 3);
+            var margin = Precision.round((PcConomy.GlobalBank.VAT + townVAT), 3);
+            var marginPercent = margin * 100d;
+            var endPrive = Precision.round(price + (price * margin), 3);
+
+            if (price > 0)
+                Storage.StorageBody.set(i, ItemManager.setLore(Storage.StorageBody.get(i), "Цена за " + purchaseSize + " шт.:\n" +
+                        purchaseSize * endPrive + CashManager.currencySigh + "\nБез НДС в " + marginPercent + "%:\n" + purchaseSize * price + CashManager.currencySigh));
+            else 
+                Storage.StorageBody.set(i, ItemManager.setLore(Storage.StorageBody.get(i), "Не доступен для торговли"));
         }
     }
 

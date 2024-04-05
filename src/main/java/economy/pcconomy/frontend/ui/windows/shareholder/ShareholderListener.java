@@ -28,11 +28,11 @@ public class ShareholderListener implements IWindowListener {
                 case "Покупка/продажа акций" -> player.openInventory(ShareholderWindow.sharesWindow(player, 0));
                 case "Выставление акций" -> {
                     var town = TownyAPI.getInstance().getTown(player);
-                    if (town != null)
-                        if (PcConomy.GlobalShareManager.InteractionList.contains(town.getUUID())) {
-                            player.sendMessage("Ваш город уже работал с акциями сегодня");
-                            return;
-                        }
+                    // if (town != null) TODO: Uncomment after test
+                    //     if (PcConomy.GlobalShareManager.InteractionList.contains(town.getUUID())) {
+                    //         player.sendMessage("Ваш город уже работал с акциями сегодня");
+                    //         return;
+                    //     }
 
                     if (player.equals(Objects.requireNonNull(town).getMayor().getPlayer()))
                         player.openInventory(ShareholderWindow.townSharesWindow(player, town.getUUID()));
@@ -102,12 +102,15 @@ public class ShareholderListener implements IWindowListener {
                             Double.parseDouble(ItemManager.getName(percentSlider.getChose()).replace("%", "")),
                             (ItemManager.getName(typeSlider.getChose()).equals("Дивиденты") ? ShareType.Dividends : ShareType.Equity));
 
+                    player.sendMessage("Акции города выставлены на продажу");
+
                 }
                 case "Снять с продажи" -> {
                     var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                     if (town == null) return;
 
                     PcConomy.GlobalShareManager.takeOffShares(town.getUUID());
+                    player.sendMessage("Акции города сняты с продажы");
                 }
             }
 

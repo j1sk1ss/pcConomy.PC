@@ -63,7 +63,7 @@ public class Trader extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        if (HomeTown == null)
+        if (HomeTown == null) // Try catch
             HomeTown = Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getUUID();
 
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && IsRanted) {
