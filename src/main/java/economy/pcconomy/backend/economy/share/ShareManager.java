@@ -3,15 +3,8 @@ package economy.pcconomy.backend.economy.share;
 import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-import economy.pcconomy.backend.scripts.BalanceManager;
-
-import com.palmergames.bukkit.towny.TownyAPI;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,15 +25,13 @@ public class ShareManager {
      */
     public void exposeShares(UUID town, double price, int count, double size, ShareType shareType) {
         var shares = new ArrayList<Share>();
-
         var townShares = getTownShares(town);
         if (townShares != null)
             for (var share : townShares)
-                if (share.Owner != null)
-                    shares.add(share);
+                if (share.IsSold) shares.add(share);
 
-        for (var i = 0; i < count; i++)
-            shares.add(new Share(town, shareType, null, price, size / (double) count));
+        for (var i = 0; i < count - shares.size(); i++)
+            shares.add(new Share(town, shareType, price, size / (double) count));
 
         Shares.put(town, shares);
         InteractionList.add(town);
@@ -51,19 +42,13 @@ public class ShareManager {
      * @param town Town who take off shares
      */
     public void takeOffShares(UUID town) {
-        var averagePrice   = getMedianSharePrice(town);
-        var capitalization = (getTownShares(town).size() - getEmptyTownShare(town).size()) * averagePrice;
-        if (capitalization > PcConomy.GlobalTownManager.getTown(town).getBudget()) return;
-
+        var shares = new ArrayList<Share>();
         for (var share : getTownShares(town))
-            if (share.Owner != null && Bukkit.getPlayer(share.Owner) != null) {
-                PcConomy.GlobalTownManager.getTown(town).changeBudget(-averagePrice);
+            if (share.IsSold) shares.add(share);
 
-                BalanceManager.giveMoney(PcConomy.GlobalBank.deleteVAT(averagePrice), Objects.requireNonNull(Bukkit.getPlayer(share.Owner)));
-                Bukkit.getPlayer(share.Owner).sendMessage("Акция была выкуплена владельцем за: " + averagePrice);
-            }
+        if (shares.size() > 0) Shares.put(town, shares);
+        else Shares.remove(town);
 
-        Shares.remove(town);
         InteractionList.add(town);
     }
 
@@ -84,74 +69,9 @@ public class ShareManager {
     public List<Share> getEmptyTownShare(UUID town) {
         var list = new ArrayList<Share>();
         for (var share : Shares.get(town))
-            if (share.Owner == null)
-                list.add(share);
+            if (!share.IsSold) list.add(share);
 
         return list;
-    }
-
-    /**
-     * Player buy share
-     * @param town Town that share are buying
-     * @param buyer Player who buy share
-     */
-    public void buyShare(UUID town, Player buyer) {
-        var shares = getEmptyTownShare(town);
-        if (shares.size() == 0) return;
-
-        //=============================
-        //  What's happens here:
-        //  - We take first "open" share of current town
-        //  - We check player's balance. If he can buy this share with VAT, we continue
-        //  - We take share price and VAT from player balance
-        //  - We give to Bank VAT and a part of price to Town
-        //=============================
-
-        var share = shares.get(0);
-        if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(share.Price)) {
-            CashManager.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(share.Price), buyer, false);
-            PcConomy.GlobalTownManager.getTown(town).changeBudget(share.Price);
-            share.Owner = buyer.getUniqueId();
-        }
-    }
-
-    /**
-     * Change owner of share
-     * @param town Town
-     * @param count Shares count
-     * @param oldOwner Old owner of share
-     * @param newOwner New owner of share
-     */
-    public void changeShareOwner(UUID town, int count, Player oldOwner, Player newOwner) {
-        var currentTown = PcConomy.GlobalTownManager.getTown(town);
-        if (currentTown == null) return;
-
-        for (var i = 0; i < count; i++)
-            for (var share : Shares.get(town))
-                if (share.Owner == oldOwner.getUniqueId()) share.Owner = newOwner.getUniqueId();
-    }
-
-    /**
-     * Player sell share
-     * @param town Town that share are selling
-     * @param seller  Player who buy share
-     */
-    public void sellShare(UUID town, Player seller) {
-        var currentTown = PcConomy.GlobalTownManager.getTown(town);
-        if (currentTown == null) return;
-
-        for (var share : Shares.get(town))
-            if (share.Owner == seller.getUniqueId()) {
-                var price = getMedianSharePrice(town);
-
-                if (currentTown.getBudget() >= price) {
-                    CashManager.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(price), seller, false);
-                    PcConomy.GlobalTownManager.getTown(town).changeBudget(-price);
-                    share.Owner = null;
-                }
-
-                break;
-            }
     }
 
     /**
@@ -163,8 +83,7 @@ public class ShareManager {
         var price = 0;
         var shares = Shares.get(town);
         for (var share : shares)
-            if (share.Owner == null)
-                price += share.Price;
+            if (!share.IsSold) price += share.Price;
 
         return price / (double)shares.size();
     }
@@ -189,32 +108,13 @@ public class ShareManager {
         for (var shares : Shares.get(town)) {
             if (shares.ShareType == ShareType.Equity) break;
             if (townObject.quarterlyEarnings < 0) break;
-            if (shares.Owner == null) continue;
 
             var pay = townObject.quarterlyEarnings * shares.Equality;
-            var player = Bukkit.getPlayer(shares.Owner);
-            if (player == null) continue;
-
             townObject.changeBudget(-pay);
-            BalanceManager.giveMoney(PcConomy.GlobalBank.deleteVAT(pay), player);
+            shares.Revenue += pay;
         }
 
         townObject.quarterlyEarnings = 0;
-    }
-
-    /**
-     * Get all player shares
-     * @param player Owner of shares
-     * @return List of shares
-     */
-    public List<Share> getShares(Player player) {
-        var answer = new ArrayList<Share>();
-        for (var town : TownyAPI.getInstance().getTowns()) {
-            for (var shares : Shares.get(town.getUUID())) 
-                if (shares.Owner.equals(player.getUniqueId())) answer.add(shares);
-        }
-
-        return answer;
     }
 
     /**

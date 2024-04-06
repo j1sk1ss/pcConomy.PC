@@ -4,6 +4,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
@@ -56,21 +57,20 @@ public class ShareholderListener implements IWindowListener {
             var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
             if (town == null) return;
 
-            var share = PcConomy.GlobalShareManager.getEmptyTownShare(town.getUUID());
-            if (share.size() == 0) return;
-
-            event.setCancelled(true);
-
             switch (ShareholderWindow.ShareHolderMenu.getPanel("Акции-Города").click(option).getName()) {
                 case "Продать одну акцию" -> {
-                    if (share.get(0).Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
-                    PcConomy.GlobalShareManager.sellShare(town.getUUID(), player);
+                    var share = new Share(player.getInventory().getItemInMainHand());
+                    if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
+                    share.sellShare(player);
                 }
                 case "Купить одну акцию" -> {
-                    if (share.get(0).Price + share.get(0).Price *
-                            PcConomy.GlobalBank.VAT > CashManager.amountOfCashInInventory(player, false)) return;
-                    PcConomy.GlobalShareManager.buyShare(town.getUUID(), player);
+                    var shares = PcConomy.GlobalShareManager.getEmptyTownShare(town.getUUID());
+                    var share  = shares.get(0);
+
+                    if (PcConomy.GlobalBank.checkVat(share.Price) > CashManager.amountOfCashInInventory(player, false)) return;
+                    share.buyShare(player);
                 }
+                // TODO: Cash out operation
             }
         }
 

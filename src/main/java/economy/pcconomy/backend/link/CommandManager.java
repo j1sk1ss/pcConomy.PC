@@ -12,7 +12,6 @@ import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -65,9 +64,6 @@ public class CommandManager implements CommandExecutor {
             case "set_day_bank_budget" -> PcConomy.GlobalBank.DayWithdrawBudget = (Double.parseDouble(args[0]));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "create_shareholder"  -> PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
-            case "transfer_share"      -> PcConomy.GlobalShareManager.changeShareOwner(Objects.requireNonNull(
-                    TownyAPI.getInstance().getTown(args[0])).getUUID(), Integer.parseInt(args[2]), (Player) sender,
-                    Bukkit.getPlayer(args[1]));
 
             case "shares_rate" -> {
                 var message = "";

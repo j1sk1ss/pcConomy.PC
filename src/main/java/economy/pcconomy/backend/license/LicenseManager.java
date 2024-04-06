@@ -19,6 +19,7 @@ import java.util.UUID;
 import static economy.pcconomy.backend.cash.CashManager.amountOfCashInInventory;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
+
 public class LicenseManager {
     public final static double marketLicensePrice = PcConomy.Config.getDouble("license.market_license_price", 2400d);
     public final static double tradeLicensePrice = PcConomy.Config.getDouble("license.trade_license_price", 650d);
