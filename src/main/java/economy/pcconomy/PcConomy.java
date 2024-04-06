@@ -2,17 +2,21 @@ package economy.pcconomy;
 
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
-import economy.pcconomy.backend.license.scripts.LicenseManager;
+import economy.pcconomy.backend.economy.TownyListener;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.license.LicenseManager;
 import economy.pcconomy.backend.link.CommandManager;
 import economy.pcconomy.backend.npc.NpcManager;
-import economy.pcconomy.backend.npc.loader.NpcLoader;
+import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
-import economy.pcconomy.backend.save.Loader;
-import economy.pcconomy.backend.economy.town.listener.TownyListener;
+import economy.pcconomy.backend.db.Loader;
 import economy.pcconomy.backend.economy.bank.Bank;
-import economy.pcconomy.backend.economy.town.scripts.TownManager;
+
 import economy.pcconomy.frontend.ui.PlayerListener;
 import economy.pcconomy.frontend.ui.windows.wallet.WalletListener;
+
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,21 +46,28 @@ import java.util.Objects;
 //
 //  P.S. Don't forget about TODO
 
+
 public final class PcConomy extends JavaPlugin {
+    
     public static FileConfiguration Config;
-    public static NpcManager GlobalNPC;
-    public static Bank GlobalBank;
-    public static BorrowerManager GlobalBorrowerManager;
-    public static TownManager GlobalTownManager;
-    public static LicenseManager GlobalLicenseManager;
-    public static ShareManager GlobalShareManager;
+    public static NpcManager        GlobalNPC;
+    public static Bank              GlobalBank;
+    public static BorrowerManager   GlobalBorrowerManager;
+    public static TownManager       GlobalTownManager;
+    public static LicenseManager    GlobalLicenseManager;
+    public static ShareManager      GlobalShareManager;
     
     private final String pluginPath = "plugins\\PcConomy\\";
 
     @Override
     public void onEnable() {
+
+        System.out.print("[PcConomy] Starting PcConomy.\n");
+
         saveConfig();
         saveDefaultConfig();
+
+        System.out.print("[PcConomy] Enable plugin config.\n");
 
         //============================================
         //  Init global objects
@@ -70,6 +81,8 @@ public final class PcConomy extends JavaPlugin {
             GlobalLicenseManager  = new LicenseManager();
             GlobalShareManager    = new ShareManager();
 
+            System.out.print("[PcConomy] Initializing global managers.\n");
+
         //============================================
         //  Init global objects
         //============================================
@@ -77,21 +90,17 @@ public final class PcConomy extends JavaPlugin {
         //============================================
 
             try {
-                if (new File(pluginPath + "npc_data.json").exists())
-                    GlobalNPC = Loader.loadNPC(pluginPath + "npc_data");
-                if (new File(pluginPath + "bank_data.json").exists())
-                    GlobalBank = Bank.loadBank(pluginPath + "bank_data");
-                if (new File(pluginPath + "towns_data.json").exists())
-                    GlobalTownManager = Loader.loadTowns(pluginPath + "towns_data");
-                if (new File(pluginPath + "license_data.json").exists())
-                    GlobalLicenseManager = Loader.loadLicenses(pluginPath + "license_data");
-                if (new File(pluginPath + "shares_data.json").exists())
-                    GlobalLicenseManager = Loader.loadLicenses(pluginPath + "shares_data");
-                if (new File(pluginPath + "borrowers_data.json").exists())
-                    GlobalBorrowerManager = Loader.loadBorrowers(pluginPath + "borrowers_data");
+                if (new File(pluginPath + "npc_data.json").exists()) GlobalNPC = Loader.loadNPC(pluginPath + "npc_data");
+                if (new File(pluginPath + "bank_data.json").exists()) GlobalBank = Bank.loadBank(pluginPath + "bank_data");
+                if (new File(pluginPath + "towns_data.json").exists()) GlobalTownManager = Loader.loadTowns(pluginPath + "towns_data");
+                if (new File(pluginPath + "license_data.json").exists()) GlobalLicenseManager = Loader.loadLicenses(pluginPath + "license_data");
+                if (new File(pluginPath + "shares_data.json").exists()) GlobalShareManager = Loader.loadShares(pluginPath + "shares_data");
+                if (new File(pluginPath + "borrowers_data.json").exists()) GlobalBorrowerManager = Loader.loadBorrowers(pluginPath + "borrowers_data");
             } catch (IOException error) {
                 System.out.println(error.getMessage());
             }
+
+            System.out.print("[PcConomy] Loading saved data complete.\n");
 
         //============================================
         //  Load objects
@@ -103,9 +112,10 @@ public final class PcConomy extends JavaPlugin {
         //      - WalletListener - listen all player actions with wallet object
         //============================================
 
-            for (var listener : Arrays.asList(new NpcLoader(), new TownyListener(),
-                    new PlayerListener(), new WalletListener()))
+            for (var listener : Arrays.asList(new TownyListener(), new PlayerListener(), new WalletListener()))
                 Bukkit.getPluginManager().registerEvents(listener, this);
+
+            System.out.print("[PcConomy] Listeners registered.\n");
 
         //============================================
         //  Register listeners
@@ -120,12 +130,28 @@ public final class PcConomy extends JavaPlugin {
                     "create_wallet", "create_shareholder", "transfer_share", "shares_rate", "global_market_prices"))
                 Objects.requireNonNull(getCommand(command)).setExecutor(command_manager);
 
+            System.out.print("[PcConomy] Commands registered.\n");
+
         //============================================
         //  Register commands
         //============================================
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
         	new PcConomyPAPI().register();
+
+        System.out.print("[PcConomy] PAPI registered.\n");
+        System.out.print("[PcConomy] Traits registered.\n");
+
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("Trader"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NpcLoaner.class).withName("npcloaner"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Loaner.class).withName("loaner"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NpcTrader.class).withName("npctrader"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("banker"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("licensor"));
+
+        System.out.print("[PcConomy] NPC reloading.\n");
+
+        GlobalNPC.reloadNPC();
     }
 
     @Override

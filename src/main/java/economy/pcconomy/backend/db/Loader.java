@@ -1,14 +1,14 @@
-package economy.pcconomy.backend.save;
+package economy.pcconomy.backend.db;
 
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.town.Town;
-import economy.pcconomy.backend.license.scripts.LicenseManager;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.license.LicenseManager;
 import economy.pcconomy.backend.npc.NpcManager;
-import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
-import economy.pcconomy.backend.economy.town.scripts.TownManager;
-import economy.pcconomy.backend.save.adaptors.TownTypeAdaptor;
+import economy.pcconomy.backend.db.adaptors.ItemStackTypeAdaptor;
+import economy.pcconomy.backend.db.adaptors.TownTypeAdaptor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.IOException;

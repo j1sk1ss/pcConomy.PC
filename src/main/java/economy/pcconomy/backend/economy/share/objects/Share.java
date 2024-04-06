@@ -2,9 +2,10 @@ package economy.pcconomy.backend.economy.share.objects;
 
 import java.util.UUID;
 
+
 public class Share {
     public Share(UUID townUUID, ShareType shareType, UUID owner, double price, double equality) {
-        TownUUID      = townUUID;
+        TownUUID  = townUUID;
         ShareType = shareType;
         Owner     = owner;
         Price     = price;
@@ -18,4 +19,3 @@ public class Share {
     public final double Price;
     public final double Equality;
 }
-

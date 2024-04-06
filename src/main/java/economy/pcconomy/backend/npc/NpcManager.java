@@ -8,7 +8,7 @@ import economy.pcconomy.backend.npc.objects.LoanerObject;
 import economy.pcconomy.backend.npc.objects.NpcObject;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.save.adaptors.ItemStackTypeAdaptor;
+import economy.pcconomy.backend.db.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 
 import net.citizensnpcs.api.CitizensAPI;
@@ -113,7 +113,6 @@ public class NpcManager {
                 trait.linkToNPC(npc);
                 npc.addTrait(trait);
             }
-
             else if (Npc.get(id) instanceof LoanerObject loanerObject) {
                 var npc = CitizensAPI.getNPCRegistry().getById(id);
                 var trait = new Loaner(loanerObject);

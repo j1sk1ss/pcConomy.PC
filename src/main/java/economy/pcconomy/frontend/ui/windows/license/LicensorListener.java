@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.ui.windows.license;
 
-import economy.pcconomy.backend.license.License;
+import economy.pcconomy.backend.license.LicenseManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
@@ -12,14 +12,10 @@ public class LicensorListener implements IWindowListener {
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         switch (LicensorWindow.Panel.click(event.getSlot()).getName()) {
-            case "Лицензия на создание торговой зоны" ->
-                    License.giveLicenseToPlayer(player, LicenseType.Market, License.marketLicensePrice);
-            case "Лицензия на торговую деятельность" ->
-                    License.giveLicenseToPlayer(player, LicenseType.Trade, License.tradeLicensePrice);
-            case "Лицензия на кредитную деятельность" ->
-                    License.giveLicenseToPlayer(player, LicenseType.Loan, License.loanLicensePrice);
-            case "Лицензия на доступ к кредитной истории" ->
-                    License.giveLicenseToPlayer(player, LicenseType.LoanHistory, License.loanHistoryLicensePrice);
+            case "Лицензия на создание торговой зоны" -> LicenseManager.giveLicenseToPlayer(player, LicenseType.Market, LicenseManager.marketLicensePrice);
+            case "Лицензия на торговую деятельность" -> LicenseManager.giveLicenseToPlayer(player, LicenseType.Trade, LicenseManager.tradeLicensePrice);
+            case "Лицензия на кредитную деятельность" -> LicenseManager.giveLicenseToPlayer(player, LicenseType.Loan, LicenseManager.loanLicensePrice);
+            case "Лицензия на доступ к кредитной истории" -> LicenseManager.giveLicenseToPlayer(player, LicenseType.LoanHistory, LicenseManager.loanHistoryLicensePrice);
         }
     }
 }

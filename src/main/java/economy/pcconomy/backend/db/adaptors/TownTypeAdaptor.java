@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.save.adaptors;
+package economy.pcconomy.backend.db.adaptors;
 
 import com.google.gson.*;
 import economy.pcconomy.backend.economy.town.NpcTown;

@@ -120,15 +120,15 @@ public class Bank extends Capitalist {
     }
 
     // This function take value, change it with VAT, and return
-    public double applyVAT(double value) {
+    public double deleteVAT(double value) {
         BankBudget += value * VAT;
         return value - (value * VAT);
     }
 
     // This function take value, add VAT and return
-    public double priceVat(double oldValue) {
-        BankBudget += oldValue * VAT;
-        return oldValue + oldValue * VAT;
+    public double addVAT(double value) {
+        BankBudget += value * VAT;
+        return value + value * VAT;
     }
 
     // This value return value with VAT (not change BankBudget)
