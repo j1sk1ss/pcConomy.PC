@@ -10,13 +10,16 @@ import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 import java.util.UUID;
 
 
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class ShareholderListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
@@ -47,7 +50,7 @@ public class ShareholderListener implements IWindowListener {
             var item = event.getCurrentItem();
             if (item == null) return;
 
-            var townId = UUID.fromString(ItemManager.getLore(item).get(3).split(" ")[1]);
+            var townId = UUID.fromString(item.getLoreLines().get(3).split(" ")[1]);
             player.openInventory(ShareholderWindow.acceptWindow(player, townId));
 
             event.setCancelled(true);
@@ -61,7 +64,7 @@ public class ShareholderListener implements IWindowListener {
                 case "Продать одну акцию" -> {
                     var share = new Share(player.getInventory().getItemInMainHand());
                     if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
-                    share.sellShare(player);
+                    share.sellShare(player, player.getInventory().getItemInMainHand());
                 }
                 case "Купить одну акцию" -> {
                     var shares = PcConomy.GlobalShareManager.getEmptyTownShare(town.getUUID());
@@ -97,10 +100,10 @@ public class ShareholderListener implements IWindowListener {
                             percentSlider.getChose() == null || typeSlider.getChose() == null) return;
                     PcConomy.GlobalShareManager.exposeShares(
                             town.getUUID(),
-                            Double.parseDouble(ItemManager.getName(costSlider.getChose()).replace(CashManager.currencySigh, "")),
-                            Integer.parseInt(ItemManager.getName(countSlider.getChose()).replace("шт.", "")),
-                            Double.parseDouble(ItemManager.getName(percentSlider.getChose()).replace("%", "")),
-                            (ItemManager.getName(typeSlider.getChose()).equals("Дивиденты") ? ShareType.Dividends : ShareType.Equity));
+                            Double.parseDouble(costSlider.getChose().getName().replace(CashManager.currencySigh, "")),
+                            Integer.parseInt(costSlider.getChose().getName().replace("шт.", "")),
+                            Double.parseDouble(percentSlider.getName().replace("%", "")),
+                            (typeSlider.getName().equals("Дивиденты") ? ShareType.Dividends : ShareType.Equity));
 
                     player.sendMessage("Акции города выставлены на продажу");
 

@@ -4,12 +4,15 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.experimental.ExtensionMethod;
 import java.util.UUID;
 
 
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class Share {
     public Share(UUID townUUID, ShareType shareType, double price, double equality) {
         TownUUID  = townUUID;
@@ -24,7 +27,7 @@ public class Share {
     }
 
     public Share(ItemStack shareBody) {
-        var loreLine = ItemManager.getLore(shareBody);
+        var loreLine = shareBody.getLoreLines();
 
         TownUUID  = UUID.fromString(loreLine.get(0));
         ShareUUID = UUID.fromString(loreLine.get(1));
@@ -57,7 +60,7 @@ public class Share {
             PcConomy.GlobalTownManager.getTown(TownUUID).changeBudget(Price);
 
             IsSold = true;
-            ItemManager.giveItems(new Item("Акция", TownUUID + "\n" + ShareUUID + "\n" + Price), buyer);
+            new Item("Акция", TownUUID + "\n" + ShareUUID + "\n" + Price).giveItems(buyer);
 
             return true;
         }
@@ -68,8 +71,9 @@ public class Share {
     /**
      * Player sell share
      * @param seller  Player who buy share
+     * @param shareItem Share item in inventory
      */
-    public void sellShare(Player seller) {
+    public void sellShare(Player seller, ItemStack shareItem) {
         var currentTown = PcConomy.GlobalTownManager.getTown(TownUUID);
         if (currentTown == null) return;
 
@@ -78,6 +82,7 @@ public class Share {
             currentTown.changeBudget(-Price);
 
             IsSold = false;
+            shareItem.takeItems(seller);
         }
     }
 

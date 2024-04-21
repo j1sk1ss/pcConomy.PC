@@ -13,10 +13,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.Objects;
+import lombok.experimental.ExtensionMethod;
 
 
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class WalletListener implements Listener, IWindowListener {
     @EventHandler
     public void onWalletUse(PlayerInteractEvent event) {
@@ -57,8 +59,8 @@ public class WalletListener implements Listener, IWindowListener {
             var option = event.getCurrentItem();
             if (option == null) return;
 
-            if (ItemManager.getLore(option).size() < 2) return;
-            var amount = ItemManager.getPriceFromLore(Objects.requireNonNull(option), 1);
+            if (option.getLoreLines().size() < 2) return;
+            var amount = option.getPriceFromLore(1);
 
             if (amount > 0) {
                 CashManager.giveCashToPlayer(Math.abs(amount), player, true);

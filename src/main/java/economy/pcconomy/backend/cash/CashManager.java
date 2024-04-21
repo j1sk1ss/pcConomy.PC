@@ -4,6 +4,7 @@ import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +12,8 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.util.*;
 
+
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class CashManager {
     /**
      * Currency name that will be used in all plugin
@@ -65,7 +68,7 @@ public class CashManager {
      */
     public static double getAmountFromCash(ItemStack money) {
         if (isCash(money))
-            return Double.parseDouble(ItemManager.getLore(money).get(0).replace(currencySigh,"")) * money.getAmount();
+            return Double.parseDouble(money.getLoreLines().get(0).replace(currencySigh,"")) * money.getAmount();
 
         return 0;
     }
@@ -114,10 +117,10 @@ public class CashManager {
      */
     public static boolean isCash(ItemStack item) {
         if (item == null) return false;
-        if (ItemManager.getLore(item).size() == 0) return false;
+        if (item.getLoreLines().size() == 0) return false;
 
-        if (ItemManager.getName(item).contains(currencyName))
-            return ItemManager.getLore(item).get(0).contains(currencySigh);
+        if (item.getName().contains(currencyName))
+            return item.getLoreLines().get(0).contains(currencySigh);
 
         return false;
     }

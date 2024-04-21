@@ -9,7 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.experimental.ExtensionMethod;
 
+
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class Slider implements IComponent {
     /**
      * Slider component
@@ -68,7 +71,7 @@ public class Slider implements IComponent {
         return name;
     }
 
-    public String getLore() {
+    public String getLoreLines() {
         return "Slider";
     }
 
@@ -112,7 +115,7 @@ public class Slider implements IComponent {
     public void displace(Inventory inventory) {
         for (var coordinate = 0; coordinate < coordinates.size(); coordinate++)
             if (inventory.getItem(coordinate) != null)
-                if (ItemManager.getName(Objects.requireNonNull(inventory.getItem(coordinate))).equals(getName()))
+                if (Objects.requireNonNull(inventory.getItem(coordinate)).getName().equals(getName()))
                     inventory.setItem(coordinate, null);
     }
 

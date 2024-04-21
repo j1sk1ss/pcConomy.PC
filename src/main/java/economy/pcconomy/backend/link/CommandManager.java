@@ -17,8 +17,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import org.bukkit.inventory.ItemStack;
+
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -26,6 +27,8 @@ import java.util.*;
 import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
+
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
@@ -84,9 +87,9 @@ public class CommandManager implements CommandExecutor {
                     if (PcConomy.GlobalNPC.Npc.get(trader) instanceof TraderObject currentTrader)
                         for (var resource : currentTrader.Storage)
                             if (!prices.containsKey(resource))
-                                prices.put(resource, ItemManager.getPriceFromLore(resource, 0));
+                                prices.put(resource, resource.getPriceFromLore(0));
                             else prices.put(resource,
-                                    (prices.get(resource) + ItemManager.getPriceFromLore(resource, 0)) / 2);
+                                    (prices.get(resource) + resource.getPriceFromLore(0)) / 2);
 
                 for (var resource : prices.keySet())
                     message += "Товар: " + resource + ", цена: " + prices.get(resource) + CashManager.currencySigh;

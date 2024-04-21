@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
 public class ItemManager {
     /**
      * Sets lore of itemStack
@@ -57,25 +58,25 @@ public class ItemManager {
 
     /**
      * Gets lore of itemStack
-     * @param item ItemStack
+     * @param itemStack ItemStack
      * @return Lore of itemStack
      */
     @SuppressWarnings("deprecation")
-    public static List<String> getLore(ItemStack item) {
-        if (item.getItemMeta() == null) return new ArrayList<>();
-        if (item.getItemMeta().getLore() == null) return new ArrayList<>();
+    public static List<String> getLoreLines(ItemStack itemStack) {
+        if (itemStack.getItemMeta() == null) return new ArrayList<>();
+        if (itemStack.getItemMeta().getLore() == null) return new ArrayList<>();
         
-        return item.getItemMeta().getLore();
+        return itemStack.getItemMeta().getLore();
     }
 
     /**
      * Gets name of itemStack
-     * @param item ItemStack
+     * @param itemStack ItemStack
      * @return Name of itemStack
      */
     @SuppressWarnings("deprecation")
-    public static String getName(ItemStack item){
-        return Objects.requireNonNull(item.getItemMeta().getDisplayName());
+    public static String getName(ItemStack itemStack){
+        return Objects.requireNonNull(itemStack.getItemMeta().getDisplayName());
     }
 
     /**
@@ -154,7 +155,7 @@ public class ItemManager {
      * @return Price
      */
     public static double getPriceFromLore(ItemStack itemStack, int loreLine) {
-        return Double.parseDouble(ItemManager.getLore(itemStack).get(loreLine)
+        return Double.parseDouble(ItemManager.getLoreLines(itemStack).get(loreLine)
                 .replace(CashManager.currencySigh, ""));
     }
 }

@@ -1,8 +1,11 @@
 package economy.pcconomy.backend.scripts.items;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class Item extends ItemStack {
     /**
      * Paper with custom name
@@ -12,7 +15,7 @@ public class Item extends ItemStack {
         super(Material.PAPER);
         var cloned = super.clone();
 
-        super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
+        super.setItemMeta(cloned.setName(name).getItemMeta());
         super.setType(Material.PAPER);
         super.setAmount(1);
     }
@@ -26,8 +29,8 @@ public class Item extends ItemStack {
         super(Material.PAPER);
         var cloned = super.clone();
 
-        super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, lore).getItemMeta());
+        super.setItemMeta(cloned.setName(name).getItemMeta());
+        super.setItemMeta(cloned.setLore(lore).getItemMeta());
         super.setType(Material.PAPER);
         super.setAmount(1);
     }
@@ -42,8 +45,8 @@ public class Item extends ItemStack {
         super(material);
         var cloned = super.clone();
 
-        super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, lore).getItemMeta());
+        super.setItemMeta(cloned.setName(name).getItemMeta());
+        super.setItemMeta(cloned.setLore(lore).getItemMeta());
         super.setType(material);
         super.setAmount(1);
     }
@@ -59,8 +62,8 @@ public class Item extends ItemStack {
         super(material);
         var cloned = super.clone();
 
-        super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, lore).getItemMeta());
+        super.setItemMeta(cloned.setName(name).getItemMeta());
+        super.setItemMeta(cloned.setLore(lore).getItemMeta());
         super.setType(material);
         super.setAmount(amount);
     }
@@ -77,8 +80,8 @@ public class Item extends ItemStack {
         super(material);
         var cloned = super.clone();
 
-        super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, lore).getItemMeta());
+        super.setItemMeta(cloned.setName(name).getItemMeta());
+        super.setItemMeta(cloned.setLore(lore).getItemMeta());
         super.setType(material);
         super.setAmount(amount);
 
@@ -94,7 +97,7 @@ public class Item extends ItemStack {
         super(itemStack);
         var cloned = super.clone();
 
-        super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
+        super.setItemMeta(cloned.setName(name).getItemMeta());
     }
 
     /**
@@ -107,8 +110,8 @@ public class Item extends ItemStack {
         super(itemStack);
         var cloned = super.clone();
 
-        super.setItemMeta(ItemManager.setName(cloned, name).getItemMeta());
-        super.setItemMeta(ItemManager.setLore(cloned, lore).getItemMeta());
+        super.setItemMeta(cloned.setName(name).getItemMeta());
+        super.setItemMeta(cloned.setLore(lore).getItemMeta());
     }
 
     /**

@@ -6,8 +6,11 @@ import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
-import org.bukkit.entity.Player;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import lombok.experimental.ExtensionMethod;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -20,6 +23,7 @@ import static economy.pcconomy.backend.cash.CashManager.amountOfCashInInventory;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
 
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class LicenseManager {
     public final static double marketLicensePrice = PcConomy.Config.getDouble("license.market_license_price", 2400d);
     public final static double tradeLicensePrice = PcConomy.Config.getDouble("license.trade_license_price", 650d);
@@ -86,7 +90,7 @@ public class LicenseManager {
         PcConomy.GlobalBank.BankBudget += price;
         //TODO: DATA MODEL
         PcConomy.GlobalLicenseManager.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));
-        ItemManager.giveItems(new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()), player);
+        new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()).giveItems(player);
     }
 
     /**

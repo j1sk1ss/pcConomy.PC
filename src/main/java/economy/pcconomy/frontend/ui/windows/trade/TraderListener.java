@@ -8,16 +8,19 @@ import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
-
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
+
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
 
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class TraderListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
@@ -41,7 +44,7 @@ public class TraderListener implements IWindowListener {
             switch (TraderWindow.TraderMenu.getPanel("Торговец-Управление").click(option).getName()) {
                 case "Перейти в товары" -> player.openInventory(TraderWindow.getWindow(player, trader));
                 case "Забрать все товары" -> {
-                    ItemManager.giveItemsWithoutLore(trader.Storage, player);
+                    trader.Storage.giveItemsWithoutLore(player);
                     trader.Storage.clear();
                 }
                 case "Забрать прибыль" -> {
@@ -52,7 +55,7 @@ public class TraderListener implements IWindowListener {
         }
 
         else if (title.contains("Торговец-Аренда-Время")) {
-            var days = Integer.parseInt(ItemManager.getName(choseItem).split(" ")[0]);
+            var days = Integer.parseInt(choseItem.getName().split(" ")[0]);
             if (CashManager.amountOfCashInInventory(player, false) < trader.Cost * days) return;
             CashManager.takeCashFromPlayer(trader.Cost * days, player, false);
             PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost * days);
@@ -96,7 +99,7 @@ public class TraderListener implements IWindowListener {
                     var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders().get(0), event.getInventory());
                     if (slider.getChose() == null) return;
 
-                    trader.Cost = Double.parseDouble(ItemManager.getName(slider.getChose()).replace(CashManager.currencySigh, ""));
+                    trader.Cost = Double.parseDouble(slider.getChose().getName().replace(CashManager.currencySigh, ""));
                     player.sendMessage("Цена установлена!");
                 }
 
@@ -117,7 +120,7 @@ public class TraderListener implements IWindowListener {
                     var slider = new Slider(TraderWindow.TraderMenu.getPanel("Торговец-Процент").getSliders("Slider"), event.getInventory());
                     if (slider.getChose() == null) return;
 
-                    trader.Margin = Double.parseDouble(ItemManager.getName(slider.getChose()).replace("%", ""));
+                    trader.Margin = Double.parseDouble(slider.getChose().getName().replace("%", ""));
                     player.sendMessage("Процент установлен!");
                 }
 
@@ -129,12 +132,12 @@ public class TraderListener implements IWindowListener {
             switch (TraderWindow.TraderMenu.getPanel("Торговец-Покупка").click(option).getName()) {
                 case "Купить" -> {
                     var buyingItem = inventory.getItem(13);
-                    var price = ItemManager.getPriceFromLore(buyingItem, 0);
+                    var price = buyingItem.getPriceFromLore(0);
 
                     if (CashManager.amountOfCashInInventory(player, false) >= price || trader.Owner.equals(player.getUniqueId())) {
                         if (trader.Storage.contains(buyingItem)) {
                             trader.Storage.remove(buyingItem);
-                            ItemManager.giveItemsWithoutLore(buyingItem, player);
+                            buyingItem.giveItemsWithoutLore(player);
 
                             if (!trader.Owner.equals(player.getUniqueId())) {
                                 CashManager.takeCashFromPlayer(price, player, false);

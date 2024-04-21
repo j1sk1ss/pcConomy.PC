@@ -8,17 +8,20 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
-
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanWindow;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
+import lombok.experimental.ExtensionMethod;
 import java.util.Arrays;
 import java.util.Objects;
 
 
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class LoanListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
@@ -35,8 +38,8 @@ public class LoanListener implements IWindowListener {
         if (loaner == null) return;
 
         if (title.contains("Кредит-Город-Взятие")) {
-            if (ItemManager.getName(item).contains(CashManager.currencySigh)) {
-                var isSafe = ItemManager.getLore(item).get(0).contains("Город одобрит данный займ.");
+            if (item.getName().contains(CashManager.currencySigh)) {
+                var isSafe = item.getLoreLines().get(0).contains("Город одобрит данный займ.");
                 if (isSafe && !currentTown.getCreditList().contains(LoanManager.getLoan(player.getUniqueId(), currentTown))) {
                     var amount = LoanWindow.getSelectedAmount(activeInventory.getItem(buttonPosition));
 

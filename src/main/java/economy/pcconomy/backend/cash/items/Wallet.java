@@ -4,6 +4,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
+import lombok.experimental.ExtensionMethod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.math3.util.Precision;
 import org.bukkit.Material;
@@ -13,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class Wallet {
     /**
      * New empty wallet
@@ -30,8 +33,8 @@ public class Wallet {
      * @param wallet Wallet itemStack
      */
     public Wallet(ItemStack wallet) {
-        Amount   = Double.parseDouble(ItemManager.getLore(wallet).get(0).split(" ")[0]);
-        Level    = Integer.parseInt(ItemManager.getLore(wallet).get(1).split(" ")[1]);
+        Amount   = Double.parseDouble(wallet.getLoreLines().get(0).split(" ")[0]);
+        Level    = Integer.parseInt(wallet.getLoreLines().get(1).split(" ")[1]);
         Capacity = Level * 500;
         Body     = wallet;
     }
@@ -48,8 +51,8 @@ public class Wallet {
      * @param player Player that will take this wallet
      */
     public void giveWallet(Player player) {
-        ItemManager.giveItems(new Item("Кошелёк", Precision.round(Amount, 3) + " " + CashManager.getCurrencyNameByNum((int)Amount)
-                + "\nВместимость: " + Level, Material.BOOK, 1, walletDataModel), player);
+        new Item("Кошелёк", Precision.round(Amount, 3) + " " + CashManager.getCurrencyNameByNum((int)Amount)
+                + "\nВместимость: " + Level, Material.BOOK, 1, walletDataModel).giveItems(player);
     }
 
     /**
@@ -57,7 +60,7 @@ public class Wallet {
      * @param player Player that will take this wallet
      */
     public void takeWallet(Player player) {
-        ItemManager.takeItems(Body, player);
+        Body.takeItems(player);
     }
 
     /**
@@ -82,10 +85,10 @@ public class Wallet {
      * @return Wallet status
      */
     public static boolean isWallet(ItemStack itemStack) {
-        if (ItemManager.getLore(itemStack).size() == 0) return false;
-        return StringUtils.containsAny(ItemManager.getLore(itemStack).get(0).toLowerCase(), "алеф") &&
-                    StringUtils.containsAny(ItemManager.getLore(itemStack).get(1).toLowerCase(), "вместимость") &&
-                ItemManager.getName(itemStack).contains("Кошелёк");
+        if (itemStack.getLoreLines().size() == 0) return false;
+        return StringUtils.containsAny(itemStack.getLoreLines().get(0).toLowerCase(), "алеф") &&
+                    StringUtils.containsAny(itemStack.getLoreLines().get(1).toLowerCase(), "вместимость") &&
+                    itemStack.getName().contains("Кошелёк");
     }
 
     /**

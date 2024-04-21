@@ -21,11 +21,13 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.experimental.ExtensionMethod;
 import java.time.LocalDateTime;
 import java.util.*;
 
 
 @TraitName("Trader")
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class Trader extends Trait {
     public Trader() {
         super("Trader");
@@ -149,13 +151,13 @@ public class Trader extends Trait {
 
                 try {
                     var cost = Double.parseDouble(playerMessage);
-                    trader.getOrAddTrait(Trader.class).Storage.add(ItemManager.setLore(sellingItem,
+                    trader.getOrAddTrait(Trader.class).Storage.add(sellingItem.setLore(
                             cost + cost * Margin + CashManager.currencySigh +
                                     "\nБез пошлины: " + cost + CashManager.currencySigh));
                     player.getInventory().setItemInMainHand(null);
                     chat.remove(player.getUniqueId());
 
-                    player.sendMessage("Предмет " + ItemManager.getName(sellingItem) + " выставлен на продажу за "
+                    player.sendMessage("Предмет " + sellingItem.getName() + " выставлен на продажу за "
                         + (cost + cost * Margin) + " " + CashManager.currencySigh);
                 }
                 catch (NumberFormatException exception) {

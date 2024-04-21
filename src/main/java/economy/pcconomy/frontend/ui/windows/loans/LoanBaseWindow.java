@@ -6,15 +6,18 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.scripts.items.ItemManager;
-
 import economy.pcconomy.frontend.ui.windows.Window;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.experimental.ExtensionMethod;
 import java.util.Objects;
 
+
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public abstract class LoanBaseWindow extends Window {
     /**
      * Regenerate window with new info
@@ -57,9 +60,9 @@ public abstract class LoanBaseWindow extends Window {
     public static int getSelectedDuration(Inventory window) {
         for (ItemStack button : window) {
             if (button == null) return 20;
-            if (ItemManager.getMaterial(button).equals(Material.PURPLE_WOOL)) {
-                System.out.println(Integer.parseInt(ItemManager.getName(button).replace("дней", "")));
-                return Integer.parseInt(ItemManager.getName(button).replace("дней", ""));
+            if (button.getMaterial().equals(Material.PURPLE_WOOL)) {
+                System.out.println(Integer.parseInt(button.getName().replace("дней", "")));
+                return Integer.parseInt(button.getName().replace("дней", ""));
             }
         }
 
@@ -72,6 +75,6 @@ public abstract class LoanBaseWindow extends Window {
      * @return Credit size
      */
     public static double getSelectedAmount(ItemStack button) {
-        return Double.parseDouble(ItemManager.getName(button).replace(CashManager.currencySigh, ""));
+        return Double.parseDouble(button.getName().replace(CashManager.currencySigh, ""));
     }
 }

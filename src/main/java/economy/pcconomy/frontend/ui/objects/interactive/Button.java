@@ -2,12 +2,15 @@ package economy.pcconomy.frontend.ui.objects.interactive;
 
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.experimental.ExtensionMethod;
 
 /**
  * Button object
@@ -15,6 +18,7 @@ import java.util.Objects;
  * @param secondSlot Second coordinate of button
  * @param name Name of button
  */
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public record Button(int firstSlot, int secondSlot, String name, String lore) implements IComponent {
     /**
      * Checks click status of button
@@ -29,7 +33,7 @@ public record Button(int firstSlot, int secondSlot, String name, String lore) im
         return name();
     }
 
-    public String getLore() {
+    public String getLoreLines() {
         return lore();
     }
 
@@ -62,7 +66,7 @@ public record Button(int firstSlot, int secondSlot, String name, String lore) im
     public void displace(Inventory inventory) {
         for (var coordinate : getCoordinates())
             if (inventory.getItem(coordinate) != null)
-                if (ItemManager.getName(Objects.requireNonNull(inventory.getItem(coordinate))).equals(name()))
+                if (Objects.requireNonNull(inventory.getItem(coordinate)).getName().equals(name()))
                     inventory.setItem(coordinate, null);
     }
 }

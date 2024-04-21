@@ -10,6 +10,6 @@ public interface IComponent {
     boolean isClicked(int click);
 
     String getName();
-    String getLore();
+    String getLoreLines();
     List<Integer> getCoordinates();
 }

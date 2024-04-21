@@ -10,6 +10,7 @@ import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.Panel;
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;
+
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,12 +18,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.experimental.ExtensionMethod;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class LoanWindow extends LoanBaseWindow {
     public LoanWindow(Loaner loaner) {
         Loaner = loaner;
@@ -92,7 +95,7 @@ public class LoanWindow extends LoanBaseWindow {
     @Override
     public ItemStack creditOptionButton(ItemStack itemStack, double maxLoanSize, int chosen, int position) {
         //TODO: DATA MODEL
-        return new Item(ItemManager.getName(itemStack), "Город одобрит данный займ.\nПроцент: " +
+        return new Item(itemStack.getName(), "Город одобрит данный займ.\nПроцент: " +
                 (Math.round(LoanManager.getPercent(maxLoanSize / (position + 1),
                         durationSteps.get(chosen - 18)) * 100) * 100d) / 100d + "%", Material.GREEN_WOOL, 1, 17000);
     }

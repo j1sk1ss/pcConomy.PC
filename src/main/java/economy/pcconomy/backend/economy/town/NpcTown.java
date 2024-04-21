@@ -12,10 +12,13 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.experimental.ExtensionMethod;
 import java.util.*;
 
 import static economy.pcconomy.backend.cash.CashManager.*;
 
+
+@ExtensionMethod({ItemStack.class, ItemManager.class})
 public class NpcTown extends Town {
     /**
      * Npc town
@@ -80,7 +83,7 @@ public class NpcTown extends Town {
      * @param buyer  Player who want by this item
      */
     public void buyResourceFromStorage(ItemStack itemStack, Player buyer) {
-        var price = ItemManager.getPriceFromLore(itemStack, 1) * purchaseSize;
+        var price = itemStack.getPriceFromLore(1) * purchaseSize;
 
         if (dayStorage < purchaseSize) {
             buyer.sendMessage("Извините, но данного товара и у нас самих не очень много.");
@@ -98,7 +101,7 @@ public class NpcTown extends Town {
         CashManager.takeCashFromPlayer(price, buyer, false);
 
         changeBudget(PcConomy.GlobalBank.deleteVAT(price));
-        ItemManager.giveItems(new ItemStack(itemStack.getType(), purchaseSize), buyer);
+        new ItemStack(itemStack.getType(), purchaseSize).giveItems(buyer);
         Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) - purchaseSize);
 
         generateLocalPrices();
@@ -118,7 +121,7 @@ public class NpcTown extends Town {
             return;
         }
 
-        var price = ItemManager.getPriceFromLore(resource, 1) * itemAmount;
+        var price = resource.getPriceFromLore(1) * itemAmount;
         if (price > dayBudget) {
             seller.sendMessage("Слишком дорого для нашего города.");
             return;
@@ -149,10 +152,10 @@ public class NpcTown extends Town {
             var endPrive = Precision.round(price + (price * margin), 3);
 
             if (price > 0)
-                Storage.StorageBody.set(i, ItemManager.setLore(Storage.StorageBody.get(i), "Цена за " + purchaseSize + " шт.:\n" +
+                Storage.StorageBody.set(i, Storage.StorageBody.get(i).setLore("Цена за " + purchaseSize + " шт.:\n" +
                         purchaseSize * endPrive + CashManager.currencySigh + "\nБез НДС в " + marginPercent + "%:\n" + purchaseSize * price + CashManager.currencySigh));
             else 
-                Storage.StorageBody.set(i, ItemManager.setLore(Storage.StorageBody.get(i), "Не доступен для торговли"));
+                Storage.StorageBody.set(i, Storage.StorageBody.get(i).setLore("Не доступен для торговли"));
         }
     }
 
