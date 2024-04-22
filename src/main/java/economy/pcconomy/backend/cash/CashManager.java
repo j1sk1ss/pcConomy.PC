@@ -13,7 +13,7 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.*;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class CashManager {
     /**
      * Currency name that will be used in all plugin

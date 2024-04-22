@@ -17,7 +17,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.Objects;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public abstract class LoanBaseWindow extends Window {
     /**
      * Regenerate window with new info

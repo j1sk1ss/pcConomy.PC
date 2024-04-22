@@ -18,7 +18,7 @@ import java.util.*;
 import static economy.pcconomy.backend.cash.CashManager.*;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class NpcTown extends Town {
     /**
      * Npc town

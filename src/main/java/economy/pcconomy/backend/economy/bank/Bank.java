@@ -79,10 +79,12 @@ public class Bank extends Capitalist {
         var isRecession  = (changePercent <= 0 || getAverageInflation() > 0) ? 1 : -1;
 
         LoanManager.takePercentFromBorrowers(this);
-        if (isRecession < 0)
-            for (var player : Bukkit.getOnlinePlayers()) {
-                var amount = (BalanceManager.getBalance(player) * DepositPercent) / 12;
-                BalanceManager.giveMoney(amount, player);
+        if (isRecession < 0 && DepositPercent > 0)
+            for (var player : Bukkit.getWhitelistedPlayers()) {
+                if (player.getPlayer() == null) continue;
+
+                var amount = (BalanceManager.getBalance(player.getPlayer()) * DepositPercent) / 12;
+                BalanceManager.giveMoney(amount, player.getPlayer());
                 BankBudget -= amount;
             }
 

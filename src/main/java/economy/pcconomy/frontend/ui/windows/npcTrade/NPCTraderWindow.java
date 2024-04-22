@@ -13,12 +13,11 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class NPCTraderWindow {
     public static Inventory generateWindow(Player player, NPC trader) {
         var town = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(TownyAPI.getInstance()

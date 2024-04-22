@@ -1,5 +1,6 @@
 package economy.pcconomy;
 
+import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.TownyListener;
@@ -10,7 +11,6 @@ import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
 import economy.pcconomy.backend.db.Loader;
-import economy.pcconomy.backend.economy.bank.Bank;
 
 import economy.pcconomy.frontend.ui.PlayerListener;
 import economy.pcconomy.frontend.ui.windows.wallet.WalletListener;

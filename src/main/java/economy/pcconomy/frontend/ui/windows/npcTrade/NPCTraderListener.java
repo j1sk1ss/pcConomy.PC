@@ -17,7 +17,7 @@ import java.util.Objects;
 public class NPCTraderListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
-        var player = (Player) event.getWhoClicked();
+        var player = (Player)event.getWhoClicked();
         var currentItem = event.getCurrentItem();
         var title = event.getView().getTitle();
         var town = TownyAPI.getInstance().getTown(title.split(" ")[1]);

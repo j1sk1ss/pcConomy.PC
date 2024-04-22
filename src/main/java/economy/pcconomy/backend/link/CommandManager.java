@@ -28,7 +28,7 @@ import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,

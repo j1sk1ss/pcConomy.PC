@@ -12,7 +12,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.UUID;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class Share {
     public Share(UUID townUUID, ShareType shareType, double price, double equality) {
         TownUUID  = townUUID;
@@ -84,14 +84,5 @@ public class Share {
             IsSold = false;
             shareItem.takeItems(seller);
         }
-    }
-
-    /**
-     * Give cash that earn this share
-     * @param owner Current owner of share
-     */
-    public void cashOutShare(Player owner) {
-        CashManager.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(Revenue), owner, false);
-        Revenue = 0;
     }
 }

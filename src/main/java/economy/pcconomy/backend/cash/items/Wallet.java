@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class Wallet {
     /**
      * New empty wallet

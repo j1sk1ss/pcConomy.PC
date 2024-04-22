@@ -27,7 +27,7 @@ import java.util.*;
 
 
 @TraitName("Trader")
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class Trader extends Trait {
     public Trader() {
         super("Trader");
@@ -65,8 +65,11 @@ public class Trader extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        if (HomeTown == null) // Try catch
-            HomeTown = Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getUUID();
+        if (HomeTown == null) {
+            var storedTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
+            if (storedTown != null) HomeTown = storedTown.getUUID();
+            else HomeTown = null; // TODO: Maybe delete NPC if town not exists?
+        }
 
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && IsRanted) {
             PcConomy.GlobalTownManager.getTown(HomeTown).changeBudget(Revenue);

@@ -13,12 +13,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 
 import lombok.experimental.ExtensionMethod;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class WalletListener implements Listener, IWindowListener {
     @EventHandler
     public void onWalletUse(PlayerInteractEvent event) {

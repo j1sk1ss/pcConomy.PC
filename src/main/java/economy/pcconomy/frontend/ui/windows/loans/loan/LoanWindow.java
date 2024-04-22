@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class LoanWindow extends LoanBaseWindow {
     public LoanWindow(Loaner loaner) {
         Loaner = loaner;

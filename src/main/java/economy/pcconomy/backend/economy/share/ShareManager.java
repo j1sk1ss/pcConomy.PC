@@ -3,8 +3,10 @@ package economy.pcconomy.backend.economy.share;
 import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
+import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,8 +45,11 @@ public class ShareManager {
      */
     public void takeOffShares(UUID town) {
         var shares = new ArrayList<Share>();
-        for (var share : getTownShares(town))
-            if (share.IsSold) shares.add(share);
+        var prevShares = getTownShares(town);
+
+        if (prevShares != null)
+            for (var share : prevShares)
+                if (share.IsSold) shares.add(share);
 
         if (shares.size() > 0) Shares.put(town, shares);
         else Shares.remove(town);
@@ -115,6 +120,21 @@ public class ShareManager {
         }
 
         townObject.quarterlyEarnings = 0;
+    }
+
+    /**
+     * Give cash that earn this share
+     * @param owner Current owner of share
+     */
+    public void cashOutShare(Player owner, Share share) {
+        for (var townShares : Shares.get(share.TownUUID)) {
+            if (townShares.ShareUUID.equals(share.ShareUUID)) {
+                CashManager.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(townShares.Revenue), owner, false);
+                townShares.Revenue = 0;
+
+                return;
+            }
+        }
     }
 
     /**

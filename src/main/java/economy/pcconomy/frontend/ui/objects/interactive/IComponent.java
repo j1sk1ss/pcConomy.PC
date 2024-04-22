@@ -1,5 +1,6 @@
 package economy.pcconomy.frontend.ui.objects.interactive;
 
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface IComponent {
     String getName();
     String getLoreLines();
     List<Integer> getCoordinates();
+
+    void action(InventoryClickEvent event);
 }

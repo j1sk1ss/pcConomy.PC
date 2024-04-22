@@ -8,7 +8,6 @@ import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import lombok.experimental.ExtensionMethod;
 import java.io.FileWriter;
@@ -23,7 +22,7 @@ import static economy.pcconomy.backend.cash.CashManager.amountOfCashInInventory;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class LicenseManager {
     public final static double marketLicensePrice = PcConomy.Config.getDouble("license.market_license_price", 2400d);
     public final static double tradeLicensePrice = PcConomy.Config.getDouble("license.trade_license_price", 650d);
@@ -54,9 +53,7 @@ public class LicenseManager {
      */
     public List<LicenseBody> getLicenses(Player player) {
         var list = new ArrayList<LicenseBody>();
-        for (var lic : Licenses)
-            if (lic.Owner.equals(player.getUniqueId())) list.add(lic);
-
+        for (var lic : Licenses) if (lic.Owner.equals(player.getUniqueId())) list.add(lic);
         return list;
     }
 
@@ -67,10 +64,7 @@ public class LicenseManager {
      * @return License body
      */
     public LicenseBody getLicense(UUID player, LicenseType licenseType) {
-        for (var lic : Licenses)
-            if (lic.Owner.equals(player))
-                if (lic.LicenseType.equals(licenseType)) return lic;
-
+        for (var lic : Licenses) if (lic.Owner.equals(player)) if (lic.LicenseType.equals(licenseType)) return lic;
         return null;
     }
 

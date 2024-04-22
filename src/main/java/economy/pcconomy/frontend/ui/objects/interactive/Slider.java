@@ -3,6 +3,7 @@ package economy.pcconomy.frontend.ui.objects.interactive;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
 import lombok.experimental.ExtensionMethod;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class Slider implements IComponent {
     /**
      * Slider component
@@ -130,4 +131,7 @@ public class Slider implements IComponent {
 
         return null;
     }
+
+    @Override
+    public void action(InventoryClickEvent event) { }
 }

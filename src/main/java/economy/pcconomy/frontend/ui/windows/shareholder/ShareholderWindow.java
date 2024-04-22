@@ -3,13 +3,17 @@ package economy.pcconomy.frontend.ui.windows.shareholder;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.share.objects.Share;
+import economy.pcconomy.backend.economy.share.objects.ShareType;
 import economy.pcconomy.backend.scripts.items.Item;
+import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.objects.Menu;
 import economy.pcconomy.frontend.ui.objects.Panel;
 import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 
 import economy.pcconomy.frontend.ui.windows.Window;
+import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
@@ -21,19 +25,104 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
+
+@ExtensionMethod({ItemManager.class})
 public class ShareholderWindow extends Window {
-    public static Menu ShareHolderMenu = new Menu(Arrays.asList(
+    @SuppressWarnings("deprecation")
+        public static Menu ShareHolderMenu = new Menu(Arrays.asList(
             new Panel(Arrays.asList(
-                    new Button(0, 21, "Покупка/продажа акций", ""),
-                    new Button(5, 26, "Выставление акций", "")
+                    new Button(0, 20, "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
+                            (event) -> {
+                                var player = (Player)event.getWhoClicked();
+                                player.openInventory(ShareholderWindow.sharesWindow(player, 0));
+                            }),
+
+                    new Button(3, 23, "Выставление акций", "Выставление акций города на рынок",
+                            (event) -> {
+                                var player = (Player)event.getWhoClicked();
+                                var town = TownyAPI.getInstance().getTown(player);
+                                // if (town != null) TODO: Uncomment after test
+                                //     if (PcConomy.GlobalShareManager.InteractionList.contains(town.getUUID())) {
+                                //         player.sendMessage("Ваш город уже работал с акциями сегодня");
+                                //         return;
+                                //     }
+
+                                if (player.equals(Objects.requireNonNull(town).getMayor().getPlayer()))
+                                    player.openInventory(ShareholderWindow.townSharesWindow(player, town.getUUID()));
+                            }),
+
+                    new Button(6, 26, "Обналичить акции", "Будут обналичены акции в инвенторе игрока",
+                            (event) -> {
+                                var player = (Player)event.getWhoClicked();
+                                var inventory = player.getInventory().getStorageContents();
+
+                                for (var item : inventory) {
+                                    var share = new Share(item);
+                                    PcConomy.GlobalShareManager.cashOutShare(player, share);
+                                }
+                            })
+
             ), "Акции-Меню"),
+
             new Panel(Arrays.asList(
-                    new Button(0 ,21, "Продать одну акцию", ""),
-                    new Button(5, 26, "Купить одну акцию", "")
+                    new Button(0 ,21, "Продать одну акцию", "",
+                            (event) -> {
+                                var player = (Player)event.getWhoClicked();
+                                var share  = new Share(player.getInventory().getItemInMainHand());
+                                var town   = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+
+                                if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
+                                share.sellShare(player, player.getInventory().getItemInMainHand());
+                            }),
+
+                    new Button(5, 26, "Купить одну акцию", "",
+                            (event) -> {
+                                var player = (Player)event.getWhoClicked();
+                                var town   = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                                var shares = PcConomy.GlobalShareManager.getEmptyTownShare(town.getUUID());
+                                var share  = shares.get(0);
+
+                                if (PcConomy.GlobalBank.checkVat(share.Price) > CashManager.amountOfCashInInventory(player, false)) return;
+                                share.buyShare(player);
+                            })
+
             ), "Акции-Города"),
+
             new Panel(Arrays.asList(
-                    new Button(0, 20, "Выставить на продажу", ""),
-                    new Button(3, 23, "Снять с продажи", ""),
+                    new Button(0, 20, "Выставить на продажу", "Акции будут выставлены на продажу",
+                            (event) -> {
+                                var player = (Player)event.getWhoClicked();
+                                var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
+                                var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                                if (town == null) return;
+
+                                var countSlider   = new Slider(townSharesPanel.getSliders("SliderCount"), event.getInventory());
+                                var percentSlider = new Slider(townSharesPanel.getSliders("SliderPercent"), event.getInventory());
+                                var costSlider    = new Slider(townSharesPanel.getSliders("SliderCost"), event.getInventory());
+                                var typeSlider    = new Slider(townSharesPanel.getSliders("SliderType"), event.getInventory());
+
+                                if (costSlider.getChose() == null || countSlider.getChose() == null || percentSlider.getChose() == null || typeSlider.getChose() == null) return;
+                                PcConomy.GlobalShareManager.exposeShares(
+                                        town.getUUID(),
+                                        Double.parseDouble(costSlider.getChose().getName().replace(CashManager.currencySigh, "")),
+                                        Integer.parseInt(countSlider.getChose().getName().replace("шт.", "")),
+                                        Double.parseDouble(percentSlider.getChose().getName().replace("%", "")),
+                                        (typeSlider.getName().equals("Дивиденты") ? ShareType.Dividends : ShareType.Equity)
+                                );
+
+                                player.sendMessage("Акции города выставлены на продажу");
+                            }),
+
+                    new Button(3, 23, "Снять с продажи", "Акции будут сняты с продажи",
+                            (event) -> {
+                                var player = (Player)event.getWhoClicked();
+                                var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                                if (town == null) return;
+
+                                PcConomy.GlobalShareManager.takeOffShares(town.getUUID());
+                                player.sendMessage("Акции города сняты с продажы");
+                            }),
+
                     new Slider(Arrays.asList(
                             27, 28, 29, 30, 31, 32, 33, 34, 35
                     ), Arrays.asList(

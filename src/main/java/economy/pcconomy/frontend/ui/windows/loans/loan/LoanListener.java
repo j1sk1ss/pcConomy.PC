@@ -14,14 +14,13 @@ import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanWindow;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import lombok.experimental.ExtensionMethod;
 import java.util.Arrays;
 import java.util.Objects;
 
 
-@ExtensionMethod({ItemStack.class, ItemManager.class})
+@ExtensionMethod({ItemManager.class})
 public class LoanListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
