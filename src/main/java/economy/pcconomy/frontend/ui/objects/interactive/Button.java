@@ -19,12 +19,10 @@ import java.util.function.Consumer;
  * @param name Name of button
  */
 public record Button(int firstSlot, int secondSlot, String name, String lore, Consumer<InventoryClickEvent> delegate) implements IComponent {
-    
     public Button(int firstSlot, int secondSlot, String name, String lore) {
         this(firstSlot, secondSlot, name, lore, null);
     }
 
-    // Конструктор без делегата и lore
     public Button(int firstSlot, int secondSlot, String name) {
         this(firstSlot, secondSlot, name, "", null);
     }

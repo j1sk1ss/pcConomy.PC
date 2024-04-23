@@ -44,6 +44,7 @@ public class Panel {
         for (var component : iComponents) {
             if (component.isClicked(click)) {
                 Bukkit.getPluginManager().callEvent(new ComponentClickEvent(component, null, click));
+                component.action(null);
                 return component;
             }
         }
@@ -60,6 +61,7 @@ public class Panel {
         for (var component : iComponents) {
             if (component.isClicked(click)) {
                 Bukkit.getPluginManager().callEvent(new ComponentClickEvent(component, player, click));
+                component.action(null);
                 return component;
             }
         }

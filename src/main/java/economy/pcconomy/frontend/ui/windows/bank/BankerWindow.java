@@ -40,24 +40,11 @@ public class BankerWindow extends Window {
             window.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000 + Integer.parseInt(currentChar + ""))); //TODO: DATA MODEL
         }
 
-        for (var i = 0; i < 8; i++) {
-            if (i == 0 && playerBalance < enableBalance)
-                window.setItem(41, new Item("Снять максимум", //TODO: DATA MODEL
-                        "\n" + Math.round(playerBalance * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000));
-
-            if (enableBalance >= CashManager.Denomination.get(i) && playerBalance >= CashManager.Denomination.get(i)) printButtons("\n", 41, i, window);
-
-            if (i == 0)
-                window.setItem(36, new Item("Положить все средства", //TODO: DATA MODEL
-                        "\n-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000));
-
-            if (cashInInventory >= CashManager.Denomination.get(i)) printButtons("\n-", 36, i, window);
-        }
-
+        printButtons(playerBalance, window, enableBalance, cashInInventory);
         return window;
     }
 
-    public static void regenerateWindow(Player player, Inventory inventory) {
+    public static Inventory regenerateWindow(Player player, Inventory inventory) {
         inventory.clear();
 
         var enableBalance   = PcConomy.GlobalBank.DayWithdrawBudget;
@@ -82,6 +69,11 @@ public class BankerWindow extends Window {
             inventory.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000 + Integer.parseInt(currentChar + ""))); //TODO: DATA MODEL
         }
 
+        printButtons(playerBalance, inventory, enableBalance, cashInInventory);
+        return inventory;
+    }
+
+    private static void printButtons(double playerBalance, Inventory inventory, double enableBalance, double cashInInventory) {
         for (var i = 0; i < 8; i++) {
             if (i == 0 && playerBalance < enableBalance)
                 inventory.setItem(41, new Item("Снять максимум", //TODO: DATA MODEL
