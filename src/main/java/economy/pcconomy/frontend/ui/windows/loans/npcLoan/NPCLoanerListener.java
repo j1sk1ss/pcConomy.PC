@@ -40,12 +40,6 @@ public class NPCLoanerListener implements IWindowListener {
             return;
         }
 
-        switch (NPCLoanWindow.Panel.click(buttonPosition).getName()) {
-            case "Взять кредит" -> player.openInventory(new NPCLoanWindow().takeWindow(player));
-            case "Погасить кредит" -> {
-                LoanManager.payOffADebt(player, PcConomy.GlobalBank);
-                player.closeInventory();
-            }
-        }
+        NPCLoanWindow.Panel.click(event);
     }
 }

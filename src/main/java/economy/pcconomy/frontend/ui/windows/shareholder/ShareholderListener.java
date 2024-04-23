@@ -1,7 +1,6 @@
 package economy.pcconomy.frontend.ui.windows.shareholder;
 
 import economy.pcconomy.backend.scripts.items.ItemManager;
-import economy.pcconomy.frontend.ui.objects.interactive.Slider;
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
 
 import lombok.experimental.ExtensionMethod;
@@ -16,8 +15,7 @@ public class ShareholderListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
         var windowTitle = event.getView().getTitle();
-        var player = (Player) event.getWhoClicked();
-        var option = event.getSlot();
+        var player = (Player)event.getWhoClicked();
 
         if (windowTitle.contains("Акции-Меню")) {
             ShareholderWindow.ShareHolderMenu.getPanel("Акции-Меню").click(event);
@@ -39,12 +37,6 @@ public class ShareholderListener implements IWindowListener {
 
         if (windowTitle.contains("Акции-Выставление")) {
             var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
-            if (townSharesPanel.click(option).getName().contains("Slider")) {
-                var slider = new Slider((Slider)townSharesPanel.click(option));
-                slider.setChose(option);
-                slider.place(event.getInventory());
-            }
-
             townSharesPanel.click(event);
         }
     }

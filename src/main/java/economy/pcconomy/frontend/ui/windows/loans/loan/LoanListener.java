@@ -55,16 +55,10 @@ public class LoanListener implements IWindowListener {
             return;
         }
 
-        switch (NPCLoanWindow.Panel.click(buttonPosition).getName()) {
-            case "Взять кредит" -> player.openInventory(new LoanWindow(loaner).takeWindow(player));
-            case "Погасить кредит" -> {
-                LoanManager.payOffADebt(player, currentTown);
-                player.closeInventory();
-            }
-        }
+        NPCLoanWindow.Panel.click(event);
     }
 
-    private static Loaner getLoanerFromTitle(String name) {
+    public static Loaner getLoanerFromTitle(String name) {
         try {
             if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
             return PcConomy.GlobalNPC.getNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Loaner.class);

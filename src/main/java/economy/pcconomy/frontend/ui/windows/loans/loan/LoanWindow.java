@@ -7,8 +7,6 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.backend.scripts.items.ItemManager;
-import economy.pcconomy.frontend.ui.objects.Panel;
-import economy.pcconomy.frontend.ui.objects.interactive.Button;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;
 
 import net.kyori.adventure.text.Component;
@@ -19,10 +17,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.experimental.ExtensionMethod;
+import org.j1sk1ss.menuframework.objects.interactive.components.Button;
+import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import static economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener.getLoanerFromTitle;
 
 
 @ExtensionMethod({ItemManager.class})
@@ -37,14 +40,33 @@ public class LoanWindow extends LoanBaseWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
-    public static final economy.pcconomy.frontend.ui.objects.Panel Panel = new Panel(Arrays.asList(
-            new Button(0, 21, "Взять кредит", ""),
-            new Button(5, 26, "Погасить кредит", "")
+    public static final org.j1sk1ss.menuframework.objects.interactive.components.Panel Panel = new Panel(Arrays.asList(
+            new Button(0, 21, "Взять кредит", "Взять кредит у этого города",
+                (event) -> {
+                    var player = (Player)event.getWhoClicked();
+                    var title  = event.getView().getTitle();
+                    var loaner = getLoanerFromTitle(title);
+
+                    player.openInventory(new LoanWindow(loaner).takeWindow(player));
+                }),
+
+            new Button(5, 26, "Погасить кредит", "Погасить нынешний кредит",
+                (event) -> {
+                    var player = (Player)event.getWhoClicked();
+                    var town = TownyAPI.getInstance().getTown(player.getLocation());
+                    var currentTown = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getUUID());
+
+                    LoanManager.payOffADebt(player, currentTown);
+                    player.closeInventory();
+                })
     ), "Panel");
 
     
     public Inventory generateWindow(Player player) {
-        return Panel.placeComponents(Bukkit.createInventory(player, 27, Component.text("Кредит-Город")));
+        var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Город"));
+        Panel.place(window);
+
+        return window;
     }
 
     public Inventory takeWindow(Player player) {
