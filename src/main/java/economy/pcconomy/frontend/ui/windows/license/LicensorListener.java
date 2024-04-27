@@ -6,6 +6,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class LicensorListener implements IWindowListener {
     public void onClick(InventoryClickEvent event) {
-        LicensorWindow.Panel.click(event);
+        // LicensorWindow.Panel.click(event);
     }
 }

@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+
 public class WalletWindow {
     public static Inventory putWindow(Player player, Wallet wallet) {
         var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк"));

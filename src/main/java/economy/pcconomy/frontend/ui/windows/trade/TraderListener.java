@@ -30,9 +30,6 @@ public class TraderListener implements IWindowListener {
         if (title.contains("Торговец-Ассортимент")) {
             if (!player.getInventory().contains(choseItem)) player.openInventory(TraderWindow.getAcceptWindow(player, choseItem, trader));
         }
-        else if (title.contains("Торговец-Управление")) {
-            TraderWindow.TraderMenu.getPanel("Торговец-Управление").click(event);
-        }
 
         else if (title.contains("Торговец-Аренда-Время")) {
             var days = Integer.parseInt(choseItem.getName().split(" ")[0]);
@@ -43,12 +40,6 @@ public class TraderListener implements IWindowListener {
             rantTrader(trader, days, player);
             player.closeInventory();
         }
-
-        else if (title.contains("Торговец-Аренда")) TraderWindow.TraderMenu.getPanel("Торговец-Аренда").click(event);
-        else if (title.contains("Торговец-Владелец")) TraderWindow.TraderMenu.getPanel("Торговец-Владелец").click(event);
-        else if (title.contains("Торговец-Цена")) TraderWindow.TraderMenu.getPanel("Торговец-Цена").click(event);
-        else if (title.contains("Торговец-Процент")) TraderWindow.TraderMenu.getPanel("Торговец-Процент").click(event);
-        else if (title.contains("Торговец-Покупка")) TraderWindow.TraderMenu.getPanel("Торговец-Покупка").click(event);
     }
 
     public static Trader getTraderFromTitle(String name) {

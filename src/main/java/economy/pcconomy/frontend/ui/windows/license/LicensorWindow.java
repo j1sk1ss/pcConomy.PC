@@ -30,7 +30,7 @@ public class LicensorWindow extends Window {
             new Button(7, 26, "Лицензия на доступ к кредитной истории", LicenseManager.loanHistoryLicensePrice + CashManager.currencySigh,
                 (event) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(), LicenseType.LoanHistory, LicenseManager.loanHistoryLicensePrice))
 
-    ), "Panel");
+    ), "Мир-Лицензии");
 
     public Inventory generateWindow(Player player) {
         var window = Bukkit.createInventory(player, 27, Component.text("Мир-Лицензии"));

@@ -17,10 +17,6 @@ public class ShareholderListener implements IWindowListener {
         var windowTitle = event.getView().getTitle();
         var player = (Player)event.getWhoClicked();
 
-        if (windowTitle.contains("Акции-Меню")) {
-            ShareholderWindow.ShareHolderMenu.getPanel("Акции-Меню").click(event);
-        }
-
         if (windowTitle.contains("Акции-Список")) {
             var item = event.getCurrentItem();
             if (item == null) return;
@@ -29,15 +25,6 @@ public class ShareholderListener implements IWindowListener {
             player.openInventory(ShareholderWindow.acceptWindow(player, townId));
 
             event.setCancelled(true);
-        }
-
-        if (windowTitle.contains("Акции-Города")) {
-            ShareholderWindow.ShareHolderMenu.getPanel("Акции-Города").click(event);
-        }
-
-        if (windowTitle.contains("Акции-Выставление")) {
-            var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
-            townSharesPanel.click(event);
         }
     }
 }

@@ -40,6 +40,7 @@ public class LoanWindow extends LoanBaseWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
+    @SuppressWarnings("deprecation")
     public static final org.j1sk1ss.menuframework.objects.interactive.components.Panel Panel = new Panel(Arrays.asList(
             new Button(0, 21, "Взять кредит", "Взять кредит у этого города",
                 (event) -> {
@@ -59,7 +60,7 @@ public class LoanWindow extends LoanBaseWindow {
                     LoanManager.payOffADebt(player, currentTown);
                     player.closeInventory();
                 })
-    ), "Panel");
+    ), "Кредит-Город");
 
     
     public Inventory generateWindow(Player player) {

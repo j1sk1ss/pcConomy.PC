@@ -40,7 +40,7 @@ public class NPCLoanWindow extends LoanBaseWindow {
                     LoanManager.payOffADebt(player, PcConomy.GlobalBank);
                     player.closeInventory();
                 })
-    ), "Panel");
+    ), "Кредит-Банк");
 
     public Inventory generateWindow(Player player) {
         var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Банк"));

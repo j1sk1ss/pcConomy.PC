@@ -4,12 +4,13 @@ import economy.pcconomy.backend.npc.traits.Loaner;
 
 import java.util.UUID;
 
+
 public class LoanerObject extends NpcObject {
     public LoanerObject(double pull, UUID homeTown) {
-        super(null, pull, 0, 0, false, homeTown, null, null);
+        super(null, pull, 0, 0, false, homeTown, null, null, 1);
     }
 
     public LoanerObject(Loaner loaner) {
-        super(null, loaner.Pull, 0, 0, false, loaner.HomeTown, null, null);
+        super(null, loaner.Pull, 0, 0, false, loaner.HomeTown, null, null, 1);
     }
 }

@@ -10,7 +10,7 @@ import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.Window;
-import economy.pcconomy.frontend.ui.windows.mayor.MayorWindow;
+import economy.pcconomy.frontend.ui.windows.mayor.trader.MayorWindow;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;

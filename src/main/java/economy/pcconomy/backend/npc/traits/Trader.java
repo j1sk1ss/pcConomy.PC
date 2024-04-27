@@ -15,7 +15,6 @@ import net.citizensnpcs.api.trait.TraitName;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -36,6 +35,7 @@ public class Trader extends Trait {
         SpecialList = new ArrayList<>();
         Term        = LocalDateTime.now().toString();
         HomeTown    = null;
+        Level       = 1;
     }
 
     public Trader(TraderObject traderObject) {
@@ -49,6 +49,7 @@ public class Trader extends Trait {
         HomeTown = traderObject.HomeTown;
         IsRanted = traderObject.IsRanted;
         Term     = traderObject.Term;
+        Level    = traderObject.Level;
     }
 
     public List<ItemStack> Storage;
@@ -60,6 +61,8 @@ public class Trader extends Trait {
     public String Term;
     public UUID HomeTown;
     public UUID Owner;
+    public int Level;
+
     private final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
@@ -67,10 +70,14 @@ public class Trader extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         if (HomeTown == null) {
             var storedTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
-            if (storedTown != null) HomeTown = storedTown.getUUID();
+            if (storedTown != null) {
+                HomeTown = storedTown.getUUID();
+                PcConomy.GlobalTownManager.getTown(HomeTown).traders.add(this.getNPC().getId());
+            }
             else HomeTown = null; // TODO: Maybe delete NPC if town not exists?
         }
 
+        // We stole all moneys to town and delete all resources if rant is over
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && IsRanted) {
             PcConomy.GlobalTownManager.getTown(HomeTown).changeBudget(Revenue);
 
@@ -106,10 +113,11 @@ public class Trader extends Trait {
 
         try {
             if (IsRanted) {
-                if (Owner.equals(playerUUID) && Storage.size() < 27) {
+                if (Owner.equals(playerUUID) && Storage.size() < event.getNPC().getOrAddTrait(Trader.class).Level) {
                     player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
                     chat.put(playerUUID, event.getNPC().getId());
-                } else if (Storage.size() >= 27) player.sendMessage("Склад торговца переполнен!");
+                } else if (Storage.size() >= event.getNPC().getOrAddTrait(Trader.class).Level)
+                    player.sendMessage("Склад торговца переполнен!");
 
                 return;
             }
@@ -134,17 +142,17 @@ public class Trader extends Trait {
     	        if (chat.get(player.getUniqueId()) == null) return;
 
                 var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
-                if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
-                    if (!Objects.requireNonNull(TownyAPI.getInstance().getTown(HomeTown)).getMayor().getUUID().equals(player.getUniqueId())) return;
-                    if (IsRanted) return;
-
-                    if (playerMessage.equalsIgnoreCase("д")) {
-                        PcConomy.GlobalNPC.Npc.remove(trader.getId());
-                        trader.destroy();
-                    }
-
-                    return;
-                }
+//                if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
+//                    if (!Objects.requireNonNull(TownyAPI.getInstance().getTown(HomeTown)).getMayor().getUUID().equals(player.getUniqueId())) return;
+//                    if (IsRanted) return;
+//
+//                    if (playerMessage.equalsIgnoreCase("д")) {
+//                        PcConomy.GlobalNPC.Npc.remove(trader.getId());
+//                        trader.destroy();
+//                    }
+//
+//                    return;
+//                }
 
                 var sellingItem = player.getInventory().getItemInMainHand();
                 if (sellingItem.getType().equals(Material.AIR)) {
@@ -170,5 +178,9 @@ public class Trader extends Trait {
                 chat.remove(player);
     		});
     	}
+    }
+
+    public void destroy() {
+        this.getNPC().destroy();
     }
 }

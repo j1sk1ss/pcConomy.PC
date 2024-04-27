@@ -59,8 +59,8 @@ public class NpcManager {
         PcConomy.GlobalBank.BankBudget += price;
 
         var npcList = Map.of(
-                LicenseType.Market, new Trader(),
-                LicenseType.Loan, new Loaner()
+            LicenseType.Market, new Trader(),
+            LicenseType.Loan, new Loaner()
         );
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());

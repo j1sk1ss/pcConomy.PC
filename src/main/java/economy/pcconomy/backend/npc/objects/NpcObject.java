@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class NpcObject {
     public NpcObject(List<ItemStack> storage, double revenue, double margin, double cost, boolean isRanted,
-                     UUID homeTown, UUID owner, String term) {
+                     UUID homeTown, UUID owner, String term, int level) {
         Storage  = storage;
         Revenue  = revenue;
         Margin   = margin;
@@ -17,6 +17,7 @@ public class NpcObject {
         HomeTown = homeTown;
         Owner    = owner;
         Term     = term;
+        Level    = level;
     }
 
     public final List<ItemStack> Storage;
@@ -27,4 +28,5 @@ public class NpcObject {
     public final UUID HomeTown;
     public final UUID Owner;
     public final String Term;
+    public final int Level;
 }
