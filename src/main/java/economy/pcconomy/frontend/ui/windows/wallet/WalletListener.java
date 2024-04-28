@@ -59,7 +59,7 @@ public class WalletListener implements Listener, IWindowListener {
             if (option == null) return;
 
             if (option.getLoreLines().size() < 2) return;
-            var amount = option.getPriceFromLore(1);
+            var amount = option.getDoubleFromContainer("item-wallet-value");
 
             if (amount > 0) {
                 CashManager.giveCashToPlayer(Math.abs(amount), player, true);

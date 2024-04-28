@@ -1,15 +1,12 @@
 package economy.pcconomy.backend.cash;
 
-import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.items.Wallet;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.persistence.PersistentDataType;
 import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 
@@ -62,12 +59,7 @@ public class CashManager {
      */
     public static ItemStack createCashObject(double amount, int count) {
         var cashBody = new Item(currencyName, "" + amount + currencySigh, Material.PAPER, count, 17000); //TODO: DATA MODEL
-        var meta = cashBody.getItemMeta();
-
-        var key = new NamespacedKey(PcConomy.getPlugin(PcConomy.class), "cash-value");
-        meta.getPersistentDataContainer().set(key, PersistentDataType.DOUBLE, amount);
-
-        cashBody.setItemMeta(meta);
+        cashBody.setDouble2Container(amount, "cash-value");
         return cashBody;
     }
 
@@ -77,10 +69,8 @@ public class CashManager {
      * @return Double value
      */
     public static double getAmountFromCash(ItemStack money) {
-        if (isCash(money))
-            return Double.parseDouble(money.getLoreLines().get(0).replace(currencySigh,"")) * money.getAmount();
-
-        return 0;
+        if (isCash(money)) return money.getDoubleFromContainer("cash-value") * money.getAmount();
+        else return 0;
     }
 
     /**
@@ -126,13 +116,7 @@ public class CashManager {
      * @return Cash object status
      */
     public static boolean isCash(ItemStack item) {
-        if (item == null) return false;
-        if (item.getLoreLines().size() == 0) return false;
-
-        if (item.getName().contains(currencyName))
-            return item.getLoreLines().get(0).contains(currencySigh);
-
-        return false;
+        return item.getDoubleFromContainer("cash-value") != -1;
     }
 
     /**
@@ -142,8 +126,7 @@ public class CashManager {
      * @param ignoreWallet Ignoring of wallet status
      */
     public static void giveCashToPlayer(double amount, Player player, boolean ignoreWallet) {
-        Manager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount :
-                Wallet.changeCashInWallets(player, amount))), player);
+        Manager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount : Wallet.changeCashInWallets(player, amount))), player);
     }
 
     /**
@@ -157,8 +140,7 @@ public class CashManager {
         if (playerCashAmount < amount) return;
 
         Manager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-        Manager.giveItems(CashManager.getChangeInCash(getChange(
-                playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallets(player, -amount)))), player);
+        Manager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallets(player, -amount)))), player);
     }
 
     /**
@@ -217,7 +199,6 @@ public class CashManager {
      * @return Price
      */
     public static double getPriceFromLore(ItemStack itemStack, int loreLine) {
-        return Double.parseDouble(itemStack.getLoreLines().get(loreLine)
-                .replace(CashManager.currencySigh, ""));
+        return Double.parseDouble(itemStack.getLoreLines().get(loreLine).replace(CashManager.currencySigh, ""));
     }
 }

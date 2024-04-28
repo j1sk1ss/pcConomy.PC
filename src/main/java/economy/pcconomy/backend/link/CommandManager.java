@@ -87,9 +87,9 @@ public class CommandManager implements CommandExecutor {
                     if (PcConomy.GlobalNPC.Npc.get(trader) instanceof TraderObject currentTrader)
                         for (var resource : currentTrader.Storage)
                             if (!prices.containsKey(resource))
-                                prices.put(resource, resource.getPriceFromLore(0));
+                                prices.put(resource, resource.getDoubleFromContainer("item-price"));
                             else prices.put(resource,
-                                    (prices.get(resource) + resource.getPriceFromLore(0)) / 2);
+                                    (prices.get(resource) + resource.getDoubleFromContainer("item-price")) / 2);
 
                 for (var resource : prices.keySet())
                     message += "Товар: " + resource + ", цена: " + prices.get(resource) + CashManager.currencySigh;

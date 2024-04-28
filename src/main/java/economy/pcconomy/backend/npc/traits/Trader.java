@@ -162,9 +162,9 @@ public class Trader extends Trait {
 
                 try {
                     var cost = Double.parseDouble(playerMessage);
-                    trader.getOrAddTrait(Trader.class).Storage.add(sellingItem.setLore(
-                            cost + cost * Margin + CashManager.currencySigh +
-                                    "\nБез пошлины: " + cost + CashManager.currencySigh));
+                    sellingItem.setDouble2Container(cost, "item-price");
+
+                    trader.getOrAddTrait(Trader.class).Storage.add(sellingItem.setLore(cost + cost * Margin + CashManager.currencySigh + "\nБез пошлины: " + cost + CashManager.currencySigh));
                     player.getInventory().setItemInMainHand(null);
                     chat.remove(player.getUniqueId());
 

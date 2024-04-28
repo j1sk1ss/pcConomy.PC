@@ -182,7 +182,7 @@ public class TraderWindow {
                             var trader     = getTraderFromTitle(title);
                             var inventory  = event.getInventory();
                             var buyingItem = inventory.getItem(13);
-                            var price      = buyingItem.getPriceFromLore(0);
+                            var price      = buyingItem.getDoubleFromContainer("item-price");
 
                             if (trader == null) return;
                             if (CashManager.amountOfCashInInventory(player, false) >= price || trader.Owner.equals(player.getUniqueId())) {
@@ -201,8 +201,7 @@ public class TraderWindow {
                                             if (trader.SpecialList.contains(Objects.requireNonNull(TownyAPI.getInstance().getTown(player)).getUUID())) {
                                                     CashManager.giveCashToPlayer(price - endPrice, player, false);
                                                     PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(-(price - endPrice));
-                                                    player.sendMessage("Так как вы состоите в торговом союзе, пошлина была " +
-                                                            "компенсированна городом");
+                                                    player.sendMessage("Так как вы состоите в торговом союзе, пошлина была компенсированна городом");
                                             }
                                     }
                                 }

@@ -19,7 +19,7 @@ public class BankerListener implements IWindowListener {
         if (option == null) return;
 
         if (option.getLoreLines().size() < 2) return;
-        var amount = option.getPriceFromLore(1);
+        var amount = option.getDoubleFromContainer("item-bank-value");
 
         if (amount > 0) PcConomy.GlobalBank.giveCashToPlayer(amount, player);
         else PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);

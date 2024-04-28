@@ -121,13 +121,21 @@ public class Bank extends Capitalist {
         return bigInflation / count;
     }
 
-    // This function take value, change it with VAT, and return
+    /**
+     * This function take value, change it with VAT, and return
+     * @param value value
+     * @return value without VAT
+     */
     public double deleteVAT(double value) {
         BankBudget += value * VAT;
         return value - (value * VAT);
     }
 
-    // This function take value, add VAT and return
+    /**
+     * This function take value, add VAT and return
+     * @param value value
+     * @return value with VAT
+     */
     public double addVAT(double value) {
         BankBudget += value * VAT;
         return value + value * VAT;

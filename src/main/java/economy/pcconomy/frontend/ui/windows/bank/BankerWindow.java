@@ -5,6 +5,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
 
 import economy.pcconomy.frontend.ui.windows.Window;
+import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
@@ -12,8 +13,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.j1sk1ss.itemmanager.manager.Item;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 
+@ExtensionMethod({Manager.class})
 public class BankerWindow extends Window {
     public Inventory generateWindow(Player player) {
         var window = Bukkit.createInventory(player, 54, Component.text("Мир-Банк"));
@@ -75,23 +78,29 @@ public class BankerWindow extends Window {
 
     private static void printButtons(double playerBalance, Inventory inventory, double enableBalance, double cashInInventory) {
         for (var i = 0; i < 8; i++) {
-            if (i == 0 && playerBalance < enableBalance)
-                inventory.setItem(41, new Item("Снять максимум", //TODO: DATA MODEL
-                        "\n" + Math.round(playerBalance * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000));
+            if (i == 0 && playerBalance < enableBalance) {// TODO: DATA MODEL
+                var button = new Item("Снять максимум", "\n" + Math.round(playerBalance * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000);
+                button.setDouble2Container(Math.round(playerBalance * 100) / 100, "item-bank-value");
+                inventory.setItem(41, button);
+            }
 
             if (enableBalance >= CashManager.Denomination.get(i) && playerBalance >= CashManager.Denomination.get(i)) printButtons("\n", 41, i, inventory);
 
-            if (i == 0)
-                inventory.setItem(36, new Item("Положить все средства", //TODO: DATA MODEL
-                        "\n-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000));
-
+            if (i == 0) { // TODO: DATA MODEL
+                var button = new Item("Положить все средства", "\n-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000);
+                button.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-bank-value");
+                inventory.setItem(36, button);
+            }
+                        
             if (cashInInventory >= CashManager.Denomination.get(i)) printButtons("\n-", 36, i, inventory);
         }
     }
 
-    private static void printButtons(String thing, int position, int enabled, Inventory window) {
-        for (var j = enabled; j < 8; j++) //TODO: DATA MODEL
-            window.setItem(j + (position + 5 * (j / 4)), new Item("Действие",
-                thing + CashManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000));
+    private static void printButtons(String thing, int position, int enabled, Inventory window) { // TODO: DATA MODEL
+        for (var j = enabled; j < 8; j++) {
+            var button = new Item("Действие", thing + CashManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000);
+            button.setDouble2Container(Double.parseDouble(thing + CashManager.Denomination.get(j)), "item-bank-value");
+            window.setItem(j + (position + 5 * (j / 4)), button);
+        }
     }
 }
