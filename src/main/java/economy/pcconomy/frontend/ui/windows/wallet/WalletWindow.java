@@ -2,7 +2,6 @@ package economy.pcconomy.frontend.ui.windows.wallet;
 
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.items.Wallet;
-import economy.pcconomy.backend.scripts.items.Item;
 
 import net.kyori.adventure.text.Component;
 
@@ -10,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.j1sk1ss.itemmanager.manager.Item;
 
 
 public class WalletWindow {

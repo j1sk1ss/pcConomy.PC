@@ -3,8 +3,6 @@ package economy.pcconomy.frontend.ui.windows.loans.npcLoan;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;
 
 import net.kyori.adventure.text.Component;
@@ -15,6 +13,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.experimental.ExtensionMethod;
+
+import org.j1sk1ss.itemmanager.manager.Item;
+import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
@@ -22,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class NPCLoanWindow extends LoanBaseWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);

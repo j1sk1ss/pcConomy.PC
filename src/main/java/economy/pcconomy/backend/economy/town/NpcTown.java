@@ -5,12 +5,12 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.objects.Storage;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import org.apache.commons.math3.util.Precision;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import lombok.experimental.ExtensionMethod;
 import java.util.*;
@@ -18,7 +18,7 @@ import java.util.*;
 import static economy.pcconomy.backend.cash.CashManager.*;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class, CashManager.class})
 public class NpcTown extends Town {
     /**
      * Npc town

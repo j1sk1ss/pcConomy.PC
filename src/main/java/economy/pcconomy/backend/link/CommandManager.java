@@ -8,7 +8,6 @@ import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.npc.traits.*;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.Window;
 import economy.pcconomy.frontend.ui.windows.mayor.trader.MayorWindow;
 
@@ -18,6 +17,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class, CashManager.class})
 public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,

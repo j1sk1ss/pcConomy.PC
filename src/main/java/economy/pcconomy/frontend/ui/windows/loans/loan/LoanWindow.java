@@ -5,8 +5,6 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.traits.Loaner;
-import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.loans.LoanBaseWindow;
 
 import net.kyori.adventure.text.Component;
@@ -17,6 +15,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.experimental.ExtensionMethod;
+
+import org.j1sk1ss.itemmanager.manager.Item;
+import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
@@ -28,7 +29,7 @@ import java.util.UUID;
 import static economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener.getLoanerFromTitle;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class LoanWindow extends LoanBaseWindow {
     public LoanWindow(Loaner loaner) {
         Loaner = loaner;

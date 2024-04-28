@@ -1,19 +1,22 @@
 package economy.pcconomy.backend.cash;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.items.Wallet;
-import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataType;
+import org.j1sk1ss.itemmanager.manager.Item;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import java.util.*;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class CashManager {
     /**
      * Currency name that will be used in all plugin
@@ -58,7 +61,14 @@ public class CashManager {
      * @return ItemStack object
      */
     public static ItemStack createCashObject(double amount, int count) {
-        return new Item(currencyName, "" + amount + currencySigh, Material.PAPER, count, 17000); //TODO: DATA MODEL
+        var cashBody = new Item(currencyName, "" + amount + currencySigh, Material.PAPER, count, 17000); //TODO: DATA MODEL
+        var meta = cashBody.getItemMeta();
+
+        var key = new NamespacedKey(PcConomy.getPlugin(PcConomy.class), "cash-value");
+        meta.getPersistentDataContainer().set(key, PersistentDataType.DOUBLE, amount);
+
+        cashBody.setItemMeta(meta);
+        return cashBody;
     }
 
     /**
@@ -132,7 +142,7 @@ public class CashManager {
      * @param ignoreWallet Ignoring of wallet status
      */
     public static void giveCashToPlayer(double amount, Player player, boolean ignoreWallet) {
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount :
+        Manager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount :
                 Wallet.changeCashInWallets(player, amount))), player);
     }
 
@@ -146,8 +156,8 @@ public class CashManager {
         var playerCashAmount = amountOfCashInInventory(player, ignoreWallet);
         if (playerCashAmount < amount) return;
 
-        ItemManager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-        ItemManager.giveItems(CashManager.getChangeInCash(getChange(
+        Manager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
+        Manager.giveItems(CashManager.getChangeInCash(getChange(
                 playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallets(player, -amount)))), player);
     }
 
@@ -198,5 +208,16 @@ public class CashManager {
     	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14)) return currencyNameCases.get("rs");
 
     	return currencyNameCases.get("rp");
+    }
+
+    /**
+     * Gets double formatted price that wrote in lore
+     * @param itemStack Item that price will be given
+     * @param loreLine Lore line position that includes price
+     * @return Price
+     */
+    public static double getPriceFromLore(ItemStack itemStack, int loreLine) {
+        return Double.parseDouble(itemStack.getLoreLines().get(loreLine)
+                .replace(CashManager.currencySigh, ""));
     }
 }

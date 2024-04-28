@@ -167,5 +167,11 @@
             <artifactId>MenuFramework.PC</artifactId>
             <version>UIMenu_ver0.9.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.j1sk1ss</groupId>
+            <artifactId>ItemManager.PC</artifactId>
+            <version>ver0.3</version>
+        </dependency>
     </dependencies>
 </project>

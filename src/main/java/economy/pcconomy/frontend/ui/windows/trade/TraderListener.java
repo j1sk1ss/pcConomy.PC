@@ -2,19 +2,19 @@ package economy.pcconomy.frontend.ui.windows.trade;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class TraderListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {

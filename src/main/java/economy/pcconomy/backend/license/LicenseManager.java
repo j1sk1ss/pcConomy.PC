@@ -4,10 +4,10 @@ import com.google.gson.*;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import org.bukkit.entity.Player;
+import org.j1sk1ss.itemmanager.manager.Item;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import lombok.experimental.ExtensionMethod;
 import java.io.FileWriter;
@@ -22,7 +22,7 @@ import static economy.pcconomy.backend.cash.CashManager.amountOfCashInInventory;
 import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class LicenseManager {
     public final static double marketLicensePrice = PcConomy.Config.getDouble("license.market_license_price", 2400d);
     public final static double tradeLicensePrice = PcConomy.Config.getDouble("license.trade_license_price", 650d);

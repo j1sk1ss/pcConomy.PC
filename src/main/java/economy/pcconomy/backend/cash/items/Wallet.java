@@ -1,8 +1,6 @@
 package economy.pcconomy.backend.cash.items;
 
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.items.Item;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import lombok.experimental.ExtensionMethod;
 import org.apache.commons.lang.StringUtils;
@@ -10,12 +8,14 @@ import org.apache.commons.math3.util.Precision;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.j1sk1ss.itemmanager.manager.Item;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class Wallet {
     /**
      * New empty wallet

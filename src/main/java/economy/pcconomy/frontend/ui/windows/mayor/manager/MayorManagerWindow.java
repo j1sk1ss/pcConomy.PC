@@ -3,13 +3,13 @@ package economy.pcconomy.frontend.ui.windows.mayor.manager;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.npc.traits.Trader;
-import economy.pcconomy.backend.scripts.items.Item;
 import economy.pcconomy.frontend.ui.windows.Window;
 import net.citizensnpcs.api.CitizensAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 

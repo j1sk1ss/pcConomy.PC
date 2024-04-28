@@ -4,7 +4,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.scripts.items.ItemManager;
 
 import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.npc.NPC;
@@ -13,11 +12,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import java.util.Objects;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class NPCTraderWindow {
     public static Inventory generateWindow(Player player, NPC trader) {
         var town = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(TownyAPI.getInstance()

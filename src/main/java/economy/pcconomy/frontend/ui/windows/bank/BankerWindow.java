@@ -3,7 +3,6 @@ package economy.pcconomy.frontend.ui.windows.bank;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
-import economy.pcconomy.backend.scripts.items.Item;
 
 import economy.pcconomy.frontend.ui.windows.Window;
 import net.kyori.adventure.text.Component;
@@ -12,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.j1sk1ss.itemmanager.manager.Item;
 
 
 public class BankerWindow extends Window {

@@ -1,16 +1,16 @@
 package economy.pcconomy.frontend.ui.windows.shareholder;
 
-import economy.pcconomy.backend.scripts.items.ItemManager;
 import economy.pcconomy.frontend.ui.windows.IWindowListener;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.j1sk1ss.itemmanager.manager.Manager;
 
 import java.util.UUID;
 
 
-@ExtensionMethod({ItemManager.class})
+@ExtensionMethod({Manager.class})
 public class ShareholderListener implements IWindowListener {
     @SuppressWarnings("deprecation")
     public void onClick(InventoryClickEvent event) {
