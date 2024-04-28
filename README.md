@@ -11,17 +11,15 @@ how he works in next part of **ReadMe**.
 ----------------------------------------
 ### Needed stuff:
 
->> XConomy
-> 
->> Vault
->
->> Citizens
->
->> LuckPerms
->
->> Denizen
->
->> Towny
+> XConomy </br>
+> Vault </br>
+> Citizens </br>
+> LuckPerms </br>
+> Denizen </br>
+> Towny </br>
+> ApacheMathLib </br>
+> MenuFramework.PC </br>
+> ItemManager.PC </br>
 ----------------------------------------
 ## How economy works:
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover2.png)
