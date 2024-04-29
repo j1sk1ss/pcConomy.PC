@@ -5,7 +5,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.objects.TraderObject;
-import economy.pcconomy.frontend.ui.windows.trade.TraderWindow;
+import economy.pcconomy.frontend.windows.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;

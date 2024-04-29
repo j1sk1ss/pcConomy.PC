@@ -15,8 +15,6 @@ import org.j1sk1ss.itemmanager.manager.Manager;
 import lombok.experimental.ExtensionMethod;
 import java.util.*;
 
-import static economy.pcconomy.backend.cash.CashManager.*;
-
 
 @ExtensionMethod({Manager.class, CashManager.class})
 public class NpcTown extends Town {
@@ -95,7 +93,7 @@ public class NpcTown extends Town {
             return;
         }
 
-        if (CashManager.amountOfCashInInventory(buyer, false) < price) {
+        if (buyer.amountOfCashInInventory(false) < price) {
             buyer.sendMessage("Приходи когда мммммммм, будешь немного по богаче.");
             return;
         }
@@ -103,7 +101,7 @@ public class NpcTown extends Town {
         dayStorage -= purchaseSize;
         dayBudget  += price;
 
-        CashManager.takeCashFromPlayer(price, buyer, false);
+        buyer.takeCashFromPlayer(price, false);
 
         changeBudget(PcConomy.GlobalBank.deleteVAT(price));
         new ItemStack(itemStack.getType(), purchaseSize).giveItems(buyer);
@@ -138,7 +136,7 @@ public class NpcTown extends Town {
         seller.getInventory().setItemInMainHand(null);
         Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) + itemAmount);
 
-        giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(price), seller, false);
+        seller.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(price), false);
         changeBudget(-price);
 
         generateLocalPrices();

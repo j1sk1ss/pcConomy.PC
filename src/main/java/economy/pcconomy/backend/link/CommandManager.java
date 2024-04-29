@@ -8,8 +8,8 @@ import economy.pcconomy.backend.cash.items.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.npc.traits.*;
-import economy.pcconomy.frontend.ui.windows.Window;
-import economy.pcconomy.frontend.ui.windows.mayor.trader.MayorWindow;
+import economy.pcconomy.frontend.windows.Window;
+import economy.pcconomy.frontend.windows.mayor.trader.MayorWindow;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -24,9 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static economy.pcconomy.backend.cash.CashManager.giveCashToPlayer;
-import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
-
 
 @ExtensionMethod({Manager.class, CashManager.class})
 public class CommandManager implements CommandExecutor {
@@ -35,8 +32,8 @@ public class CommandManager implements CommandExecutor {
                              @NotNull String label, @NotNull String[] args) {
 
         switch (command.getName()) {
-            case "take_cash"          -> takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender, true);
-            case "create_cash"        -> giveCashToPlayer(Double.parseDouble(args[0]), (Player)sender, true);
+            case "take_cash"          -> ((Player)sender).takeCashFromPlayer(Double.parseDouble(args[0]), true);
+            case "create_cash"        -> ((Player)sender).giveCashToPlayer(Double.parseDouble(args[0]), true);
             case "reload_towns"       -> PcConomy.GlobalTownManager.reloadTownObjects();
             case "reload_npc"         -> PcConomy.GlobalNPC.reloadNPC();
             case "put_cash2bank"      -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);

@@ -10,6 +10,8 @@ import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.cash.CashManager;
 
 import economy.pcconomy.backend.scripts.BalanceManager;
+import lombok.experimental.ExtensionMethod;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -19,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+
+@ExtensionMethod({CashManager.class})
 public class Bank extends Capitalist {
     public Bank() {
         Credit = new ArrayList<>();
@@ -42,7 +46,7 @@ public class Bank extends Capitalist {
         if (BalanceManager.solvent(amount, player)) return;
 
         BalanceManager.takeMoney(amount, player);
-        CashManager.giveCashToPlayer(amount, player, false);
+        player.giveCashToPlayer(amount, false);
 
         BankBudget -= amount;
         DayWithdrawBudget -= amount;
@@ -54,9 +58,9 @@ public class Bank extends Capitalist {
      * @param player Player that will lose cash
      */
     public void takeCashFromPlayer(double amount, Player player) {
-        if (amount > CashManager.amountOfCashInInventory(player, false)) return;
+        if (amount > player.amountOfCashInInventory(false)) return;
 
-        CashManager.takeCashFromPlayer(amount, player, false);
+        player.takeCashFromPlayer(amount, false);
         BalanceManager.giveMoney(amount, player);
 
         BankBudget += amount;

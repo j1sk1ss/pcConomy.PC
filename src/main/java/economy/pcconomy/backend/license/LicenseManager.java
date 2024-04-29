@@ -2,6 +2,7 @@ package economy.pcconomy.backend.license;
 
 import com.google.gson.*;
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseBody;
 import economy.pcconomy.backend.license.objects.LicenseType;
 
@@ -18,11 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static economy.pcconomy.backend.cash.CashManager.amountOfCashInInventory;
-import static economy.pcconomy.backend.cash.CashManager.takeCashFromPlayer;
 
-
-@ExtensionMethod({Manager.class})
+@ExtensionMethod({Manager.class, CashManager.class})
 public class LicenseManager {
     public final static double marketLicensePrice      = PcConomy.Config.getDouble("license.market_license_price", 2400d);
     public final static double tradeLicensePrice       = PcConomy.Config.getDouble("license.trade_license_price", 650d);
@@ -75,12 +73,12 @@ public class LicenseManager {
      * @param price Price of license
      */
     public static void giveLicenseToPlayer(Player player, LicenseType licenseType, double price) {
-        if (amountOfCashInInventory(player, false) < price) return;
+        if (player.amountOfCashInInventory(false) < price) return;
 
         if (PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType) != null)
             PcConomy.GlobalLicenseManager.Licenses.remove(PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType));
 
-        takeCashFromPlayer(price, player, false);
+            player.takeCashFromPlayer(price, false);
         PcConomy.GlobalBank.BankBudget += price;
         //TODO: DATA MODEL
         PcConomy.GlobalLicenseManager.createLicense(new LicenseBody(player, LocalDateTime.now().plusDays(1), licenseType));

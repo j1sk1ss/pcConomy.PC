@@ -7,6 +7,7 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.objects.LoanerObject;
 import economy.pcconomy.backend.npc.objects.NpcObject;
 import economy.pcconomy.backend.npc.traits.*;
+import lombok.experimental.ExtensionMethod;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.db.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.npc.objects.TraderObject;
@@ -24,6 +25,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 
+@ExtensionMethod({CashManager.class})
 public class NpcManager {
     public final Map<Integer, NpcObject> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
@@ -49,13 +51,13 @@ public class NpcManager {
      * @param price Price of NPC
      */
     public void buyNPC(Player buyer, LicenseType neededLicense, double price) {
-        if (CashManager.amountOfCashInInventory(buyer, false) < price) return;
+        if (buyer.amountOfCashInInventory(false) < price) return;
 
         var license = PcConomy.GlobalLicenseManager.getLicense(buyer.getUniqueId(), neededLicense);
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        CashManager.takeCashFromPlayer(price, buyer, false);
+        buyer.takeCashFromPlayer(price, false);
         PcConomy.GlobalBank.BankBudget += price;
 
         var npcList = Map.of(

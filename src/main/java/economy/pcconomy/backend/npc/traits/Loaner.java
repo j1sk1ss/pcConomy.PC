@@ -4,8 +4,8 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.npc.objects.LoanerObject;
-import economy.pcconomy.frontend.ui.windows.Window;
-import economy.pcconomy.frontend.ui.windows.loans.loan.LoanWindow;
+import economy.pcconomy.frontend.windows.Window;
+import economy.pcconomy.frontend.windows.loans.loan.LoanWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;

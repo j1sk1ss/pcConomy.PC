@@ -6,6 +6,8 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
+import lombok.experimental.ExtensionMethod;
+
 import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 
+@ExtensionMethod({CashManager.class})
 public class ShareManager {
     public final List<UUID> InteractionList = new ArrayList<>();
     public final Map<UUID, List<Share>> Shares = new HashMap<>();
@@ -129,7 +132,7 @@ public class ShareManager {
     public void cashOutShare(Player owner, Share share) {
         for (var townShares : Shares.get(share.TownUUID)) {
             if (townShares.ShareUUID.equals(share.ShareUUID)) {
-                CashManager.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(townShares.Revenue), owner, false);
+                owner.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(townShares.Revenue), false);
                 townShares.Revenue = 0;
 
                 return;

@@ -12,7 +12,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class})
+@ExtensionMethod({Manager.class, CashManager.class})
 public class Share {
     public Share(UUID townUUID, ShareType shareType, double price, double equality) {
         TownUUID  = townUUID;
@@ -56,7 +56,7 @@ public class Share {
         if (IsSold) return false;
 
         if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(Price)) {
-            CashManager.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Price), buyer, false);
+            buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Price), false);
             PcConomy.GlobalTownManager.getTown(TownUUID).changeBudget(Price);
 
             IsSold = true;
@@ -78,7 +78,7 @@ public class Share {
         if (currentTown == null) return;
 
         if (currentTown.getBudget() >= Price) {
-            CashManager.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(Price), seller, false);
+            seller.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(Price), false);
             currentTown.changeBudget(-Price);
 
             IsSold = false;

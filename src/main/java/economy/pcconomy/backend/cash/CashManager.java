@@ -128,7 +128,7 @@ public class CashManager {
      * @param player Player that will take this cash
      * @param ignoreWallet Ignoring of wallet status
      */
-    public static void giveCashToPlayer(double amount, Player player, boolean ignoreWallet) {
+    public static void giveCashToPlayer(Player player, double amount, boolean ignoreWallet) {
         Manager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount : Wallet.changeCashInWallets(player, amount))), player);
     }
 
@@ -138,7 +138,7 @@ public class CashManager {
      * @param player Player that will lose cash
      * @param ignoreWallet Ignoring wallet status
      */
-    public static void takeCashFromPlayer(double amount, Player player, boolean ignoreWallet) {
+    public static void takeCashFromPlayer(Player player, double amount, boolean ignoreWallet) {
         var playerCashAmount = amountOfCashInInventory(player, ignoreWallet);
         if (playerCashAmount < amount) return;
 

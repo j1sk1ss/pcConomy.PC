@@ -12,8 +12,8 @@ import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
 import economy.pcconomy.backend.db.Loader;
 
-import economy.pcconomy.frontend.ui.PlayerListener;
-import economy.pcconomy.frontend.ui.windows.wallet.WalletListener;
+import economy.pcconomy.frontend.PlayerListener;
+import economy.pcconomy.frontend.windows.wallet.WalletListener;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -148,6 +148,7 @@ public final class PcConomy extends JavaPlugin {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NpcTrader.class).withName("npctrader"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("banker"));
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("licensor"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Shareholder.class).withName("shareholder"));
 
         System.out.print("[PcConomy] NPC reloading.\n");
 

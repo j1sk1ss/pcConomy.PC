@@ -5,13 +5,13 @@ import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Borrower;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.scripts.BalanceManager;
-import economy.pcconomy.backend.scripts.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 
 public class LoanManager {
     public static double trustCoefficient = .5d; // 1.5f
