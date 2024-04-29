@@ -112,3 +112,7 @@ After all steps u can set rant price, town margin and leave trader for finding c
 ## Bank actions list explaining:
 
 1) The bank in this plugin has a fairly large impact on the entire economy. This influence consists both in the impact on the global credit history (it is the bank that determines for the whole world whether a loan on the terms that the player has chosen is safe for the lender), in the impact on VAT (VAT is involved in almost all transactions from the purchase of NPS to the sale of shares) and influencing the withdrawal limit. All these values change depending on the global economic situation. The bank, in other words, will try to maximize its profits by increasing VAT, lowering the entry threshold for lending, reducing the withdrawal limit if it notices that its income (VAT, loans, invested funds) will decrease.
+
+</br>
+
+[![](https://jitpack.io/v/j1sk1ss/pcConomy.PC.svg)](https://jitpack.io/#j1sk1ss/pcConomy.PC)
