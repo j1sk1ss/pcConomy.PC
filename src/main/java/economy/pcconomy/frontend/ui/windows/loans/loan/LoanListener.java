@@ -54,8 +54,6 @@ public class LoanListener implements IWindowListener {
 
             return;
         }
-
-        NPCLoanWindow.Panel.click(event);
     }
 
     public static Loaner getLoanerFromTitle(String name) {

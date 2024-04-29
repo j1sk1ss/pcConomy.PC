@@ -20,10 +20,10 @@ import java.util.Arrays;
 public class MayorWindow extends Window {
     public static final org.j1sk1ss.menuframework.objects.interactive.components.Panel TownMenu = new Panel(Arrays.asList(
         new Button(0 ,21, "Установить торговца", (NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh,
-            (event) -> PcConomy.GlobalNPC.buyNPC((Player)event.getWhoClicked(), LicenseType.Market, NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT)),
+            (event) -> PcConomy.GlobalNPC.buyNPC((Player)event.getWhoClicked(), LicenseType.Market, NpcManager.traderCost + NpcManager.traderCost * PcConomy.GlobalBank.VAT))
 
-        new Button(5, 26, "Установить кредитора", (NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh,
-            (event) -> PcConomy.GlobalNPC.buyNPC((Player)event.getWhoClicked(), LicenseType.Loan,NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT))
+//        new Button(5, 26, "Установить кредитора", (NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT) + CashManager.currencySigh,
+//            (event) -> PcConomy.GlobalNPC.buyNPC((Player)event.getWhoClicked(), LicenseType.Loan,NpcManager.loanerCost + NpcManager.loanerCost * PcConomy.GlobalBank.VAT))
     ), "Город-Меню");
 
     public Inventory generateWindow(Player mayor) {

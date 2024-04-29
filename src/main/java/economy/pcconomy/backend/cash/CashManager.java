@@ -116,6 +116,9 @@ public class CashManager {
      * @return Cash object status
      */
     public static boolean isCash(ItemStack item) {
+        if (item == null) return false;
+        if (item.getItemMeta() == null) return false;
+
         return item.getDoubleFromContainer("cash-value") != -1;
     }
 

@@ -32,35 +32,35 @@ public class ShareholderWindow extends Window {
         public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
             new Panel(Arrays.asList(
                     new Button(0, 20, "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
-                            (event) -> {
-                                var player = (Player) event.getWhoClicked();
-                                player.openInventory(ShareholderWindow.sharesWindow(player, 0));
-                            }),
+                        (event) -> {
+                            var player = (Player) event.getWhoClicked();
+                            player.openInventory(ShareholderWindow.sharesWindow(player, 0));
+                        }),
 
                     new Button(3, 23, "Выставление акций", "Выставление акций города на рынок",
-                            (event) -> {
-                                var player = (Player) event.getWhoClicked();
-                                var town = TownyAPI.getInstance().getTown(player);
-                                // if (town != null) TODO: Uncomment after test
-                                //     if (PcConomy.GlobalShareManager.InteractionList.contains(town.getUUID())) {
-                                //         player.sendMessage("Ваш город уже работал с акциями сегодня");
-                                //         return;
-                                //     }
+                        (event) -> {
+                            var player = (Player) event.getWhoClicked();
+                            var town = TownyAPI.getInstance().getTown(player);
+                            // if (town != null) TODO: Uncomment after test
+                            //     if (PcConomy.GlobalShareManager.InteractionList.contains(town.getUUID())) {
+                            //         player.sendMessage("Ваш город уже работал с акциями сегодня");
+                            //         return;
+                            //     }
 
-                                if (player.equals(Objects.requireNonNull(town).getMayor().getPlayer()))
-                                    player.openInventory(ShareholderWindow.townSharesWindow(player, town.getUUID()));
-                            }),
+                            if (player.equals(Objects.requireNonNull(town).getMayor().getPlayer()))
+                                player.openInventory(ShareholderWindow.townSharesWindow(player, town.getUUID()));
+                        }),
 
                     new Button(6, 26, "Обналичить акции", "Будут обналичены акции в инвенторе игрока",
-                            (event) -> {
-                                var player = (Player) event.getWhoClicked();
-                                var inventory = player.getInventory().getStorageContents();
+                        (event) -> {
+                            var player = (Player) event.getWhoClicked();
+                            var inventory = player.getInventory().getStorageContents();
 
-                                for (var item : inventory) {
-                                    var share = new Share(item);
-                                    PcConomy.GlobalShareManager.cashOutShare(player, share);
-                                }
-                            })
+                            for (var item : inventory) {
+                                var share = new Share(item);
+                                PcConomy.GlobalShareManager.cashOutShare(player, share);
+                            }
+                        })
 
             ), "Акции-Меню"),
 
@@ -68,20 +68,19 @@ public class ShareholderWindow extends Window {
                 new Button(0, 21, "Продать одну акцию", "",
                     (event) -> {
                         var player = (Player) event.getWhoClicked();
-                        var share = new Share(player.getInventory().getItemInMainHand());
-                        var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                        var share  = new Share(player.getInventory().getItemInMainHand());
+                        var town   = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
 
-                        if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget())
-                            return;
+                        if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
                         share.sellShare(player, player.getInventory().getItemInMainHand());
                     }),
 
                 new Button(5, 26, "Купить одну акцию", "",
                     (event) -> {
                         var player = (Player) event.getWhoClicked();
-                        var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                        var town   = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                         var shares = PcConomy.GlobalShareManager.getEmptyTownShare(town.getUUID());
-                        var share = shares.get(0);
+                        var share  = shares.get(0);
 
                         if (PcConomy.GlobalBank.checkVat(share.Price) > CashManager.amountOfCashInInventory(player, false))
                             return;
@@ -127,24 +126,24 @@ public class ShareholderWindow extends Window {
                     }),
 
                 new Slider(Arrays.asList(
-                        27, 28, 29, 30, 31, 32, 33, 34, 35
+                    27, 28, 29, 30, 31, 32, 33, 34, 35
                 ), Arrays.asList(
-                        "1шт.", "10шт.", "25шт.", "50шт.", "100шт.", "200шт.", "500шт.", "1000шт.", "10000шт."
+                    "1шт.", "10шт.", "25шт.", "50шт.", "100шт.", "200шт.", "500шт.", "1000шт.", "10000шт."
                 ), "Кол-во", "SliderCount", null),
                 new Slider(Arrays.asList(
-                        36, 37, 38, 39, 40, 41, 42, 43, 44
+                    36, 37, 38, 39, 40, 41, 42, 43, 44
                 ), Arrays.asList(
-                        "5%", "15%", "20%", "30%", "40%", "50%", "60%", "70%", "100%"
+                    "5%", "15%", "20%", "30%", "40%", "50%", "60%", "70%", "100%"
                 ), "Процент", "SliderPercent", null),
                 new Slider(Arrays.asList(
-                        45, 46, 47, 48, 49, 50, 51, 52, 53
+                    45, 46, 47, 48, 49, 50, 51, 52, 53
                 ), Arrays.asList(
-                        "100" + CashManager.currencySigh, "500" + CashManager.currencySigh, "1000" + CashManager.currencySigh,
-                        "1500" + CashManager.currencySigh, "2000" + CashManager.currencySigh, "2500" + CashManager.currencySigh,
-                        "5000" + CashManager.currencySigh, "10000" + CashManager.currencySigh, "20000" + CashManager.currencySigh
+                    "100" + CashManager.currencySigh, "500" + CashManager.currencySigh, "1000" + CashManager.currencySigh,
+                    "1500" + CashManager.currencySigh, "2000" + CashManager.currencySigh, "2500" + CashManager.currencySigh,
+                    "5000" + CashManager.currencySigh, "10000" + CashManager.currencySigh, "20000" + CashManager.currencySigh
                 ), "Цена", "SliderCost", null),
                 new Slider(Arrays.asList(
-                        16, 17
+                    16, 17
                 ), Arrays.asList("Дивиденты", "Доля"), "Тип", "SliderType", null)
             ), "Акции-Выставление")
     )) {

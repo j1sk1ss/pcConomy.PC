@@ -4,7 +4,6 @@ import economy.pcconomy.frontend.ui.windows.IWindowListener;
 import economy.pcconomy.frontend.ui.windows.bank.BankerListener;
 import economy.pcconomy.frontend.ui.windows.license.LicensorListener;
 import economy.pcconomy.frontend.ui.windows.loans.loan.LoanListener;
-import economy.pcconomy.frontend.ui.windows.loans.npcLoan.NPCLoanerListener;
 import economy.pcconomy.frontend.ui.windows.mayor.manager.MayorManagerListener;
 import economy.pcconomy.frontend.ui.windows.npcTrade.NPCTraderListener;
 import economy.pcconomy.frontend.ui.windows.shareholder.ShareholderListener;
@@ -24,7 +23,6 @@ public class PlayerListener implements Listener {
     public PlayerListener() {
         windows = new HashMap<>();
         windows.put("Кредит-Город", new LoanListener());
-        windows.put("Кредит-Банк", new NPCLoanerListener());
         windows.put("Мир-Банк", new BankerListener());
         windows.put("Торговец", new TraderListener());
         windows.put("Мир-Лицензии", new LicensorListener());

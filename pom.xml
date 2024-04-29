@@ -79,7 +79,7 @@
             <id>citizens-repo</id>
             <url>https://maven.citizensnpcs.co/repo</url>
         </repository>
-        
+
         <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
@@ -135,19 +135,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
-        	<groupId>me.clip</groupId>
-        	<artifactId>placeholderapi</artifactId>
-        	<version>2.11.2</version>
-        	<scope>provided</scope>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.11.2</version>
+            <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
-         	<groupId>net.kyori</groupId>
-         	<artifactId>adventure-api</artifactId>
-        	<version>4.11.0</version>
-      	</dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>4.11.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -165,7 +165,7 @@
         <dependency>
             <groupId>com.github.j1sk1ss</groupId>
             <artifactId>MenuFramework.PC</artifactId>
-            <version>UIMenu_ver0.9.1</version>
+            <version>UIMenu_ver1.0.2</version>
         </dependency>
 
         <dependency>

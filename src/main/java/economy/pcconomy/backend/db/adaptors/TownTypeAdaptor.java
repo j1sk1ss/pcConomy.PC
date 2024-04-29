@@ -37,6 +37,7 @@ public class TownTypeAdaptor implements JsonSerializer<Town>, JsonDeserializer<T
         var budget = jsonObject.get("budget").getAsDouble();
 
         // TODO: Load credit
+        // TODO: Load traders
 
         if (jsonObject.has("usefulStorage")) {
             var usefulStorage = jsonObject.get("usefulStorage").getAsDouble();
@@ -44,10 +45,11 @@ public class TownTypeAdaptor implements JsonSerializer<Town>, JsonDeserializer<T
             var townVAT = jsonObject.get("townVAT").getAsDouble();
 
             // TODO: Load storage
+            
 
-            return new NpcTown(uuid, new ArrayList<>(), new Storage(null), budget, usefulStorage, usefulBudget, townVAT);
+            return new NpcTown(uuid, new ArrayList<>(), new Storage(null), budget, usefulStorage, usefulBudget, townVAT, new ArrayList<>());
         }
 
-        return new PlayerTown(uuid, new ArrayList<>());
+        return new PlayerTown(uuid, new ArrayList<>(), new ArrayList<>());
     }
 }

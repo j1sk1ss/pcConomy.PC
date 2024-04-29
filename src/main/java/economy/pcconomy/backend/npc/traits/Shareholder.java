@@ -18,7 +18,10 @@ public class Shareholder extends Trait {
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
+        System.out.print("Click");
         if (!event.getNPC().equals(this.getNPC())) return;
+        System.out.print("Click (1)");
         Window.openWindow(event.getClicker(), new ShareholderWindow());
+        System.out.print("Click (2)");
     }
 }

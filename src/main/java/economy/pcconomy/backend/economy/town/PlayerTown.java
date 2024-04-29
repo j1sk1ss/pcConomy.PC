@@ -16,6 +16,7 @@ public class PlayerTown extends Town {
     public PlayerTown(com.palmergames.bukkit.towny.object.Town town) {
         TownUUID = town.getUUID();
         Credit   = new ArrayList<>();
+        traders  = new ArrayList<>();
     }
 
     /**
@@ -25,7 +26,20 @@ public class PlayerTown extends Town {
      */
     public PlayerTown(UUID townUUID, List<Loan> credit) {
         TownUUID = townUUID;
-        Credit = credit;
+        Credit   = credit;
+        traders  = new ArrayList<>();
+    }
+
+    /**
+     * Player town
+     * @param townUUID Player town UID
+     * @param credit Player town credit list
+     * @param traders Traders in player town
+     */
+    public PlayerTown(UUID townUUID, List<Loan> credit, List<Integer> traders) {
+        TownUUID      = townUUID;
+        Credit        = credit;
+        this.traders  = traders;
     }
 
 

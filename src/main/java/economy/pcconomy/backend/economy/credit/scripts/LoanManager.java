@@ -62,9 +62,10 @@ public class LoanManager {
      * @return Loan status for this borrower
      */
     public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
-        return (getSafetyFactor(loanAmount, duration, PcConomy.GlobalBorrowerManager.getBorrowerObject(borrower)) >= trustCoefficient
-                || blackTown(PlayerManager.getCountryMens(borrower.getUniqueId()))
-                || PlayerManager.getPlayerServerDuration(borrower) > 100); // TODO: Return && &&
+        return true;
+//        return (getSafetyFactor(loanAmount, duration, PcConomy.GlobalBorrowerManager.getBorrowerObject(borrower)) >= trustCoefficient
+//                && blackTown(PlayerManager.getCountryMens(borrower.getUniqueId()))
+//                && PlayerManager.getPlayerServerDuration(borrower) > 100); // TODO: Return && &&
     }
 
     /**

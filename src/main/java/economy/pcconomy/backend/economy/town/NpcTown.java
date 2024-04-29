@@ -27,6 +27,7 @@ public class NpcTown extends Town {
     public NpcTown(com.palmergames.bukkit.towny.object.Town town) {
         TownUUID = town.getUUID();
         Credit   = new ArrayList<>();
+        traders  = new ArrayList<>();
 
         Storage = new Storage(Arrays.asList(
                 new ItemStack(Material.SPRUCE_WOOD, 1000),
@@ -50,9 +51,12 @@ public class NpcTown extends Town {
      * @param credit NPC town credit list
      * @param storage NPC town storage
      * @param previousBudget NPC town previous budget
+     * @param usefulStorage useful storage of town
+     * @param townVAT townVat
+     * @param usefulBudget useful budget of town
      */
     public NpcTown(UUID townUUID, List<Loan> credit, Storage storage, double previousBudget,
-                   double usefulStorage, double usefulBudget, double townVAT) {
+                   double usefulStorage, double usefulBudget, double townVAT, List<Integer> traders) {
         TownUUID = townUUID;
         Credit   = credit;
         Storage  = storage;
@@ -61,6 +65,7 @@ public class NpcTown extends Town {
         this.usefulStorage  = usefulStorage;
         this.usefulBudget   = usefulBudget;
         this.townVAT        = townVAT;
+        this.traders        = traders;
     }
 
     public double usefulStorage = PcConomy.Config.getDouble("town.start_useful_storage", .5);
