@@ -113,6 +113,7 @@ public class TownManager {
                 .registerTypeHierarchyAdapter(Town.class, new TownTypeAdaptor())
                 .create()
                 .toJson(this, writer);
+
         writer.close();
     }
 }

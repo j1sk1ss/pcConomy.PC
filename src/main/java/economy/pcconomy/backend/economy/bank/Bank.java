@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.cash.CashManager;
 
@@ -22,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
-@ExtensionMethod({CashManager.class})
+@ExtensionMethod({CashManager.class, BalanceManager.class})
 public class Bank extends Capitalist {
     public Bank() {
         Credit = new ArrayList<>();
@@ -43,9 +42,9 @@ public class Bank extends Capitalist {
      */
     public void giveCashToPlayer(double amount, Player player) {
         if (amount >= DayWithdrawBudget) return;
-        if (BalanceManager.solvent(amount, player)) return;
+        if (player.solvent(amount)) return;
 
-        BalanceManager.takeMoney(amount, player);
+        player.takeMoney(amount);
         player.giveCashToPlayer(amount, false);
 
         BankBudget -= amount;
@@ -61,7 +60,7 @@ public class Bank extends Capitalist {
         if (amount > player.amountOfCashInInventory(false)) return;
 
         player.takeCashFromPlayer(amount, false);
-        BalanceManager.giveMoney(amount, player);
+        player.giveMoney(amount);
 
         BankBudget += amount;
         DayWithdrawBudget += amount;
@@ -82,20 +81,20 @@ public class Bank extends Capitalist {
         var changePercent = (BankBudget - previousBudget) / previousBudget;
         var isRecession  = (changePercent <= 0 || getAverageInflation() > 0) ? 1 : -1;
 
-        LoanManager.takePercentFromBorrowers(this);
+        Loan.takePercentFromBorrowers(this);
         if (isRecession < 0 && DepositPercent > 0)
-            for (var player : Bukkit.getWhitelistedPlayers()) {
-                if (player.getPlayer() == null) continue;
-
-                var amount = (BalanceManager.getBalance(player.getPlayer()) * DepositPercent) / 12;
-                BalanceManager.giveMoney(amount, player.getPlayer());
-                BankBudget -= amount;
-            }
+            Bukkit.getWhitelistedPlayers().parallelStream().forEach((player) -> {
+                if (player.getPlayer() != null) {
+                    var amount = (BalanceManager.getBalance(player.getPlayer()) * DepositPercent) / 12;
+                    player.getPlayer().giveMoney(amount);
+                    BankBudget -= amount;
+                }
+            });
 
         VAT += (VAT * Math.abs(changePercent) / 2) * isRecession;
         UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
         DepositPercent -= DepositPercent * Math.abs(changePercent) / 2 * isRecession;
-        LoanManager.trustCoefficient -= LoanManager.trustCoefficient * Math.abs(changePercent) * isRecession;
+        Loan.trustCoefficient -= Loan.trustCoefficient * Math.abs(changePercent) * isRecession;
 
         if (isRecession > 0) {
             if (recessionCount++ >= 5) {

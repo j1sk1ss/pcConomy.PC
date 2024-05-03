@@ -27,7 +27,7 @@ public class NPCTraderWindow {
         var window = Bukkit.createInventory(player, 54, Component.text("Магазин " +
                 Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId()));
 
-        var townStorage = ((NpcTown)town).Storage.StorageBody;
+        var townStorage = ((NpcTown)town).Storage;
         for (var item : townStorage)
             window.addItem(item.setLore(String.join("\n", item.getLoreLines())));
 

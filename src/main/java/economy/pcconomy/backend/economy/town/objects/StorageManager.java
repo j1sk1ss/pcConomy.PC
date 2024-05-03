@@ -6,34 +6,24 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Random;
 
-public class Storage {
-    /**
-     * Storage class object
-     * @param storage List of storage
-     */
-    public Storage(List<ItemStack> storage) {
-        StorageBody = storage;
-    }
-
-    public List<ItemStack> StorageBody;
-
+public class StorageManager {
     /**
      * Create resource in storage
      * @param maxAmount Max amount of random generated count
      */
-    public void createResources(int maxAmount) {
-        for (var item : StorageBody)
-            setAmountOfResource(item, getAmountOfResource(item) + new Random().nextInt() % maxAmount);
+    public static void createResources(List<ItemStack> storage, int maxAmount) {
+        for (var item : storage)
+            setAmountOfResource(storage, item, getAmountOfResource(storage, item) + new Random().nextInt() % maxAmount);
     }
 
     /**
      * Delete resource in storage
      * @param maxAmount Max amount of random generated count
      */
-    public void useResources(int maxAmount) {
-        for (var item : StorageBody) {
+    public static void useResources(List<ItemStack> storage, int maxAmount) {
+        for (var item : storage) {
             if (item.getAmount() < maxAmount) return;
-            setAmountOfResource(item, getAmountOfResource(item) - new Random().nextInt() % maxAmount);
+            setAmountOfResource(storage, item, getAmountOfResource(storage, item) - new Random().nextInt() % maxAmount);
         }
     }
 
@@ -42,8 +32,8 @@ public class Storage {
      * @param item Type of item
      * @param amount Amount of items
      */
-    public void addResource(Material item, int amount) {
-        StorageBody.add(new ItemStack(item, amount));
+    public static void addResource(List<ItemStack> storage, Material item, int amount) {
+        storage.add(new ItemStack(item, amount));
     }
 
     /**
@@ -51,10 +41,10 @@ public class Storage {
      * @param item Specified item
      * @param amount New amount
      */
-    public void setAmountOfResource(ItemStack item, int amount) {
-        for (var itemStack : StorageBody)
+    public static void setAmountOfResource(List<ItemStack> storage, ItemStack item, int amount) {
+        for (var itemStack : storage)
             if (itemStack.isSimilar(item))
-                StorageBody.set(StorageBody.indexOf(itemStack), new ItemStack(item.getType(), amount > 0 ? amount : 1));
+                storage.set(storage.indexOf(itemStack), new ItemStack(item.getType(), amount > 0 ? amount : 1));
     }
 
     /**
@@ -62,8 +52,8 @@ public class Storage {
      * @param item Specified item
      * @return Amount of resource
      */
-    public int getAmountOfResource(ItemStack item) {
-        for (var itemStack : StorageBody)
+    public static int getAmountOfResource(List<ItemStack> storage, ItemStack item) {
+        for (var itemStack : storage)
             if (itemStack.isSimilar(item))
                 return itemStack.getAmount();
 
@@ -75,8 +65,8 @@ public class Storage {
      * @param item Specified item
      * @return ItemStack with same characteristics
      */
-    public ItemStack getResource(ItemStack item) {
-        for (var itemStack : StorageBody)
+    public static ItemStack getResource(List<ItemStack> storage, ItemStack item) {
+        for (var itemStack : storage)
             if (itemStack.getType().equals(item.getType()))
                 return itemStack;
 
@@ -87,12 +77,9 @@ public class Storage {
      * Get amount of storage
      * @return Amount of specified resource
      */
-    public int getAmountOfStorage() {
+    public static int getAmountOfStorage(List<ItemStack> storage) {
         var amount = 0;
-
-        for (var itemStack : StorageBody)
-            amount += itemStack.getAmount();
-
+        for (var itemStack : storage) amount += itemStack.getAmount();
         return amount;
     }
 }

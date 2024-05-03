@@ -1,7 +1,6 @@
 package economy.pcconomy.backend.economy.town;
 
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class PlayerTown extends Town {
 
     @Override
     public void newDay() {
-        LoanManager.takePercentFromBorrowers(this);
+        Loan.takePercentFromBorrowers(this);
     }
 
     @Override

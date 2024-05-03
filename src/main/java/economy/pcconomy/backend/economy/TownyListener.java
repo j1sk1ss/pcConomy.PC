@@ -58,8 +58,8 @@ public class TownyListener implements Listener {
      */
     @EventHandler
     public void newDay(NewDayEvent event) {
-        for (var town : TownyAPI.getInstance().getTowns()) PcConomy.GlobalBank.BankBudget += town.getPlotTax(); // TODO: Towny API connect correct price
-        for (var town : PcConomy.GlobalTownManager.Towns) town.newDay();
+        TownyAPI.getInstance().getTowns().parallelStream().forEach((town) -> PcConomy.GlobalBank.BankBudget += town.getPlotTax()); // TODO: Towny API connect correct price
+        PcConomy.GlobalTownManager.Towns.parallelStream().forEach(Capitalist::newDay);
 
         PcConomy.GlobalShareManager.newDay();
         PcConomy.GlobalBank.newDay();

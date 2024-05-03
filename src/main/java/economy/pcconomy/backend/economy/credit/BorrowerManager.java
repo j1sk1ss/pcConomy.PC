@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.economy.credit.scripts;
+package economy.pcconomy.backend.economy.credit;
 
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.backend.economy.credit.Borrower;

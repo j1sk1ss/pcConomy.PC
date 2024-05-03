@@ -3,7 +3,7 @@ package economy.pcconomy.frontend.windows.loans.loan;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 
-import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.frontend.windows.WindowListener;
@@ -39,11 +39,12 @@ public class LoanListener extends WindowListener {
         if (title.contains("Кредит-Город-Взятие")) {
             if (item.getName().contains(CashManager.currencySigh)) {
                 var isSafe = item.getLoreLines().get(0).contains("Город одобрит данный займ.");
-                if (isSafe && !currentTown.getCreditList().contains(LoanManager.getLoan(player.getUniqueId(), currentTown))) {
+                if (isSafe && !currentTown.getCreditList().contains(Loan.getLoan(player.getUniqueId(), currentTown))) {
                     var amount = LoanWindow.getSelectedAmount(activeInventory.getItem(buttonPosition));
 
                     loaner.Pull -= amount;
-                    LoanManager.createLoan(amount, LoanWindow.getSelectedDuration(activeInventory), player, currentTown);
+                    var loan = Loan.createLoan(amount, LoanWindow.getSelectedDuration(activeInventory), player);
+                    loan.addLoan(currentTown);
 
                     player.closeInventory();
                 }

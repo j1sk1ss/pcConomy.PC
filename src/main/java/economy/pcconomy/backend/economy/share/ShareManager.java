@@ -100,10 +100,7 @@ public class ShareManager {
      * Daily pay
      */
     public void newDay() {
-        var towns = Shares.keySet();
-        for (var town : towns)
-            payDividends(town);
-
+        Shares.keySet().parallelStream().forEach(this::payDividends);
         InteractionList.clear();
     }
 

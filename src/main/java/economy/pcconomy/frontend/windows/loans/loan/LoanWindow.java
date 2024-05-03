@@ -2,7 +2,7 @@ package economy.pcconomy.frontend.windows.loans.loan;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.traits.Loaner;
 import economy.pcconomy.frontend.windows.loans.LoanBaseWindow;
@@ -56,7 +56,7 @@ public class LoanWindow extends LoanBaseWindow {
                     var town = TownyAPI.getInstance().getTown(player.getLocation());
                     var currentTown = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getUUID());
 
-                    LoanManager.payOffADebt(player, currentTown);
+                    Loan.payOffADebt(player, currentTown);
                     player.closeInventory();
                 })
     ), "Кредит-Город");
@@ -102,9 +102,7 @@ public class LoanWindow extends LoanBaseWindow {
     public ItemStack getAmountButton(int position, int chosen, UUID townName, Player player, boolean canReadHistory) {
         var townObject = PcConomy.GlobalTownManager.getTown(townName);
         var maxLoan = Math.min(Loaner.Pull, townObject.getBudget());
-
-        boolean isSafe = LoanManager.isSafeLoan(maxLoan / (position + 1), durationSteps.get(chosen - 18), player);
-
+        var isSafe = Loan.isSafeLoan(maxLoan / (position + 1), durationSteps.get(chosen - 18), player);
         ItemStack tempItem = new Item(Math.round(maxLoan / (position + 1) * 100) / 100 + CashManager.currencySigh,
                 "Город не одобрит данный займ.", Material.RED_WOOL, 1, 17000); //TODO: DATA MODEL
 
@@ -116,9 +114,9 @@ public class LoanWindow extends LoanBaseWindow {
 
     @Override
     public ItemStack creditOptionButton(ItemStack itemStack, double maxLoanSize, int chosen, int position) {
-        //TODO: DATA MODEL
+        //TODO: DATA MODEL, ROUND
         return new Item(itemStack.getName(), "Город одобрит данный займ.\nПроцент: " +
-                (Math.round(LoanManager.getPercent(maxLoanSize / (position + 1),
+                (Math.round(Loan.getPercent(maxLoanSize / (position + 1),
                         durationSteps.get(chosen - 18)) * 100) * 100d) / 100d + "%", Material.GREEN_WOOL, 1, 17000);
     }
 }

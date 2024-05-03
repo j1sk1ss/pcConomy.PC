@@ -4,7 +4,7 @@ import com.google.gson.*;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.economy.town.PlayerTown;
 import economy.pcconomy.backend.economy.town.Town;
-import economy.pcconomy.backend.economy.town.objects.Storage;
+import economy.pcconomy.backend.economy.town.objects.StorageManager;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class TownTypeAdaptor implements JsonSerializer<Town>, JsonDeserializer<T
             // TODO: Load storage
             
 
-            return new NpcTown(uuid, new ArrayList<>(), new Storage(null), budget, usefulStorage, usefulBudget, townVAT, new ArrayList<>());
+            return new NpcTown(uuid, new ArrayList<>(), new ArrayList<>(), budget, usefulStorage, usefulBudget, townVAT, new ArrayList<>());
         }
 
         return new PlayerTown(uuid, new ArrayList<>(), new ArrayList<>());

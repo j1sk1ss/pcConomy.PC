@@ -1,7 +1,7 @@
 package economy.pcconomy;
 
 import economy.pcconomy.backend.economy.bank.Bank;
-import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
+import economy.pcconomy.backend.economy.credit.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.TownyListener;
 import economy.pcconomy.backend.economy.town.manager.TownManager;

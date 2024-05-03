@@ -1,6 +1,4 @@
-package economy.pcconomy.backend.cash.items;
-
-import economy.pcconomy.backend.cash.CashManager;
+package economy.pcconomy.backend.cash;
 
 import lombok.experimental.ExtensionMethod;
 import org.apache.commons.lang.StringUtils;

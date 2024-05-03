@@ -50,10 +50,11 @@ public class Share {
 
     /**
      * Player buy share
+     *
      * @param buyer Player who buy share
      */
-    public boolean buyShare(Player buyer) {
-        if (IsSold) return false;
+    public void buyShare(Player buyer) {
+        if (IsSold) return;
 
         if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(Price)) {
             buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Price), false);
@@ -61,11 +62,7 @@ public class Share {
 
             IsSold = true;
             new Item("Акция", TownUUID + "\n" + ShareUUID + "\n" + Price).giveItems(buyer);
-
-            return true;
         }
-
-        return false;
     }
 
     /**

@@ -1,7 +1,5 @@
 package economy.pcconomy.backend.cash;
 
-import economy.pcconomy.backend.cash.items.Wallet;
-
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

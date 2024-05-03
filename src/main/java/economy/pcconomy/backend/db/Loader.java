@@ -1,7 +1,7 @@
 package economy.pcconomy.backend.db;
 
 import com.google.gson.GsonBuilder;
-import economy.pcconomy.backend.economy.credit.scripts.BorrowerManager;
+import economy.pcconomy.backend.economy.credit.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.town.Town;
 import economy.pcconomy.backend.economy.town.manager.TownManager;

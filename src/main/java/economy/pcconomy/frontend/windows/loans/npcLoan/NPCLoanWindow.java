@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.windows.loans.npcLoan;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
+import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.frontend.windows.loans.LoanBaseWindow;
 
@@ -45,7 +45,7 @@ public class NPCLoanWindow extends LoanBaseWindow {
             new Button(5, 26, "Погасить кредит", "Погасить кредит банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    LoanManager.payOffADebt(player, PcConomy.GlobalBank);
+                    Loan.payOffADebt(player, PcConomy.GlobalBank);
                     player.closeInventory();
                 })
         ), "Кредит-Банк"),
@@ -65,14 +65,14 @@ public class NPCLoanWindow extends LoanBaseWindow {
 
                     for (var i = 0; i < countOfAmountSteps; i++) {
                         var maxLoanSize = PcConomy.GlobalBank.DayWithdrawBudget * 2;
-                        var isSafe = LoanManager.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), player);
+                        var isSafe = Loan.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), player);
 
                         var val = Math.round(maxLoanSize / (countOfAmountSteps - i) * 100) / 100 + " " + CashManager.currencySigh;
                         var opt = "Банк не одобрит данный займ";
 
                         if (isSafe && !PcConomy.GlobalBank.getBorrowers().contains(player.getUniqueId())) { // TODO: Fix credits
                             opt = "Банк одобрит данный займ\nПроцент: " +
-                                    (Math.round(LoanManager.getPercent(maxLoanSize / (countOfAmountSteps - i), durationSteps.get((8 - i))) * 100) * 100d) / 100d + "%";
+                                    (Math.round(Loan.getPercent(maxLoanSize / (countOfAmountSteps - i), durationSteps.get((8 - i))) * 100) * 100d) / 100d + "%";
                             value = i;
                         }
 
@@ -99,8 +99,10 @@ public class NPCLoanWindow extends LoanBaseWindow {
 
                     if (durSlider.equals("none")) return;
                     if (agreement.contains("Банк одобрит данный займ")) { // TODO: fix credits
-                        if (!PcConomy.GlobalBank.Credit.contains(LoanManager.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
-                            LoanManager.createLoan(value, Integer.parseInt(durSlider.split(" ")[0]), player, PcConomy.GlobalBank);
+                        if (!PcConomy.GlobalBank.Credit.contains(Loan.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
+                            var loan = Loan.createLoan(value, Integer.parseInt(durSlider.split(" ")[0]), player);
+                            loan.addLoan(PcConomy.GlobalBank);
+
                             player.closeInventory();
                         }
                     }

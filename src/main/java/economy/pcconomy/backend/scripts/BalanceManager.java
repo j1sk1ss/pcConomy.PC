@@ -5,7 +5,8 @@ import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
 
-public class BalanceManager { // TODO: Think about writing own abstract economy overrider instead xConomy
+
+public class BalanceManager {
     private static final XConomyAPI xConomyAPI = new XConomyAPI();
 
     /**
@@ -23,7 +24,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param player Player
      * @return Status
      */
-    public static boolean solvent(double value, Player player) {
+    public static boolean solvent(Player player, double value) {
         return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(value)) < 0;
     }
 
@@ -32,7 +33,7 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param amount Amount of giving
      * @param player Player that will take this amount
      */
-    public static void giveMoney(double amount, Player player) {
+    public static void giveMoney(Player player, double amount) {
         xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), true);
     }
 
@@ -41,8 +42,8 @@ public class BalanceManager { // TODO: Think about writing own abstract economy 
      * @param amount Amount of taken money
      * @param player Player that will lose moneys
      */
-    public static void takeMoney(double amount, Player player) {
-        if (solvent(amount, player)) return;
+    public static void takeMoney(Player player, double amount) {
+        if (solvent(player, amount)) return;
         xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), false);
     }
 }

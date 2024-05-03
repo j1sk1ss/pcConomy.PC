@@ -1,7 +1,7 @@
 package economy.pcconomy.frontend.windows.wallet;
 
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.cash.items.Wallet;
+import economy.pcconomy.backend.cash.Wallet;
 import economy.pcconomy.frontend.windows.WindowListener;
 import economy.pcconomy.frontend.windows.Window;
 

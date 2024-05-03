@@ -3,8 +3,7 @@ package economy.pcconomy.backend.economy.town;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.economy.credit.scripts.LoanManager;
-import economy.pcconomy.backend.economy.town.objects.Storage;
+import economy.pcconomy.backend.economy.town.objects.StorageManager;
 
 import org.apache.commons.math3.util.Precision;
 import org.bukkit.Material;
@@ -16,7 +15,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.*;
 
 
-@ExtensionMethod({Manager.class, CashManager.class})
+@ExtensionMethod({Manager.class, CashManager.class, StorageManager.class})
 public class NpcTown extends Town {
     /**
      * Npc town
@@ -27,15 +26,15 @@ public class NpcTown extends Town {
         Credit   = new ArrayList<>();
         traders  = new ArrayList<>();
 
-        Storage = new Storage(Arrays.asList(
-                new ItemStack(Material.SPRUCE_WOOD, 1000),
-                new ItemStack(Material.STONE, 2500),
-                new ItemStack(Material.GLASS, 1700),
-                new ItemStack(Material.CARROT, 5000),
-                new ItemStack(Material.BEEF, 2000),
-                new ItemStack(Material.IRON_INGOT, 1650),
-                new ItemStack(Material.COBBLESTONE, 5000)
-        ));
+        Storage = Arrays.asList(
+            new ItemStack(Material.SPRUCE_WOOD, 1000),
+            new ItemStack(Material.STONE, 2500),
+            new ItemStack(Material.GLASS, 1700),
+            new ItemStack(Material.CARROT, 5000),
+            new ItemStack(Material.BEEF, 2000),
+            new ItemStack(Material.IRON_INGOT, 1650),
+            new ItemStack(Material.COBBLESTONE, 5000)
+        );
 
         StartStorageAmount = Storage.getAmountOfStorage();
 
@@ -53,7 +52,7 @@ public class NpcTown extends Town {
      * @param townVAT townVat
      * @param usefulBudget useful budget of town
      */
-    public NpcTown(UUID townUUID, List<Loan> credit, Storage storage, double previousBudget,
+    public NpcTown(UUID townUUID, List<Loan> credit, List<ItemStack> storage, double previousBudget,
                    double usefulStorage, double usefulBudget, double townVAT, List<Integer> traders) {
         TownUUID = townUUID;
         Credit   = credit;
@@ -70,7 +69,7 @@ public class NpcTown extends Town {
     public double usefulBudget  = PcConomy.Config.getDouble("town.start_useful_budget", .5);
     public double townVAT       = PcConomy.Config.getDouble("town.start_vat", .05d);
 
-    public final economy.pcconomy.backend.economy.town.objects.Storage Storage;
+    public final List<ItemStack> Storage;
     public final List<Loan> Credit;
     public final UUID TownUUID;
 
@@ -148,20 +147,18 @@ public class NpcTown extends Town {
     public void generateLocalPrices() {
         var budget = getBudget();
 
-        for (var i = 0; i < Storage.StorageBody.size(); i++) {
-            var price  = Precision.round(Math.abs(budget / Storage.StorageBody.get(i).getAmount() + 1), 3);
+        for (var i = 0; i < Storage.size(); i++) {
+            var price  = Precision.round(Math.abs(budget / Storage.get(i).getAmount() + 1), 3);
             var margin = Precision.round((PcConomy.GlobalBank.VAT + townVAT), 3);
             var marginPercent = margin * 100d;
-            var endPrive = Precision.round(price + (price * margin), 3);
+            var endPrice = Precision.round(price + (price * margin), 3);
 
             if (price > 0)
-                Storage.StorageBody.set(i, 
-                    Storage.StorageBody.get(i)
-                        .setLore("Цена за " + purchaseSize + " шт.:\n" + purchaseSize * endPrive + CashManager.currencySigh + 
+                Storage.set(i, Storage.get(i).setLore("Цена за " + purchaseSize + " шт.:\n" + purchaseSize * endPrice + CashManager.currencySigh +
                                  "\nБез НДС в " + marginPercent + "%:\n" + purchaseSize * price + CashManager.currencySigh));
-            else Storage.StorageBody.set(i, Storage.StorageBody.get(i).setLore("Не доступен для торговли"));
+            else Storage.set(i, Storage.get(i).setLore("Не доступен для торговли"));
 
-            Storage.StorageBody.get(i).setDouble2Container(price, "item-price");
+            Storage.get(i).setDouble2Container(price, "item-price");
         }
     }
 
@@ -191,7 +188,7 @@ public class NpcTown extends Town {
 
     @Override
     public void newDay() {
-        LoanManager.takePercentFromBorrowers(this);
+        Loan.takePercentFromBorrowers(this);
 
         var changePercent = (getBudget() - previousBudget) / previousBudget;
         var isRecession   = (changePercent <= 0 && getLocalInflation() > 0) ? 1 : -1;
