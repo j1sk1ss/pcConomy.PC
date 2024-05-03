@@ -2,7 +2,7 @@ package economy.pcconomy.frontend.windows.bank;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.frontend.windows.IWindowListener;
+import economy.pcconomy.frontend.windows.WindowListener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -12,7 +12,8 @@ import lombok.experimental.ExtensionMethod;
 
 
 @ExtensionMethod({Manager.class, CashManager.class})
-public class BankerListener implements IWindowListener {
+public class BankerListener extends WindowListener {
+    @Override
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var option = event.getCurrentItem();

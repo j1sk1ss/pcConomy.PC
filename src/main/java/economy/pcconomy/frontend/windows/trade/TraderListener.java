@@ -3,7 +3,7 @@ package economy.pcconomy.frontend.windows.trade;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.traits.Trader;
-import economy.pcconomy.frontend.windows.IWindowListener;
+import economy.pcconomy.frontend.windows.WindowListener;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
@@ -15,8 +15,9 @@ import java.util.Arrays;
 
 
 @ExtensionMethod({Manager.class, CashManager.class})
-public class TraderListener implements IWindowListener {
+public class TraderListener extends WindowListener {
     @SuppressWarnings("deprecation")
+    @Override
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var title  = event.getView().getTitle();

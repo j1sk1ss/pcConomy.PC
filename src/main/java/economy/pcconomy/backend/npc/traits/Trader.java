@@ -70,10 +70,7 @@ public class Trader extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         if (HomeTown == null) {
             var storedTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
-            if (storedTown != null) {
-                HomeTown = storedTown.getUUID();
-                PcConomy.GlobalTownManager.getTown(HomeTown).traders.add(this.getNPC().getId());
-            }
+            if (storedTown != null) HomeTown = storedTown.getUUID();
             else HomeTown = null; // TODO: Maybe delete NPC if town not exists?
         }
 

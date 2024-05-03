@@ -21,6 +21,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.interactive.components.Slider;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -74,7 +75,7 @@ public class TraderWindow {
                             if (trader != null) {
                                 trader.IsRanted = false;
                                 trader.Owner    = null;
-                                trader.Term     = null;
+                                trader.Term     = LocalDateTime.now().toString();;
 
                                 player.giveCashToPlayer(trader.Revenue, false);
                                 Manager.giveItems(trader.Storage, player);
@@ -145,7 +146,7 @@ public class TraderWindow {
                             var trader = TraderListener.getTraderFromTitle(title);
 
                             if (trader == null) return;
-                            var price = TraderWindow.TraderMenu.getPanel("Торговец-Процент").getSliders("Цена аренды").getChose(event);
+                            var price = TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders("Цена аренды").getChose(event);
                             if (price.equals("none")) return;
 
                             trader.Cost = Double.parseDouble(price.replace(CashManager.currencySigh, ""));

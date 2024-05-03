@@ -2,9 +2,9 @@ package economy.pcconomy.backend.npc;
 
 import com.google.gson.GsonBuilder;
 
+import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.npc.objects.LoanerObject;
 import economy.pcconomy.backend.npc.objects.NpcObject;
 import economy.pcconomy.backend.npc.traits.*;
 import lombok.experimental.ExtensionMethod;
@@ -29,9 +29,8 @@ import java.util.Map;
 public class NpcManager {
     public final Map<Integer, NpcObject> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
-    public static final double loanerCost = PcConomy.Config.getDouble("npc.loaner_cost", 2000d);
 
-    /***
+    /**
      * Create NPC with special trait
      * @param creator Player that create NPC
      * @param trait Trait class
@@ -44,7 +43,7 @@ public class NpcManager {
         npc.spawn(creator.getLocation());
     }
 
-    /***
+    /**
      * Buy NPC
      * @param buyer Player that buy NPC
      * @param neededLicense License that needs for this
@@ -61,24 +60,25 @@ public class NpcManager {
         PcConomy.GlobalBank.BankBudget += price;
 
         var npcList = Map.of(
-            LicenseType.Market, new Trader(),
-            LicenseType.Loan, new Loaner()
+            LicenseType.Market, new Trader()
         );
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());
         npcList.get(neededLicense).linkToNPC(npc);
         npc.spawn(buyer.getLocation());
         npc.addTrait(npcList.get(neededLicense));
+
+        PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTownUUID(buyer.getLocation())).traders.add(npc.getId());
+        buyer.sendMessage("Торговец куплен");
     }
 
-    /***
+    /**
      * Update list of available NPC
      */
     public void reloadNPC() {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
             switch (npc.getName()) {
                 case "npcloaner"   -> npc.addTrait(NpcLoaner.class);
-                case "loaner"      -> npc.addTrait(Loaner.class);
                 case "banker"      -> npc.addTrait(Banker.class);
                 case "licensor"    -> npc.addTrait(Licensor.class);
                 case "npctrader"   -> npc.addTrait(NpcTrader.class);
@@ -90,7 +90,7 @@ public class NpcManager {
         loadNpc();
     }
 
-    /***
+    /**
      * Get NPC class by NPC id
      * @param id ID of NPC
      * @return NPC class
@@ -103,7 +103,7 @@ public class NpcManager {
         return null;
     }
 
-    /***
+    /**
      * Load traders and their stuff
      */
     public void loadNpc() {
@@ -115,26 +115,17 @@ public class NpcManager {
                 trait.linkToNPC(npc);
                 npc.addTrait(trait);
             }
-            else if (Npc.get(id) instanceof LoanerObject loanerObject) {
-                var npc = CitizensAPI.getNPCRegistry().getById(id);
-                var trait = new Loaner(loanerObject);
-
-                trait.linkToNPC(npc);
-                npc.addTrait(trait);
-            }
         }
     }
 
-    /***
+    /**
      * Saves traders list into .json file
      * @param fileName File name
      * @throws IOException If something goes wrong
      */
     public void saveNPC(String fileName) throws IOException {
-        // Check all server NPC
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), new TraderObject(npc.getOrAddTrait(Trader.class)));
-            else if (npc.hasTrait(Loaner.class)) Npc.put(npc.getId(), new LoanerObject(npc.getOrAddTrait(Loaner.class)));
 
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()

@@ -2,7 +2,7 @@ package economy.pcconomy.frontend.windows.wallet;
 
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.items.Wallet;
-import economy.pcconomy.frontend.windows.IWindowListener;
+import economy.pcconomy.frontend.windows.WindowListener;
 import economy.pcconomy.frontend.windows.Window;
 
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ import lombok.experimental.ExtensionMethod;
 
 
 @ExtensionMethod({Manager.class, CashManager.class})
-public class WalletListener implements Listener, IWindowListener {
+public class WalletListener extends WindowListener implements Listener  {
     @EventHandler
     public void onWalletUse(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -26,10 +26,8 @@ public class WalletListener implements Listener, IWindowListener {
                 event.getAction() != Action.RIGHT_CLICK_AIR) return;
 
         var player = event.getPlayer();
-        var wallet = Wallet.isWallet(player.getInventory().getItemInMainHand()) ?
-                new Wallet(player.getInventory().getItemInMainHand()) :
-                null;
-
+        var item = player.getInventory().getItemInMainHand();
+        var wallet = Wallet.isWallet(item) ? new Wallet(item) : null;
         if (wallet != null) {
             switch (event.getAction()) {
                 case LEFT_CLICK_AIR -> player.openInventory(WalletWindow.putWindow(player, wallet));
@@ -41,6 +39,7 @@ public class WalletListener implements Listener, IWindowListener {
         }
     }
 
+    @Override
     public void onClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
         var currentItem = player.getInventory().getItemInMainHand();

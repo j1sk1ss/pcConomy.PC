@@ -5,7 +5,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 
 import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.frontend.windows.IWindowListener;
+import economy.pcconomy.frontend.windows.WindowListener;
 import net.citizensnpcs.api.CitizensAPI;
 
 import org.bukkit.entity.Player;
@@ -14,8 +14,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.util.Objects;
 
 
-public class NPCTraderListener implements IWindowListener {
+public class NPCTraderListener extends WindowListener {
     @SuppressWarnings("deprecation")
+    @Override
     public void onClick(InventoryClickEvent event) {
         var player = (Player)event.getWhoClicked();
         var currentItem = event.getCurrentItem();

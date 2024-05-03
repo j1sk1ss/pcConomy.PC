@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.windows.shareholder;
 
-import economy.pcconomy.frontend.windows.IWindowListener;
+import economy.pcconomy.frontend.windows.WindowListener;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
@@ -11,8 +11,9 @@ import java.util.UUID;
 
 
 @ExtensionMethod({Manager.class})
-public class ShareholderListener implements IWindowListener {
+public class ShareholderListener extends WindowListener {
     @SuppressWarnings("deprecation")
+    @Override
     public void onClick(InventoryClickEvent event) {
         var windowTitle = event.getView().getTitle();
         var player = (Player)event.getWhoClicked();

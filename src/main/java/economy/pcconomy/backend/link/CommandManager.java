@@ -9,8 +9,8 @@ import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.npc.traits.*;
 import economy.pcconomy.frontend.windows.Window;
-import economy.pcconomy.frontend.windows.mayor.trader.MayorWindow;
 
+import economy.pcconomy.frontend.windows.mayor.MayorManagerWindow;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -46,9 +46,9 @@ public class CommandManager implements CommandExecutor {
             case "switch_town2npc"    -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), true);
             case "switch_town2player" -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), false);
             
-            case "town_menu" -> { // TODO: Try catch
+            case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player)sender)).getMayor().getName().equals((sender).getName())) return true;
-                Window.openWindow((Player)sender, new MayorWindow());
+                Window.openWindow((Player)sender, new MayorManagerWindow());
             }
 
             case "add_trade2town" -> ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage

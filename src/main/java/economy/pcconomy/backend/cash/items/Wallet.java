@@ -85,6 +85,9 @@ public class Wallet {
      * @return Wallet status
      */
     public static boolean isWallet(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        if (itemStack.getLoreLines() == null) return false;
+
         if (itemStack.getLoreLines().size() == 0) return false;
         return StringUtils.containsAny(itemStack.getLoreLines().get(0).toLowerCase(), "алеф") &&
                     StringUtils.containsAny(itemStack.getLoreLines().get(1).toLowerCase(), "вместимость") &&
