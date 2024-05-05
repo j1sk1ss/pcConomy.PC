@@ -139,18 +139,6 @@ public class Trader extends Trait {
     	        if (chat.get(player.getUniqueId()) == null) return;
 
                 var trader = CitizensAPI.getNPCRegistry().getById(chat.get(player.getUniqueId()));
-//                if (StringUtils.containsAny(playerMessage.toLowerCase(), "дн")) {
-//                    if (!Objects.requireNonNull(TownyAPI.getInstance().getTown(HomeTown)).getMayor().getUUID().equals(player.getUniqueId())) return;
-//                    if (IsRanted) return;
-//
-//                    if (playerMessage.equalsIgnoreCase("д")) {
-//                        PcConomy.GlobalNPC.Npc.remove(trader.getId());
-//                        trader.destroy();
-//                    }
-//
-//                    return;
-//                }
-
                 var sellingItem = player.getInventory().getItemInMainHand();
                 if (sellingItem.getType().equals(Material.AIR)) {
                     player.sendMessage("Воздух, пока что, нельзя продавать.");

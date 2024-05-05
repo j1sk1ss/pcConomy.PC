@@ -1,12 +1,13 @@
-package economy.pcconomy.frontend.windows.loans.npcLoan;
+package economy.pcconomy.frontend.windows.loans;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.Loan;
+import economy.pcconomy.backend.license.objects.LicenseType;
+import economy.pcconomy.frontend.windows.Window;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.frontend.windows.loans.LoanBaseWindow;
-
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import lombok.experimental.ExtensionMethod;
 
 import org.j1sk1ss.itemmanager.manager.Manager;
+import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.Bar;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
@@ -21,13 +23,16 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.interactive.components.Slider;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 @ExtensionMethod({Manager.class})
-public class NPCLoanWindow extends LoanBaseWindow {
+public class NPCLoanWindow extends Window {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
@@ -48,7 +53,7 @@ public class NPCLoanWindow extends LoanBaseWindow {
                     Loan.payOffADebt(player, PcConomy.GlobalBank);
                     player.closeInventory();
                 })
-        ), "Кредит-Банк"),
+        ), "Кредит-Банк", MenuSizes.ThreeLines),
 
         new Panel(Arrays.asList(
             new Slider(Arrays.asList(
@@ -107,23 +112,58 @@ public class NPCLoanWindow extends LoanBaseWindow {
                         }
                     }
                 })
-        ), "Кредит-Банк-Взятие")
+        ), "Кредит-Банк-Взятие", MenuSizes.ThreeLines)
     ));
 
-    public Inventory generateWindow(Player player) {
-        var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Банк"));
-        LoanMenu.getPanel("Кредит-Банк").place(window);
-
-        return window;
+    public void generateWindow(Player player) {
+        LoanMenu.getPanel("Кредит-Банк").getView(player);
     }
 
-    @Override
     public Inventory regenerateWindow(Inventory window, Player player, int option) {
         return window;
     }
 
-    @Override
     public ItemStack creditOptionButton(ItemStack itemStack, double maxLoanSize, int chosen, int position) {
         return itemStack;
+    }
+
+    /***
+     * Checks license of reading credit history
+     * @param player Player who wants to take credit
+     * @return Status
+     */
+    protected static boolean canReadHistory(Player player) {
+        var town = TownyAPI.getInstance().getTown(player.getLocation());
+        var licenseHistory = PcConomy.GlobalLicenseManager
+                .getLicense(Objects.requireNonNull(town).getMayor().getUUID(), LicenseType.LoanHistory);
+        if (licenseHistory == null) return false;
+
+        return !licenseHistory.isOverdue();
+    }
+
+    /***
+     * Get selected duration from window
+     * @param window Window
+     * @return Duration
+     */
+    public static int getSelectedDuration(Inventory window) {
+        for (ItemStack button : window) {
+            if (button == null) return 20;
+            if (button.getMaterial().equals(Material.PURPLE_WOOL)) {
+                System.out.println(Integer.parseInt(button.getName().replace("дней", "")));
+                return Integer.parseInt(button.getName().replace("дней", ""));
+            }
+        }
+
+        return 20;
+    }
+
+    /***
+     * Get selected credit size from window
+     * @param button Pressed button
+     * @return Credit size
+     */
+    public static double getSelectedAmount(ItemStack button) {
+        return Double.parseDouble(button.getName().replace(CashManager.currencySigh, ""));
     }
 }

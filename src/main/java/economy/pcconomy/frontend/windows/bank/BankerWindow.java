@@ -6,84 +6,123 @@ import economy.pcconomy.backend.scripts.BalanceManager;
 
 import economy.pcconomy.frontend.windows.Window;
 import lombok.experimental.ExtensionMethod;
-import net.kyori.adventure.text.Component;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.j1sk1ss.itemmanager.manager.Item;
+
 import org.j1sk1ss.itemmanager.manager.Manager;
+import org.j1sk1ss.menuframework.objects.MenuSizes;
+import org.j1sk1ss.menuframework.objects.MenuWindow;
+import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
+import org.j1sk1ss.menuframework.objects.interactive.components.LittleButton;
+import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 
 @ExtensionMethod({Manager.class, CashManager.class})
 public class BankerWindow extends Window {
-    public Inventory generateWindow(Player player) {
-        var window = Bukkit.createInventory(player, 54, Component.text("Мир-Банк"));
-        var enableBalance   = PcConomy.GlobalBank.DayWithdrawBudget;
-        var playerBalance   = BalanceManager.getBalance(player);
-        var cashInInventory = player.amountOfCashInInventory(false);
-        var textBalance = playerBalance + "";
-        var charArray   = textBalance.toCharArray();
+    public static MenuWindow BankWindow = new MenuWindow(
+        Arrays.asList(
+            new Panel(
+                Arrays.asList(
+                    new ClickArea(36, 48,
+                        (event) -> {
+                            var player = (Player) event.getWhoClicked();
+                            var option = event.getCurrentItem();
+                            if (option == null) return;
 
-        printButtons(charArray, textBalance, window);
-        printButtons(playerBalance, window, enableBalance, cashInInventory);
+                            if (option.getLoreLines().size() < 2) return;
+                            var amount = option.getDoubleFromContainer("item-bank-value");
 
-        return window;
+                            PcConomy.GlobalBank.takeCashFromPlayer(Math.abs(amount), player);
+                            BankerWindow.regenerateWindow(player, event.getInventory());
+                        }), // Put
+                    new ClickArea(41, 53,
+                        (event) -> {
+                            var player = (Player) event.getWhoClicked();
+                            var option = event.getCurrentItem();
+                            if (option == null) return;
+
+                            if (option.getLoreLines().size() < 2) return;
+                            var amount = option.getDoubleFromContainer("item-bank-value");
+
+                            PcConomy.GlobalBank.giveCashToPlayer(amount, player);
+                            BankerWindow.regenerateWindow(player, event.getInventory());
+                        }) // Withdraw
+                ), "Банк", MenuSizes.SixLines
+            )
+        )
+    );
+
+    public static void generateWindow(Player player) {
+        regenerateWindow(player, null);
     }
 
-    public static Inventory regenerateWindow(Player player, Inventory inventory) {
-        inventory.clear();
-
+    public static void regenerateWindow(Player player, Inventory inventory) {
         var enableBalance   = PcConomy.GlobalBank.DayWithdrawBudget;
         var playerBalance   = BalanceManager.getBalance(player);
         var cashInInventory = player.amountOfCashInInventory(false);
         var textBalance = playerBalance + "";
         var charArray   = textBalance.toCharArray();
 
-        printButtons(charArray, textBalance, inventory);
-        printButtons(playerBalance, inventory, enableBalance, cashInInventory);
+        var balance = printBalance(charArray, textBalance);
+        var actions = printButtons(playerBalance, enableBalance, cashInInventory);
 
-        return inventory;
+        var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
+        components.addAll(balance);
+        components.addAll(actions);
+        
+        if (inventory == null) BankWindow.getPanel("Банк").getViewWith(player, components);
+        else BankWindow.getPanel("Банк").getViewWith(player, components, inventory);
     }
 
     // Print action buttons (Default + max-min actions)
-    private static void printButtons(double playerBalance, Inventory inventory, double enableBalance, double cashInInventory) {
+    private static List<org.j1sk1ss.menuframework.objects.interactive.Component> printButtons(double playerBalance, double enableBalance, double cashInInventory) {
+        var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
+
+        if (playerBalance < enableBalance) {
+            var withdrawMax = new LittleButton(41, "Снять максимум", "\n" + Math.round(playerBalance * 100) / 100 + CashManager.currencySigh);
+            withdrawMax.setDouble2Container(Math.round(playerBalance * 100d) / 100d, "item-bank-value");
+            list.add(withdrawMax);  
+        } 
+
+        var putMax = new LittleButton(36, "Положить все средства", "\n-" + cashInInventory + CashManager.currencySigh);
+        putMax.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-bank-value");
+        list.add(putMax);        
+        
         for (var i = 0; i < 8; i++) {
-            if (i == 0 && playerBalance < enableBalance) { // TODO: DATA MODEL
-                var button = new Item("Снять максимум", "\n" + Math.round(playerBalance * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000);
-                button.setDouble2Container(Math.round(playerBalance * 100d) / 100d, "item-bank-value");
-                inventory.setItem(41, button);
-            }
-
-            if (enableBalance >= CashManager.Denomination.get(i) && playerBalance >= CashManager.Denomination.get(i)) printButtons("\n", 41, i, inventory);
-
-            if (i == 0) { // TODO: DATA MODEL
-                var button = new Item("Положить все средства", "\n-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000);
-                button.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-bank-value");
-                inventory.setItem(36, button);
-            }
-                        
-            if (cashInInventory >= CashManager.Denomination.get(i)) printButtons("\n-", 36, i, inventory);
+            if (enableBalance >= CashManager.Denomination.get(i) && playerBalance >= CashManager.Denomination.get(i)) list.addAll(printButtons("\n", 41, i));
+            if (cashInInventory >= CashManager.Denomination.get(i)) list.addAll(printButtons("\n-", 36, i));
         }
+
+        return list;
     }
 
     // Print action buttons (default actions)
-    private static void printButtons(String thing, int position, int enabled, Inventory window) { // TODO: DATA MODEL
+    private static List<org.j1sk1ss.menuframework.objects.interactive.Component> printButtons(String thing, int position, int enabled) {
+        var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var j = enabled; j < 8; j++) {
-            var button = new Item("Действие", thing + CashManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000);
+            var button = new LittleButton(j + (position + 5 * (j / 4)), "Действие", thing + CashManager.Denomination.get(j) + CashManager.currencySigh);
             button.setDouble2Container(Double.parseDouble(thing + CashManager.Denomination.get(j)), "item-bank-value");
-            window.setItem(j + (position + 5 * (j / 4)), button);
+            list.add(button);
         }
+
+        return list;
     }
 
     // Print user balance
-    private static void printButtons(char[] charArray, String textBalance, Inventory inventory) {
+    private static List<org.j1sk1ss.menuframework.objects.interactive.Component> printBalance(char[] charArray, String textBalance) {
+        var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = 9; i < Math.min(charArray.length + 9, 27); i++) {
             var currentChar = charArray[i - 9];
-            if (currentChar == 'E') inventory.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000)); // TODO: DATA MODEL
-            else if (currentChar == '.') inventory.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17001));
-            else inventory.setItem(i, new Item("Баланс", textBalance, Material.PAPER, 1, 17000 + Integer.parseInt(currentChar + ""))); // TODO: DATA MODEL
+            if (currentChar == 'E') list.add(new LittleButton(i, "Баланс", textBalance));
+            else if (currentChar == '.') list.add(new LittleButton(i, "Баланс", textBalance));
+            else  list.add(new LittleButton(i, "Баланс", textBalance)); // TODO: DATA MODEL
         }
+
+        return list;
     }
 }

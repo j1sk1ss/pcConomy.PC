@@ -1,12 +1,7 @@
 package economy.pcconomy.frontend;
 
 import economy.pcconomy.frontend.windows.WindowListener;
-import economy.pcconomy.frontend.windows.bank.BankerListener;
-import economy.pcconomy.frontend.windows.loans.loan.LoanListener;
 import economy.pcconomy.frontend.windows.mayor.MayorManagerListener;
-import economy.pcconomy.frontend.windows.npcTrade.NPCTraderListener;
-import economy.pcconomy.frontend.windows.shareholder.ShareholderListener;
-import economy.pcconomy.frontend.windows.trade.TraderListener;
 
 import economy.pcconomy.frontend.windows.wallet.WalletListener;
 import org.bukkit.entity.Player;
@@ -22,18 +17,8 @@ import java.util.Map;
 public class PlayerListener implements Listener {
     public PlayerListener() {
         windows = new HashMap<>();
-        windows.put("Кредит-Город", new LoanListener());
-        windows.put("Мир-Банк", new BankerListener());
-        windows.put("Торговец", new TraderListener());
-        windows.put("Магазин", new NPCTraderListener());
         windows.put("Кошелёк", new WalletListener());
         windows.put("Город-Торговцы", new MayorManagerListener());
-
-        var share = new ShareholderListener();
-        windows.put("Акции-Меню", share);
-        windows.put("Акции-Список", share);
-        windows.put("Акции-Города", share);
-        windows.put("Акции-Выставление", share);
     }
 
     private final Map<String, WindowListener> windows;

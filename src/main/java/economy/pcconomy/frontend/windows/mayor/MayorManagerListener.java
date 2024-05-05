@@ -6,7 +6,6 @@ import economy.pcconomy.frontend.windows.WindowListener;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -15,18 +14,6 @@ import org.j1sk1ss.itemmanager.manager.Manager;
 
 @ExtensionMethod({Manager.class})
 public class MayorManagerListener extends WindowListener {
-    @Override
-    public void onClick(InventoryClickEvent event) {
-        var player = (Player)event.getWhoClicked();
-        var inventory = event.getInventory();
-
-        try {
-            var traderId = Integer.parseInt(inventory.getItem(event.getSlot()).getName());
-            player.openInventory(MayorManagerWindow.generateTradeControls(player, traderId));
-        }
-        catch (NumberFormatException ignored) {}
-    }
-
     @Override
     public void onInteract(PlayerInteractEvent event) {
         var player = (Player)event.getPlayer();

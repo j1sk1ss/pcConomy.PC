@@ -16,28 +16,41 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-
 import org.bukkit.persistence.PersistentDataType;
-import org.j1sk1ss.itemmanager.manager.Item;
+
+import org.j1sk1ss.itemmanager.manager.Manager;
+import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
+import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
+import org.j1sk1ss.menuframework.objects.interactive.components.LittleButton;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static economy.pcconomy.frontend.windows.trade.TraderListener.getTraderFromTitle;
+import static economy.pcconomy.frontend.windows.trade.TraderWindow.getTraderFromTitle;
 
 
-@ExtensionMethod({CashManager.class})
+@ExtensionMethod({CashManager.class, Manager.class})
 public class MayorManagerWindow extends Window {
     @SuppressWarnings("deprecation")
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
         new Panel(List.of(
+            new ClickArea(0, 26, 
+                (event) -> {
+                    var player = (Player)event.getWhoClicked();
+                    var inventory = event.getInventory();
+
+                    var traderId = Integer.parseInt(inventory.getItem(event.getSlot()).getName());
+                    player.openInventory(MayorManagerWindow.generateTradeControls(player, traderId));
+                }),
+
             new Button(27, 35, "Купить торговца", "Купить нового торговца",
                 (event) -> PcConomy.GlobalNPC.buyNPC((Player) event.getWhoClicked(),
                         LicenseType.Market, PcConomy.GlobalBank.addVAT(NpcManager.traderCost)))
-        ), "Город-Торговцы"),
+        ), "Город-Торговцы", MenuSizes.FourLines),
 
         new Panel(Arrays.asList(
             new Button(0, 20, "Уволить торговца", "Торговец будет уволен",
@@ -77,22 +90,19 @@ public class MayorManagerWindow extends Window {
                     trader.Level = Math.min(trader.Level + 1, 6);
                     player.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(price), false);
                 })
-        ), "Город-Торговцы-Управление")
+        ), "Город-Торговцы-Управление", MenuSizes.ThreeLines)
     ));
 
-    @Override
-    public Inventory generateWindow(Player player) {
-        var window = Bukkit.createInventory(player, 36, Component.text("Город-Торговцы"));
-        TraderManager.getPanel("Город-Торговцы").place(window);
-
-        var town   = PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTown(player).getUUID());
+    public static void generateWindow(Player player) {
+        var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
+        var town = PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTown(player).getUUID());
         for (var i = 0; i < Math.min(27, town.traders.size()); i++) {
             var trader = CitizensAPI.getNPCRegistry().getById(town.traders.get(i)).getOrAddTrait(Trader.class);
-            window.setItem(i, new Item(town.traders.get(i) + "",
+            components.add(new LittleButton(i, town.traders.get(i) + "",
                     "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost));
         }
 
-        return window;
+        TraderManager.getPanel("Город-Торговцы").getViewWith(player, components);
     }
 
     public static Inventory generateTradeControls(Player player, int traderId) {

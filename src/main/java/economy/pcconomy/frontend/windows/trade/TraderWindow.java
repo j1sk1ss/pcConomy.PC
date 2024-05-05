@@ -16,8 +16,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
+import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
+import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.interactive.components.Slider;
 
@@ -33,20 +35,36 @@ public class TraderWindow {
         public static MenuWindow TraderMenu =
             new MenuWindow(Arrays.asList(
                 new Panel(Arrays.asList(
+                    new ClickArea(0, 53, 
+                        (event) -> {
+                            var player = (Player) event.getWhoClicked();
+                            var title  = event.getView().getTitle();
+                            var trader = getTraderFromTitle(title);
+                            if (trader == null) return;
+                    
+                            var choseItem = event.getCurrentItem();
+                            if (choseItem == null) return;
+
+                            if (!player.getInventory().contains(choseItem))
+                                player.openInventory(TraderWindow.getAcceptWindow(player, choseItem, trader));
+                        })
+                ), "Торговец-Ассортимент"),
+
+                new Panel(Arrays.asList(
                     new Button(0, 19, "Перейти в товары", "Перейти в товары торговца",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
 
-                            if (trader != null) player.openInventory(TraderWindow.getWindow(player, trader));
+                            if (trader != null) player.openInventory(getWindow(player, trader));
                         }),
 
                     new Button(2, 21, "Забрать все товары", "Забрать выставленные на продажу товары",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
                                 trader.Storage.giveItemsWithoutLore(player);
@@ -58,7 +76,7 @@ public class TraderWindow {
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
                                 player.giveCashToPlayer(trader.Revenue, false);
@@ -70,7 +88,7 @@ public class TraderWindow {
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
                                 trader.IsRanted = false;
@@ -88,13 +106,13 @@ public class TraderWindow {
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
                                 var playerTradeLicense = PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                                 if (playerTradeLicense == null) return;
                                 if (!playerTradeLicense.isOverdue())
-                                    player.openInventory(TraderWindow.getExtendedRantedWindow(player, trader));
+                                    player.openInventory(getExtendedRantedWindow(player, trader));
                             }
                         }),
 
@@ -102,30 +120,51 @@ public class TraderWindow {
                 ), "Торговец-Аренда"),
 
                 new Panel(Arrays.asList(
+                    new ClickArea(0, 8, 
+                        (event) -> {
+                            var player = (Player) event.getWhoClicked();
+                            var title  = event.getView().getTitle();
+                            var trader = getTraderFromTitle(title);
+                            if (trader == null) return;
+                    
+                            var choseItem = event.getCurrentItem();
+                            if (choseItem == null) return;
+                            
+                            var days = Integer.parseInt(choseItem.getName().split(" ")[0]);
+                            if (player.amountOfCashInInventory(false) < trader.Cost * days) return;
+                            player.takeCashFromPlayer(trader.Cost * days, false);
+                            PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost * days);
+                
+                            rantTrader(trader, days, player);
+                            player.closeInventory(); 
+                        })
+                ), "Торговец-Аренда-Время", MenuSizes.OneLine),
+
+                new Panel(Arrays.asList(
                     new Button(0, 20, "Установить цену", "Установить цену аренды за 1 день",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
-                            if (trader != null) player.openInventory(TraderWindow.getPricesWindow(player, trader));
+                            var trader = getTraderFromTitle(title);
+                            if (trader != null) player.openInventory(getPricesWindow(player, trader));
                         }),
 
                     new Button(3, 23, "Установить процент", "Установить процент с прибыли торговца",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
-                            if (trader != null) player.openInventory(TraderWindow.getMarginWindow(player, trader));
+                            var trader = getTraderFromTitle(title);
+                            if (trader != null) player.openInventory(getMarginWindow(player, trader));
                         }),
 
                     new Button(6, 26, "Занять", "Занять торговца бесплатно",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
 
                             if (trader == null) return;
-                            TraderListener.rantTrader(trader, 1, player);
+                            rantTrader(trader, 1, player);
                             player.sendMessage("Торговец успешно занят!");
                         })
                 ), "Торговец-Владелец"),
@@ -143,7 +182,7 @@ public class TraderWindow {
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
 
                             if (trader == null) return;
                             var price = TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders("Цена аренды").getChose(event);
@@ -171,7 +210,7 @@ public class TraderWindow {
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
-                            var trader = TraderListener.getTraderFromTitle(title);
+                            var trader = getTraderFromTitle(title);
                             if (trader == null) return;
 
                             var percent = TraderWindow.TraderMenu.getPanel("Торговец-Процент").getSliders("Процент города").getChose(event);
@@ -193,7 +232,7 @@ public class TraderWindow {
                         (event) -> {
                             var player     = (Player)event.getWhoClicked();
                             var title      = event.getView().getTitle();
-                            var trader     = TraderListener.getTraderFromTitle(title);
+                            var trader     = getTraderFromTitle(title);
                             var inventory  = event.getInventory();
                             var buyingItem = inventory.getItem(13);
                             assert buyingItem != null;
@@ -223,16 +262,16 @@ public class TraderWindow {
                                 }
                             }
 
-                            player.openInventory(TraderWindow.getWindow(player, trader));
+                            player.openInventory(getWindow(player, trader));
                         }),
 
                         new Button(5, 26, "Отмена", "",
                             (event) -> {
                                 var player = (Player)event.getWhoClicked();
                                 var title  = event.getView().getTitle();
-                                var trader = TraderListener.getTraderFromTitle(title);
+                                var trader = getTraderFromTitle(title);
 
-                                if (trader != null) player.openInventory(TraderWindow.getWindow(player, trader));
+                                if (trader != null) player.openInventory(getWindow(player, trader));
                             })
                 ), "Торговец-Покупка")
             ));
@@ -304,5 +343,20 @@ public class TraderWindow {
         TraderMenu.getPanel("Торговец-Покупка").place(window);
 
         return window;
+    }
+
+    public static Trader getTraderFromTitle(String name) {
+        try {
+            if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
+            return PcConomy.GlobalNPC.getNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Trader.class);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    public static void rantTrader(Trader trader, int days, Player ranter) {
+        trader.Owner    = ranter.getUniqueId();
+        trader.IsRanted = true;
+        trader.Term     = LocalDateTime.now().plusDays(days).toString();
     }
 }

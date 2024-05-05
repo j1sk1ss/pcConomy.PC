@@ -9,7 +9,6 @@ import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.economy.town.objects.StorageManager;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.npc.traits.*;
-import economy.pcconomy.frontend.windows.Window;
 
 import economy.pcconomy.frontend.windows.mayor.MayorManagerWindow;
 import org.bukkit.Material;
@@ -40,16 +39,16 @@ public class CommandManager implements CommandExecutor {
             case "put_cash2bank"      -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
             case "create_banker"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Banker());
             case "create_npc_loaner"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcLoaner());
-            case "create_loaner"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Loaner());
             case "create_trader"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Trader());
             case "create_npc_trader"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcTrader());
             case "create_licensor"    -> PcConomy.GlobalNPC.createNPC((Player)sender, new Licensor());
+            case "create_shareholder" -> PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
             case "switch_town2npc"    -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), true);
             case "switch_town2player" -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), false);
             
             case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player)sender)).getMayor().getName().equals((sender).getName())) return true;
-                Window.openWindow((Player)sender, new MayorManagerWindow());
+                MayorManagerWindow.generateWindow((Player)sender);
             }
 
             case "add_trade2town" -> ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage
@@ -64,8 +63,6 @@ public class CommandManager implements CommandExecutor {
 
             case "set_day_bank_budget" -> PcConomy.GlobalBank.DayWithdrawBudget = (Double.parseDouble(args[0]));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
-            case "create_shareholder"  -> PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
-
             case "shares_rate" -> {
                 var message = "";
                 for (var town : PcConomy.GlobalShareManager.Shares.keySet())

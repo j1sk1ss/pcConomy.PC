@@ -4,7 +4,6 @@ import com.google.gson.*;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.economy.town.PlayerTown;
 import economy.pcconomy.backend.economy.town.Town;
-import economy.pcconomy.backend.economy.town.objects.StorageManager;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
