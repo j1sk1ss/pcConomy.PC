@@ -2,8 +2,8 @@ package economy.pcconomy.backend.npc.traits;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
-import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.frontend.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
@@ -26,7 +26,7 @@ import java.util.*;
 
 
 @TraitName("Trader")
-@ExtensionMethod({Manager.class})
+@ExtensionMethod({Manager.class, TownManager.class})
 public class Trader extends Trait {
     public Trader() {
         super("Trader");
@@ -79,7 +79,7 @@ public class Trader extends Trait {
 
         // We stole all moneys to town and delete all resources if rant is over
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && IsRanted) {
-            PcConomy.GlobalTownManager.getTown(HomeTown).changeBudget(Revenue);
+            HomeTown.getTown().changeBudget(Revenue);
 
             IsRanted = false;
             Owner    = null;

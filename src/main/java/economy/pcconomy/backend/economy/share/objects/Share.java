@@ -2,6 +2,7 @@ package economy.pcconomy.backend.economy.share.objects;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +13,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class, CashManager.class})
+@ExtensionMethod({Manager.class, CashManager.class, TownManager.class})
 public class Share {
     public Share(UUID townUUID, ShareType shareType, double price, double equality) {
         TownUUID  = townUUID;
@@ -71,14 +72,13 @@ public class Share {
 
     /**
      * Player buy share
-     *
      * @param buyer Player who buy share
      */
     public void buyShare(Player buyer) {
         if (IsSold) return;
         if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(Price)) {
             buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Price), false);
-            PcConomy.GlobalTownManager.getTown(TownUUID).changeBudget(Price);
+            TownUUID.getTown().changeBudget(Price);
 
             IsSold = true;
             new Item("Акция", TownUUID + "\n" + ShareUUID + "\n" + Price).giveItems(buyer);
@@ -91,8 +91,11 @@ public class Share {
      * @param shareItem Share item in inventory
      */
     public void sellShare(Player seller, ItemStack shareItem) {
-        var currentTown = PcConomy.GlobalTownManager.getTown(TownUUID);
-        if (currentTown == null) return;
+        var currentTown = TownUUID.getTown();
+        if (currentTown == null) {
+            seller.sendMessage("Город-владелец прекратил своё существование");
+            return;
+        }
 
         if (currentTown.getBudget() >= Price) {
             seller.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(Price), false);

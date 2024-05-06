@@ -6,6 +6,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
 import economy.pcconomy.backend.economy.town.objects.StorageManager;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 import economy.pcconomy.backend.npc.traits.*;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 
-@ExtensionMethod({Manager.class, CashManager.class, StorageManager.class})
+@ExtensionMethod({Manager.class, CashManager.class, StorageManager.class, TownManager.class})
 public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
@@ -34,7 +35,7 @@ public class CommandManager implements CommandExecutor {
         switch (command.getName()) {
             case "take_cash"          -> ((Player)sender).takeCashFromPlayer(Double.parseDouble(args[0]), true);
             case "create_cash"        -> ((Player)sender).giveCashToPlayer(Double.parseDouble(args[0]), true);
-            case "reload_towns"       -> PcConomy.GlobalTownManager.reloadTownObjects();
+            case "reload_towns"       -> TownManager.reloadTownObjects();
             case "reload_npc"         -> PcConomy.GlobalNPC.reloadNPC();
             case "put_cash2bank"      -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
             case "create_banker"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Banker());
@@ -43,15 +44,15 @@ public class CommandManager implements CommandExecutor {
             case "create_npc_trader"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcTrader());
             case "create_licensor"    -> PcConomy.GlobalNPC.createNPC((Player)sender, new Licensor());
             case "create_shareholder" -> PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
-            case "switch_town2npc"    -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), true);
-            case "switch_town2player" -> PcConomy.GlobalTownManager.changeNPCStatus(TownyAPI.getInstance().getTown(((Player)sender).getLocation()).getUUID(), false);
+            case "switch_town2npc"    -> TownyAPI.getInstance().getTown(((Player)sender).getLocation()).changeNPCStatus(true);
+            case "switch_town2player" -> TownyAPI.getInstance().getTown(((Player)sender).getLocation()).changeNPCStatus(false);
             
             case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player)sender)).getMayor().getName().equals((sender).getName())) return true;
                 MayorManagerWindow.generateWindow((Player)sender);
             }
 
-            case "add_trade2town" -> ((NpcTown)PcConomy.GlobalTownManager.getTown(UUID.fromString(args[0]))).Storage
+            case "add_trade2town" -> ((NpcTown)UUID.fromString(args[0]).getTown()).Storage
                     .addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]));
 
             case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "$\n" +

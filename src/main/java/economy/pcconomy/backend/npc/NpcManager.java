@@ -10,6 +10,7 @@ import economy.pcconomy.backend.npc.traits.*;
 import lombok.experimental.ExtensionMethod;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.db.adaptors.ItemStackTypeAdaptor;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
 import economy.pcconomy.backend.npc.objects.TraderObject;
 
 import net.citizensnpcs.api.CitizensAPI;
@@ -25,7 +26,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 
-@ExtensionMethod({CashManager.class})
+@ExtensionMethod({CashManager.class, TownManager.class})
 public class NpcManager {
     public final Map<Integer, NpcObject> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
@@ -68,7 +69,7 @@ public class NpcManager {
         npc.spawn(buyer.getLocation());
         npc.addTrait(npcList.get(neededLicense));
 
-        PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTownUUID(buyer.getLocation())).traders.add(npc.getId());
+        TownyAPI.getInstance().getTownUUID(buyer.getLocation()).getTown().Traders.add(npc.getId());
         buyer.sendMessage("Торговец куплен");
     }
 

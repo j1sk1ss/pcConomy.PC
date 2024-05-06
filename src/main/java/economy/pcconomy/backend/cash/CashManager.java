@@ -11,7 +11,7 @@ import org.j1sk1ss.itemmanager.manager.Manager;
 import java.util.*;
 
 
-@ExtensionMethod({Manager.class})
+@ExtensionMethod({Manager.class, CashManager.class, Wallet.class})
 public class CashManager {
     /**
      * Currency name that will be used in all plugin
@@ -127,7 +127,7 @@ public class CashManager {
      * @param ignoreWallet Ignoring of wallet status
      */
     public static void giveCashToPlayer(Player player, double amount, boolean ignoreWallet) {
-        Manager.giveItems(CashManager.getChangeInCash(getChange(ignoreWallet ? amount : Wallet.changeCashInWallets(player, amount))), player);
+        getChange(ignoreWallet ? amount : Wallet.changeCashInWallets(player, amount)).getChangeInCash().giveItems(player);
     }
 
     /**
@@ -140,8 +140,8 @@ public class CashManager {
         var playerCashAmount = amountOfCashInInventory(player, ignoreWallet);
         if (playerCashAmount < amount) return;
 
-        Manager.takeItems(CashManager.getCashFromInventory(player.getInventory()), player);
-        Manager.giveItems(CashManager.getChangeInCash(getChange(playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallets(player, -amount)))), player);
+        player.getInventory().getCashFromInventory().takeItems(player);
+        getChange(playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallets(player, -amount))).getChangeInCash().giveItems(player);
     }
 
     /**
@@ -151,7 +151,6 @@ public class CashManager {
      */
     public static List<Integer> getChange(double amount) {
         var change = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
         for (int i = 0; i < Denomination.size(); i++)
             while (amount - Denomination.get(i) >= 0) {
                 amount -= Denomination.get(i);
@@ -168,8 +167,8 @@ public class CashManager {
      * @return Amount of cash in player`s inventory
      */
     public static double amountOfCashInInventory(Player player, boolean ignoreWallet) {
-        return CashManager.getAmountFromCash(CashManager.getCashFromInventory(player.getInventory()))
-                + (ignoreWallet ? 0 : Wallet.getWalletAmount(Wallet.getWallets(player)));
+        return player.getInventory().getCashFromInventory().getAmountFromCash()
+                + (ignoreWallet ? 0 : player.getWallets().getWalletAmount());
     }
 
     /**
@@ -189,7 +188,6 @@ public class CashManager {
     public static String getCurrencyNameByNum(int num) {
     	if (num % 10 == 1 && num % 100 != 11) return currencyNameCases.get("is");
     	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14)) return currencyNameCases.get("rs");
-
     	return currencyNameCases.get("rp");
     }
 

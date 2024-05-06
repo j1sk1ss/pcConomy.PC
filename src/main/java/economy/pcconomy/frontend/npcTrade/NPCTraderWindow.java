@@ -1,14 +1,7 @@
 package economy.pcconomy.frontend.npcTrade;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-
-import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.town.NpcTown;
-
-import lombok.experimental.ExtensionMethod;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.text.Component;
+import java.util.Arrays;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,11 +12,17 @@ import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
-import java.util.Arrays;
-import java.util.Objects;
+import com.palmergames.bukkit.towny.TownyAPI;
+
+import economy.pcconomy.backend.economy.town.NpcTown;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
+import lombok.experimental.ExtensionMethod;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.kyori.adventure.text.Component;
 
 
-@ExtensionMethod({Manager.class})
+@ExtensionMethod({Manager.class, TownManager.class})
 public class NPCTraderWindow {
     @SuppressWarnings("deprecation")
     public static MenuWindow NpcTradeWindow = new MenuWindow(
@@ -32,15 +31,20 @@ public class NPCTraderWindow {
                 Arrays.asList(
                     new ClickArea(0, 53,
                         (event) -> {
-                            var player = (Player)event.getWhoClicked();
+                            var player      = (Player)event.getWhoClicked();
                             var currentItem = event.getCurrentItem();
-                            var title = event.getView().getTitle();
-                            var town = TownyAPI.getInstance().getTown(title.split(" ")[1]);
+                            var title       = event.getView().getTitle();
+                            var town        = (NpcTown)TownyAPI.getInstance().getTown(title.split(" ")[1]).getTown();
+                            if (town == null) return;
 
                             if (!player.getInventory().contains(currentItem))
                                 if (event.isLeftClick()) {
-                                    ((NpcTown)(PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(town).getUUID()))).buyResourceFromStorage(currentItem, player);
-                                    player.openInventory(Objects.requireNonNull(NPCTraderWindow.generateWindow(player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2])))));
+                                    town.buyResourceFromStorage(currentItem, player);
+                                    player.openInventory(NPCTraderWindow.generateWindow(player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2]))));
+                                }
+                                else {
+                                    town.generateLocalPrices();
+                                    town.sellResourceToStorage(player.getInventory().getItemInMainHand(), player);
                                 }
                         })
                 ), "Магазин", MenuSizes.SixLines
@@ -49,8 +53,7 @@ public class NPCTraderWindow {
     );
 
     public static Inventory generateWindow(Player player, NPC trader) {
-        var town = PcConomy.GlobalTownManager.getTown(Objects.requireNonNull(TownyAPI.getInstance()
-                .getTown(trader.getStoredLocation())).getUUID());
+        var town = (NpcTown)TownyAPI.getInstance().getTown(trader.getStoredLocation()).getTown();
         if (town == null) return null;
 
         var window = Bukkit.createInventory(player, 54, Component.text("Магазин " +

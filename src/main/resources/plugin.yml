@@ -22,8 +22,6 @@ commands:
     usage: /put_cash2bank [amount]
   create_banker:
     usage: /create_banker
-  create_loaner:
-    usage: /create_loaner
   create_npc_loaner:
     usage: /create_npc_loaner
   create_trader:
@@ -46,8 +44,6 @@ commands:
     usage: /full_info
   set_day_bank_budget:
     usage: /set_day_bank_budget [amount]
-  transfer_share:
-    usage: /transfer_share [town name] [player name] [shares count]
   shares_rate:
     usage: /shares_rate
   global_market_prices:
@@ -60,13 +56,13 @@ bank:
   start_VAT: 0.10
   start_deposit_percent: 0.05
 license:
-  market_license_price: 1200
+  market_license_price: 1500
   trade_license_price: 500
-  loan_license_price: 3200
-  loan_history_license_price: 1600
+  loan_license_price: 10000
+  loan_history_license_price: 20000
 npc:
-  trader_cost: 3000
-  loaner_cost: 4500
+  trader_cost: 3500
+  loaner_cost: 20000
 town:
   start_useful_budget: 0.35
   start_useful_storage: 0.30

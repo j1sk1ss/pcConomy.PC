@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-@ExtensionMethod({BalanceManager.class})
+@ExtensionMethod({BalanceManager.class, PlayerManager.class, BorrowerManager.class})
 public class Loan {
     /**
      * Loan object
@@ -93,9 +93,9 @@ public class Loan {
      * @return Loan status for this borrower
      */
     public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
-        return (getSafetyFactor(loanAmount, duration, PcConomy.GlobalBorrowerManager.getBorrowerObject(borrower)) >= trustCoefficient
-                && blackTown(PlayerManager.getCountryMens(borrower.getUniqueId()))
-                && PlayerManager.getPlayerServerDuration(borrower) > 100);
+        return (getSafetyFactor(loanAmount, duration, borrower.getBorrowerObject()) >= trustCoefficient
+                && blackTown(borrower.getUniqueId().getCountryMens())
+                && borrower.getPlayerServerDuration() > 100);
     }
 
     /**
@@ -184,11 +184,11 @@ public class Loan {
     public static void destroyLoan(UUID player, Capitalist creditOwner) {
         var credit   = creditOwner.getCreditList();
         var loan     = getLoan(player, creditOwner);
-        var borrower = PcConomy.GlobalBorrowerManager.getBorrowerObject(Bukkit.getPlayer(player));
+        var borrower = Bukkit.getPlayer(player).getBorrowerObject();
 
         if (borrower != null) {
             borrower.CreditHistory.add(loan);
-            PcConomy.GlobalBorrowerManager.setBorrowerObject(borrower);
+            borrower.setBorrowerObject();
         } else PcConomy.GlobalBorrowerManager.borrowers.add(new Borrower(Objects.requireNonNull(Bukkit.getPlayer(player)), loan));
 
         credit.remove(getLoan(player, creditOwner));

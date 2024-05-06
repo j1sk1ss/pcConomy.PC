@@ -4,18 +4,20 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.economy.BankAccount;
 
 import economy.pcconomy.backend.economy.Capitalist;
+import economy.pcconomy.backend.economy.credit.Loan;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 
-public abstract class Town extends Capitalist {
+public class Town extends Capitalist {
     /**
      * Quarterly earnings
      */
-    public double quarterlyEarnings;
-    public List<Integer> traders;
+    public double QuarterlyEarnings;
+    public List<Integer> Traders;
+    public UUID TownUUID;
 
     /**
      * Change budget of town
@@ -23,7 +25,7 @@ public abstract class Town extends Capitalist {
      */
     @Override
     public void changeBudget(double amount) {
-        quarterlyEarnings += amount;
+        QuarterlyEarnings += amount;
         getBankAccount().setBalance(getBudget() + amount, "PcConomy economic action");
     }
 
@@ -31,7 +33,9 @@ public abstract class Town extends Capitalist {
      * UUID of town
      * @return UUID
      */
-    public abstract UUID getUUID();
+    public UUID getUUID() {
+        return TownUUID;
+    }
 
     /**
      * Set budget of town
@@ -55,5 +59,15 @@ public abstract class Town extends Capitalist {
      */
     public BankAccount getBankAccount() {
         return Objects.requireNonNull(TownyAPI.getInstance().getTown(getUUID())).getAccount();
+    }
+
+    @Override
+    public void newDay() {
+        throw new UnsupportedOperationException("Unimplemented method 'newDay'");
+    }
+
+    @Override
+    public List<Loan> getCreditList() {
+        throw new UnsupportedOperationException("Unimplemented method 'getCreditList'");
     }
 }

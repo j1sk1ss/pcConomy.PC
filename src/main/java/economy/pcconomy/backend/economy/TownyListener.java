@@ -5,11 +5,14 @@ import com.palmergames.bukkit.towny.event.*;
 import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
+import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 
+@ExtensionMethod({TownManager.class})
 public class TownyListener implements Listener {
     /**
      * Triggers when TownyAPI creates town
@@ -20,7 +23,7 @@ public class TownyListener implements Listener {
         var town = event.getTown();
 
         PcConomy.GlobalBank.BankBudget += 250d; // TODO: Towny API connect correct price
-        PcConomy.GlobalTownManager.createTownObject(town, false);
+        town.createTownObject(false);
     }
 
     /**
@@ -39,7 +42,8 @@ public class TownyListener implements Listener {
     @EventHandler
     public void onDestroy(DeleteTownEvent event) { // TODO: Make correct paying for shares (maybe?)
         var town = event.getTownUUID();
-        PcConomy.GlobalTownManager.destroyTown(town);
+        PcConomy.GlobalShareManager.takeOffShares(town);
+        town.destroyTown();
     }
 
     /**
@@ -49,7 +53,7 @@ public class TownyListener implements Listener {
     @EventHandler
     public void onDied(TownRuinedEvent event) { // TODO: Make correct paying for shares (maybe?)
         var town = event.getTown().getUUID();
-        PcConomy.GlobalTownManager.destroyTown(town);
+        town.destroyTown();
     }
 
     /**

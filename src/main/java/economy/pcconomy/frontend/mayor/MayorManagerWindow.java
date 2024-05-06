@@ -3,6 +3,7 @@ package economy.pcconomy.frontend.mayor;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.town.manager.TownManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
@@ -32,7 +33,7 @@ import java.util.List;
 import static economy.pcconomy.frontend.trade.TraderWindow.getTraderFromTitle;
 
 
-@ExtensionMethod({CashManager.class, Manager.class})
+@ExtensionMethod({CashManager.class, Manager.class, TownManager.class})
 public class MayorManagerWindow {
     @SuppressWarnings("deprecation")
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
@@ -94,10 +95,10 @@ public class MayorManagerWindow {
 
     public static void generateWindow(Player player) {
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
-        var town = PcConomy.GlobalTownManager.getTown(TownyAPI.getInstance().getTown(player).getUUID());
-        for (var i = 0; i < Math.min(27, town.traders.size()); i++) {
-            var trader = CitizensAPI.getNPCRegistry().getById(town.traders.get(i)).getOrAddTrait(Trader.class);
-            components.add(new LittleButton(i, town.traders.get(i) + "",
+        var town = TownyAPI.getInstance().getTown(player).getTown();
+        for (var i = 0; i < Math.min(27, town.Traders.size()); i++) {
+            var trader = CitizensAPI.getNPCRegistry().getById(town.Traders.get(i)).getOrAddTrait(Trader.class);
+            components.add(new LittleButton(i, town.Traders.get(i) + "",
                 "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost));
         }
 

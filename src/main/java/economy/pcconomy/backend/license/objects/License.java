@@ -25,6 +25,3 @@ public class License {
         return LocalDateTime.now().isAfter(LocalDateTime.parse(Term));
     }
 }
-
-
-

@@ -5,7 +5,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-
+import economy.pcconomy.backend.economy.town.manager.TownManager;
 import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
 
@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class, CashManager.class})
+@ExtensionMethod({Manager.class, CashManager.class, TownManager.class})
 public class ShareholderWindow {
     @SuppressWarnings({ "deprecation", "null" })
     public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
@@ -115,7 +115,7 @@ public class ShareholderWindow {
                         var share = new Share(player.getInventory().getItemInMainHand());
                         var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
 
-                        if (share.Price > PcConomy.GlobalTownManager.getTown(town.getUUID()).getBudget()) return;
+                        if (share.Price > town.getTown().getBudget()) return;
                         share.sellShare(player, player.getInventory().getItemInMainHand());
                     }
                 })

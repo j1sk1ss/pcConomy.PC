@@ -125,9 +125,9 @@ public final class PcConomy extends JavaPlugin {
 
             var command_manager = new CommandManager();
             for (var command : Arrays.asList("take_cash", "create_cash", "reload_towns", "put_cash2bank",
-                    "create_banker", "create_loaner", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor",
+                    "create_banker", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor",
                     "switch_town2npc", "switch_town2player", "town_menu", "add_trade2town", "reload_npc", "full_info", "set_day_bank_budget",
-                    "create_wallet", "create_shareholder", "transfer_share", "shares_rate", "global_market_prices"))
+                    "create_wallet", "create_shareholder", "shares_rate", "global_market_prices"))
                 Objects.requireNonNull(getCommand(command)).setExecutor(command_manager);
 
             System.out.print("[PcConomy] Commands registered.\n");
