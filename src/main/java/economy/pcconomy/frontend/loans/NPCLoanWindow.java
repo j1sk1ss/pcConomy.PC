@@ -1,12 +1,10 @@
-package economy.pcconomy.frontend.windows.loans;
+package economy.pcconomy.frontend.loans;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.frontend.windows.Window;
 import economy.pcconomy.backend.cash.CashManager;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -32,7 +30,7 @@ import java.util.Objects;
 
 
 @ExtensionMethod({Manager.class})
-public class NPCLoanWindow extends Window {
+public class NPCLoanWindow {
     private final static int countOfAmountSteps = 9;
     private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
 
@@ -41,10 +39,7 @@ public class NPCLoanWindow extends Window {
             new Button(0, 21, "Взять кредит", "Взять кредит у банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    var window = Bukkit.createInventory(player, 27, Component.text("Кредит-Банк-Взятие"));
-
-                    NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие").place(window);
-                    player.openInventory(window);
+                    NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие").getView(player);
                 }),
 
             new Button(5, 26, "Погасить кредит", "Погасить кредит банка",
@@ -115,19 +110,11 @@ public class NPCLoanWindow extends Window {
         ), "Кредит-Банк-Взятие", MenuSizes.ThreeLines)
     ));
 
-    public void generateWindow(Player player) {
+    public static void generateWindow(Player player) {
         LoanMenu.getPanel("Кредит-Банк").getView(player);
     }
 
-    public Inventory regenerateWindow(Inventory window, Player player, int option) {
-        return window;
-    }
-
-    public ItemStack creditOptionButton(ItemStack itemStack, double maxLoanSize, int chosen, int position) {
-        return itemStack;
-    }
-
-    /***
+    /**
      * Checks license of reading credit history
      * @param player Player who wants to take credit
      * @return Status
@@ -141,7 +128,7 @@ public class NPCLoanWindow extends Window {
         return !licenseHistory.isOverdue();
     }
 
-    /***
+    /**
      * Get selected duration from window
      * @param window Window
      * @return Duration
@@ -158,7 +145,7 @@ public class NPCLoanWindow extends Window {
         return 20;
     }
 
-    /***
+    /**
      * Get selected credit size from window
      * @param button Pressed button
      * @return Credit size

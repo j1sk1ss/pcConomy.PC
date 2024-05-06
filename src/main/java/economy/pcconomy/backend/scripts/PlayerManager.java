@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+
 public class PlayerManager {
     /**
      * Get country mens of player (All players that live with this player in the same town)

@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.windows.trade;
+package economy.pcconomy.frontend.trade;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
@@ -34,14 +34,14 @@ public class TraderWindow {
         @SuppressWarnings("deprecation")
         public static MenuWindow TraderMenu =
             new MenuWindow(Arrays.asList(
-                new Panel(Arrays.asList(
-                    new ClickArea(0, 53, 
+                new Panel(List.of(
+                    new ClickArea(0, 53,
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title = event.getView().getTitle();
                             var trader = getTraderFromTitle(title);
                             if (trader == null) return;
-                    
+
                             var choseItem = event.getCurrentItem();
                             if (choseItem == null) return;
 
@@ -95,8 +95,9 @@ public class TraderWindow {
                                 trader.Owner    = null;
                                 trader.Term     = LocalDateTime.now().toString();;
 
+                                trader.Storage.giveItemsWithoutLore(player);
                                 player.giveCashToPlayer(trader.Revenue, false);
-                                Manager.giveItems(trader.Storage, player);
+                                trader.Storage.clear();
                             }
                         })
                 ), "Торговец-Управление"),
@@ -119,24 +120,24 @@ public class TraderWindow {
                     new Button(5, 26, "НДС города:", "")
                 ), "Торговец-Аренда"),
 
-                new Panel(Arrays.asList(
-                    new ClickArea(0, 8, 
+                new Panel(List.of(
+                    new ClickArea(0, 8,
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title = event.getView().getTitle();
                             var trader = getTraderFromTitle(title);
                             if (trader == null) return;
-                    
+
                             var choseItem = event.getCurrentItem();
                             if (choseItem == null) return;
-                            
+
                             var days = Integer.parseInt(choseItem.getName().split(" ")[0]);
                             if (player.amountOfCashInInventory(false) < trader.Cost * days) return;
                             player.takeCashFromPlayer(trader.Cost * days, false);
                             PcConomy.GlobalTownManager.getTown(trader.HomeTown).changeBudget(trader.Cost * days);
-                
+
                             rantTrader(trader, days, player);
-                            player.closeInventory(); 
+                            player.closeInventory();
                         })
                 ), "Торговец-Аренда-Время", MenuSizes.OneLine),
 
@@ -216,7 +217,7 @@ public class TraderWindow {
                             var percent = TraderWindow.TraderMenu.getPanel("Торговец-Процент").getSliders("Процент города").getChose(event);
                             if (percent.equals("none")) return;
 
-                            trader.Margin = Double.parseDouble(percent.replace("%", ""));
+                            trader.Margin = Double.parseDouble(percent.replace("%", "")) / 100;
                             player.sendMessage("Процент установлен!");
                         }),
 

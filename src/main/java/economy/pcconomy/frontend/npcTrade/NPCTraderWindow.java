@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.windows.npcTrade;
+package economy.pcconomy.frontend.npcTrade;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 

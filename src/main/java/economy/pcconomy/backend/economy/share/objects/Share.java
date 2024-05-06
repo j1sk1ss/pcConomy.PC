@@ -49,13 +49,33 @@ public class Share {
     public double Revenue;
 
     /**
+     * Check if itemStack is shareBody
+     * @param shareBody ItemStack
+     * @return True or False
+     */
+    public static boolean isShare(ItemStack shareBody) {
+        try {
+            var loreLine = shareBody.getLoreLines();
+            if (loreLine == null) return false;
+            if (loreLine.size() < 3) return false;
+
+            UUID.fromString(loreLine.get(0));
+            UUID.fromString(loreLine.get(1));
+            Double.parseDouble(loreLine.get(2));
+            return true;
+        }
+        catch (NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    /**
      * Player buy share
      *
      * @param buyer Player who buy share
      */
     public void buyShare(Player buyer) {
         if (IsSold) return;
-
         if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(Price)) {
             buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Price), false);
             PcConomy.GlobalTownManager.getTown(TownUUID).changeBudget(Price);

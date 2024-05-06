@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.windows.mayor;
+package economy.pcconomy.frontend.mayor;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
@@ -6,7 +6,6 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
-import economy.pcconomy.frontend.windows.Window;
 
 import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.CitizensAPI;
@@ -30,11 +29,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static economy.pcconomy.frontend.windows.trade.TraderWindow.getTraderFromTitle;
+import static economy.pcconomy.frontend.trade.TraderWindow.getTraderFromTitle;
 
 
 @ExtensionMethod({CashManager.class, Manager.class})
-public class MayorManagerWindow extends Window {
+public class MayorManagerWindow {
     @SuppressWarnings("deprecation")
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
         new Panel(List.of(
@@ -99,7 +98,7 @@ public class MayorManagerWindow extends Window {
         for (var i = 0; i < Math.min(27, town.traders.size()); i++) {
             var trader = CitizensAPI.getNPCRegistry().getById(town.traders.get(i)).getOrAddTrait(Trader.class);
             components.add(new LittleButton(i, town.traders.get(i) + "",
-                    "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost));
+                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost));
         }
 
         TraderManager.getPanel("Город-Торговцы").getViewWith(player, components);

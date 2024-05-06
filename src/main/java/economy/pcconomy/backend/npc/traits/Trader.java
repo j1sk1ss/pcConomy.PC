@@ -5,7 +5,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.npc.objects.TraderObject;
-import economy.pcconomy.frontend.windows.trade.TraderWindow;
+import economy.pcconomy.frontend.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -71,7 +71,10 @@ public class Trader extends Trait {
         if (HomeTown == null) {
             var storedTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
             if (storedTown != null) HomeTown = storedTown.getUUID();
-            else HomeTown = null; // TODO: Maybe delete NPC if town not exists?
+            else {
+                event.getClicker().sendMessage("Что я здесь забыл?");
+                HomeTown = null;
+            }
         }
 
         // We stole all moneys to town and delete all resources if rant is over
@@ -88,13 +91,15 @@ public class Trader extends Trait {
 
         var player = event.getClicker();
         try {
-            if (IsRanted)
+            if (IsRanted) {
                 if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.getOwnerWindow(player, this));
                 else player.openInventory(TraderWindow.getWindow(player, this));
-            else
-                if (Objects.requireNonNull(TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation())).getMayor()
-                        .getUUID().equals(player.getUniqueId())) player.openInventory(TraderWindow.getMayorWindow(player, this));
+            }
+            else {
+                if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor().getUUID().equals(player.getUniqueId()))
+                    player.openInventory(TraderWindow.getMayorWindow(player, this));
                 else player.openInventory(TraderWindow.getRanterWindow(player, this));
+            }
         }
         catch (NullPointerException e) {
             player.sendMessage("Что-то пошло не так (1).");
@@ -110,11 +115,15 @@ public class Trader extends Trait {
 
         try {
             if (IsRanted) {
+                if (Storage.size() >= (event.getNPC().getOrAddTrait(Trader.class).Level * 9)) {
+                    player.sendMessage("Склад торговца переполнен!");
+                    return;
+                }
+
                 if (Owner.equals(playerUUID) && Storage.size() < event.getNPC().getOrAddTrait(Trader.class).Level) {
                     player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
                     chat.put(playerUUID, event.getNPC().getId());
-                } else if (Storage.size() >= event.getNPC().getOrAddTrait(Trader.class).Level)
-                    player.sendMessage("Склад торговца переполнен!");
+                }
 
                 return;
             }

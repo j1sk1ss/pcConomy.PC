@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.npc.traits;
 
-import economy.pcconomy.frontend.windows.loans.NPCLoanWindow;
+import economy.pcconomy.frontend.loans.NPCLoanWindow;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
@@ -16,6 +16,6 @@ public class NpcLoaner extends Trait {
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
         if (!event.getNPC().equals(this.getNPC())) return;
-        new NPCLoanWindow().generateWindow(event.getClicker());
+        NPCLoanWindow.generateWindow(event.getClicker());
     }
 }

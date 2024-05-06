@@ -70,6 +70,26 @@ public class ShareManager {
     }
 
     /**
+     * Sold first empty share of town
+     * @param town Town
+     * @return Share that was sold
+     */
+    public Share soldFirstEmptyShare(UUID town) {
+        var shares = Shares.get(town);
+        Share share = null;
+
+        for (var body : shares)
+            if (!body.IsSold) {
+                body.IsSold = true;
+                share = body;
+                break;
+            }
+
+        Shares.put(town, shares);
+        return share;
+    }
+
+    /**
      * Get share without owner
      * @param town Town
      * @return Share without owner

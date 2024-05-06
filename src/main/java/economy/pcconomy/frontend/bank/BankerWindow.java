@@ -1,10 +1,9 @@
-package economy.pcconomy.frontend.windows.bank;
+package economy.pcconomy.frontend.bank;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.scripts.BalanceManager;
 
-import economy.pcconomy.frontend.windows.Window;
 import lombok.experimental.ExtensionMethod;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 
 @ExtensionMethod({Manager.class, CashManager.class})
-public class BankerWindow extends Window {
+public class BankerWindow {
     public static MenuWindow BankWindow = new MenuWindow(
         Arrays.asList(
             new Panel(

@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.npc.traits;
 
-import economy.pcconomy.frontend.windows.bank.BankerWindow;
+import economy.pcconomy.frontend.bank.BankerWindow;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;

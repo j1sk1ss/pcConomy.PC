@@ -1,11 +1,12 @@
-package economy.pcconomy.frontend.windows.mayor;
+package economy.pcconomy.frontend.mayor;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.frontend.windows.WindowListener;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -13,8 +14,8 @@ import org.j1sk1ss.itemmanager.manager.Manager;
 
 
 @ExtensionMethod({Manager.class})
-public class MayorManagerListener extends WindowListener {
-    @Override
+public class MayorManagerListener implements Listener {
+    @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         var player = (Player)event.getPlayer();
         var container = player.getPersistentDataContainer();
