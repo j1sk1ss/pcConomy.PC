@@ -4,7 +4,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 
@@ -48,8 +47,7 @@ public class MayorManagerWindow {
                 }),
 
             new Button(27, 35, "Купить торговца", "Купить нового торговца",
-                (event) -> PcConomy.GlobalNPC.buyNPC((Player) event.getWhoClicked(),
-                        LicenseType.Market, PcConomy.GlobalBank.addVAT(NpcManager.traderCost)))
+                (event) -> new Trader().Buy((Player) event.getWhoClicked()))
         ), "Город-Торговцы", MenuSizes.FourLines),
 
         new Panel(Arrays.asList(

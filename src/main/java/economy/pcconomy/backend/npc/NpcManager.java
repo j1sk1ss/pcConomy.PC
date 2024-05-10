@@ -1,17 +1,12 @@
 package economy.pcconomy.backend.npc;
 
 import com.google.gson.GsonBuilder;
-
-import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.npc.objects.NpcObject;
+import economy.pcconomy.backend.db.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.npc.traits.*;
 import lombok.experimental.ExtensionMethod;
-import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.db.adaptors.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.npc.objects.TraderObject;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
@@ -22,13 +17,15 @@ import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Hashtable;
 import java.util.Map;
 
 
 @ExtensionMethod({CashManager.class, TownManager.class})
 public class NpcManager {
-    public final Map<Integer, NpcObject> Npc = new Hashtable<>();
+    public final Map<Integer, Trader> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
 
     /**
@@ -36,48 +33,22 @@ public class NpcManager {
      * @param creator Player that create NPC
      * @param trait Trait class
      */
-    public void createNPC(Player creator, Trait trait) {
+    public static void createNPC(Player creator, Trait trait) {
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, trait.getName());
-
         trait.linkToNPC(npc);
         npc.addTrait(trait);
         npc.spawn(creator.getLocation());
     }
 
     /**
-     * Buy NPC
-     * @param buyer Player that buy NPC
-     * @param neededLicense License that needs for this
-     * @param price Price of NPC
-     */
-    public void buyNPC(Player buyer, LicenseType neededLicense, double price) {
-        if (buyer.amountOfCashInInventory(false) < price) return;
-
-        var license = PcConomy.GlobalLicenseManager.getLicense(buyer.getUniqueId(), neededLicense);
-        if (license == null) return;
-        if (license.isOverdue()) return;
-
-        buyer.takeCashFromPlayer(price, false);
-        PcConomy.GlobalBank.BankBudget += price;
-
-        var npcList = Map.of(
-            LicenseType.Market, new Trader()
-        );
-
-        var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcList.get(neededLicense).getName());
-        npcList.get(neededLicense).linkToNPC(npc);
-        npc.spawn(buyer.getLocation());
-        npc.addTrait(npcList.get(neededLicense));
-
-        TownyAPI.getInstance().getTownUUID(buyer.getLocation()).getTown().Traders.add(npc.getId());
-        buyer.sendMessage("Торговец куплен");
-    }
-
-    /**
      * Update list of available NPC
      */
-    public void reloadNPC() {
+    public static void reloadNPC() {
+        // Register traits
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
+            if (PcConomy.GlobalNPC.Npc.get(npc.getId()) != null)
+                PcConomy.GlobalNPC.Npc.get(npc.getId()).linkToNPC(npc);
+
             switch (npc.getName()) {
                 case "npcloaner"   -> npc.addTrait(NpcLoaner.class);
                 case "banker"      -> npc.addTrait(Banker.class);
@@ -87,8 +58,6 @@ public class NpcManager {
                 case "shareholder" -> npc.addTrait(Shareholder.class);
             }
         }
-
-        loadNpc();
     }
 
     /**
@@ -96,27 +65,8 @@ public class NpcManager {
      * @param id ID of NPC
      * @return NPC class
      */
-    public net.citizensnpcs.api.npc.NPC getNPC(int id) {
-        for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
-            if (npc.hasTrait(Trader.class))
-                if (npc.getId() == id) return npc;
-
-        return null;
-    }
-
-    /**
-     * Load traders and their stuff
-     */
-    public void loadNpc() {
-        for (var id : Npc.keySet()) {
-            if (Npc.get(id) instanceof TraderObject traderObject) {
-                var npc = CitizensAPI.getNPCRegistry().getById(id);
-                var trait = new Trader(traderObject);
-
-                trait.linkToNPC(npc);
-                npc.addTrait(trait);
-            }
-        }
+    public static net.citizensnpcs.api.npc.NPC getNPC(int id) {
+        return CitizensAPI.getNPCRegistry().getById(id);
     }
 
     /**
@@ -125,8 +75,9 @@ public class NpcManager {
      * @throws IOException If something goes wrong
      */
     public void saveNPC(String fileName) throws IOException {
+        // Check all server NPC
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
-            if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), new TraderObject(npc.getOrAddTrait(Trader.class)));
+            if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), npc.getOrAddTrait(Trader.class));
 
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
@@ -135,6 +86,22 @@ public class NpcManager {
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
                 .toJson(this, writer);
+
         writer.close();
+    }
+
+    /**
+     * Loads NPC data from .json
+     * @param fileName File name (without format)
+     * @return NPC object
+     * @throws IOException If something goes wrong
+     */
+    public static NpcManager loadNPC(String fileName) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), NpcManager.class);
     }
 }

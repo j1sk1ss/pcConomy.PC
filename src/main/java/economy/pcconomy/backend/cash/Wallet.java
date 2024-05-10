@@ -142,28 +142,11 @@ public class Wallet {
      * @return Amount of cash that can't be stored
      */
     public static double changeCashInWallets(Player player, double amount) {
-
-        // ==============================
-        // Found all wallets in inventory
-        // ==============================
-
         var wallets = getWallets(player);
         var cashAmount = Math.abs(amount);
 
-        // ==============================
-        // Found all wallets in inventory
-        // ==============================
-        // Take them from inventory
-        // ==============================
-
         for (var wallet : wallets)
             wallet.takeWallet(player);
-
-        // ==============================
-        // Take them from inventory
-        // ==============================
-        // Change value from all wallets
-        // ==============================
 
         for (var wallet : wallets) {
             if (cashAmount <= 0) break;
@@ -173,18 +156,8 @@ public class Wallet {
             wallet.giveWallet(player);
         }
 
-        // ==============================
-        // Change value from all wallets
-        // ==============================
-        // Give wallets to player
-        // ==============================
-
         for (var wallet : wallets)
             wallet.giveWallet(player);
-
-        // ==============================
-        // Give wallets to player
-        // ==============================
 
         return cashAmount;
     }

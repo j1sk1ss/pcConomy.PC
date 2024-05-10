@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.scripts;
+package economy.pcconomy.backend.economy;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import org.bukkit.Bukkit;

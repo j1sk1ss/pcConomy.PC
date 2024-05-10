@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,5 +52,19 @@ public class BorrowerManager {
                 .create()
                 .toJson(this, writer);
         writer.close();
+    }
+
+    /**
+     * Loads borrowers data from .json
+     * @param fileName File name (without format)
+     * @return Borrowers manager object
+     * @throws IOException If something goes wrong
+     */
+    public static BorrowerManager loadBorrowers(String fileName) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), BorrowerManager.class);
     }
 }

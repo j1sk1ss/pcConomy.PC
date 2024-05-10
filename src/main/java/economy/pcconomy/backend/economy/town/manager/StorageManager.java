@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.economy.town.objects;
+package economy.pcconomy.backend.economy.town.manager;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

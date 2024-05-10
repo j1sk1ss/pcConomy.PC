@@ -3,7 +3,7 @@ package economy.pcconomy.backend.economy.town;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.economy.town.objects.StorageManager;
+import economy.pcconomy.backend.economy.town.manager.StorageManager;
 
 import org.apache.commons.math3.util.Precision;
 import org.bukkit.Material;

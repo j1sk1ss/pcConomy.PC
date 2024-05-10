@@ -7,11 +7,12 @@ import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.cash.Wallet;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.economy.town.objects.StorageManager;
-import economy.pcconomy.backend.npc.objects.TraderObject;
+import economy.pcconomy.backend.economy.town.manager.StorageManager;
+import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.*;
 
 import economy.pcconomy.frontend.mayor.MayorManagerWindow;
+import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,14 +37,14 @@ public class CommandManager implements CommandExecutor {
             case "take_cash"          -> ((Player)sender).takeCashFromPlayer(Double.parseDouble(args[0]), true);
             case "create_cash"        -> ((Player)sender).giveCashToPlayer(Double.parseDouble(args[0]), true);
             case "reload_towns"       -> TownManager.reloadTownObjects();
-            case "reload_npc"         -> PcConomy.GlobalNPC.reloadNPC();
+            case "reload_npc"         -> NpcManager.reloadNPC();
             case "put_cash2bank"      -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
-            case "create_banker"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Banker());
-            case "create_npc_loaner"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcLoaner());
-            case "create_trader"      -> PcConomy.GlobalNPC.createNPC((Player)sender, new Trader());
-            case "create_npc_trader"  -> PcConomy.GlobalNPC.createNPC((Player)sender, new NpcTrader());
-            case "create_licensor"    -> PcConomy.GlobalNPC.createNPC((Player)sender, new Licensor());
-            case "create_shareholder" -> PcConomy.GlobalNPC.createNPC((Player) sender, new Shareholder());
+            case "create_banker"      -> NpcManager.createNPC((Player)sender, new Banker());
+            case "create_npc_loaner"  -> NpcManager.createNPC((Player)sender, new NpcLoaner());
+            case "create_trader"      -> NpcManager.createNPC((Player)sender, new Trader());
+            case "create_npc_trader"  -> NpcManager.createNPC((Player)sender, new NpcTrader());
+            case "create_licensor"    -> NpcManager.createNPC((Player)sender, new Licensor());
+            case "create_shareholder" -> NpcManager.createNPC((Player) sender, new Shareholder());
             case "switch_town2npc"    -> TownyAPI.getInstance().getTown(((Player)sender).getLocation()).changeNPCStatus(true);
             case "switch_town2player" -> TownyAPI.getInstance().getTown(((Player)sender).getLocation()).changeNPCStatus(false);
             
@@ -59,8 +60,7 @@ public class CommandManager implements CommandExecutor {
                         "Global VAT: " + PcConomy.GlobalBank.VAT + "%\n" +
                         "Deposit percent: " + PcConomy.GlobalBank.DepositPercent + "%\n" +
                         "Registered towns count: " + PcConomy.GlobalTownManager.Towns.size() + "\n" +
-                        "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n" +
-                        "NPC Traders count: " + PcConomy.GlobalNPC.Npc.size());
+                        "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n");
 
             case "set_day_bank_budget" -> PcConomy.GlobalBank.DayWithdrawBudget = (Double.parseDouble(args[0]));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
@@ -79,13 +79,15 @@ public class CommandManager implements CommandExecutor {
                 var message = "";
                 var prices = new HashMap<ItemStack, Double>();
 
-                for (var trader : PcConomy.GlobalNPC.Npc.keySet())
-                    if (PcConomy.GlobalNPC.Npc.get(trader) instanceof TraderObject currentTrader)
-                        for (var resource : currentTrader.Storage)
-                            if (!prices.containsKey(resource))
-                                prices.put(resource, resource.getDoubleFromContainer("item-price"));
-                            else prices.put(resource,
-                                    (prices.get(resource) + resource.getDoubleFromContainer("item-price")) / 2);
+                for (var trader : CitizensAPI.getNPCRegistry()) {
+                    if (trader.hasTrait(Trader.class)) {
+                        var trait = trader.getOrAddTrait(Trader.class);
+                        for (var resource : trait.Storage) {
+                            if (!prices.containsKey(resource)) prices.put(resource, resource.getDoubleFromContainer("item-price"));
+                            else prices.put(resource, (prices.get(resource) + resource.getDoubleFromContainer("item-price")) / 2);
+                        }
+                    }
+                }
 
                 for (var resource : prices.keySet())
                     message += "Товар: " + resource + ", цена: " + prices.get(resource) + CashManager.currencySigh;

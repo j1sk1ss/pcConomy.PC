@@ -8,12 +8,14 @@ import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.economy.town.PlayerTown;
 import economy.pcconomy.backend.economy.town.Town;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.db.adaptors.ItemStackTypeAdaptor;
+import economy.pcconomy.backend.db.ItemStackTypeAdaptor;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,7 +69,7 @@ public class TownManager {
 
     /**
      * Changes town NPS status
-     * @param townUUID UUID of town that change status
+     * @param town UUID of town that change status
      * @param isNPC New status
      */
     public static void changeNPCStatus(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
@@ -79,7 +81,7 @@ public class TownManager {
 
     /**
      * Gets town from list of town in plugin
-     * @param townUUID Name of town
+     * @param uuid Name of town
      * @return TownObject
      */
     public static Town getTown(UUID uuid) {
@@ -139,5 +141,20 @@ public class TownManager {
                 .toJson(this, writer);
 
         writer.close();
+    }
+
+    /**
+     * Loads towns data from .json
+     * @param fileName File name (without format)
+     * @return Town manager object
+     * @throws IOException If something goes wrong
+     */
+    public static TownManager loadTowns(String fileName) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), TownManager.class);
     }
 }

@@ -5,6 +5,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.town.manager.TownManager;
 import economy.pcconomy.backend.license.objects.LicenseType;
+import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 
 import lombok.experimental.ExtensionMethod;
@@ -350,7 +351,7 @@ public class TraderWindow {
     public static Trader getTraderFromTitle(String name) {
         try {
             if (Arrays.stream(name.split(" ")).toList().size() <= 1) return null;
-            return PcConomy.GlobalNPC.getNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Trader.class);
+            return NpcManager.getNPC(Integer.parseInt(name.split(" ")[1])).getOrAddTrait(Trader.class);
         } catch (NumberFormatException ex) {
             return null;
         }

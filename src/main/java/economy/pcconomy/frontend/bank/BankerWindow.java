@@ -2,7 +2,7 @@ package economy.pcconomy.frontend.bank;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.scripts.BalanceManager;
+import economy.pcconomy.backend.economy.BalanceManager;
 
 import lombok.experimental.ExtensionMethod;
 

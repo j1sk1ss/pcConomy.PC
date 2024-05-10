@@ -13,6 +13,8 @@ import org.j1sk1ss.itemmanager.manager.Manager;
 import lombok.experimental.ExtensionMethod;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,5 +100,19 @@ public class LicenseManager {
                 .create()
                 .toJson(this, writer);
         writer.close();
+    }
+
+    /**
+     * Loads license data from .json
+     * @param fileName File name (without format)
+     * @return License manager object
+     * @throws IOException If something goes wrong
+     */
+    public static LicenseManager loadLicenses(String fileName) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), LicenseManager.class);
     }
 }

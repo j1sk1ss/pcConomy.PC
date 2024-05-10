@@ -2,13 +2,16 @@ package economy.pcconomy.backend.npc.traits;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.CashManager;
 import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.npc.objects.TraderObject;
+import economy.pcconomy.backend.license.objects.LicenseType;
 import economy.pcconomy.frontend.trade.TraderWindow;
+
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 
@@ -16,6 +19,8 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.j1sk1ss.itemmanager.manager.Manager;
@@ -26,7 +31,7 @@ import java.util.*;
 
 
 @TraitName("Trader")
-@ExtensionMethod({Manager.class, TownManager.class})
+@ExtensionMethod({Manager.class, TownManager.class, CashManager.class})
 public class Trader extends Trait {
     public Trader() {
         super("Trader");
@@ -38,32 +43,33 @@ public class Trader extends Trait {
         Level       = 1;
     }
 
-    public Trader(TraderObject traderObject) {
+    public Trader(List<ItemStack> storage, double revenue, double margin, double cost, boolean isRanted,
+                     UUID homeTown, UUID owner, String term, int level) {
         super("Trader");
 
-        Owner    = traderObject.Owner;
-        Storage  = traderObject.Storage;
-        Revenue  = traderObject.Revenue;
-        Cost     = traderObject.Cost;
-        Margin   = traderObject.Margin;
-        HomeTown = traderObject.HomeTown;
-        IsRanted = traderObject.IsRanted;
-        Term     = traderObject.Term;
-        Level    = traderObject.Level;
+        Storage  = storage;
+        Revenue  = revenue;
+        Margin   = margin;
+        Cost     = cost;
+        IsRanted = isRanted;
+        HomeTown = homeTown;
+        Owner    = owner;
+        Term     = term;
+        Level    = level;
     }
 
-    public List<ItemStack> Storage;
-    public List<UUID> SpecialList;
-    public double Revenue;
-    public double Margin;
-    public double Cost;
-    public boolean IsRanted;
-    public String Term;
-    public UUID HomeTown;
-    public UUID Owner;
-    public int Level;
+    @Persist public List<ItemStack> Storage;
+    @Persist public List<UUID> SpecialList;
+    @Persist public double Revenue;
+    @Persist public double Margin;
+    @Persist public double Cost;
+    @Persist public boolean IsRanted;
+    @Persist public String Term;
+    @Persist public UUID HomeTown;
+    @Persist public UUID Owner;
+    @Persist public int Level;
 
-    private final Dictionary<UUID, Integer> chat = new Hashtable<>();
+    private transient final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
@@ -96,8 +102,10 @@ public class Trader extends Trait {
                 else player.openInventory(TraderWindow.getWindow(player, this));
             }
             else {
-                if (TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation()).getMayor().getUUID().equals(player.getUniqueId()))
-                    player.openInventory(TraderWindow.getMayorWindow(player, this));
+                var town = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
+                if (town == null) return;
+
+                if (town.getMayor().getUUID().equals(player.getUniqueId())) player.openInventory(TraderWindow.getMayorWindow(player, this));
                 else player.openInventory(TraderWindow.getRanterWindow(player, this));
             }
         }
@@ -176,5 +184,23 @@ public class Trader extends Trait {
 
     public void destroy() {
         this.getNPC().destroy();
+    }
+
+    public void Buy(Player buyer) {
+        if (buyer.amountOfCashInInventory(false) < PcConomy.GlobalBank.checkVat(Cost)) return;
+
+        var license = PcConomy.GlobalLicenseManager.getLicense(buyer.getUniqueId(), LicenseType.Market);
+        if (license == null) return;
+        if (license.isOverdue()) return;
+
+        buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Cost), false);
+
+        var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
+        this.linkToNPC(npc);
+        npc.spawn(buyer.getLocation());
+        npc.addTrait(this);
+
+        TownyAPI.getInstance().getTownUUID(buyer.getLocation()).getTown().Traders.add(getNPC().getId());
+        buyer.sendMessage("Торговец куплен");
     }
 }

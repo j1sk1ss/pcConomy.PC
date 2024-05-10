@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.scripts;
+package economy.pcconomy.backend.economy;
 
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.entity.Player;

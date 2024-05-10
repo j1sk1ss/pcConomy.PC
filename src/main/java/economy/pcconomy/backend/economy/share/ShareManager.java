@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -171,5 +173,19 @@ public class ShareManager {
                 .create()
                 .toJson(this, writer);
         writer.close();
+    }
+
+    /**
+     * Loads shares data from .json
+     * @param fileName File name (without format)
+     * @return License manager object
+     * @throws IOException If something goes wrong
+     */
+    public static ShareManager loadShares(String fileName) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), ShareManager.class);
     }
 }

@@ -8,7 +8,7 @@ import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.economy.town.NpcTown;
 import economy.pcconomy.backend.cash.CashManager;
 
-import economy.pcconomy.backend.scripts.BalanceManager;
+import economy.pcconomy.backend.economy.BalanceManager;
 import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.Bukkit;

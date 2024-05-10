@@ -2,8 +2,8 @@ package economy.pcconomy.backend.economy.credit;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.Capitalist;
-import economy.pcconomy.backend.scripts.BalanceManager;
-import economy.pcconomy.backend.scripts.PlayerManager;
+import economy.pcconomy.backend.economy.BalanceManager;
+import economy.pcconomy.backend.economy.PlayerManager;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.Bukkit;

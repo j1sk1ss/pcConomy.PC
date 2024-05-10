@@ -11,7 +11,7 @@ import org.j1sk1ss.itemmanager.manager.Manager;
 import java.util.*;
 
 
-@ExtensionMethod({Manager.class, CashManager.class, Wallet.class})
+@ExtensionMethod({Manager.class, Wallet.class})
 public class CashManager {
     /**
      * Currency name that will be used in all plugin
@@ -47,7 +47,7 @@ public class CashManager {
      * List of nominations
      */
     public static final List<Double> Denomination =
-            Arrays.asList(5000.0, 2000.0, 1000.0, 500.0, 200.0, 100.0, 50.0, 10.0, 1.0, 0.5, 0.1, 0.05, 0.01);
+        Arrays.asList(5000.0, 2000.0, 1000.0, 500.0, 200.0, 100.0, 50.0, 10.0, 1.0, 0.5, 0.1, 0.05, 0.01);
 
     /**
      * Creates itemStack object
@@ -79,7 +79,6 @@ public class CashManager {
     public static double getAmountFromCash(List<ItemStack> money) {
         var amount = 0.0;
         for (var item : money) if (isCash(item)) amount += getAmountFromCash(item);
-
         return amount;
     }
 
@@ -91,7 +90,6 @@ public class CashManager {
     public static List<ItemStack> getCashFromInventory(PlayerInventory inventory) {
         var moneys = new ArrayList<ItemStack>();
         for (var item : inventory) if (isCash(item)) moneys.add(item);
-
         return moneys;
     }
 
@@ -103,7 +101,7 @@ public class CashManager {
     public static List<ItemStack> getChangeInCash(List<Integer> change) {
         var moneyStack = new ArrayList<ItemStack>();
         for (int i = 0; i < Denomination.size(); i++)
-            moneyStack.add(CashManager.createCashObject(Denomination.get(i), change.get(i)));
+            moneyStack.add(createCashObject(Denomination.get(i), change.get(i)));
 
         return moneyStack;
     }
@@ -127,7 +125,7 @@ public class CashManager {
      * @param ignoreWallet Ignoring of wallet status
      */
     public static void giveCashToPlayer(Player player, double amount, boolean ignoreWallet) {
-        getChange(ignoreWallet ? amount : Wallet.changeCashInWallets(player, amount)).getChangeInCash().giveItems(player);
+        getChangeInCash(getChange(ignoreWallet ? amount : player.changeCashInWallets(amount))).giveItems(player);
     }
 
     /**
@@ -140,8 +138,8 @@ public class CashManager {
         var playerCashAmount = amountOfCashInInventory(player, ignoreWallet);
         if (playerCashAmount < amount) return;
 
-        player.getInventory().getCashFromInventory().takeItems(player);
-        getChange(playerCashAmount - (ignoreWallet ? amount : Wallet.changeCashInWallets(player, -amount))).getChangeInCash().giveItems(player);
+        getCashFromInventory(player.getInventory()).takeItems(player);
+        getChangeInCash(getChange(playerCashAmount - (ignoreWallet ? amount : player.changeCashInWallets(-amount)))).giveItems(player);
     }
 
     /**
@@ -167,8 +165,7 @@ public class CashManager {
      * @return Amount of cash in player`s inventory
      */
     public static double amountOfCashInInventory(Player player, boolean ignoreWallet) {
-        return player.getInventory().getCashFromInventory().getAmountFromCash()
-                + (ignoreWallet ? 0 : player.getWallets().getWalletAmount());
+        return getAmountFromCash(getCashFromInventory(player.getInventory())) + (ignoreWallet ? 0 : player.getWallets().getWalletAmount());
     }
 
     /**
@@ -198,6 +195,6 @@ public class CashManager {
      * @return Price
      */
     public static double getPriceFromLore(ItemStack itemStack, int loreLine) {
-        return Double.parseDouble(itemStack.getLoreLines().get(loreLine).replace(CashManager.currencySigh, ""));
+        return Double.parseDouble(itemStack.getLoreLines().get(loreLine).replace(currencySigh, ""));
     }
 }

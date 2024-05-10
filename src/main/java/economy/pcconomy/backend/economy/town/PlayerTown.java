@@ -18,7 +18,6 @@ public class PlayerTown extends Town {
     /**
      * Player town
      * @param townUUID Player town UID
-     * @param credit Player town credit list
      */
     public PlayerTown(UUID townUUID) {
         TownUUID = townUUID;
@@ -28,7 +27,6 @@ public class PlayerTown extends Town {
     /**
      * Player town
      * @param townUUID Player town UID
-     * @param credit Player town credit list
      * @param traders Traders in player town
      */
     public PlayerTown(UUID townUUID, List<Integer> traders) {
