@@ -18,6 +18,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @ExtensionMethod({Manager.class, Cash.class})
@@ -25,7 +26,7 @@ public class WalletWindow {
     public static MenuWindow WalletWindow = new MenuWindow(
         Arrays.asList(
             new Panel(
-                Arrays.asList(
+                List.of(
                     new ClickArea(
                         0, 8,
                         (event) -> {
@@ -57,7 +58,7 @@ public class WalletWindow {
                 ), "Кошелёк-Внесение", MenuSizes.OneLine
             ),
             new Panel(
-                Arrays.asList(
+                List.of(
                     new ClickArea(
                         0, 8,
                         (event) -> {
@@ -92,7 +93,7 @@ public class WalletWindow {
     );
 
     public static Inventory putWindow(Player player, Wallet wallet) {
-        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк"));
+        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк-Внесение"));
         var cashInInventory = Math.min(player.amountOfCashInInventory(true), wallet.Capacity - wallet.Amount);
 
         var button = new Item("Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, Material.PAPER, 1, 17000);
@@ -106,11 +107,11 @@ public class WalletWindow {
     }
 
     public static Inventory withdrawWindow(Player player, Wallet wallet) {
-        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк"));
+        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк-Снятие"));
         var cashInWallet = wallet.Amount;
 
-        var button = new Item("Снять максимум", "\n" + Math.round(cashInWallet * 100) / 100 + Cash.currencySigh, Material.PAPER, 1, 17000);
-        button.setDouble2Container(Math.round(cashInWallet * 100) / 100, "item-wallet-value"); // TODO: DATA MODEL
+        var button = new Item("Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.PAPER, 1, 17000);
+        button.setDouble2Container(cashInWallet, "item-wallet-value"); // TODO: DATA MODEL
         window.setItem(0, button);
 
         for (var i = 0; i < 8; i++)

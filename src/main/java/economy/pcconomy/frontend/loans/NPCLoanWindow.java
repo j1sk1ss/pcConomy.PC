@@ -2,13 +2,9 @@ package economy.pcconomy.frontend.loans;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.economy.license.objects.LicenseType;
 import economy.pcconomy.backend.cash.Cash;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -20,8 +16,6 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.interactive.components.Slider;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
-
-import com.palmergames.bukkit.towny.TownyAPI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +88,7 @@ public class NPCLoanWindow {
                     var player    = (Player) event.getWhoClicked();
                     var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие");
                     var durSlider = loanPanel.getSliders("Время выплаты").getChose(event);
-                    var value     = Double.parseDouble(event.getCurrentItem().getLoreLines().get(0).split(" ")[0]);
+                    var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().get(0).split(" ")[0]);
                     var agreement = event.getCurrentItem().getLoreLines().get(1);
 
                     if (durSlider.equals("none")) return;
@@ -112,45 +106,5 @@ public class NPCLoanWindow {
 
     public static void generateWindow(Player player) {
         LoanMenu.getPanel("Кредит-Банк").getView(player);
-    }
-
-    /**
-     * Checks license of reading credit history
-     * @param player Player who wants to take credit
-     * @return Status
-     */
-    protected static boolean canReadHistory(Player player) {
-        var town = TownyAPI.getInstance().getTown(player.getLocation());
-        var licenseHistory = PcConomy.GlobalLicense
-                .getLicense(Objects.requireNonNull(town).getMayor().getUUID(), LicenseType.LoanHistory);
-        if (licenseHistory == null) return false;
-
-        return !licenseHistory.isOverdue();
-    }
-
-    /**
-     * Get selected duration from window
-     * @param window Window
-     * @return Duration
-     */
-    public static int getSelectedDuration(Inventory window) {
-        for (ItemStack button : window) {
-            if (button == null) return 20;
-            if (button.getMaterial().equals(Material.PURPLE_WOOL)) {
-                System.out.println(Integer.parseInt(button.getName().replace("дней", "")));
-                return Integer.parseInt(button.getName().replace("дней", ""));
-            }
-        }
-
-        return 20;
-    }
-
-    /**
-     * Get selected credit size from window
-     * @param button Pressed button
-     * @return Credit size
-     */
-    public static double getSelectedAmount(ItemStack button) {
-        return Double.parseDouble(button.getName().replace(Cash.currencySigh, ""));
     }
 }

@@ -24,7 +24,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 @ExtensionMethod({Manager.class, Cash.class})
 public class BankerWindow {
     public static MenuWindow BankWindow = new MenuWindow(
-        Arrays.asList(
+        List.of(
             new Panel(
                 Arrays.asList(
                     new ClickArea(36, 48,
@@ -119,7 +119,7 @@ public class BankerWindow {
             var currentChar = charArray[i - 9];
             if (currentChar == 'E') list.add(new LittleButton(i, "Баланс", textBalance));
             else if (currentChar == '.') list.add(new LittleButton(i, "Баланс", textBalance));
-            else  list.add(new LittleButton(i, "Баланс", textBalance)); // TODO: DATA MODEL
+            else  list.add(new LittleButton(i, "Баланс", textBalance)); // TODO: DATA MODEL | ICON FROM MENU_FRAMEWORK
         }
 
         return list;

@@ -29,6 +29,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static economy.pcconomy.frontend.trade.TraderWindow.getTraderFromTitle;
 
@@ -43,7 +44,7 @@ public class MayorManagerWindow {
                     var player = (Player)event.getWhoClicked();
                     var inventory = event.getInventory();
 
-                    var traderId = Integer.parseInt(inventory.getItem(event.getSlot()).getName());
+                    var traderId = Integer.parseInt(Objects.requireNonNull(inventory.getItem(event.getSlot())).getName());
                     player.openInventory(MayorManagerWindow.generateTradeControls(player, traderId));
                 }),
 

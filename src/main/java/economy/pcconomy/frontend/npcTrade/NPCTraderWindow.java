@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.npcTrade;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import org.bukkit.Bukkit;
@@ -26,41 +26,48 @@ import net.kyori.adventure.text.Component;
 public class NPCTraderWindow {
     @SuppressWarnings("deprecation")
     public static MenuWindow NpcTradeWindow = new MenuWindow(
-        Arrays.asList(
+        List.of(
             new Panel(
-                Arrays.asList(
+                List.of(
                     new ClickArea(0, 53,
                         (event) -> {
-                            var player      = (Player)event.getWhoClicked();
+                            var player = (Player) event.getWhoClicked();
                             var currentItem = event.getCurrentItem();
-                            var title       = event.getView().getTitle();
-                            var town        = (NpcTown)TownyAPI.getInstance().getTown(title.split(" ")[1]).getTown();
+                            var title = event.getView().getTitle();
+                            var town = (NpcTown) TownyAPI.getInstance().getTown(title.split(" ")[1]).getTown();
                             if (town == null) return;
 
                             if (!player.getInventory().contains(currentItem))
                                 if (event.isLeftClick()) {
+                                    assert currentItem != null;
                                     town.buyResourceFromStorage(currentItem, player);
-                                    player.openInventory(NPCTraderWindow.generateWindow(player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2]))));
-                                }
-                                else {
+                                    player.openInventory(
+                                            Objects.requireNonNull(
+                                                    NPCTraderWindow.generateWindow(
+                                                            player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2]))
+                                                    )
+                                            )
+                                    );
+                                } else {
                                     town.generateLocalPrices();
                                     town.sellResource2Storage(player.getInventory().getItemInMainHand(), player);
                                 }
                         })
                 ), "Магазин", MenuSizes.SixLines
             )
-        )   
+        )
     );
 
     public static Inventory generateWindow(Player player, NPC trader) {
         var town = (NpcTown)TownyAPI.getInstance().getTown(trader.getStoredLocation()).getTown();
         if (town == null) return null;
 
-        var window = Bukkit.createInventory(player, 54, Component.text("Магазин " +
-                Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId()));
+        var window = Bukkit.createInventory(
+                player, 54, Component.text("Магазин " +
+                Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId())
+        );
 
-        var townStorage = ((NpcTown)town).Storage;
-        for (var item : townStorage)
+        for (var item : town.Storage)
             window.addItem(item.setLore(String.join("\n", item.getLoreLines())));
 
         return window;

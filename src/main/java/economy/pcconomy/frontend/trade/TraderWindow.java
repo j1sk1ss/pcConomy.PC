@@ -95,7 +95,7 @@ public class TraderWindow {
                             if (trader != null) {
                                 trader.IsRanted = false;
                                 trader.Owner    = null;
-                                trader.Term     = LocalDateTime.now().toString();;
+                                trader.Term     = LocalDateTime.now().toString();
 
                                 trader.Storage.giveItemsWithoutLore(player);
                                 player.giveCashToPlayer(trader.Revenue, false);

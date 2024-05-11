@@ -39,11 +39,12 @@ public class ShareholderWindow {
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(player);
-                    if (town != null)
+                    if (town != null) {
                         if (PcConomy.GlobalShare.InteractionList.contains(town.getUUID())) {
                             player.sendMessage("Ваш город уже работал с акциями сегодня");
                             return;
                         }
+                    }
                     else return;
 
                     if (player.equals(town.getMayor().getPlayer()))
@@ -99,6 +100,8 @@ public class ShareholderWindow {
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var town   = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                    assert town != null;
+
                     var share  = PcConomy.GlobalShare.soldFirstEmptyShare(town.getUUID());
                     if (share == null) {
                         player.sendMessage("Акции данного города не доступны к покупке (6)");
