@@ -1,14 +1,28 @@
 package economy.pcconomy.backend.db;
 
-import java.io.IOException;
+import com.google.gson.GsonBuilder;
 
-public interface Loadable {
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public abstract class Loadable {
     /**
      * Saves loadable into .json file
      * @param path File name (without format)
      * @throws IOException If something goes wrong
      */
-    void save(String path) throws IOException;
+    public void save(String path) throws IOException {
+        var writer = new FileWriter(path + ".json", false);
+        new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .toJson(this, writer);
+
+        writer.close();
+    }
 
     /**
      * Loads loadable data from .json
@@ -16,11 +30,17 @@ public interface Loadable {
      * @return Bank object
      * @throws IOException If something goes wrong
      */
-    Loadable load(String path) throws IOException;
+    public <T extends Loadable> T load(String path, Class<T> target) throws IOException {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
+                .create()
+                .fromJson(new String(Files.readAllBytes(Paths.get(path + ".json"))), target);
+    }
 
     /**
      * Get name of manager`s data
      * @return name
      */
-    String getName();
+    public abstract String getName();
 }

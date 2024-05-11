@@ -10,6 +10,8 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.event.EventHandler;
 
+import java.util.Objects;
+
 
 @TraitName("NPCTrader")
 @ExtensionMethod({TownManager.class})
@@ -24,6 +26,6 @@ public class NpcTrader extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
         
         ((NpcTown)TownyAPI.getInstance().getTownUUID(this.getNPC().getStoredLocation()).getTown()).generateLocalPrices();
-        player.openInventory(NPCTraderWindow.generateWindow(player, this.getNPC()));
+        player.openInventory(Objects.requireNonNull(NPCTraderWindow.generateWindow(player, this.getNPC())));
     }
 }

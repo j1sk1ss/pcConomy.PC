@@ -58,7 +58,7 @@ public class Loan {
      * @return Percent of this loan
      */
     public static double getPercent(double amount, double duration) {
-        return Math.round((PcConomy.GlobalBank.DayWithdrawBudget / (amount * duration)) * 1000d) / 1000d;
+        return Math.round((PcConomy.GlobalBank.getMainBank().DayWithdrawBudget / (amount * duration)) * 1000d) / 1000d;
     }
 
     /**
@@ -79,9 +79,9 @@ public class Loan {
      */
     public static double getSafetyFactor(double amount, int duration, Borrower borrower) {
         var expired = 0;
-        if (borrower == null) return ((duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.DayWithdrawBudget));
+        if (borrower == null) return ((duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getMainBank().DayWithdrawBudget));
         for (var loan : borrower.CreditHistory) expired += loan.expired;
-        return (borrower.CreditHistory.size() + (duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.DayWithdrawBudget));
+        return (borrower.CreditHistory.size() + (duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getMainBank().DayWithdrawBudget));
     }
 
     /**
@@ -104,7 +104,7 @@ public class Loan {
      */
     public static boolean blackTown(List<UUID> uuids) {
         return uuids.parallelStream().anyMatch(uuid -> {
-            var loan = getLoan(uuid, PcConomy.GlobalBank);
+            var loan = getLoan(uuid, PcConomy.GlobalBank.getMainBank());
             return loan != null && loan.expired > 5;
         });
     }

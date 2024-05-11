@@ -25,7 +25,7 @@ import java.util.Map;
 
 
 @ExtensionMethod({Cash.class, TownManager.class})
-public class NpcManager implements Loadable {
+public class NpcManager extends Loadable {
     public final Map<Integer, Trader> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
 
@@ -88,13 +88,13 @@ public class NpcManager implements Loadable {
     }
 
     @Override
-    public NpcManager load(String fileName) throws IOException {
+    public <T extends Loadable> T load(String path, Class<T> target) throws IOException {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
-                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), NpcManager.class);
+                .fromJson(new String(Files.readAllBytes(Paths.get(path + ".json"))), target);
     }
 
     @Override

@@ -12,7 +12,6 @@ import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.entity.Player;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,7 +19,7 @@ import java.util.*;
 
 
 @ExtensionMethod({Cash.class, TownManager.class})
-public class ShareManager implements Loadable {
+public class ShareManager extends Loadable {
     public final List<UUID> InteractionList = new ArrayList<>();
     public final Map<UUID, List<Share>> Shares = new HashMap<>();
 
@@ -153,32 +152,12 @@ public class ShareManager implements Loadable {
     public void cashOutShare(Player owner, Share share) {
         for (var townShares : Shares.get(share.TownUUID)) {
             if (townShares.ShareUUID.equals(share.ShareUUID)) {
-                owner.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(townShares.Revenue), false);
+                owner.giveCashToPlayer(PcConomy.GlobalBank.getMainBank().deleteVAT(townShares.Revenue), false);
                 townShares.Revenue = 0;
 
                 return;
             }
         }
-    }
-
-    @Override
-    public void save(String fileName) throws IOException {
-        FileWriter writer = new FileWriter(fileName + ".json", false);
-        new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .toJson(this, writer);
-        writer.close();
-    }
-
-    @Override
-    public ShareManager load(String fileName) throws IOException {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), ShareManager.class);
     }
 
     @Override

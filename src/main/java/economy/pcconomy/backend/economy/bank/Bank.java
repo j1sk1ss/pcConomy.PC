@@ -23,7 +23,7 @@ import java.util.*;
 
 
 @ExtensionMethod({Cash.class, Balance.class})
-public class Bank extends Capitalist implements Loadable {
+public class Bank extends Capitalist {
     public Bank() {
         BankBudget          = PcConomy.Config.getDouble("bank.start_budget", 15000d);
         UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
@@ -159,7 +159,7 @@ public class Bank extends Capitalist implements Loadable {
      * @return value with VAT
       */
     public static double checkVat(double value) {
-        return value + value * PcConomy.GlobalBank.VAT;
+        return value + value * PcConomy.GlobalBank.getMainBank().VAT;
     }
 
     @Override
@@ -173,30 +173,5 @@ public class Bank extends Capitalist implements Loadable {
     @Override
     public List<Loan> getCreditList() {
         return Credit;
-    }
-
-    @Override
-    public void save(String fileName) throws IOException {
-        var writer = new FileWriter(fileName + ".json", false);
-        new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .toJson(this, writer);
-        writer.close();
-    }
-
-    @Override
-    public Bank load(String fileName) throws IOException {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), Bank.class);
-    }
-
-    @Override
-    public String getName() {
-        return "bank_data";
     }
 }

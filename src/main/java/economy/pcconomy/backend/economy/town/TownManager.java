@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-public class TownManager implements Loadable {
+public class TownManager extends Loadable {
     public final List<Town> Towns = new ArrayList<>();
 
     /**
@@ -137,13 +137,13 @@ public class TownManager implements Loadable {
     }
 
     @Override
-    public TownManager load(String fileName) throws IOException {
+    public <T extends Loadable> T load(String path, Class<T> target) throws IOException {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
-                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), TownManager.class);
+                .fromJson(new String(Files.readAllBytes(Paths.get(path + ".json"))), target);
     }
 
     @Override

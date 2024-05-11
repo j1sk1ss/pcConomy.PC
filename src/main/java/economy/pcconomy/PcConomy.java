@@ -1,6 +1,7 @@
 package economy.pcconomy;
 
 import economy.pcconomy.backend.economy.bank.Bank;
+import economy.pcconomy.backend.economy.bank.BankManager;
 import economy.pcconomy.backend.economy.credit.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.town.TownyListener;
@@ -50,7 +51,7 @@ public final class PcConomy extends JavaPlugin {
     
     public static FileConfiguration Config;
     public static NpcManager        GlobalNPC;
-    public static Bank              GlobalBank;
+    public static BankManager       GlobalBank;
     public static BorrowerManager   GlobalBorrower;
     public static TownManager       GlobalTown;
     public static LicenseManager    GlobalLicense;
@@ -73,7 +74,7 @@ public final class PcConomy extends JavaPlugin {
 
             Config         = PcConomy.getPlugin(PcConomy.class).getConfig();
             GlobalNPC      = new NpcManager();
-            GlobalBank     = new Bank();
+            GlobalBank     = new BankManager(new Bank());
             GlobalBorrower = new BorrowerManager();
             GlobalTown     = new TownManager();
             GlobalLicense  = new LicenseManager();
@@ -88,12 +89,23 @@ public final class PcConomy extends JavaPlugin {
         //============================================
 
             try {
-                if (new File(pluginPath + "npc_data.json").exists())       GlobalNPC = GlobalNPC.load(pluginPath + "npc_data");
-                if (new File(pluginPath + "bank_data.json").exists())      GlobalBank = GlobalBank.load(pluginPath + "bank_data");
-                if (new File(pluginPath + "towns_data.json").exists())     GlobalTown = GlobalTown.load(pluginPath + "towns_data");
-                if (new File(pluginPath + "license_data.json").exists())   GlobalLicense = GlobalLicense.load(pluginPath + "license_data");
-                if (new File(pluginPath + "shares_data.json").exists())    GlobalShare = GlobalShare.load(pluginPath + "shares_data");
-                if (new File(pluginPath + "borrowers_data.json").exists()) GlobalBorrower = GlobalBorrower.load(pluginPath + "borrowers_data");
+                if (new File(pluginPath + "npc_data.json").exists())
+                    GlobalNPC = GlobalNPC.load(pluginPath + "npc_data", NpcManager.class);
+
+                if (new File(pluginPath + "bank_data.json").exists())
+                    GlobalBank = GlobalBank.load(pluginPath + "bank_data", BankManager.class);
+
+                if (new File(pluginPath + "towns_data.json").exists())
+                    GlobalTown = GlobalTown.load(pluginPath + "towns_data", TownManager.class);
+
+                if (new File(pluginPath + "license_data.json").exists())
+                    GlobalLicense = GlobalLicense.load(pluginPath + "license_data", LicenseManager.class);
+
+                if (new File(pluginPath + "shares_data.json").exists())
+                    GlobalShare = GlobalShare.load(pluginPath + "shares_data", ShareManager.class);
+
+                if (new File(pluginPath + "borrowers_data.json").exists())
+                    GlobalBorrower = GlobalBorrower.load(pluginPath + "borrowers_data", BorrowerManager.class);
             } catch (IOException error) {
                 System.out.println(error.getMessage());
             }

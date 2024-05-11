@@ -88,7 +88,7 @@ public class MayorManagerWindow {
                     if (Bank.checkVat(price) > inventoryAmount) return;
 
                     trader.Level = Math.min(trader.Level + 1, 6);
-                    player.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(price), false);
+                    player.takeCashFromPlayer(PcConomy.GlobalBank.getMainBank().addVAT(price), false);
                 })
         ), "Город-Торговцы-Управление", MenuSizes.ThreeLines)
     ));

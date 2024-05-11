@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BorrowerManager implements Loadable {
+public class BorrowerManager extends Loadable {
     public final List<Borrower> borrowers = new ArrayList<>();
 
     /**
@@ -38,26 +38,6 @@ public class BorrowerManager implements Loadable {
         for (var borrower = 0; borrower < PcConomy.GlobalBorrower.borrowers.size(); borrower++)
             if (PcConomy.GlobalBorrower.borrowers.get(borrower).Borrower.equals(borrowerObject.Borrower))
                 PcConomy.GlobalBorrower.borrowers.set(borrower, borrowerObject);
-    }
-
-    @Override
-    public void save(String fileName) throws IOException {
-        var writer = new FileWriter(fileName + ".json", false);
-        new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .toJson(this, writer);
-        writer.close();
-    }
-
-    @Override
-    public BorrowerManager load(String fileName) throws IOException {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), BorrowerManager.class);
     }
 
     @Override

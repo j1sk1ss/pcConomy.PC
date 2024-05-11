@@ -194,7 +194,7 @@ public class Trader extends Trait {
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Cost), false);
+        buyer.takeCashFromPlayer(PcConomy.GlobalBank.getMainBank().addVAT(Cost), false);
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
         this.linkToNPC(npc);

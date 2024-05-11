@@ -24,7 +24,7 @@ import java.util.UUID;
 
 
 @ExtensionMethod({Manager.class, Cash.class})
-public class LicenseManager implements Loadable {
+public class LicenseManager extends Loadable {
     public final static double marketLicensePrice      = PcConomy.Config.getDouble("license.market_license_price", 2400d);
     public final static double tradeLicensePrice       = PcConomy.Config.getDouble("license.trade_license_price", 650d);
     public final static double loanLicensePrice        = PcConomy.Config.getDouble("license.loan_license_price", 3500d);
@@ -82,30 +82,10 @@ public class LicenseManager implements Loadable {
             PcConomy.GlobalLicense.Licenses.remove(PcConomy.GlobalLicense.getLicense(player.getUniqueId(), licenseType));
 
         player.takeCashFromPlayer(price, false);
-        PcConomy.GlobalBank.BankBudget += price;
+        PcConomy.GlobalBank.getMainBank().BankBudget += price;
         //TODO: DATA MODEL
         PcConomy.GlobalLicense.createLicense(new License(player, LocalDateTime.now().plusDays(1), licenseType));
         new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()).giveItems(player);
-    }
-
-    @Override
-    public void save(String fileName) throws IOException {
-        var writer = new FileWriter(fileName + ".json", false);
-        new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .toJson(this, writer);
-        writer.close();
-    }
-
-    @Override
-    public LicenseManager load(String fileName) throws IOException {
-        return new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create()
-                .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), LicenseManager.class);
     }
 
     @Override

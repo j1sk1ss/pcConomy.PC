@@ -42,11 +42,11 @@ public class NPCTraderWindow {
                                     assert currentItem != null;
                                     town.buyResourceFromStorage(currentItem, player);
                                     player.openInventory(
-                                            Objects.requireNonNull(
-                                                    NPCTraderWindow.generateWindow(
-                                                            player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2]))
-                                                    )
+                                        Objects.requireNonNull(
+                                            NPCTraderWindow.generateWindow(
+                                                player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2]))
                                             )
+                                        )
                                     );
                                 } else {
                                     town.generateLocalPrices();

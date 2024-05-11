@@ -38,15 +38,15 @@ public class CommandManager implements CommandExecutor {
             case "create_cash"        -> ((Player)sender).giveCashToPlayer(Double.parseDouble(args[0]), true);
             case "reload_towns"       -> TownManager.reloadTownObjects();
             case "reload_npc"         -> NpcManager.reloadNPC();
-            case "put_cash2bank"      -> PcConomy.GlobalBank.takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
+            case "put_cash2bank"      -> PcConomy.GlobalBank.getMainBank().takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
             case "create_banker"      -> NpcManager.createNPC((Player)sender, new Banker());
             case "create_npc_loaner"  -> NpcManager.createNPC((Player)sender, new NpcLoaner());
             case "create_trader"      -> NpcManager.createNPC((Player)sender, new Trader());
             case "create_npc_trader"  -> NpcManager.createNPC((Player)sender, new NpcTrader());
             case "create_licensor"    -> NpcManager.createNPC((Player)sender, new Licensor());
             case "create_shareholder" -> NpcManager.createNPC((Player) sender, new Shareholder());
-            case "switch_town2npc"    -> TownyAPI.getInstance().getTown(((Player)sender).getLocation()).changeNPCStatus(true);
-            case "switch_town2player" -> TownyAPI.getInstance().getTown(((Player)sender).getLocation()).changeNPCStatus(false);
+            case "switch_town2npc"    -> Objects.requireNonNull(TownyAPI.getInstance().getTown(((Player) sender).getLocation())).changeNPCStatus(true);
+            case "switch_town2player" -> Objects.requireNonNull(TownyAPI.getInstance().getTown(((Player) sender).getLocation())).changeNPCStatus(false);
             
             case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player)sender)).getMayor().getName().equals((sender).getName())) return true;
@@ -56,13 +56,13 @@ public class CommandManager implements CommandExecutor {
             case "add_trade2town" -> ((NpcTown)UUID.fromString(args[0]).getTown()).Storage
                     .addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]));
 
-            case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "$\n" +
-                        "Global VAT: " + PcConomy.GlobalBank.VAT + "%\n" +
-                        "Deposit percent: " + PcConomy.GlobalBank.DepositPercent + "%\n" +
+            case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.getMainBank().BankBudget + "$\n" +
+                        "Global VAT: " + PcConomy.GlobalBank.getMainBank().VAT + "%\n" +
+                        "Deposit percent: " + PcConomy.GlobalBank.getMainBank().DepositPercent + "%\n" +
                         "Registered towns count: " + PcConomy.GlobalTown.Towns.size() + "\n" +
                         "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n");
 
-            case "set_day_bank_budget" -> PcConomy.GlobalBank.DayWithdrawBudget = (Double.parseDouble(args[0]));
+            case "set_day_bank_budget" -> PcConomy.GlobalBank.getMainBank().DayWithdrawBudget = (Double.parseDouble(args[0]));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "shares_rate" -> {
                 var message = "";

@@ -61,8 +61,8 @@ public class Share {
             if (loreLine == null) return false;
             if (loreLine.size() < 3) return false;
 
-            UUID.fromString(loreLine.get(0));
-            UUID.fromString(loreLine.get(1));
+            var first  = UUID.fromString(loreLine.get(0));
+            var second = UUID.fromString(loreLine.get(1));
             Double.parseDouble(loreLine.get(2));
             return true;
         }
@@ -78,7 +78,7 @@ public class Share {
     public void buyShare(Player buyer) {
         if (IsSold) return;
         if (Cash.amountOfCashInInventory(buyer, false) >= Bank.checkVat(Price)) {
-            buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Price), false);
+            buyer.takeCashFromPlayer(PcConomy.GlobalBank.getMainBank().addVAT(Price), false);
             TownUUID.getTown().changeBudget(Price);
 
             IsSold = true;
@@ -99,7 +99,7 @@ public class Share {
         }
 
         if (currentTown.getBudget() >= Price) {
-            seller.giveCashToPlayer(PcConomy.GlobalBank.deleteVAT(Price), false);
+            seller.giveCashToPlayer(PcConomy.GlobalBank.getMainBank().deleteVAT(Price), false);
             currentTown.changeBudget(-Price);
 
             IsSold = false;

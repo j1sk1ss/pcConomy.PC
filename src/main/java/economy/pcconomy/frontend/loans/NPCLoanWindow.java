@@ -39,7 +39,7 @@ public class NPCLoanWindow {
             new Button(5, 26, "Погасить кредит", "Погасить кредит банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    Loan.payOffADebt(player, PcConomy.GlobalBank);
+                    Loan.payOffADebt(player, PcConomy.GlobalBank.getMainBank());
                     player.closeInventory();
                 })
         ), "Кредит-Банк", MenuSizes.ThreeLines),
@@ -58,13 +58,13 @@ public class NPCLoanWindow {
                     var options = new ArrayList<String>();
 
                     for (var i = 0; i < countOfAmountSteps; i++) {
-                        var maxLoanSize = PcConomy.GlobalBank.DayWithdrawBudget * 2;
-                        var isSafe = Loan.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), PcConomy.GlobalBank, player);
+                        var maxLoanSize = PcConomy.GlobalBank.getMainBank().DayWithdrawBudget * 2;
+                        var isSafe = Loan.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), PcConomy.GlobalBank.getMainBank(), player);
 
                         var val = Math.round(maxLoanSize / (countOfAmountSteps - i) * 100) / 100 + " " + Cash.currencySigh;
                         var opt = "Банк не одобрит данный займ";
 
-                        if (isSafe && !PcConomy.GlobalBank.getBorrowers().contains(player.getUniqueId())) { // TODO: Fix credits
+                        if (isSafe && !PcConomy.GlobalBank.getMainBank().getBorrowers().contains(player.getUniqueId())) { // TODO: Fix credits
                             opt = "Банк одобрит данный займ\nПроцент: " +
                                     (Math.round(Loan.getPercent(maxLoanSize / (countOfAmountSteps - i), durationSteps.get((8 - i))) * 100) * 100d) / 100d + "%";
                             value = i;
@@ -93,9 +93,9 @@ public class NPCLoanWindow {
 
                     if (durSlider.equals("none")) return;
                     if (agreement.contains("Банк одобрит данный займ")) { // TODO: fix credits
-                        if (!PcConomy.GlobalBank.Credit.contains(Loan.getLoan(player.getUniqueId(), PcConomy.GlobalBank))) {
+                        if (!PcConomy.GlobalBank.getMainBank().Credit.contains(Loan.getLoan(player.getUniqueId(), PcConomy.GlobalBank.getMainBank()))) {
                             var loan = Loan.createLoan(value, Integer.parseInt(durSlider.split(" ")[0]), player);
-                            loan.addLoan(PcConomy.GlobalBank);
+                            loan.addLoan(PcConomy.GlobalBank.getMainBank());
 
                             player.closeInventory();
                         }
