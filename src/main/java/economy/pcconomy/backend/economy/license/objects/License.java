@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.license.objects;
+package economy.pcconomy.backend.economy.license.objects;
 
 import org.bukkit.entity.Player;
 

@@ -2,9 +2,9 @@ package economy.pcconomy.frontend.trade;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.license.objects.LicenseType;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.economy.town.TownManager;
+import economy.pcconomy.backend.economy.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-@ExtensionMethod({Manager.class, CashManager.class, TownManager.class})
+@ExtensionMethod({Manager.class, Cash.class, TownManager.class})
 public class TraderWindow {
         @SuppressWarnings("deprecation")
         public static MenuWindow TraderMenu =
@@ -112,7 +112,7 @@ public class TraderWindow {
                             var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
-                                var playerTradeLicense = PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
+                                var playerTradeLicense = PcConomy.GlobalLicense.getLicense(player.getUniqueId(), LicenseType.Trade);
                                 if (playerTradeLicense == null) return;
                                 if (!playerTradeLicense.isOverdue())
                                     player.openInventory(getExtendedRantedWindow(player, trader));
@@ -176,9 +176,9 @@ public class TraderWindow {
                     new Slider(Arrays.asList(
                         0, 1, 2, 3, 4, 5, 6, 7, 8
                     ), Arrays.asList(
-                        "100" + CashManager.currencySigh,  "500" + CashManager.currencySigh,   "1000" + CashManager.currencySigh,
-                        "1500" + CashManager.currencySigh, "2000" + CashManager.currencySigh,  "2500" + CashManager.currencySigh,
-                        "5000" + CashManager.currencySigh, "10000" + CashManager.currencySigh, "20000" + CashManager.currencySigh
+                        "100" + Cash.currencySigh,  "500" + Cash.currencySigh,   "1000" + Cash.currencySigh,
+                        "1500" + Cash.currencySigh, "2000" + Cash.currencySigh,  "2500" + Cash.currencySigh,
+                        "5000" + Cash.currencySigh, "10000" + Cash.currencySigh, "20000" + Cash.currencySigh
                     ), "", "Цена аренды", null),
 
                     new Button(9, 21, "Установить", "Установить выбранные цены",
@@ -191,7 +191,7 @@ public class TraderWindow {
                             var price = TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders("Цена аренды").getChose(event);
                             if (price.equals("none")) return;
 
-                            trader.Cost = Double.parseDouble(price.replace(CashManager.currencySigh, ""));
+                            trader.Cost = Double.parseDouble(price.replace(Cash.currencySigh, ""));
                             player.sendMessage("Цена установлена!");
                         }),
 
@@ -298,7 +298,7 @@ public class TraderWindow {
         TraderMenu.getPanel("Торговец-Аренда").place(window, Arrays.asList(
             Arrays.asList(
                 "Окно аренды торговца. Цена за день: ",
-                trader.Cost + CashManager.currencySigh
+                trader.Cost + Cash.currencySigh
             ),
 
             List.of(
@@ -314,7 +314,7 @@ public class TraderWindow {
     public static Inventory getExtendedRantedWindow(Player player, Trader trader) {
         var window = Bukkit.createInventory(player, 9, Component.text("Торговец-Аренда-Время " + trader.getNPC().getId()));
         for (var i = 0; i < 9; i++) //TODO: DATA MODEL
-            window.setItem(i, new Item((i + 1) + " дней", trader.Cost * (i + 1) + CashManager.currencySigh, Material.PAPER, 1, 17000));
+            window.setItem(i, new Item((i + 1) + " дней", trader.Cost * (i + 1) + Cash.currencySigh, Material.PAPER, 1, 17000));
 
         return window;
     }

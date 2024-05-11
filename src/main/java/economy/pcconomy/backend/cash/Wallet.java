@@ -22,8 +22,9 @@ public class Wallet {
         Amount   = 0.0d;
         Level    = 1;
         Capacity = Level * 500;
-        Body     = new Item("Кошелёк", Amount + " Алеф\nВместимость: " + Level,
-                     Material.BOOK, 1, walletDataModel);
+        Body     = new Item("Кошелёк", Amount + " Алеф\nВместимость: " + Level, Material.BOOK, 1, walletDataModel);
+
+        Body.setInteger2Container(1, "wallet");
     }
 
     /**
@@ -35,6 +36,8 @@ public class Wallet {
         Level    = Integer.parseInt(wallet.getLoreLines().get(1).split(" ")[1]);
         Capacity = Level * 500;
         Body     = wallet;
+
+        Body.setInteger2Container(1, "wallet");
     }
 
     public double Amount;
@@ -49,8 +52,8 @@ public class Wallet {
      * @param player Player that will take this wallet
      */
     public void giveWallet(Player player) {
-        new Item("Кошелёк", Precision.round(Amount, 3) + " " + CashManager.getCurrencyNameByNum((int)Amount)
-                + "\nВместимость: " + Level, Material.BOOK, 1, walletDataModel).giveItems(player);
+        Body.setLore(Precision.round(Amount, 3) + " " + Cash.getCurrencyNameByNum((int)Amount) + "\nВместимость: " + Level);
+        Body.giveItems(player);
     }
 
     /**
@@ -68,11 +71,14 @@ public class Wallet {
      */
     public static List<Wallet> getWallets(Player player) {
         var list = new ArrayList<Wallet>();
-        for (var item : player.getInventory())
-            if (item != null)
-                if (isWallet(item))
+        for (var item : player.getInventory()) {
+            if (item != null) {
+                if (isWallet(item)) {
                     for (var i = 0; i < item.getAmount(); i++)
                         list.add(new Wallet(item));
+                }
+            }
+        }
 
         return list;
     }
@@ -83,13 +89,7 @@ public class Wallet {
      * @return Wallet status
      */
     public static boolean isWallet(ItemStack itemStack) {
-        if (itemStack == null) return false;
-        if (itemStack.getLoreLines() == null) return false;
-        if (itemStack.getLoreLines().size() == 0) return false;
-
-        return StringUtils.containsAny(itemStack.getLoreLines().get(0).toLowerCase(), "алеф") &&
-                    StringUtils.containsAny(itemStack.getLoreLines().get(1).toLowerCase(), "вместимость") &&
-                    itemStack.getName().contains("Кошелёк");
+        return itemStack.getIntegerFromContainer("wallet") == 1;
     }
 
     /**

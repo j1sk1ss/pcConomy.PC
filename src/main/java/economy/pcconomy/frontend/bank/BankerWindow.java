@@ -1,8 +1,8 @@
 package economy.pcconomy.frontend.bank;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.BalanceManager;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.cash.Balance;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -21,7 +21,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.LittleButton;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 
-@ExtensionMethod({Manager.class, CashManager.class})
+@ExtensionMethod({Manager.class, Cash.class})
 public class BankerWindow {
     public static MenuWindow BankWindow = new MenuWindow(
         Arrays.asList(
@@ -48,7 +48,7 @@ public class BankerWindow {
                             if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-bank-value");
 
-                            PcConomy.GlobalBank.giveCashToPlayer(amount, player);
+                            PcConomy.GlobalBank.giveCash2Player(amount, player);
                             BankerWindow.regenerateWindow(player, event.getInventory());
                         }) // Withdraw
                 ), "Банк", MenuSizes.SixLines
@@ -62,7 +62,7 @@ public class BankerWindow {
 
     public static void regenerateWindow(Player player, Inventory inventory) {
         var enableBalance   = PcConomy.GlobalBank.DayWithdrawBudget;
-        var playerBalance   = BalanceManager.getBalance(player);
+        var playerBalance   = Balance.getBalance(player);
         var cashInInventory = player.amountOfCashInInventory(false);
         var textBalance = playerBalance + "";
         var charArray   = textBalance.toCharArray();
@@ -83,18 +83,18 @@ public class BankerWindow {
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
 
         if (playerBalance < enableBalance) {
-            var withdrawMax = new LittleButton(41, "Снять максимум", "\n" + Math.round(playerBalance * 100) / 100 + CashManager.currencySigh);
+            var withdrawMax = new LittleButton(41, "Снять максимум", "\n" + Math.round(playerBalance * 100) / 100 + Cash.currencySigh);
             withdrawMax.setDouble2Container(Math.round(playerBalance * 100d) / 100d, "item-bank-value");
             list.add(withdrawMax);  
         } 
 
-        var putMax = new LittleButton(36, "Положить все средства", "\n-" + cashInInventory + CashManager.currencySigh);
+        var putMax = new LittleButton(36, "Положить все средства", "\n-" + cashInInventory + Cash.currencySigh);
         putMax.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-bank-value");
         list.add(putMax);        
         
         for (var i = 0; i < 8; i++) {
-            if (enableBalance >= CashManager.Denomination.get(i) && playerBalance >= CashManager.Denomination.get(i)) list.addAll(printButtons("\n", 41, i));
-            if (cashInInventory >= CashManager.Denomination.get(i)) list.addAll(printButtons("\n-", 36, i));
+            if (enableBalance >= Cash.Denomination.get(i) && playerBalance >= Cash.Denomination.get(i)) list.addAll(printButtons("\n", 41, i));
+            if (cashInInventory >= Cash.Denomination.get(i)) list.addAll(printButtons("\n-", 36, i));
         }
 
         return list;
@@ -104,8 +104,8 @@ public class BankerWindow {
     private static List<org.j1sk1ss.menuframework.objects.interactive.Component> printButtons(String thing, int position, int enabled) {
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var j = enabled; j < 8; j++) {
-            var button = new LittleButton(j + (position + 5 * (j / 4)), "Действие", thing + CashManager.Denomination.get(j) + CashManager.currencySigh);
-            button.setDouble2Container(Double.parseDouble(thing + CashManager.Denomination.get(j)), "item-bank-value");
+            var button = new LittleButton(j + (position + 5 * (j / 4)), "Действие", thing + Cash.Denomination.get(j) + Cash.currencySigh);
+            button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(j)), "item-bank-value");
             list.add(button);
         }
 

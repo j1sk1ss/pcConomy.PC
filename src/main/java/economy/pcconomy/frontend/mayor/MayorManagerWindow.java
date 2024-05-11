@@ -2,8 +2,9 @@ package economy.pcconomy.frontend.mayor;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.economy.bank.Bank;
+import economy.pcconomy.backend.economy.town.TownManager;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 
@@ -32,7 +33,7 @@ import java.util.List;
 import static economy.pcconomy.frontend.trade.TraderWindow.getTraderFromTitle;
 
 
-@ExtensionMethod({CashManager.class, Manager.class, TownManager.class})
+@ExtensionMethod({Cash.class, Manager.class, TownManager.class})
 public class MayorManagerWindow {
     @SuppressWarnings("deprecation")
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
@@ -83,7 +84,7 @@ public class MayorManagerWindow {
 
                     var inventoryAmount = player.amountOfCashInInventory(false);
                     var price = NpcManager.traderCost * trader.Level;
-                    if (PcConomy.GlobalBank.checkVat(price) > inventoryAmount) return;
+                    if (Bank.checkVat(price) > inventoryAmount) return;
 
                     trader.Level = Math.min(trader.Level + 1, 6);
                     player.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(price), false);

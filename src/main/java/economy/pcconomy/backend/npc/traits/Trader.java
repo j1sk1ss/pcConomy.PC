@@ -3,9 +3,10 @@ package economy.pcconomy.backend.npc.traits;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.license.objects.LicenseType;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.economy.bank.Bank;
+import economy.pcconomy.backend.economy.town.TownManager;
+import economy.pcconomy.backend.economy.license.objects.LicenseType;
 import economy.pcconomy.frontend.trade.TraderWindow;
 
 import net.citizensnpcs.api.CitizensAPI;
@@ -31,7 +32,7 @@ import java.util.*;
 
 
 @TraitName("Trader")
-@ExtensionMethod({Manager.class, TownManager.class, CashManager.class})
+@ExtensionMethod({Manager.class, TownManager.class, Cash.class})
 public class Trader extends Trait {
     public Trader() {
         super("Trader");
@@ -166,12 +167,12 @@ public class Trader extends Trait {
                     var cost = Double.parseDouble(playerMessage);
                     sellingItem.setDouble2Container(cost, "item-price");
 
-                    trader.getOrAddTrait(Trader.class).Storage.add(sellingItem.setLore(cost + cost * Margin + CashManager.currencySigh + "\nБез пошлины: " + cost + CashManager.currencySigh));
+                    trader.getOrAddTrait(Trader.class).Storage.add(sellingItem.setLore(cost + cost * Margin + Cash.currencySigh + "\nБез пошлины: " + cost + Cash.currencySigh));
                     player.getInventory().setItemInMainHand(null);
                     chat.remove(player.getUniqueId());
 
                     player.sendMessage("Предмет " + sellingItem.getName() + " выставлен на продажу за "
-                        + (cost + cost * Margin) + " " + CashManager.currencySigh);
+                        + (cost + cost * Margin) + " " + Cash.currencySigh);
                 }
                 catch (NumberFormatException exception) {
                     player.sendMessage("Напишите корректную цену.");
@@ -187,9 +188,9 @@ public class Trader extends Trait {
     }
 
     public void Buy(Player buyer) {
-        if (buyer.amountOfCashInInventory(false) < PcConomy.GlobalBank.checkVat(Cost)) return;
+        if (buyer.amountOfCashInInventory(false) < Bank.checkVat(Cost)) return;
 
-        var license = PcConomy.GlobalLicenseManager.getLicense(buyer.getUniqueId(), LicenseType.Market);
+        var license = PcConomy.GlobalLicense.getLicense(buyer.getUniqueId(), LicenseType.Market);
         if (license == null) return;
         if (license.isOverdue()) return;
 

@@ -1,8 +1,9 @@
 package economy.pcconomy.backend.economy.share.objects;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.economy.bank.Bank;
+import economy.pcconomy.backend.economy.town.TownManager;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,7 +14,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class, CashManager.class, TownManager.class})
+@ExtensionMethod({Manager.class, Cash.class, TownManager.class})
 public class Share {
     public Share(UUID townUUID, ShareType shareType, double price, double equality) {
         TownUUID  = townUUID;
@@ -76,7 +77,7 @@ public class Share {
      */
     public void buyShare(Player buyer) {
         if (IsSold) return;
-        if (CashManager.amountOfCashInInventory(buyer, false) >= PcConomy.GlobalBank.checkVat(Price)) {
+        if (Cash.amountOfCashInInventory(buyer, false) >= Bank.checkVat(Price)) {
             buyer.takeCashFromPlayer(PcConomy.GlobalBank.addVAT(Price), false);
             TownUUID.getTown().changeBudget(Price);
 

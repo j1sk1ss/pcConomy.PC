@@ -70,4 +70,7 @@ public class Town extends Capitalist {
     public List<Loan> getCreditList() {
         throw new UnsupportedOperationException("Unimplemented method 'getCreditList'");
     }
+
+    @Override
+    public double getTrustCoefficient() { return 0; }
 }

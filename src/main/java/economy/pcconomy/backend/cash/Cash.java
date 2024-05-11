@@ -12,7 +12,7 @@ import java.util.*;
 
 
 @ExtensionMethod({Manager.class, Wallet.class})
-public class CashManager {
+public class Cash {
     /**
      * Currency name that will be used in all plugin
      */
@@ -114,7 +114,6 @@ public class CashManager {
     public static boolean isCash(ItemStack item) {
         if (item == null) return false;
         if (item.getItemMeta() == null) return false;
-
         return item.getDoubleFromContainer("cash-value") != -1;
     }
 
@@ -186,15 +185,5 @@ public class CashManager {
     	if (num % 10 == 1 && num % 100 != 11) return currencyNameCases.get("is");
     	if (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 12 || num % 100 > 14)) return currencyNameCases.get("rs");
     	return currencyNameCases.get("rp");
-    }
-
-    /**
-     * Gets double formatted price that wrote in lore
-     * @param itemStack Item that price will be given
-     * @param loreLine Lore line position that includes price
-     * @return Price
-     */
-    public static double getPriceFromLore(ItemStack itemStack, int loreLine) {
-        return Double.parseDouble(itemStack.getLoreLines().get(loreLine).replace(currencySigh, ""));
     }
 }

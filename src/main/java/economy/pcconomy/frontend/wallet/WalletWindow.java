@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.wallet;
 
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.Wallet;
 import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
@@ -20,7 +20,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import java.util.Arrays;
 
 
-@ExtensionMethod({Manager.class, CashManager.class})
+@ExtensionMethod({Manager.class, Cash.class})
 public class WalletWindow {
     public static MenuWindow WalletWindow = new MenuWindow(
         Arrays.asList(
@@ -95,12 +95,12 @@ public class WalletWindow {
         var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк"));
         var cashInInventory = Math.min(player.amountOfCashInInventory(true), wallet.Capacity - wallet.Amount);
 
-        var button = new Item("Положить все средства", "\n-" + cashInInventory + CashManager.currencySigh, Material.PAPER, 1, 17000);
+        var button = new Item("Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, Material.PAPER, 1, 17000);
         button.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-wallet-value"); // TODO: DATA MODEL
         window.setItem(0, button);
 
         for (var i = 0; i < 8; i++)
-            if (cashInInventory >= CashManager.Denomination.get(i)) printButtons("\n-", window);
+            if (cashInInventory >= Cash.Denomination.get(i)) printButtons("\n-", window);
 
         return window;
     }
@@ -109,20 +109,20 @@ public class WalletWindow {
         var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк"));
         var cashInWallet = wallet.Amount;
 
-        var button = new Item("Снять максимум", "\n" + Math.round(cashInWallet * 100) / 100 + CashManager.currencySigh, Material.PAPER, 1, 17000);
+        var button = new Item("Снять максимум", "\n" + Math.round(cashInWallet * 100) / 100 + Cash.currencySigh, Material.PAPER, 1, 17000);
         button.setDouble2Container(Math.round(cashInWallet * 100) / 100, "item-wallet-value"); // TODO: DATA MODEL
         window.setItem(0, button);
 
         for (var i = 0; i < 8; i++)
-            if (cashInWallet >= CashManager.Denomination.get(i)) printButtons("\n", window);
+            if (cashInWallet >= Cash.Denomination.get(i)) printButtons("\n", window);
 
         return window;
     }
 
     private static void printButtons(String thing, Inventory window) {
         for (var j = 1; j < 8; j++) { // TODO: DATA MODEL
-            var button = new Item("Действия", thing + CashManager.Denomination.get(j) + CashManager.currencySigh, Material.PAPER, 1, 17000);
-            button.setDouble2Container(Double.parseDouble(thing + CashManager.Denomination.get(j)), "item-wallet-value");
+            var button = new Item("Действия", thing + Cash.Denomination.get(j) + Cash.currencySigh, Material.PAPER, 1, 17000);
+            button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(j)), "item-wallet-value");
             window.setItem(j, button);
         }
     }

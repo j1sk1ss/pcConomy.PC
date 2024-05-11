@@ -29,6 +29,12 @@ public abstract class Capitalist {
     public abstract List<Loan> getCreditList();
 
     /**
+     * Get trust coefficient for loans
+     * @return trust coefficient
+     */
+    public abstract double getTrustCoefficient();
+
+    /**
      * Get UUID of all borrowers
      * @return List of borrowers UUID
      */

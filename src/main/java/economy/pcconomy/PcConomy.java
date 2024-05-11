@@ -3,9 +3,9 @@ package economy.pcconomy;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.credit.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
-import economy.pcconomy.backend.economy.TownyListener;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.license.LicenseManager;
+import economy.pcconomy.backend.economy.town.TownyListener;
+import economy.pcconomy.backend.economy.town.TownManager;
+import economy.pcconomy.backend.economy.license.LicenseManager;
 import economy.pcconomy.backend.link.CommandManager;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.*;
@@ -29,19 +29,19 @@ import java.util.Objects;
 
 // TODO List:
 // 1) Refactoring
-//   1.1) Change project structure
-//   1.2) Cleanup junk code (If it exists)
+//   1.1) Change project structure V
+//   1.2) Cleanup junk code (If it exists) V
 // 2) Debugging
-//   2.1) Wallet debugging
-//   2.2) Shares debugging
-//   2.3) Money transfer debugging
+//   2.1) Wallet debugging V
+//   2.2) Shares debugging ?
+//   2.3) Money transfer debugging V
 // 3) Load \ Save
-//   3.1) Finish Town adaptor
-//   3.2) Check save \ loading
+//   3.1) Finish Town adaptor V
+//   3.2) Check save \ loading ?
 // 4) Models
-//   4.1) Set all model data where it needed
+//   4.1) Set all model data where it needed ?
 // 5) Bank
-//   5.1) Check bank and credit working (Maybe change loan class structure?)
+//   5.1) Check bank and credit working (Maybe change loan class structure?) ?
 //
 //  P.S. Don't forget about TODO
 
@@ -51,16 +51,15 @@ public final class PcConomy extends JavaPlugin {
     public static FileConfiguration Config;
     public static NpcManager        GlobalNPC;
     public static Bank              GlobalBank;
-    public static BorrowerManager   GlobalBorrowerManager;
-    public static TownManager       GlobalTownManager;
-    public static LicenseManager    GlobalLicenseManager;
-    public static ShareManager      GlobalShareManager;
+    public static BorrowerManager   GlobalBorrower;
+    public static TownManager       GlobalTown;
+    public static LicenseManager    GlobalLicense;
+    public static ShareManager      GlobalShare;
     
     private final String pluginPath = "plugins\\PcConomy\\";
 
     @Override
     public void onEnable() {
-
         System.out.print("[PcConomy] Starting PcConomy.\n");
 
         saveConfig();
@@ -72,13 +71,13 @@ public final class PcConomy extends JavaPlugin {
         //  Init global objects
         //============================================
 
-            Config                = PcConomy.getPlugin(PcConomy.class).getConfig();
-            GlobalNPC             = new NpcManager();
-            GlobalBank            = new Bank();
-            GlobalBorrowerManager = new BorrowerManager();
-            GlobalTownManager     = new TownManager();
-            GlobalLicenseManager  = new LicenseManager();
-            GlobalShareManager    = new ShareManager();
+            Config         = PcConomy.getPlugin(PcConomy.class).getConfig();
+            GlobalNPC      = new NpcManager();
+            GlobalBank     = new Bank();
+            GlobalBorrower = new BorrowerManager();
+            GlobalTown     = new TownManager();
+            GlobalLicense  = new LicenseManager();
+            GlobalShare    = new ShareManager();
 
             System.out.print("[PcConomy] Initializing global managers.\n");
 
@@ -89,12 +88,12 @@ public final class PcConomy extends JavaPlugin {
         //============================================
 
             try {
-                if (new File(pluginPath + "npc_data.json").exists()) GlobalNPC = NpcManager.loadNPC(pluginPath + "npc_data");
-                if (new File(pluginPath + "bank_data.json").exists()) GlobalBank = Bank.loadBank(pluginPath + "bank_data");
-                if (new File(pluginPath + "towns_data.json").exists()) GlobalTownManager = TownManager.loadTowns(pluginPath + "towns_data");
-                if (new File(pluginPath + "license_data.json").exists()) GlobalLicenseManager = LicenseManager.loadLicenses(pluginPath + "license_data");
-                if (new File(pluginPath + "shares_data.json").exists()) GlobalShareManager = ShareManager.loadShares(pluginPath + "shares_data");
-                if (new File(pluginPath + "borrowers_data.json").exists()) GlobalBorrowerManager = BorrowerManager.loadBorrowers(pluginPath + "borrowers_data");
+                if (new File(pluginPath + "npc_data.json").exists())       GlobalNPC = GlobalNPC.load(pluginPath + "npc_data");
+                if (new File(pluginPath + "bank_data.json").exists())      GlobalBank = GlobalBank.load(pluginPath + "bank_data");
+                if (new File(pluginPath + "towns_data.json").exists())     GlobalTown = GlobalTown.load(pluginPath + "towns_data");
+                if (new File(pluginPath + "license_data.json").exists())   GlobalLicense = GlobalLicense.load(pluginPath + "license_data");
+                if (new File(pluginPath + "shares_data.json").exists())    GlobalShare = GlobalShare.load(pluginPath + "shares_data");
+                if (new File(pluginPath + "borrowers_data.json").exists()) GlobalBorrower = GlobalBorrower.load(pluginPath + "borrowers_data");
             } catch (IOException error) {
                 System.out.println(error.getMessage());
             }
@@ -163,12 +162,8 @@ public final class PcConomy extends JavaPlugin {
      */
     public void saveData() {
         try {
-            GlobalNPC.saveNPC(pluginPath + "npc_data");
-            GlobalBank.saveBank(pluginPath + "bank_data");
-            GlobalTownManager.saveTown(pluginPath + "towns_data");
-            GlobalShareManager.saveShares(pluginPath + "shares_data");
-            GlobalLicenseManager.saveLicenses(pluginPath + "license_data");
-            GlobalBorrowerManager.saveBorrowers(pluginPath + "borrowers_data");
+            for (var manager : Arrays.asList(GlobalBank, GlobalNPC, GlobalBorrower, GlobalLicense, GlobalShare, GlobalTown))
+                manager.save(pluginPath + manager.getName());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

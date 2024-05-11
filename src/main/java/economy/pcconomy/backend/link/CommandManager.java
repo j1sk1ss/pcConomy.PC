@@ -3,11 +3,11 @@ package economy.pcconomy.backend.link;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.Wallet;
-import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
-import economy.pcconomy.backend.economy.town.manager.StorageManager;
+import economy.pcconomy.backend.economy.town.towns.NpcTown;
+import economy.pcconomy.backend.economy.town.TownManager;
+import economy.pcconomy.backend.economy.town.towns.Storage;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.*;
 
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 
-@ExtensionMethod({Manager.class, CashManager.class, StorageManager.class, TownManager.class})
+@ExtensionMethod({Manager.class, Cash.class, Storage.class, TownManager.class})
 public class CommandManager implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
@@ -59,18 +59,18 @@ public class CommandManager implements CommandExecutor {
             case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.BankBudget + "$\n" +
                         "Global VAT: " + PcConomy.GlobalBank.VAT + "%\n" +
                         "Deposit percent: " + PcConomy.GlobalBank.DepositPercent + "%\n" +
-                        "Registered towns count: " + PcConomy.GlobalTownManager.Towns.size() + "\n" +
-                        "Borrowers count: " + PcConomy.GlobalBorrowerManager.borrowers.size() + "\n");
+                        "Registered towns count: " + PcConomy.GlobalTown.Towns.size() + "\n" +
+                        "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n");
 
             case "set_day_bank_budget" -> PcConomy.GlobalBank.DayWithdrawBudget = (Double.parseDouble(args[0]));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "shares_rate" -> {
                 var message = "";
-                for (var town : PcConomy.GlobalShareManager.Shares.keySet())
+                for (var town : PcConomy.GlobalShare.Shares.keySet())
                     if (TownyAPI.getInstance().getTown(town) != null)
                         message += Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName() + ": " +
-                                (PcConomy.GlobalShareManager.getMedianSharePrice(town) / PcConomy.GlobalShareManager.getTownShares(town).size())
-                                + CashManager.currencySigh;
+                                (PcConomy.GlobalShare.getMedianSharePrice(town) / PcConomy.GlobalShare.getTownShares(town).size())
+                                + Cash.currencySigh;
 
                 sender.sendMessage(message);
             }
@@ -90,7 +90,7 @@ public class CommandManager implements CommandExecutor {
                 }
 
                 for (var resource : prices.keySet())
-                    message += "Товар: " + resource + ", цена: " + prices.get(resource) + CashManager.currencySigh;
+                    message += "Товар: " + resource + ", цена: " + prices.get(resource) + Cash.currencySigh;
 
                 sender.sendMessage(message);
             }

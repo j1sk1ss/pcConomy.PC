@@ -2,11 +2,12 @@ package economy.pcconomy.backend.npc;
 
 import com.google.gson.GsonBuilder;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.db.ItemStackTypeAdaptor;
+import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.npc.traits.*;
 import lombok.experimental.ExtensionMethod;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.economy.town.TownManager;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
@@ -23,8 +24,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 
-@ExtensionMethod({CashManager.class, TownManager.class})
-public class NpcManager {
+@ExtensionMethod({Cash.class, TownManager.class})
+public class NpcManager implements Loadable {
     public final Map<Integer, Trader> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
 
@@ -69,12 +70,8 @@ public class NpcManager {
         return CitizensAPI.getNPCRegistry().getById(id);
     }
 
-    /**
-     * Saves traders list into .json file
-     * @param fileName File name
-     * @throws IOException If something goes wrong
-     */
-    public void saveNPC(String fileName) throws IOException {
+    @Override
+    public void save(String fileName) throws IOException {
         // Check all server NPC
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), npc.getOrAddTrait(Trader.class));
@@ -90,18 +87,18 @@ public class NpcManager {
         writer.close();
     }
 
-    /**
-     * Loads NPC data from .json
-     * @param fileName File name (without format)
-     * @return NPC object
-     * @throws IOException If something goes wrong
-     */
-    public static NpcManager loadNPC(String fileName) throws IOException {
+    @Override
+    public NpcManager load(String fileName) throws IOException {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), NpcManager.class);
+    }
+
+    @Override
+    public String getName() {
+        return "npc_data";
     }
 }

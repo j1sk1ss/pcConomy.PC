@@ -3,12 +3,13 @@ package economy.pcconomy.backend.economy.bank;
 import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.town.towns.NpcTown;
+import economy.pcconomy.backend.cash.Cash;
 
-import economy.pcconomy.backend.economy.BalanceManager;
+import economy.pcconomy.backend.cash.Balance;
 import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.Bukkit;
@@ -21,26 +22,36 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
-@ExtensionMethod({CashManager.class, BalanceManager.class})
-public class Bank extends Capitalist {
+@ExtensionMethod({Cash.class, Balance.class})
+public class Bank extends Capitalist implements Loadable {
     public Bank() {
+        BankBudget          = PcConomy.Config.getDouble("bank.start_budget", 15000d);
+        UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
+        VAT                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
+        DepositPercent      = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
+        DayWithdrawBudget   = BankBudget * UsefulBudgetPercent;
+        TrustCoefficient    = .5d;
+
         Credit = new ArrayList<>();
     }
 
-    public double BankBudget          = PcConomy.Config.getDouble("bank.start_budget", 15000d);
-    public double UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
-    public double VAT                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
-    public double DepositPercent      = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
-    public double DayWithdrawBudget   = BankBudget * UsefulBudgetPercent;
-
+    public double BankBudget;
+    public double UsefulBudgetPercent;
+    public double VAT;
+    public double DepositPercent;
+    public double DayWithdrawBudget;
+    public double TrustCoefficient;
     public final List<Loan> Credit;
+
+    private double previousBudget = BankBudget;
+    private int recessionCount    = 0;
 
     /**
      * Give cash from bank player`s balance to player`s inventory
      * @param amount Amount of given cash
      * @param player Player that will take cash
      */
-    public void giveCashToPlayer(double amount, Player player) {
+    public void giveCash2Player(double amount, Player player) {
         if (amount >= DayWithdrawBudget) return;
         if (player.solvent(amount)) return;
 
@@ -66,9 +77,6 @@ public class Bank extends Capitalist {
         DayWithdrawBudget += amount;
     }
 
-    private double previousBudget = BankBudget;
-    private int recessionCount    = 0;
-
     /**
      * Life cycle of bank working
      * First part - pay for deposit (Online players)
@@ -85,23 +93,24 @@ public class Bank extends Capitalist {
         if (isRecession < 0 && DepositPercent > 0)
             Bukkit.getWhitelistedPlayers().parallelStream().forEach((player) -> {
                 if (player.getPlayer() != null) {
-                    var amount = (BalanceManager.getBalance(player.getPlayer()) * DepositPercent) / 12;
+                    var amount = (Balance.getBalance(player.getPlayer()) * DepositPercent) / 12;
                     player.getPlayer().giveMoney(amount);
                     BankBudget -= amount;
                 }
             });
 
-        VAT += (VAT * Math.abs(changePercent) / 2) * isRecession;
+        VAT                 += (VAT * Math.abs(changePercent) / 2) * isRecession;
         UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
-        DepositPercent -= DepositPercent * Math.abs(changePercent) / 2 * isRecession;
-        Loan.trustCoefficient -= Loan.trustCoefficient * Math.abs(changePercent) * isRecession;
+        DepositPercent      -= DepositPercent * Math.abs(changePercent) / 2 * isRecession;
+        TrustCoefficient    -= TrustCoefficient * Math.abs(changePercent) * isRecession;
 
         if (isRecession > 0) {
             if (recessionCount++ >= 5) {
                 BankBudget += BankBudget * (changePercent * recessionCount);
                 recessionCount = 0;
             }
-        } else recessionCount = 0;
+        }
+        else recessionCount = 0;
 
         previousBudget    = BankBudget;
         DayWithdrawBudget = BankBudget * UsefulBudgetPercent;
@@ -115,10 +124,10 @@ public class Bank extends Capitalist {
         var count = 0;
         var bigInflation = 0d;
 
-        for (var town : PcConomy.GlobalTownManager.Towns)
+        for (var town : PcConomy.GlobalTown.Towns)
             if (town instanceof NpcTown npcTown) {
-                count++;
                 bigInflation += npcTown.getLocalInflation();
+                count++;
             }
 
         return bigInflation / count;
@@ -144,35 +153,30 @@ public class Bank extends Capitalist {
         return value + value * VAT;
     }
 
-    // This value return value with VAT (not change BankBudget)
-    public double checkVat(double value) {
-        return value + value * VAT;
+    /**
+     * This value return value with VAT (not change BankBudget)
+     * @param value value
+     * @return value with VAT
+      */
+    public static double checkVat(double value) {
+        return value + value * PcConomy.GlobalBank.VAT;
     }
 
-    /**
-     * Change bank budget
-     * @param amount Amount of changing
-     */
     @Override
     public void changeBudget(double amount) {
         BankBudget += amount;
     }
 
-    /**
-     * Gets list of loans
-     * @return List of loans
-     */
+    @Override
+    public double getTrustCoefficient() { return TrustCoefficient; }
+
     @Override
     public List<Loan> getCreditList() {
         return Credit;
     }
 
-    /**
-     * Saves bank into .json file
-     * @param fileName File name
-     * @throws IOException If something goes wrong
-     */
-    public void saveBank(String fileName) throws IOException {
+    @Override
+    public void save(String fileName) throws IOException {
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
@@ -182,17 +186,17 @@ public class Bank extends Capitalist {
         writer.close();
     }
 
-    /***
-     * Loads bank data from .json
-     * @param fileName File name (without format)
-     * @return Bank object
-     * @throws IOException If something goes wrong
-     */
-    public static Bank loadBank(String fileName) throws IOException {
+    @Override
+    public Bank load(String fileName) throws IOException {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), Bank.class);
+    }
+
+    @Override
+    public String getName() {
+        return "bank_data";
     }
 }

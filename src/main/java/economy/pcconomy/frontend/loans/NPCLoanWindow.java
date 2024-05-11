@@ -2,8 +2,8 @@ package economy.pcconomy.frontend.loans;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.license.objects.LicenseType;
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.economy.license.objects.LicenseType;
+import economy.pcconomy.backend.cash.Cash;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -65,9 +65,9 @@ public class NPCLoanWindow {
 
                     for (var i = 0; i < countOfAmountSteps; i++) {
                         var maxLoanSize = PcConomy.GlobalBank.DayWithdrawBudget * 2;
-                        var isSafe = Loan.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), player);
+                        var isSafe = Loan.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), PcConomy.GlobalBank, player);
 
-                        var val = Math.round(maxLoanSize / (countOfAmountSteps - i) * 100) / 100 + " " + CashManager.currencySigh;
+                        var val = Math.round(maxLoanSize / (countOfAmountSteps - i) * 100) / 100 + " " + Cash.currencySigh;
                         var opt = "Банк не одобрит данный займ";
 
                         if (isSafe && !PcConomy.GlobalBank.getBorrowers().contains(player.getUniqueId())) { // TODO: Fix credits
@@ -121,7 +121,7 @@ public class NPCLoanWindow {
      */
     protected static boolean canReadHistory(Player player) {
         var town = TownyAPI.getInstance().getTown(player.getLocation());
-        var licenseHistory = PcConomy.GlobalLicenseManager
+        var licenseHistory = PcConomy.GlobalLicense
                 .getLicense(Objects.requireNonNull(town).getMayor().getUUID(), LicenseType.LoanHistory);
         if (licenseHistory == null) return false;
 
@@ -151,6 +151,6 @@ public class NPCLoanWindow {
      * @return Credit size
      */
     public static double getSelectedAmount(ItemStack button) {
-        return Double.parseDouble(button.getName().replace(CashManager.currencySigh, ""));
+        return Double.parseDouble(button.getName().replace(Cash.currencySigh, ""));
     }
 }

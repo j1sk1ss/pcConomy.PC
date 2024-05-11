@@ -1,4 +1,6 @@
-package economy.pcconomy.backend.economy.town;
+package economy.pcconomy.backend.economy.town.towns;
+
+import economy.pcconomy.backend.economy.town.Town;
 
 import java.util.ArrayList;
 import java.util.List;

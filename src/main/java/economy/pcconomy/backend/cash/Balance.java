@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.economy;
+package economy.pcconomy.backend.cash;
 
 import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.entity.Player;
@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.math.BigDecimal;
 
 
-public class BalanceManager {
+public class Balance {
     private static final XConomyAPI xConomyAPI = new XConomyAPI();
 
     /**

@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.license.objects;
+package economy.pcconomy.backend.economy.license.objects;
 
 public enum LicenseType {
     Market, // For creation trader

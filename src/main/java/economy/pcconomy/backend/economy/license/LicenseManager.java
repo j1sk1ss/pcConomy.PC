@@ -1,10 +1,11 @@
-package economy.pcconomy.backend.license;
+package economy.pcconomy.backend.economy.license;
 
 import com.google.gson.*;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
-import economy.pcconomy.backend.license.objects.License;
-import economy.pcconomy.backend.license.objects.LicenseType;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.db.Loadable;
+import economy.pcconomy.backend.economy.license.objects.License;
+import economy.pcconomy.backend.economy.license.objects.LicenseType;
 
 import org.bukkit.entity.Player;
 import org.j1sk1ss.itemmanager.manager.Item;
@@ -22,8 +23,8 @@ import java.util.Map;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class, CashManager.class})
-public class LicenseManager {
+@ExtensionMethod({Manager.class, Cash.class})
+public class LicenseManager implements Loadable {
     public final static double marketLicensePrice      = PcConomy.Config.getDouble("license.market_license_price", 2400d);
     public final static double tradeLicensePrice       = PcConomy.Config.getDouble("license.trade_license_price", 650d);
     public final static double loanLicensePrice        = PcConomy.Config.getDouble("license.loan_license_price", 3500d);
@@ -77,22 +78,18 @@ public class LicenseManager {
     public static void giveLicenseToPlayer(Player player, LicenseType licenseType, double price) {
         if (player.amountOfCashInInventory(false) < price) return;
 
-        if (PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType) != null)
-            PcConomy.GlobalLicenseManager.Licenses.remove(PcConomy.GlobalLicenseManager.getLicense(player.getUniqueId(), licenseType));
+        if (PcConomy.GlobalLicense.getLicense(player.getUniqueId(), licenseType) != null)
+            PcConomy.GlobalLicense.Licenses.remove(PcConomy.GlobalLicense.getLicense(player.getUniqueId(), licenseType));
 
         player.takeCashFromPlayer(price, false);
         PcConomy.GlobalBank.BankBudget += price;
         //TODO: DATA MODEL
-        PcConomy.GlobalLicenseManager.createLicense(new License(player, LocalDateTime.now().plusDays(1), licenseType));
+        PcConomy.GlobalLicense.createLicense(new License(player, LocalDateTime.now().plusDays(1), licenseType));
         new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()).giveItems(player);
     }
 
-    /**
-     * Saves license
-     * @param fileName File name
-     * @throws IOException If something goes wrong
-     */
-    public void saveLicenses(String fileName) throws IOException {
+    @Override
+    public void save(String fileName) throws IOException {
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
@@ -102,17 +99,17 @@ public class LicenseManager {
         writer.close();
     }
 
-    /**
-     * Loads license data from .json
-     * @param fileName File name (without format)
-     * @return License manager object
-     * @throws IOException If something goes wrong
-     */
-    public static LicenseManager loadLicenses(String fileName) throws IOException {
+    @Override
+    public LicenseManager load(String fileName) throws IOException {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), LicenseManager.class);
+    }
+
+    @Override
+    public String getName() {
+        return "license_data";
     }
 }

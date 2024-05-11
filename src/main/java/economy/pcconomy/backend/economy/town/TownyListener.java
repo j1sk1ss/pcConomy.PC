@@ -1,11 +1,12 @@
-package economy.pcconomy.backend.economy;
+package economy.pcconomy.backend.economy.town;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.*;
 import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.economy.Capitalist;
+import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.event.EventHandler;
@@ -43,7 +44,7 @@ public class TownyListener implements Listener {
     @EventHandler
     public void onDestroy(DeleteTownEvent event) {
         var town = event.getTownUUID();
-        PcConomy.GlobalShareManager.takeOffShares(town);
+        PcConomy.GlobalShare.takeOffShares(town);
         town.destroyTown();
     }
 
@@ -64,9 +65,9 @@ public class TownyListener implements Listener {
     @EventHandler
     public void newDay(NewDayEvent event) {
         TownyAPI.getInstance().getTowns().parallelStream().forEach((town) -> PcConomy.GlobalBank.BankBudget += town.getPlotTax());
-        PcConomy.GlobalTownManager.Towns.parallelStream().forEach(Capitalist::newDay);
+        PcConomy.GlobalTown.Towns.parallelStream().forEach(Capitalist::newDay);
 
-        PcConomy.GlobalShareManager.newDay();
+        PcConomy.GlobalShare.newDay();
         PcConomy.GlobalBank.newDay();
     }
 }

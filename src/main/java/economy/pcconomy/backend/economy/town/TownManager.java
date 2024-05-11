@@ -1,12 +1,12 @@
-package economy.pcconomy.backend.economy.town.manager;
+package economy.pcconomy.backend.economy.town;
 
 import com.google.gson.GsonBuilder;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
-import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.economy.town.PlayerTown;
-import economy.pcconomy.backend.economy.town.Town;
+import economy.pcconomy.backend.db.Loadable;
+import economy.pcconomy.backend.economy.town.towns.NpcTown;
+import economy.pcconomy.backend.economy.town.towns.PlayerTown;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.db.ItemStackTypeAdaptor;
 
@@ -22,14 +22,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-public class TownManager {
+public class TownManager implements Loadable {
     public final List<Town> Towns = new ArrayList<>();
 
     /**
      * Reload and save all Towns from server
      */
     public static void reloadTownObjects() {
-        PcConomy.GlobalTownManager.Towns.clear();
+        PcConomy.GlobalTown.Towns.clear();
         for (com.palmergames.bukkit.towny.object.Town town : TownyAPI.getInstance().getTowns())
             createTownObject(town, false);
     }
@@ -40,7 +40,7 @@ public class TownManager {
      * @param isNPC Is this town belongs NPC
      */
     public static void createTownObject(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
-        PcConomy.GlobalTownManager.Towns.add(isNPC ? new NpcTown(town) : new PlayerTown(town));
+        PcConomy.GlobalTown.Towns.add(isNPC ? new NpcTown(town) : new PlayerTown(town));
     }
 
     /**
@@ -48,9 +48,9 @@ public class TownManager {
      * @param townUUID UUID of town that was destroyed
      */
     public static void destroyTown(UUID townUUID) {
-        for (var townObject : PcConomy.GlobalTownManager.Towns)
+        for (var townObject : PcConomy.GlobalTown.Towns)
             if (townObject.getUUID().equals(townUUID)) {
-                PcConomy.GlobalTownManager.Towns.remove(townObject);
+                PcConomy.GlobalTown.Towns.remove(townObject);
                 break;
             }
     }
@@ -62,9 +62,12 @@ public class TownManager {
      */
     public static void changeNPCStatus(UUID townUUID, boolean isNPC) {
         var townObject = getTown(townUUID);
+        if (townObject == null) return;
+
         setTownObject(isNPC ?
                 new NpcTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID()))) :
-                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID()))));
+                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID())))
+        );
     }
 
     /**
@@ -74,9 +77,12 @@ public class TownManager {
      */
     public static void changeNPCStatus(com.palmergames.bukkit.towny.object.Town town, boolean isNPC) {
         var townObject = getTown(town.getUUID());
+        if (townObject == null) return;
+
         setTownObject(isNPC ?
                 new NpcTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID()))) :
-                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID()))));
+                new PlayerTown(Objects.requireNonNull(TownyAPI.getInstance().getTown(townObject.getUUID())))
+        );
     }
 
     /**
@@ -85,7 +91,7 @@ public class TownManager {
      * @return TownObject
      */
     public static Town getTown(UUID uuid) {
-        for (var townObject : PcConomy.GlobalTownManager.Towns)
+        for (var townObject : PcConomy.GlobalTown.Towns)
             if (townObject.getUUID().equals(uuid))
                 return townObject;
 
@@ -98,7 +104,7 @@ public class TownManager {
      * @return TownObject
      */
     public static Town getTown(com.palmergames.bukkit.towny.object.Town town) {
-        for (var townObject : PcConomy.GlobalTownManager.Towns)
+        for (var townObject : PcConomy.GlobalTown.Towns)
             if (townObject.getUUID().equals(town.getUUID()))
                 return townObject;
 
@@ -110,28 +116,15 @@ public class TownManager {
      * @param town New townObject
      */
     public static void setTownObject(Town town) {
-        for (var currentTown : PcConomy.GlobalTownManager.Towns)
+        for (var currentTown : PcConomy.GlobalTown.Towns)
             if (currentTown.getUUID().equals(town.getUUID())) {
-                PcConomy.GlobalTownManager.Towns.remove(currentTown);
-                PcConomy.GlobalTownManager.Towns.add(town);
+                PcConomy.GlobalTown.Towns.remove(currentTown);
+                PcConomy.GlobalTown.Towns.add(town);
             }
     }
 
-    /**
-     * Get town prefix
-     * @param town Town
-     * @return Prefix
-     */
-    public static String getTownPrefix(UUID town) {
-        return Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getPrefix();
-    }
-
-    /**
-     * Saves Towns into .json file
-     * @param fileName File name
-     * @throws IOException If something goes wrong
-     */
-    public void saveTown(String fileName) throws IOException {
+    @Override
+    public void save(String fileName) throws IOException {
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
@@ -143,18 +136,18 @@ public class TownManager {
         writer.close();
     }
 
-    /**
-     * Loads towns data from .json
-     * @param fileName File name (without format)
-     * @return Town manager object
-     * @throws IOException If something goes wrong
-     */
-    public static TownManager loadTowns(String fileName) throws IOException {
+    @Override
+    public TownManager load(String fileName) throws IOException {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), TownManager.class);
+    }
+
+    @Override
+    public String getName() {
+        return "towns_data";
     }
 }

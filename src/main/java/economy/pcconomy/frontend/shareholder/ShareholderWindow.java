@@ -2,10 +2,11 @@ package economy.pcconomy.frontend.shareholder;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
 
@@ -23,7 +24,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class, CashManager.class, TownManager.class})
+@ExtensionMethod({Manager.class, Cash.class, TownManager.class})
 public class ShareholderWindow {
     @SuppressWarnings({ "deprecation", "null" })
     public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
@@ -39,7 +40,7 @@ public class ShareholderWindow {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(player);
                     if (town != null)
-                        if (PcConomy.GlobalShareManager.InteractionList.contains(town.getUUID())) {
+                        if (PcConomy.GlobalShare.InteractionList.contains(town.getUUID())) {
                             player.sendMessage("Ваш город уже работал с акциями сегодня");
                             return;
                         }
@@ -56,7 +57,7 @@ public class ShareholderWindow {
 
                     for (var item : inventory) {
                         if (Share.isShare(item))
-                            PcConomy.GlobalShareManager.cashOutShare(player, new Share(item));
+                            PcConomy.GlobalShare.cashOutShare(player, new Share(item));
                     }
                 })
 
@@ -98,13 +99,13 @@ public class ShareholderWindow {
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var town   = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
-                    var share  = PcConomy.GlobalShareManager.soldFirstEmptyShare(town.getUUID());
+                    var share  = PcConomy.GlobalShare.soldFirstEmptyShare(town.getUUID());
                     if (share == null) {
                         player.sendMessage("Акции данного города не доступны к покупке (6)");
                         return;
                     }
 
-                    if (PcConomy.GlobalBank.checkVat(share.Price) > player.amountOfCashInInventory(false)) return;
+                    if (Bank.checkVat(share.Price) > player.amountOfCashInInventory(false)) return;
                     share.buyShare(player);
                 }),
 
@@ -136,9 +137,9 @@ public class ShareholderWindow {
                     var typeSlider    = townSharesPanel.getSliders("SliderType").getChose(event);
 
                     if (costSlider.equals("none") || countSlider.equals("none") || percentSlider.equals("none") || typeSlider.equals("none")) return;
-                    PcConomy.GlobalShareManager.exposeShares(
+                    PcConomy.GlobalShare.exposeShares(
                             town.getUUID(),
-                            Double.parseDouble(costSlider.replace(CashManager.currencySigh, "")),
+                            Double.parseDouble(costSlider.replace(Cash.currencySigh, "")),
                             Integer.parseInt(countSlider.replace("шт.", "")),
                             Double.parseDouble(percentSlider.replace("%", "")),
                             (typeSlider.equals("Дивиденты") ? ShareType.Dividends : ShareType.Equity)
@@ -153,7 +154,7 @@ public class ShareholderWindow {
                     var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                     if (town == null) return;
 
-                    PcConomy.GlobalShareManager.takeOffShares(town.getUUID());
+                    PcConomy.GlobalShare.takeOffShares(town.getUUID());
                     player.sendMessage("Акции города сняты с продажы");
                 }),
 
@@ -170,9 +171,9 @@ public class ShareholderWindow {
             new Slider(Arrays.asList(
                 45, 46, 47, 48, 49, 50, 51, 52, 53
             ), Arrays.asList(
-                "100" + CashManager.currencySigh, "500" + CashManager.currencySigh, "1000" + CashManager.currencySigh,
-                "1500" + CashManager.currencySigh, "2000" + CashManager.currencySigh, "2500" + CashManager.currencySigh,
-                "5000" + CashManager.currencySigh, "10000" + CashManager.currencySigh, "20000" + CashManager.currencySigh
+                "100" + Cash.currencySigh, "500" + Cash.currencySigh, "1000" + Cash.currencySigh,
+                "1500" + Cash.currencySigh, "2000" + Cash.currencySigh, "2500" + Cash.currencySigh,
+                "5000" + Cash.currencySigh, "10000" + Cash.currencySigh, "20000" + Cash.currencySigh
             ), "Цена", "SliderCost", null),
             new Slider(Arrays.asList(
                 16, 17
@@ -185,11 +186,11 @@ public class ShareholderWindow {
     }
 
     public static void sharesWindow(Player player, int windowNumber) {
-        var actions = PcConomy.GlobalShareManager.Shares.keySet().toArray();
+        var actions = PcConomy.GlobalShare.Shares.keySet().toArray();
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = windowNumber * 27; i < actions.length; i++)
             for (var j = i; j < i + Math.min(Math.max(actions.length - 27, 1), 27); j++) {
-                var share = PcConomy.GlobalShareManager.getTownShares((UUID) actions[j]).get(0);
+                var share = PcConomy.GlobalShare.getTownShares((UUID) actions[j]).get(0);
 
                 var townName = "[удалён]";
                 var town = TownyAPI.getInstance().getTown((UUID) actions[j]);
@@ -197,7 +198,7 @@ public class ShareholderWindow {
 
                 list.add(new LittleButton(j,
                     "Акции города " + townName,
-                    "Цена: " + share.Price + CashManager.currencySigh + "\n" +
+                    "Цена: " + share.Price + Cash.currencySigh + "\n" +
                     "Доля собственности: " + share.Equality + "%\n" +
                     "Тип ценной бумаги: " + share.ShareType + "\n" +
                     "ID: " + share.TownUUID)); // TODO: DATA MODEL

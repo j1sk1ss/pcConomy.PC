@@ -14,8 +14,8 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
-import economy.pcconomy.backend.economy.town.NpcTown;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.economy.town.towns.NpcTown;
+import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -44,7 +44,7 @@ public class NPCTraderWindow {
                                 }
                                 else {
                                     town.generateLocalPrices();
-                                    town.sellResourceToStorage(player.getInventory().getItemInMainHand(), player);
+                                    town.sellResource2Storage(player.getInventory().getItemInMainHand(), player);
                                 }
                         })
                 ), "Магазин", MenuSizes.SixLines

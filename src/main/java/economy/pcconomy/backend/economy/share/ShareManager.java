@@ -3,10 +3,11 @@ package economy.pcconomy.backend.economy.share;
 import com.google.gson.GsonBuilder;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-import economy.pcconomy.backend.economy.town.manager.TownManager;
+import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
-@ExtensionMethod({CashManager.class, TownManager.class})
-public class ShareManager {
+@ExtensionMethod({Cash.class, TownManager.class})
+public class ShareManager implements Loadable {
     public final List<UUID> InteractionList = new ArrayList<>();
     public final Map<UUID, List<Share>> Shares = new HashMap<>();
 
@@ -160,12 +161,8 @@ public class ShareManager {
         }
     }
 
-    /**
-     * Saves license
-     * @param fileName File name
-     * @throws IOException If something goes wrong
-     */
-    public void saveShares(String fileName) throws IOException {
+    @Override
+    public void save(String fileName) throws IOException {
         FileWriter writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()
                 .setPrettyPrinting()
@@ -175,17 +172,17 @@ public class ShareManager {
         writer.close();
     }
 
-    /**
-     * Loads shares data from .json
-     * @param fileName File name (without format)
-     * @return License manager object
-     * @throws IOException If something goes wrong
-     */
-    public static ShareManager loadShares(String fileName) throws IOException {
+    @Override
+    public ShareManager load(String fileName) throws IOException {
         return new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
                 .create()
                 .fromJson(new String(Files.readAllBytes(Paths.get(fileName + ".json"))), ShareManager.class);
+    }
+
+    @Override
+    public String getName() {
+        return "shares_data";
     }
 }

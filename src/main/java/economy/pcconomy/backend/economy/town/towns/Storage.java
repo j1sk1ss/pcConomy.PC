@@ -1,4 +1,4 @@
-package economy.pcconomy.backend.economy.town.manager;
+package economy.pcconomy.backend.economy.town.towns;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Random;
 
-public class StorageManager {
+public class Storage {
     /**
      * Create resource in storage
      * @param maxAmount Max amount of random generated count

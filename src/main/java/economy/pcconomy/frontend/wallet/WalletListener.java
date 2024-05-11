@@ -1,6 +1,6 @@
 package economy.pcconomy.frontend.wallet;
 
-import economy.pcconomy.backend.cash.CashManager;
+import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.Wallet;
 
 import org.bukkit.event.EventHandler;
@@ -13,7 +13,7 @@ import org.j1sk1ss.itemmanager.manager.Manager;
 import lombok.experimental.ExtensionMethod;
 
 
-@ExtensionMethod({Manager.class, CashManager.class})
+@ExtensionMethod({Manager.class, Cash.class})
 public class WalletListener implements Listener  {
     @EventHandler
     public void onWalletUse(PlayerInteractEvent event) {

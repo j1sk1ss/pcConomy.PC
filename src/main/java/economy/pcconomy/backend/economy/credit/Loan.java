@@ -2,7 +2,7 @@ package economy.pcconomy.backend.economy.credit;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.Capitalist;
-import economy.pcconomy.backend.economy.BalanceManager;
+import economy.pcconomy.backend.cash.Balance;
 import economy.pcconomy.backend.economy.PlayerManager;
 
 import lombok.experimental.ExtensionMethod;
@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-@ExtensionMethod({BalanceManager.class, PlayerManager.class, BorrowerManager.class})
+@ExtensionMethod({Balance.class, PlayerManager.class, BorrowerManager.class})
 public class Loan {
     /**
      * Loan object
@@ -39,7 +39,6 @@ public class Loan {
     public final int duration;
     public final double dailyPayment;
     public int expired;
-    public static double trustCoefficient = .5d; // 1.5f
 
     /**
      * Add loan to loan owner (Pays starts)
@@ -49,7 +48,7 @@ public class Loan {
         loanOwner.getCreditList().add(this);
         loanOwner.changeBudget(-amount);
 
-        Bukkit.getPlayer(Owner).giveMoney(amount);
+        Objects.requireNonNull(Bukkit.getPlayer(Owner)).giveMoney(amount);
     }
 
     /**
@@ -92,8 +91,8 @@ public class Loan {
      * @param borrower Borrower who wants to take loan
      * @return Loan status for this borrower
      */
-    public static boolean isSafeLoan(double loanAmount, int duration, Player borrower) {
-        return (getSafetyFactor(loanAmount, duration, borrower.getBorrowerObject()) >= trustCoefficient
+    public static boolean isSafeLoan(double loanAmount, int duration, Capitalist loaner, Player borrower) {
+        return (getSafetyFactor(loanAmount, duration, borrower.getBorrowerObject()) >= loaner.getTrustCoefficient()
                 && blackTown(borrower.getUniqueId().getCountryMens())
                 && borrower.getPlayerServerDuration() > 100);
     }
@@ -189,7 +188,7 @@ public class Loan {
         if (borrower != null) {
             borrower.CreditHistory.add(loan);
             borrower.setBorrowerObject();
-        } else PcConomy.GlobalBorrowerManager.borrowers.add(new Borrower(Objects.requireNonNull(Bukkit.getPlayer(player)), loan));
+        } else PcConomy.GlobalBorrower.borrowers.add(new Borrower(Objects.requireNonNull(Bukkit.getPlayer(player)), loan));
 
         credit.remove(getLoan(player, creditOwner));
     }
