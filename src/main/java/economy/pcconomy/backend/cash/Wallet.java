@@ -1,11 +1,12 @@
 package economy.pcconomy.backend.cash;
 
 import lombok.experimental.ExtensionMethod;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.math3.util.Precision;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
 import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 

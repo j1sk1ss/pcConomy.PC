@@ -4,6 +4,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.cash.Cash;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import lombok.experimental.ExtensionMethod;
@@ -33,16 +34,16 @@ public class NPCLoanWindow {
             new Button(0, 21, "Взять кредит", "Взять кредит у банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие").getView(player);
-                }),
+                    NPCLoanWindow.LoanMenu.getPanel("სКредит-Банк-Взятие").getView(player);
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(5, 26, "Погасить кредит", "Погасить кредит банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
                     Loan.payOffADebt(player, PcConomy.GlobalBank.getMainBank());
                     player.closeInventory();
-                })
-        ), "Кредит-Банк", MenuSizes.ThreeLines),
+                }, Material.GOLD_INGOT, 7000)
+        ), "გКредит-Банк", MenuSizes.ThreeLines),
 
         new Panel(Arrays.asList(
             new Slider(Arrays.asList(
@@ -51,7 +52,7 @@ public class NPCLoanWindow {
                 "20 дн.", "30 дн.", "40 дн.", "50 дн.", "60 дн.", "70 дн.", "80 дн.", "90 дн.", "100 дн."
             ), "Размер", "Время выплаты",
                 (event) -> {
-                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие");
+                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("სКредит-Банк-Взятие");
                     var bar = loanPanel.getBars("Размер кредита");
                     var player = (Player)event.getWhoClicked();
                     var value = 0;
@@ -86,7 +87,7 @@ public class NPCLoanWindow {
             ),
                 (event) -> {
                     var player    = (Player) event.getWhoClicked();
-                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие");
+                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("სКредит-Банк-Взятие");
                     var durSlider = loanPanel.getSliders("Время выплаты").getChose(event);
                     var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().get(0).split(" ")[0]);
                     var agreement = event.getCurrentItem().getLoreLines().get(1);
@@ -101,10 +102,10 @@ public class NPCLoanWindow {
                         }
                     }
                 })
-        ), "Кредит-Банк-Взятие", MenuSizes.ThreeLines)
+        ), "სКредит-Банк-Взятие", MenuSizes.ThreeLines)
     ));
 
     public static void generateWindow(Player player) {
-        LoanMenu.getPanel("Кредит-Банк").getView(player);
+        LoanMenu.getPanel("გКредит-Банк").getView(player);
     }
 }

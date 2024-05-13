@@ -53,7 +53,7 @@ public class NPCTraderWindow {
                                     town.sellResource2Storage(player.getInventory().getItemInMainHand(), player);
                                 }
                         })
-                ), "Магазин", MenuSizes.SixLines
+                ), "ვМагазин", MenuSizes.SixLines
             )
         )
     );
@@ -63,7 +63,7 @@ public class NPCTraderWindow {
         if (town == null) return null;
 
         var window = Bukkit.createInventory(
-                player, 54, Component.text("Магазин " +
+                player, 54, Component.text("ვМагазин " +
                 Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId())
         );
 

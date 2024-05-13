@@ -1,9 +1,6 @@
 package economy.pcconomy.backend.economy.bank;
 
-import com.google.gson.GsonBuilder;
-
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.economy.town.towns.NpcTown;
@@ -15,10 +12,6 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 

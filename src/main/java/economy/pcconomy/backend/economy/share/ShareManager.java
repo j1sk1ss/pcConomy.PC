@@ -1,7 +1,5 @@
 package economy.pcconomy.backend.economy.share;
 
-import com.google.gson.GsonBuilder;
-
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.db.Loadable;
@@ -12,9 +10,6 @@ import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 

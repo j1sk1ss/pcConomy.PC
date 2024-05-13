@@ -61,8 +61,12 @@ public class Share {
             if (loreLine == null) return false;
             if (loreLine.size() < 3) return false;
 
+            @SuppressWarnings("unused")
             var first  = UUID.fromString(loreLine.get(0));
+
+            @SuppressWarnings("unused")
             var second = UUID.fromString(loreLine.get(1));
+            
             Double.parseDouble(loreLine.get(2));
             return true;
         }

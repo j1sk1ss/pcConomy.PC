@@ -13,6 +13,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -23,7 +24,7 @@ import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
-import org.j1sk1ss.menuframework.objects.interactive.components.LittleButton;
+import org.j1sk1ss.menuframework.objects.interactive.components.Icon;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class MayorManagerWindow {
 
             new Button(27, 35, "Купить торговца", "Купить нового торговца",
                 (event) -> new Trader().Buy((Player) event.getWhoClicked()))
-        ), "Город-Торговцы", MenuSizes.FourLines),
+        ), "დГород-Торговцы", MenuSizes.FourLines),
 
         new Panel(Arrays.asList(
             new Button(0, 20, "Уволить торговца", "Торговец будет уволен",
@@ -61,7 +62,7 @@ public class MayorManagerWindow {
                     if (trader.IsRanted) return;
 
                     trader.destroy();
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(3, 23, "Переместить торговца", "Торговец будет перемещён в место вашего клика",
                 (event) -> {
@@ -73,7 +74,7 @@ public class MayorManagerWindow {
                     var key = new NamespacedKey(PcConomy.getPlugin(PcConomy.class), "trader-move");
                     if (!player.getPersistentDataContainer().has(key, PersistentDataType.INTEGER))
                         player.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, trader.getNPC().getId());
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(6, 26, "Улучшить торговца", "Торговец будет улучшен (+9 слотов)",
                 (event) -> {
@@ -89,8 +90,8 @@ public class MayorManagerWindow {
 
                     trader.Level = Math.min(trader.Level + 1, 6);
                     player.takeCashFromPlayer(PcConomy.GlobalBank.getMainBank().addVAT(price), false);
-                })
-        ), "Город-Торговцы-Управление", MenuSizes.ThreeLines)
+                }, Material.GOLD_INGOT, 7000)
+        ), "ეГород-Торговцы-Управление", MenuSizes.ThreeLines)
     ));
 
     public static void generateWindow(Player player) {
@@ -98,16 +99,16 @@ public class MayorManagerWindow {
         var town = TownyAPI.getInstance().getTown(player).getTown();
         for (var i = 0; i < Math.min(27, town.Traders.size()); i++) {
             var trader = CitizensAPI.getNPCRegistry().getById(town.Traders.get(i)).getOrAddTrait(Trader.class);
-            components.add(new LittleButton(i, town.Traders.get(i) + "",
-                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost));
+            components.add(new Icon(i, town.Traders.get(i) + "",
+                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost, Material.GOLD_INGOT, 7000)); // TODO: Icons for traders
         }
 
-        TraderManager.getPanel("Город-Торговцы").getViewWith(player, components);
+        TraderManager.getPanel("დГород-Торговцы").getViewWith(player, components);
     }
 
     public static Inventory generateTradeControls(Player player, int traderId) {
-        var window = Bukkit.createInventory(player, 27, Component.text("Город-Торговцы-Управление " + traderId));
-        TraderManager.getPanel("Город-Торговцы-Управление").place(window);
+        var window = Bukkit.createInventory(player, 27, Component.text("ეГород-Торговцы-Управление " + traderId));
+        TraderManager.getPanel("ეГород-Торговцы-Управление").place(window);
         return window;
     }
 }

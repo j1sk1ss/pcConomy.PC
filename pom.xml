@@ -165,7 +165,7 @@
         <dependency>
             <groupId>com.github.j1sk1ss</groupId>
             <artifactId>MenuFramework.PC</artifactId>
-            <version>ver1.0.6.1</version>
+            <version>ver1.0.6.3</version>
         </dependency>
 
         <dependency>

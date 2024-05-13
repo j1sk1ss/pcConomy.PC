@@ -11,6 +11,7 @@ import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.j1sk1ss.itemmanager.manager.Manager;
@@ -33,7 +34,7 @@ public class ShareholderWindow {
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     ShareholderWindow.sharesWindow(player, 0);
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(3, 23, "Выставление акций", "Выставление акций города на рынок",
                 (event) -> {
@@ -49,7 +50,7 @@ public class ShareholderWindow {
 
                     if (player.equals(town.getMayor().getPlayer()))
                         player.openInventory(ShareholderWindow.townSharesWindow(player, town.getUUID()));
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(6, 26, "Обналичить акции", "Будут обналичены акции в инвенторе игрока",
                 (event) -> {
@@ -60,9 +61,9 @@ public class ShareholderWindow {
                         if (Share.isShare(item))
                             PcConomy.GlobalShare.cashOutShare(player, new Share(item));
                     }
-                })
+                }, Material.GOLD_INGOT, 7000)
 
-        ), "Акции-Меню", MenuSizes.ThreeLines),
+        ), "ზАкции-Меню", MenuSizes.ThreeLines),
 
         new Panel(Arrays.asList(
             new ClickArea(0, 44, 
@@ -85,15 +86,15 @@ public class ShareholderWindow {
                         var player = (Player) event.getWhoClicked();
                         ShareholderWindow.sharesWindow(player, page - 1);
                     }
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(50, 53, "Вперёд", "На одну страницу", 
                 (event) -> {
                     var page = Integer.parseInt(event.getView().getTitle().split(" ")[1]);
                     var player = (Player) event.getWhoClicked();
                     ShareholderWindow.sharesWindow(player, page + 1);
-                })
-        ), "Акции-Список", MenuSizes.SixLines),
+                }, Material.GOLD_INGOT, 7000)
+        ), "თАкции-Список", MenuSizes.SixLines),
 
         new Panel(Arrays.asList(
             new Button(0, 21, "Купить одну акцию", "",
@@ -110,7 +111,7 @@ public class ShareholderWindow {
 
                     if (Bank.checkVat(share.Price) > player.amountOfCashInInventory(false)) return;
                     share.buyShare(player);
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(5, 26, "Продать одну акцию", "",
                 (event) -> {
@@ -122,15 +123,15 @@ public class ShareholderWindow {
                         if (share.Price > town.getTown().getBudget()) return;
                         share.sellShare(player, player.getInventory().getItemInMainHand());
                     }
-                })
+                }, Material.GOLD_INGOT, 7000)
 
-        ), "Акции-Города"),
+        ), "იАкции-Города"),
 
         new Panel(Arrays.asList(
             new Button(0, 20, "Выставить на продажу", "Акции будут выставлены на продажу",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
-                    var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
+                    var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("კАкции-Выставление");
                     var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                     if (town == null) return;
 
@@ -149,7 +150,7 @@ public class ShareholderWindow {
                     );
 
                     player.sendMessage("Акции города выставлены на продажу");
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Button(3, 23, "Снять с продажи", "Акции будут сняты с продажи",
                 (event) -> {
@@ -159,7 +160,7 @@ public class ShareholderWindow {
 
                     PcConomy.GlobalShare.takeOffShares(town.getUUID());
                     player.sendMessage("Акции города сняты с продажы");
-                }),
+                }, Material.GOLD_INGOT, 7000),
 
             new Slider(Arrays.asList(
                 27, 28, 29, 30, 31, 32, 33, 34, 35
@@ -181,11 +182,11 @@ public class ShareholderWindow {
             new Slider(Arrays.asList(
                 16, 17
             ), Arrays.asList("Дивиденты", "Доля"), "Тип", "SliderType", null)
-        ), "Акции-Выставление")
+        ), "კАкции-Выставление")
     ));
 
     public static void generateWindow(Player player) {
-        ShareHolderMenu.getPanel("Акции-Меню").getView(player);
+        ShareHolderMenu.getPanel("ზАкции-Меню").getView(player);
     }
 
     public static void sharesWindow(Player player, int windowNumber) {
@@ -207,21 +208,21 @@ public class ShareholderWindow {
                     "ID: " + share.TownUUID)); // TODO: DATA MODEL
             }
 
-        var window = Bukkit.createInventory(player, 54, Component.text("Акции-Список " + windowNumber));
-        ShareHolderMenu.getPanel("Акции-Список").getViewWith(player, list, window);
+        var window = Bukkit.createInventory(player, 54, Component.text("თАкции-Список " + windowNumber));
+        ShareHolderMenu.getPanel("თАкции-Список").getViewWith(player, list, window);
         player.openInventory(window);
     }
 
     public static Inventory acceptWindow(Player player, UUID town) {
-        var window = Bukkit.createInventory(player, 27, Component.text("Акции-Города " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName()));
-        ShareHolderMenu.getPanel("Акции-Города").place(window);
+        var window = Bukkit.createInventory(player, 27, Component.text("იАкции-Города " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName()));
+        ShareHolderMenu.getPanel("იАкции-Города").place(window);
 
         return window;
     }
 
     public static Inventory townSharesWindow(Player player, UUID town) {
-        var window = Bukkit.createInventory(player, 54, Component.text("Акции-Выставление " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName()));
-        ShareHolderMenu.getPanel("Акции-Выставление").place(window);
+        var window = Bukkit.createInventory(player, 54, Component.text("კАкции-Выставление " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName()));
+        ShareHolderMenu.getPanel("კАкции-Выставление").place(window);
 
         return window;
     }

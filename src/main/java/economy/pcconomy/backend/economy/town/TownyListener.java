@@ -6,7 +6,6 @@ import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.Capitalist;
-import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.event.EventHandler;
