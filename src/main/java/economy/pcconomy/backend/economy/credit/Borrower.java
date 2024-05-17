@@ -1,5 +1,7 @@
 package economy.pcconomy.backend.economy.credit;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -15,6 +17,6 @@ public class Borrower {
         CreditHistory = Collections.singletonList(loan);
     }
 
-    public final UUID Borrower;
-    public List<Loan> CreditHistory;
+    @Getter private final UUID Borrower;
+    @Getter @Setter public List<Loan> CreditHistory;
 }

@@ -49,7 +49,7 @@ public class LicenseManager extends Loadable {
      */
     public List<License> getLicenses(Player player) {
         var list = new ArrayList<License>();
-        for (var lic : Licenses) if (lic.Owner.equals(player.getUniqueId())) list.add(lic);
+        for (var lic : Licenses) if (lic.getOwner().equals(player.getUniqueId())) list.add(lic);
         return list;
     }
 
@@ -60,7 +60,7 @@ public class LicenseManager extends Loadable {
      * @return License body
      */
     public License getLicense(UUID player, LicenseType licenseType) {
-        for (var lic : Licenses) if (lic.Owner.equals(player)) if (lic.LicenseType.equals(licenseType)) return lic;
+        for (var lic : Licenses) if (lic.getOwner().equals(player)) if (lic.getLicenseType().equals(licenseType)) return lic;
         return null;
     }
 
@@ -77,7 +77,7 @@ public class LicenseManager extends Loadable {
             PcConomy.GlobalLicense.Licenses.remove(PcConomy.GlobalLicense.getLicense(player.getUniqueId(), licenseType));
 
         player.takeCashFromPlayer(price, false);
-        PcConomy.GlobalBank.getMainBank().BankBudget += price;
+        PcConomy.GlobalBank.getBank().changeBudget(price);
         //TODO: DATA MODEL
         PcConomy.GlobalLicense.createLicense(new License(player, LocalDateTime.now().plusDays(1), licenseType));
         new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()).giveItems(player);

@@ -38,7 +38,7 @@ public class BankerWindow {
                             if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-bank-value");
 
-                            PcConomy.GlobalBank.getMainBank().takeCashFromPlayer(Math.abs(amount), player);
+                            PcConomy.GlobalBank.getBank().takeCashFromPlayer(Math.abs(amount), player);
                             BankerWindow.regenerateWindow(player, event.getInventory());
                         }), // Put
                     new ClickArea(41, 53,
@@ -50,7 +50,7 @@ public class BankerWindow {
                             if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-bank-value");
 
-                            PcConomy.GlobalBank.getMainBank().giveCash2Player(amount, player);
+                            PcConomy.GlobalBank.getBank().giveCash2Player(amount, player);
                             BankerWindow.regenerateWindow(player, event.getInventory());
                         }) // Withdraw
                 ), "აБанк", MenuSizes.SixLines
@@ -63,11 +63,11 @@ public class BankerWindow {
     }
 
     public static void regenerateWindow(Player player, Inventory inventory) {
-        var enableBalance   = PcConomy.GlobalBank.getMainBank().DayWithdrawBudget;
+        var enableBalance   = PcConomy.GlobalBank.getBank().getDayWithdrawBudget();
         var playerBalance   = Balance.getBalance(player);
         var cashInInventory = player.amountOfCashInInventory(false);
-        var textBalance = playerBalance + "";
-        var charArray   = textBalance.toCharArray();
+        var textBalance     = playerBalance + "";
+        var charArray       = textBalance.toCharArray();
 
         var balance = printBalance(charArray, textBalance);
         var actions = printButtons(playerBalance, enableBalance, cashInInventory);

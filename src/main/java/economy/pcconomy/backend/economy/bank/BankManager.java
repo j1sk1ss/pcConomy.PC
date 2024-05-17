@@ -1,6 +1,8 @@
 package economy.pcconomy.backend.economy.bank;
 
 import economy.pcconomy.backend.db.Loadable;
+import lombok.Getter;
+import lombok.Setter;
 
 
 public class BankManager extends Loadable {
@@ -8,11 +10,7 @@ public class BankManager extends Loadable {
         Bank = bank;
     }
 
-    public Bank Bank;
-
-    public Bank getMainBank() {
-        return Bank;
-    }
+    @Getter @Setter public Bank Bank;
 
     @Override
     public String getName() {

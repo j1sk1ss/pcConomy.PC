@@ -25,7 +25,10 @@ public class MayorManagerListener implements Listener {
 
         if (block == null) return;
         if (container.has(key, PersistentDataType.INTEGER)) {
-            var trader = NpcManager.getNPC(container.get(key, PersistentDataType.INTEGER));
+            var id = container.get(key, PersistentDataType.INTEGER);
+            if (id == null) return;
+
+            var trader = NpcManager.getNPC(id);
             trader.teleport(block.getLocation().add(0, 1, 0), PlayerTeleportEvent.TeleportCause.ENDER_PEARL);
 
             container.remove(key);

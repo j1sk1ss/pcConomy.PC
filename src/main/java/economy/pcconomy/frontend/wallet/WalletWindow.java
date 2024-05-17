@@ -94,7 +94,7 @@ public class WalletWindow {
 
     public static Inventory putWindow(Player player, Wallet wallet) {
         var window = Bukkit.createInventory(player, 9, Component.text("რКошелёк-Внесение"));
-        var cashInInventory = Math.min(player.amountOfCashInInventory(true), wallet.Capacity - wallet.Amount);
+        var cashInInventory = Math.min(player.amountOfCashInInventory(true), wallet.getCapacity() - wallet.getAmount());
 
         var button = new Item("Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, Material.PAPER, 1, 17000);
         button.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-wallet-value"); // TODO: DATA MODEL
@@ -108,7 +108,7 @@ public class WalletWindow {
 
     public static Inventory withdrawWindow(Player player, Wallet wallet) {
         var window = Bukkit.createInventory(player, 9, Component.text("რКошелёк-Снятие"));
-        var cashInWallet = wallet.Amount;
+        var cashInWallet = wallet.getAmount();
 
         var button = new Item("Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.PAPER, 1, 17000);
         button.setDouble2Container(cashInWallet, "item-wallet-value"); // TODO: DATA MODEL

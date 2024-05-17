@@ -57,11 +57,13 @@ public class NpcTown extends Town {
     public double usefulStorage;
     public double usefulBudget;
     public double townVAT;
+
     public final List<ItemStack> Storage;
     public final List<Loan> Credit;
     public final UUID TownUUID;
 
     private final int purchaseSize = 8;
+
     private double previousBudget = 10000;
     private double dayBudget = previousBudget * usefulBudget;
     private int StartStorageAmount;
@@ -91,7 +93,7 @@ public class NpcTown extends Town {
 
         buyer.takeCashFromPlayer(price, false);
 
-        changeBudget(PcConomy.GlobalBank.getMainBank().deleteVAT(price));
+        changeBudget(PcConomy.GlobalBank.getBank().deleteVAT(price));
         new ItemStack(itemStack.getType(), purchaseSize).giveItems(buyer);
         Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) - purchaseSize);
 
@@ -126,7 +128,7 @@ public class NpcTown extends Town {
         seller.getInventory().setItemInMainHand(null);
         Storage.setAmountOfResource(itemStack, Storage.getAmountOfResource(itemStack) + itemAmount);
 
-        seller.giveCashToPlayer(PcConomy.GlobalBank.getMainBank().deleteVAT(price), false);
+        seller.giveCashToPlayer(PcConomy.GlobalBank.getBank().deleteVAT(price), false);
         changeBudget(-price);
 
         generateLocalPrices();
@@ -139,7 +141,7 @@ public class NpcTown extends Town {
         var budget = getBudget();
         for (var i = 0; i < Storage.size(); i++) {
             var price  = Precision.round(Math.abs(budget / Storage.get(i).getAmount() + 1), 3);
-            var margin = Precision.round((PcConomy.GlobalBank.getMainBank().VAT + townVAT), 3);
+            var margin = Precision.round((PcConomy.GlobalBank.getBank().getVat() + townVAT), 3);
             var marginPercent = margin * 100d;
             var endPrice = Precision.round(price + (price * margin), 3);
 
@@ -171,8 +173,8 @@ public class NpcTown extends Town {
      * @param amount Amount of taken moneys
      */
     public void getMoneyFromBank(double amount) {
-        if (amount > PcConomy.GlobalBank.getMainBank().DayWithdrawBudget) return;
-        PcConomy.GlobalBank.getMainBank().BankBudget -= amount;
+        if (amount > PcConomy.GlobalBank.getBank().getDayWithdrawBudget()) return;
+        PcConomy.GlobalBank.getBank().changeBudget(-amount);
         changeBudget(amount);
     }
 

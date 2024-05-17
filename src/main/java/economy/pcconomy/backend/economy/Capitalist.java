@@ -41,7 +41,7 @@ public abstract class Capitalist {
     public List<UUID> getBorrowers() {
         var list = new ArrayList<UUID>();
         for (var loan : getCreditList())
-            list.add(loan.Owner);
+            list.add(loan.getOwner());
 
         return list;
     }

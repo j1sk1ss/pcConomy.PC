@@ -109,7 +109,7 @@ public class ShareholderWindow {
                         return;
                     }
 
-                    if (Bank.checkVat(share.Price) > player.amountOfCashInInventory(false)) return;
+                    if (Bank.checkVat(share.getPrice()) > player.amountOfCashInInventory(false)) return;
                     share.buyShare(player);
                 }, Material.GOLD_INGOT, 7000),
 
@@ -120,7 +120,7 @@ public class ShareholderWindow {
                         var share = new Share(player.getInventory().getItemInMainHand());
                         var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
 
-                        if (share.Price > town.getTown().getBudget()) return;
+                        if (share.getPrice() > town.getTown().getBudget()) return;
                         share.sellShare(player, player.getInventory().getItemInMainHand());
                     }
                 }, Material.GOLD_INGOT, 7000)
@@ -202,10 +202,10 @@ public class ShareholderWindow {
 
                 list.add(new LittleButton(j,
                     "Акции города " + townName,
-                    "Цена: " + share.Price + Cash.currencySigh + "\n" +
-                    "Доля собственности: " + share.Equality + "%\n" +
-                    "Тип ценной бумаги: " + share.ShareType + "\n" +
-                    "ID: " + share.TownUUID)); // TODO: DATA MODEL
+                    "Цена: " + share.getPrice() + Cash.currencySigh + "\n" +
+                    "Доля собственности: " + share.getEquality() + "%\n" +
+                    "Тип ценной бумаги: " + share.getShareType() + "\n" +
+                    "ID: " + share.getTownUUID())); // TODO: DATA MODEL
             }
 
         var window = Bukkit.createInventory(player, 54, Component.text("თАкции-Список " + windowNumber));

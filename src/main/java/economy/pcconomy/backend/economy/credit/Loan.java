@@ -5,6 +5,8 @@ import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.cash.Balance;
 import economy.pcconomy.backend.economy.PlayerManager;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -33,12 +35,12 @@ public class Loan {
         Owner = player.getUniqueId();
     }
 
-    public final UUID Owner;
-    public double amount;
-    public final double percentage;
-    public final int duration;
-    public final double dailyPayment;
-    public int expired;
+    @Getter private final UUID Owner;
+    @Getter @Setter private double amount;
+    @Getter private final double percentage;
+    @Getter private final int duration;
+    @Getter private final double dailyPayment;
+    @Getter @Setter private int expired;
 
     /**
      * Add loan to loan owner (Pays starts)
@@ -58,7 +60,7 @@ public class Loan {
      * @return Percent of this loan
      */
     public static double getPercent(double amount, double duration) {
-        return Math.round((PcConomy.GlobalBank.getMainBank().DayWithdrawBudget / (amount * duration)) * 1000d) / 1000d;
+        return Math.round((PcConomy.GlobalBank.getBank().getDayWithdrawBudget() / (amount * duration)) * 1000d) / 1000d;
     }
 
     /**
@@ -79,9 +81,9 @@ public class Loan {
      */
     public static double getSafetyFactor(double amount, int duration, Borrower borrower) {
         var expired = 0;
-        if (borrower == null) return ((duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getMainBank().DayWithdrawBudget));
+        if (borrower == null) return ((duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget()));
         for (var loan : borrower.CreditHistory) expired += loan.expired;
-        return (borrower.CreditHistory.size() + (duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getMainBank().DayWithdrawBudget));
+        return (borrower.CreditHistory.size() + (duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget()));
     }
 
     /**
@@ -104,7 +106,7 @@ public class Loan {
      */
     public static boolean blackTown(List<UUID> uuids) {
         return uuids.parallelStream().anyMatch(uuid -> {
-            var loan = getLoan(uuid, PcConomy.GlobalBank.getMainBank());
+            var loan = getLoan(uuid, PcConomy.GlobalBank.getBank());
             return loan != null && loan.expired > 5;
         });
     }

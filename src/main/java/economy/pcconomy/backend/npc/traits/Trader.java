@@ -1,5 +1,6 @@
 package economy.pcconomy.backend.npc.traits;
 
+import com.google.gson.annotations.Expose;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
@@ -12,7 +13,6 @@ import economy.pcconomy.frontend.trade.TraderWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
-import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 
@@ -39,8 +39,12 @@ public class Trader extends Trait {
 
         Storage     = new ArrayList<>();
         SpecialList = new ArrayList<>();
-        Term        = LocalDateTime.now().toString();
+        Margin      = 0d;
+        Cost        = 0d;
+        IsRanted    = false;
         HomeTown    = null;
+        Owner       = null;
+        Term        = LocalDateTime.now().toString();
         Level       = 1;
     }
 
@@ -59,16 +63,16 @@ public class Trader extends Trait {
         Level    = level;
     }
 
-    @Persist public List<ItemStack> Storage;
-    @Persist public List<UUID> SpecialList;
-    @Persist public double Revenue;
-    @Persist public double Margin;
-    @Persist public double Cost;
-    @Persist public boolean IsRanted;
-    @Persist public String Term;
-    @Persist public UUID HomeTown;
-    @Persist public UUID Owner;
-    @Persist public int Level;
+    @Expose public List<ItemStack> Storage;
+    @Expose public List<UUID> SpecialList;
+    @Expose public double Revenue;
+    @Expose public double Margin;
+    @Expose public double Cost;
+    @Expose public boolean IsRanted;
+    @Expose public String Term;
+    @Expose public UUID HomeTown;
+    @Expose public UUID Owner;
+    @Expose public int Level;
 
     private transient final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
@@ -82,6 +86,8 @@ public class Trader extends Trait {
                 event.getClicker().sendMessage("Что я здесь забыл?");
                 HomeTown = null;
             }
+
+            return;
         }
 
         // We stole all moneys to town and delete all resources if rant is over
@@ -194,10 +200,10 @@ public class Trader extends Trait {
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        buyer.takeCashFromPlayer(PcConomy.GlobalBank.getMainBank().addVAT(Cost), false);
+        buyer.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(Cost), false);
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
-        this.linkToNPC(npc);
+        linkToNPC(npc);
         npc.spawn(buyer.getLocation());
         npc.addTrait(this);
 

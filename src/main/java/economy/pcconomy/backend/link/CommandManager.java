@@ -38,7 +38,7 @@ public class CommandManager implements CommandExecutor {
             case "create_cash"        -> ((Player)sender).giveCashToPlayer(Double.parseDouble(args[0]), true);
             case "reload_towns"       -> TownManager.reloadTownObjects();
             case "reload_npc"         -> NpcManager.reloadNPC();
-            case "put_cash2bank"      -> PcConomy.GlobalBank.getMainBank().takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
+            case "put_cash2bank"      -> PcConomy.GlobalBank.getBank().takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
             case "create_banker"      -> NpcManager.createNPC((Player)sender, new Banker());
             case "create_npc_loaner"  -> NpcManager.createNPC((Player)sender, new NpcLoaner());
             case "create_trader"      -> NpcManager.createNPC((Player)sender, new Trader());
@@ -56,27 +56,29 @@ public class CommandManager implements CommandExecutor {
             case "add_trade2town" -> ((NpcTown)UUID.fromString(args[0]).getTown()).Storage
                     .addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]));
 
-            case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.getMainBank().BankBudget + "$\n" +
-                        "Global VAT: " + PcConomy.GlobalBank.getMainBank().VAT + "%\n" +
-                        "Deposit percent: " + PcConomy.GlobalBank.getMainBank().DepositPercent + "%\n" +
+            case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.getBank().getBudget() + "$\n" +
+                        "Global VAT: " + PcConomy.GlobalBank.getBank().getVat() + "%\n" +
+                        "Deposit percent: " + PcConomy.GlobalBank.getBank().getDepositPercent() + "%\n" +
                         "Registered towns count: " + PcConomy.GlobalTown.Towns.size() + "\n" +
                         "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n");
 
-            case "set_day_bank_budget" -> PcConomy.GlobalBank.getMainBank().DayWithdrawBudget = (Double.parseDouble(args[0]));
+            case "set_day_bank_budget" -> PcConomy.GlobalBank.getBank().setDayWithdrawBudget((Double.parseDouble(args[0])));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "shares_rate" -> {
-                var message = "";
+                StringBuilder message = new StringBuilder();
                 for (var town : PcConomy.GlobalShare.Shares.keySet())
                     if (TownyAPI.getInstance().getTown(town) != null)
-                        message += Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName() + ": " +
-                                (PcConomy.GlobalShare.getMedianSharePrice(town) / PcConomy.GlobalShare.getTownShares(town).size())
-                                + Cash.currencySigh;
+                        message.append(
+                                Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName()
+                        ).append(": ").append(
+                                PcConomy.GlobalShare.getMedianSharePrice(town) / PcConomy.GlobalShare.getTownShares(town).size()
+                        ).append(Cash.currencySigh);
 
-                sender.sendMessage(message);
+                sender.sendMessage(message.toString());
             }
 
             case "global_market_prices" -> {
-                var message = "";
+                StringBuilder message = new StringBuilder();
                 var prices = new HashMap<ItemStack, Double>();
 
                 for (var trader : CitizensAPI.getNPCRegistry()) {
@@ -90,9 +92,9 @@ public class CommandManager implements CommandExecutor {
                 }
 
                 for (var resource : prices.keySet())
-                    message += "Товар: " + resource + ", цена: " + prices.get(resource) + Cash.currencySigh;
+                    message.append("Товар: ").append(resource).append(", цена: ").append(prices.get(resource)).append(Cash.currencySigh);
 
-                sender.sendMessage(message);
+                sender.sendMessage(message.toString());
             }
         }
 

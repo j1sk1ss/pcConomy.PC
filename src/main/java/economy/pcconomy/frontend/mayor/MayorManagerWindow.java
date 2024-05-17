@@ -89,7 +89,7 @@ public class MayorManagerWindow {
                     if (Bank.checkVat(price) > inventoryAmount) return;
 
                     trader.Level = Math.min(trader.Level + 1, 6);
-                    player.takeCashFromPlayer(PcConomy.GlobalBank.getMainBank().addVAT(price), false);
+                    player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
                 }, Material.GOLD_INGOT, 7000)
         ), "ეГород-Торговцы-Управление", MenuSizes.ThreeLines)
     ));

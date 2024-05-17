@@ -80,6 +80,7 @@ public class NpcManager extends Loadable {
         new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
+                .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeHierarchyAdapter(ConfigurationSerializable.class, new ItemStackTypeAdaptor())
                 .create()
                 .toJson(this, writer);

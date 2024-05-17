@@ -23,7 +23,7 @@ public class TownyListener implements Listener {
     public void onCreation(NewTownEvent event) {
         var town = event.getTown();
 
-        PcConomy.GlobalBank.getMainBank().BankBudget += 250d;
+        PcConomy.GlobalBank.getBank().changeBudget(250);
         town.createTownObject(false);
     }
 
@@ -33,7 +33,7 @@ public class TownyListener implements Listener {
      */
     @EventHandler
     public void onClaim(TownClaimEvent event) {
-        PcConomy.GlobalBank.getMainBank().BankBudget += event.getTownBlock().getPlotPrice();
+        PcConomy.GlobalBank.getBank().changeBudget(event.getTownBlock().getPlotPrice());
     }
 
     /**
@@ -63,10 +63,9 @@ public class TownyListener implements Listener {
      */
     @EventHandler
     public void newDay(NewDayEvent event) {
-        TownyAPI.getInstance().getTowns().parallelStream().forEach((town) -> PcConomy.GlobalBank.getMainBank().BankBudget += town.getPlotTax());
+        TownyAPI.getInstance().getTowns().parallelStream().forEach((town) -> PcConomy.GlobalBank.getBank().changeBudget(town.getPlotTax()));
         PcConomy.GlobalTown.Towns.parallelStream().forEach(Capitalist::newDay);
-
         PcConomy.GlobalShare.newDay();
-        PcConomy.GlobalBank.getMainBank().newDay();
+        PcConomy.GlobalBank.getBank().newDay();
     }
 }

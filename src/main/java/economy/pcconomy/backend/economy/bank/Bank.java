@@ -7,6 +7,8 @@ import economy.pcconomy.backend.economy.town.towns.NpcTown;
 import economy.pcconomy.backend.cash.Cash;
 
 import economy.pcconomy.backend.cash.Balance;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.Bukkit;
@@ -18,25 +20,25 @@ import java.util.*;
 @ExtensionMethod({Cash.class, Balance.class})
 public class Bank extends Capitalist {
     public Bank() {
-        BankBudget          = PcConomy.Config.getDouble("bank.start_budget", 15000d);
-        UsefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
-        VAT                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
-        DepositPercent      = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
-        DayWithdrawBudget   = BankBudget * UsefulBudgetPercent;
-        TrustCoefficient    = .5d;
+        budget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
+        usefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
+        vat                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
+        depositPercent    = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
+        dayWithdrawBudget = budget * usefulBudgetPercent;
+        trustCoefficient  = .5d;
 
-        Credit = new ArrayList<>();
+        credit = new ArrayList<>();
     }
 
-    public double BankBudget;
-    public double UsefulBudgetPercent;
-    public double VAT;
-    public double DepositPercent;
-    public double DayWithdrawBudget;
-    public double TrustCoefficient;
-    public final List<Loan> Credit;
+    @Getter @Setter private double budget;
+    @Getter @Setter private double usefulBudgetPercent;
+    @Getter @Setter private double vat;
+    @Getter @Setter private double depositPercent;
+    @Getter @Setter private double dayWithdrawBudget;
+    @Setter private double trustCoefficient;
+    @Getter private final List<Loan> credit;
 
-    private double previousBudget = BankBudget;
+    private double previousBudget = budget;
     private int recessionCount    = 0;
 
     /**
@@ -45,14 +47,14 @@ public class Bank extends Capitalist {
      * @param player Player that will take cash
      */
     public void giveCash2Player(double amount, Player player) {
-        if (amount >= DayWithdrawBudget) return;
+        if (amount >= dayWithdrawBudget) return;
         if (player.solvent(amount)) return;
 
         player.takeMoney(amount);
         player.giveCashToPlayer(amount, false);
 
-        BankBudget -= amount;
-        DayWithdrawBudget -= amount;
+        budget -= amount;
+        dayWithdrawBudget -= amount;
     }
 
     /**
@@ -66,8 +68,8 @@ public class Bank extends Capitalist {
         player.takeCashFromPlayer(amount, false);
         player.giveMoney(amount);
 
-        BankBudget += amount;
-        DayWithdrawBudget += amount;
+        budget += amount;
+        dayWithdrawBudget += amount;
     }
 
     /**
@@ -79,34 +81,34 @@ public class Bank extends Capitalist {
      */
     @Override
     public void newDay() {
-        var changePercent = (BankBudget - previousBudget) / previousBudget;
+        var changePercent = (budget - previousBudget) / previousBudget;
         var isRecession  = (changePercent <= 0 || getAverageInflation() > 0) ? 1 : -1;
 
         Loan.takePercentFromBorrowers(this);
-        if (isRecession < 0 && DepositPercent > 0)
+        if (isRecession < 0 && depositPercent > 0)
             Bukkit.getWhitelistedPlayers().parallelStream().forEach((player) -> {
                 if (player.getPlayer() != null) {
-                    var amount = (Balance.getBalance(player.getPlayer()) * DepositPercent) / 12;
+                    var amount = (Balance.getBalance(player.getPlayer()) * depositPercent) / 12;
                     player.getPlayer().giveMoney(amount);
-                    BankBudget -= amount;
+                    budget -= amount;
                 }
             });
 
-        VAT                 += (VAT * Math.abs(changePercent) / 2) * isRecession;
-        UsefulBudgetPercent -= UsefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
-        DepositPercent      -= DepositPercent * Math.abs(changePercent) / 2 * isRecession;
-        TrustCoefficient    -= TrustCoefficient * Math.abs(changePercent) * isRecession;
+        vat                 += (vat * Math.abs(changePercent) / 2) * isRecession;
+        usefulBudgetPercent -= usefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
+        depositPercent -= depositPercent * Math.abs(changePercent) / 2 * isRecession;
+        trustCoefficient -= trustCoefficient * Math.abs(changePercent) * isRecession;
 
         if (isRecession > 0) {
             if (recessionCount++ >= 5) {
-                BankBudget += BankBudget * (changePercent * recessionCount);
+                budget += budget * (changePercent * recessionCount);
                 recessionCount = 0;
             }
         }
         else recessionCount = 0;
 
-        previousBudget    = BankBudget;
-        DayWithdrawBudget = BankBudget * UsefulBudgetPercent;
+        previousBudget    = budget;
+        dayWithdrawBudget = budget * usefulBudgetPercent;
     }
 
     /**
@@ -132,8 +134,8 @@ public class Bank extends Capitalist {
      * @return value without VAT
      */
     public double deleteVAT(double value) {
-        BankBudget += value * VAT;
-        return value - (value * VAT);
+        budget += value * vat;
+        return value - (value * vat);
     }
 
     /**
@@ -142,8 +144,8 @@ public class Bank extends Capitalist {
      * @return value with VAT
      */
     public double addVAT(double value) {
-        BankBudget += value * VAT;
-        return value + value * VAT;
+        budget += value * vat;
+        return value + value * vat;
     }
 
     /**
@@ -152,19 +154,19 @@ public class Bank extends Capitalist {
      * @return value with VAT
       */
     public static double checkVat(double value) {
-        return value + value * PcConomy.GlobalBank.getMainBank().VAT;
+        return value + value * PcConomy.GlobalBank.getBank().vat;
     }
 
     @Override
     public void changeBudget(double amount) {
-        BankBudget += amount;
+        budget += amount;
     }
 
     @Override
-    public double getTrustCoefficient() { return TrustCoefficient; }
+    public double getTrustCoefficient() { return trustCoefficient; }
 
     @Override
     public List<Loan> getCreditList() {
-        return Credit;
+        return credit;
     }
 }
