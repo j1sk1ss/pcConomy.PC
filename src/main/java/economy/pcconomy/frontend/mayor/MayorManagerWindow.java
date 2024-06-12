@@ -4,7 +4,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.bank.Bank;
-import economy.pcconomy.backend.economy.town.TownManager;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 
@@ -12,6 +11,7 @@ import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.CitizensAPI;
 import net.kyori.adventure.text.Component;
 
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -35,7 +35,7 @@ import java.util.Objects;
 import static economy.pcconomy.frontend.trade.TraderWindow.getTraderFromTitle;
 
 
-@ExtensionMethod({Cash.class, Manager.class, TownManager.class})
+@ExtensionMethod({Cash.class, Manager.class})
 public class MayorManagerWindow {
     @SuppressWarnings("deprecation")
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
@@ -96,10 +96,10 @@ public class MayorManagerWindow {
 
     public static void generateWindow(Player player) {
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
-        var town = TownyAPI.getInstance().getTown(player).getTown();
-        for (var i = 0; i < Math.min(27, town.Traders.size()); i++) {
-            var trader = CitizensAPI.getNPCRegistry().getById(town.Traders.get(i)).getOrAddTrait(Trader.class);
-            components.add(new Icon(i, town.Traders.get(i) + "",
+        var town = GorodkiUniverse.getInstance().getGorod(TownyAPI.getInstance().getTown(player));
+        for (var i = 0; i < Math.min(27, town.getTraders().size()); i++) {
+            var trader = CitizensAPI.getNPCRegistry().getById(town.getTraders().get(i)).getOrAddTrait(Trader.class);
+            components.add(new Icon(i, town.getTraders().get(i) + "",
                 "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost, Material.GOLD_INGOT, 7000)); // TODO: Icons for traders
         }
 

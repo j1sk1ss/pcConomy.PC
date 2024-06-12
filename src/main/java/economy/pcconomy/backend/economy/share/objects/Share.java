@@ -3,10 +3,10 @@ package economy.pcconomy.backend.economy.share.objects;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.bank.Bank;
-import economy.pcconomy.backend.economy.town.TownManager;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.j1sk1ss.itemmanager.manager.Item;
@@ -16,7 +16,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class, Cash.class, TownManager.class})
+@ExtensionMethod({Manager.class, Cash.class})
 public class Share {
     public Share(UUID townUUID, ShareType shareType, double price, double equality) {
         this.townUUID  = townUUID;
@@ -81,7 +81,7 @@ public class Share {
         if (isSold) return;
         if (Cash.amountOfCashInInventory(buyer, false) >= Bank.checkVat(price)) {
             buyer.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
-            townUUID.getTown().changeBudget(price);
+            GorodkiUniverse.getInstance().getGorod(townUUID).changeBudget(price);
 
             isSold = true;
             new Item("Акция", townUUID + "\n" + shareUUID + "\n" + price).giveItems(buyer);
@@ -94,7 +94,7 @@ public class Share {
      * @param shareItem Share item in inventory
      */
     public void sellShare(Player seller, ItemStack shareItem) {
-        var currentTown = townUUID.getTown();
+        var currentTown = GorodkiUniverse.getInstance().getGorod(townUUID);
         if (currentTown == null) {
             seller.sendMessage("Город-владелец прекратил своё существование");
             return;

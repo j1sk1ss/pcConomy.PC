@@ -5,7 +5,6 @@ import economy.pcconomy.backend.economy.bank.BankManager;
 import economy.pcconomy.backend.economy.credit.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.town.TownyListener;
-import economy.pcconomy.backend.economy.town.TownManager;
 import economy.pcconomy.backend.economy.license.LicenseManager;
 import economy.pcconomy.backend.link.CommandManager;
 import economy.pcconomy.backend.npc.NpcManager;
@@ -53,7 +52,6 @@ public final class PcConomy extends JavaPlugin {
     public static NpcManager        GlobalNPC;
     public static BankManager       GlobalBank;
     public static BorrowerManager   GlobalBorrower;
-    public static TownManager       GlobalTown;
     public static LicenseManager    GlobalLicense;
     public static ShareManager      GlobalShare;
     
@@ -76,7 +74,6 @@ public final class PcConomy extends JavaPlugin {
             GlobalNPC      = new NpcManager();
             GlobalBank     = new BankManager(new Bank());
             GlobalBorrower = new BorrowerManager();
-            GlobalTown     = new TownManager();
             GlobalLicense  = new LicenseManager();
             GlobalShare    = new ShareManager();
 
@@ -94,9 +91,6 @@ public final class PcConomy extends JavaPlugin {
 
                 if (new File(pluginPath + "bank_data.json").exists())
                     GlobalBank = GlobalBank.load(pluginPath + "bank_data", BankManager.class);
-
-                if (new File(pluginPath + "towns_data.json").exists())
-                    GlobalTown = GlobalTown.load(pluginPath + "towns_data", TownManager.class);
 
                 if (new File(pluginPath + "license_data.json").exists())
                     GlobalLicense = GlobalLicense.load(pluginPath + "license_data", LicenseManager.class);
@@ -174,7 +168,7 @@ public final class PcConomy extends JavaPlugin {
      */
     public void saveData() {
         try {
-            for (var manager : Arrays.asList(GlobalBank, GlobalNPC, GlobalBorrower, GlobalLicense, GlobalShare, GlobalTown))
+            for (var manager : Arrays.asList(GlobalBank, GlobalNPC, GlobalBorrower, GlobalLicense, GlobalShare))
                 manager.save(pluginPath + manager.getName());
         } catch (IOException e) {
             System.out.println(e.getMessage());

@@ -173,5 +173,11 @@
             <artifactId>ItemManager.PC</artifactId>
             <version>ver0.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.Potolotcraft-2-0</groupId>
+            <artifactId>Gorodki</artifactId>
+            <version>v0.0.2</version>
+        </dependency>
     </dependencies>
 </project>

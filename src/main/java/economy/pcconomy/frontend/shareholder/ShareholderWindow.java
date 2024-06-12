@@ -6,10 +6,10 @@ import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
 
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-@ExtensionMethod({Manager.class, Cash.class, TownManager.class})
+@ExtensionMethod({ Manager.class, Cash.class })
 public class ShareholderWindow {
     @SuppressWarnings({ "deprecation", "null" })
     public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
@@ -120,7 +120,7 @@ public class ShareholderWindow {
                         var share = new Share(player.getInventory().getItemInMainHand());
                         var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
 
-                        if (share.getPrice() > town.getTown().getBudget()) return;
+                        if (share.getPrice() > GorodkiUniverse.getInstance().getGorod(town).getBudget()) return;
                         share.sellShare(player, player.getInventory().getItemInMainHand());
                     }
                 }, Material.GOLD_INGOT, 7000)

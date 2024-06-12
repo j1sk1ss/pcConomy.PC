@@ -3,7 +3,6 @@ package economy.pcconomy.frontend.trade;
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.economy.town.TownManager;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
@@ -11,6 +10,7 @@ import economy.pcconomy.backend.npc.traits.Trader;
 import lombok.experimental.ExtensionMethod;
 import net.kyori.adventure.text.Component;
 
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-@ExtensionMethod({Manager.class, Cash.class, TownManager.class})
+@ExtensionMethod({Manager.class, Cash.class})
 public class TraderWindow {
         @SuppressWarnings("deprecation")
         public static MenuWindow TraderMenu =
@@ -136,7 +136,7 @@ public class TraderWindow {
                             var days = Integer.parseInt(choseItem.getName().split(" ")[0]);
                             if (player.amountOfCashInInventory(false) < trader.Cost * days) return;
                             player.takeCashFromPlayer(trader.Cost * days, false);
-                            trader.HomeTown.getTown().changeBudget(trader.Cost * days);
+                            GorodkiUniverse.getInstance().getGorod(trader.HomeTown).changeBudget(trader.Cost * days);
 
                             rantTrader(trader, days, player);
                             player.closeInventory();
@@ -252,13 +252,13 @@ public class TraderWindow {
                                         player.takeCashFromPlayer(price, false);
 
                                         var endPrice = price / (1 + trader.Margin);
-                                        trader.HomeTown.getTown().changeBudget(price - endPrice);
+                                        GorodkiUniverse.getInstance().getGorod(trader.HomeTown).changeBudget(price - endPrice);
                                         trader.Revenue += endPrice;
 
                                         if (TownyAPI.getInstance().getTown(player) != null)
                                             if (trader.SpecialList.contains(Objects.requireNonNull(TownyAPI.getInstance().getTown(player)).getUUID())) {
                                                 player.giveCashToPlayer(price - endPrice, false);
-                                                trader.HomeTown.getTown().changeBudget(-(price - endPrice));
+                                                GorodkiUniverse.getInstance().getGorod(trader.HomeTown).changeBudget(-(price - endPrice));
                                                     player.sendMessage("Так как вы состоите в торговом союзе, пошлина была компенсированна городом");
                                             }
                                     }

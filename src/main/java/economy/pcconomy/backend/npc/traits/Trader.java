@@ -6,7 +6,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.bank.Bank;
-import economy.pcconomy.backend.economy.town.TownManager;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
 import economy.pcconomy.frontend.trade.TraderWindow;
 
@@ -18,6 +17,7 @@ import net.citizensnpcs.api.trait.TraitName;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -32,7 +32,7 @@ import java.util.*;
 
 
 @TraitName("Trader")
-@ExtensionMethod({Manager.class, TownManager.class, Cash.class})
+@ExtensionMethod({Manager.class, Cash.class})
 public class Trader extends Trait {
     public Trader() {
         super("Trader");
@@ -92,7 +92,7 @@ public class Trader extends Trait {
 
         // We stole all moneys to town and delete all resources if rant is over
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && IsRanted) {
-            HomeTown.getTown().changeBudget(Revenue);
+            GorodkiUniverse.getInstance().getGorod(HomeTown).changeBudget(Revenue);
 
             IsRanted = false;
             Owner    = null;
@@ -207,7 +207,7 @@ public class Trader extends Trait {
         npc.spawn(buyer.getLocation());
         npc.addTrait(this);
 
-        TownyAPI.getInstance().getTownUUID(buyer.getLocation()).getTown().Traders.add(getNPC().getId());
+        GorodkiUniverse.getInstance().getGorod(TownyAPI.getInstance().getTownUUID(buyer.getLocation())).addTrader(getNPC().getId());
         buyer.sendMessage("Торговец куплен");
     }
 }

@@ -7,7 +7,6 @@ import economy.pcconomy.backend.db.ItemStackTypeAdaptor;
 import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.npc.traits.*;
 import lombok.experimental.ExtensionMethod;
-import economy.pcconomy.backend.economy.town.TownManager;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.Trait;
@@ -24,7 +23,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 
-@ExtensionMethod({Cash.class, TownManager.class})
+@ExtensionMethod({Cash.class})
 public class NpcManager extends Loadable {
     public final Map<Integer, Trader> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
