@@ -1,10 +1,7 @@
 package economy.pcconomy.backend.npc.traits;
 
 import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.backend.economy.town.towns.NpcTown;
-import economy.pcconomy.backend.economy.town.TownManager;
 import economy.pcconomy.frontend.npcTrade.NPCTraderWindow;
-import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;

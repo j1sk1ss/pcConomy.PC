@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
-import net.potolotcraft.gorodki.objects.goroda.NPCGorod;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -16,8 +15,6 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 
-import economy.pcconomy.backend.economy.town.towns.NpcTown;
-import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;

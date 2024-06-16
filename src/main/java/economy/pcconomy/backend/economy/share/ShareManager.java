@@ -5,15 +5,15 @@ import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-import economy.pcconomy.backend.economy.town.TownManager;
 import lombok.experimental.ExtensionMethod;
 
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
 
-@ExtensionMethod({Cash.class, TownManager.class})
+@ExtensionMethod({Cash.class})
 public class ShareManager extends Loadable {
     public final List<UUID> InteractionList    = new ArrayList<>();
     public final Map<UUID, List<Share>> Shares = new HashMap<>();
@@ -88,19 +88,6 @@ public class ShareManager extends Loadable {
     }
 
     /**
-     * Get share without owner
-     * @param town Town
-     * @return Share without owner
-     */
-    public List<Share> getEmptyTownShare(UUID town) {
-        var list = new ArrayList<Share>();
-        for (var share : Shares.get(town))
-            if (!share.isSold()) list.add(share);
-
-        return list;
-    }
-
-    /**
      * Get average price of share
      * @param town Town
      * @return Average price
@@ -127,17 +114,18 @@ public class ShareManager extends Loadable {
      * @param town Town that pay
      */
     public void payDividends(UUID town) {
-        var townObject = town.getTown();
+        var townObject = GorodkiUniverse.getInstance().getGorod(town);
+
         for (var shares : Shares.get(town)) {
             if (shares.getShareType() == ShareType.Equity) break;
-            if (townObject.QuarterlyEarnings < 0) break;
+            if (townObject.getQuarterlyEarnigns() < 0) break;
 
-            var pay = townObject.QuarterlyEarnings * shares.getEquality();
+            var pay = townObject.getQuarterlyEarnigns() * shares.getEquality();
             townObject.changeBudget(-pay);
             shares.setRevenue(shares.getRevenue() + pay);
         }
 
-        townObject.QuarterlyEarnings = 0;
+        townObject.setQuarterlyEarnigns(0);
     }
 
     /**

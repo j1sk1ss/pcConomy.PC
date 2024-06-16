@@ -2,11 +2,8 @@ package economy.pcconomy.backend.economy.town;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.*;
-import com.palmergames.bukkit.towny.event.town.TownRuinedEvent;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.Capitalist;
-import lombok.experimental.ExtensionMethod;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
 import net.potolotcraft.gorodki.objects.goroda.NPCGorod;
@@ -21,9 +18,16 @@ public class TownyListener implements Listener {
      */
     @EventHandler
     public void newDay(NewDayEvent event) {
+        // All plot tax from towny goes to global bank
         TownyAPI.getInstance().getTowns().parallelStream().forEach((town) -> PcConomy.GlobalBank.getBank().changeBudget(town.getPlotTax()));
+
+        // All town invokes new day action
         GorodkiUniverse.getInstance().getNPCGorods().parallelStream().forEach(NPCGorod::newDay);
+
+        // All share owners earn percent from shares
         PcConomy.GlobalShare.newDay();
+
+        // Bank pay deposit and change strategy
         PcConomy.GlobalBank.getBank().newDay();
     }
 }

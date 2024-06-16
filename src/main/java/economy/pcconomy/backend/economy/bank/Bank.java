@@ -3,7 +3,6 @@ package economy.pcconomy.backend.economy.bank;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.economy.town.towns.NpcTown;
 import economy.pcconomy.backend.cash.Cash;
 
 import economy.pcconomy.backend.cash.Balance;
@@ -11,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.ExtensionMethod;
 
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -23,9 +23,9 @@ public class Bank extends Capitalist {
         budget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
         usefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
         vat                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
-        depositPercent    = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
-        dayWithdrawBudget = budget * usefulBudgetPercent;
-        trustCoefficient  = .5d;
+        depositPercent      = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
+        dayWithdrawBudget   = budget * usefulBudgetPercent;
+        trustCoefficient    = .5d;
 
         credit = new ArrayList<>();
     }
@@ -119,11 +119,10 @@ public class Bank extends Capitalist {
         var count = 0;
         var bigInflation = 0d;
 
-        for (var town : PcConomy.GlobalTown.Towns)
-            if (town instanceof NpcTown npcTown) {
-                bigInflation += npcTown.getLocalInflation();
-                count++;
-            }
+        for (var town : GorodkiUniverse.getInstance().getNPCGorods()) {
+            bigInflation += town.getLocalInflation();
+            count++;
+        }
 
         return bigInflation / count;
     }

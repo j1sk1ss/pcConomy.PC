@@ -1,7 +1,6 @@
 package economy.pcconomy.backend.economy.license.objects;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
