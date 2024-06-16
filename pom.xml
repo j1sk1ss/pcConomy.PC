@@ -177,7 +177,7 @@
         <dependency>
             <groupId>com.github.Potolotcraft-2-0</groupId>
             <artifactId>Gorodki</artifactId>
-            <version>v0.0.2</version>
+            <version>cc1e66d7f0</version>
         </dependency>
     </dependencies>
 </project>
