@@ -55,7 +55,7 @@ public class WalletWindow {
                             wallet.giveWallet(player);
                         }
                     )
-                ), "Кошелёк-Внесение", MenuSizes.OneLine
+                ), "რКошелёк-Внесение", MenuSizes.OneLine
             ),
             new Panel(
                 List.of(
@@ -87,7 +87,7 @@ public class WalletWindow {
                             wallet.giveWallet(player);
                         }
                     )
-                ), "Кошелёк-Снятие", MenuSizes.OneLine
+                ), "რКошелёк-Снятие", MenuSizes.OneLine
             )
         )
     );
@@ -101,7 +101,7 @@ public class WalletWindow {
         window.setItem(0, button);
 
         for (var i = 0; i < 8; i++)
-            if (cashInInventory >= Cash.Denomination.get(i)) printButtons("\n-", window);
+            if (cashInInventory >= Cash.Denomination.get(i)) printButtons("\n-", window, i);
 
         return window;
     }
@@ -115,16 +115,14 @@ public class WalletWindow {
         window.setItem(0, button);
 
         for (var i = 0; i < 8; i++)
-            if (cashInWallet >= Cash.Denomination.get(i)) printButtons("\n", window);
+            if (cashInWallet >= Cash.Denomination.get(i)) printButtons("\n", window, i);
 
         return window;
     }
 
-    private static void printButtons(String thing, Inventory window) {
-        for (var j = 1; j < 8; j++) { // TODO: DATA MODEL
-            var button = new Item("Действия", thing + Cash.Denomination.get(j) + Cash.currencySigh, Material.PAPER, 1, 17000);
-            button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(j)), "item-wallet-value");
-            window.setItem(j, button);
-        }
+    private static void printButtons(String thing, Inventory window, int pos) {
+        var button = new Item("Действия", thing + Cash.Denomination.get(pos) + Cash.currencySigh, Material.PAPER, 1, 17000);
+        button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(pos)), "item-wallet-value");
+        window.setItem(pos, button);
     }
 }

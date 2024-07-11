@@ -101,7 +101,7 @@ public class Wallet {
      * @return Amount
      */
     public static double getWalletAmount(List<Wallet> wallets) {
-        var amount = 0;
+        var amount = 0d;
         for (var wallet : wallets)
             amount += wallet.Amount;
 
