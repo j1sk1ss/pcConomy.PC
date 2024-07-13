@@ -22,7 +22,6 @@ commands:
     description: create shareholder npc
   reload_towns:
     usage: /reload_towns
-    description: !depricated method!
   put_cash2bank:
     usage: /put_cash2bank [amount]
     description: take moneys from inventory and put it to the bank (Moved to your bank account)
@@ -43,22 +42,17 @@ commands:
     description: create licensor npc
   switch_town2npc:
     usage: /switch_town2npc
-    description: !depricated method!
   switch_town2player:
     usage: /switch_town2player
-    description: !depricated method!
   town_menu:
     usage: /town_menu
     description: open mayor menu
   add_trade2town:
     usage: /add_trade2town [town name] [material] [amount]
-    description: !depricated method!
   reload_npc:
     usage: /reload_npc
-    description: !debug function!
   full_info:
     usage: /full_info
-    description: !debug function!
   set_day_bank_budget:
     usage: /set_day_bank_budget [amount]
     description: set budget that`s can be used by players in global bank

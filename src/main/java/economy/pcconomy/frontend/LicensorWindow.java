@@ -26,7 +26,7 @@ public class LicensorWindow {
 
         new Button(7, 26, "Лицензия на доступ к кредитной истории", LicenseManager.loanHistoryLicensePrice + Cash.currencySigh,
             (event) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(), LicenseType.LoanHistory, LicenseManager.loanHistoryLicensePrice), Material.GOLD_INGOT, 7000)
-    ), "ბМир-Лицензии", MenuSizes.ThreeLines);
+    ), "Мир-Лицензии", MenuSizes.ThreeLines, "\u10D1");
 
     public static void generateWindow(Player player) {
         Panel.getView(player);

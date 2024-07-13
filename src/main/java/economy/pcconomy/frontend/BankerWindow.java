@@ -53,7 +53,7 @@ public class BankerWindow {
                             PcConomy.GlobalBank.getBank().giveCash2Player(amount, player);
                             BankerWindow.regenerateWindow(player, event.getInventory());
                         }) // Withdraw
-                ), "აБанк", MenuSizes.SixLines
+                ), "Банк", MenuSizes.SixLines, "\u10D0"
             )
         )
     );
@@ -76,8 +76,8 @@ public class BankerWindow {
         components.addAll(balance);
         components.addAll(actions);
         
-        if (inventory == null) BankWindow.getPanel("აБанк").getViewWith(player, components);
-        else BankWindow.getPanel("აБанк").getViewWith(player, components, inventory);
+        if (inventory == null) BankWindow.getPanel("Банк").getViewWith(player, components);
+        else BankWindow.getPanel("Банк").getViewWith(components, inventory);
     }
 
     // Print action buttons (Default + max-min actions)

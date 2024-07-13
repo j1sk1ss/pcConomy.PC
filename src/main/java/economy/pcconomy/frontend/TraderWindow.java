@@ -20,12 +20,10 @@ import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
-import org.j1sk1ss.menuframework.objects.interactive.components.Button;
-import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
-import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
-import org.j1sk1ss.menuframework.objects.interactive.components.Slider;
+import org.j1sk1ss.menuframework.objects.interactive.components.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -48,9 +46,9 @@ public class TraderWindow {
                             if (choseItem == null) return;
 
                             if (!player.getInventory().contains(choseItem))
-                                player.openInventory(TraderWindow.getAcceptWindow(player, choseItem, trader));
+                                TraderWindow.getAcceptWindow(player, choseItem, trader);
                         })
-                ), "ლТорговец-Ассортимент"),
+                ), "Торговец-Ассортимент", MenuSizes.ThreeLines, "\u10DA"),
 
                 new Panel(Arrays.asList(
                     new Button(0, 19, "Перейти в товары", "Перейти в товары торговца",
@@ -59,7 +57,7 @@ public class TraderWindow {
                             var title  = event.getView().getTitle();
                             var trader = getTraderFromTitle(title);
 
-                            if (trader != null) player.openInventory(getWindow(player, trader));
+                            if (trader != null) getWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
                     new Button(2, 21, "Забрать все товары", "Забрать выставленные на продажу товары",
@@ -102,7 +100,7 @@ public class TraderWindow {
                                 trader.Storage.clear();
                             }
                         }, Material.GOLD_INGOT, 7000)
-                ), "ტТорговец-Управление"),
+                ), "Торговец-Управление", MenuSizes.ThreeLines, "\u10E2"),
 
                 new Panel(Arrays.asList(
                     new Button(0, 21, "Арендовать", "",
@@ -115,12 +113,12 @@ public class TraderWindow {
                                 var playerTradeLicense = PcConomy.GlobalLicense.getLicense(player.getUniqueId(), LicenseType.Trade);
                                 if (playerTradeLicense == null) return;
                                 if (!playerTradeLicense.isOverdue())
-                                    player.openInventory(getExtendedRantedWindow(player, trader));
+                                    getExtendedRantedWindow(player, trader);
                             }
                         }, Material.GOLD_INGOT, 7000),
 
                     new Button(5, 26, "НДС города:", "", null, Material.GOLD_INGOT, 7000)
-                ), "უТорговец-Аренда"),
+                ), "Торговец-Аренда", MenuSizes.ThreeLines, "\u10E3"),
 
                 new Panel(List.of(
                     new ClickArea(0, 8,
@@ -141,7 +139,7 @@ public class TraderWindow {
                             rantTrader(trader, days, player);
                             player.closeInventory();
                         })
-                ), "ჟТорговец-Аренда-Время", MenuSizes.OneLine),
+                ), "Торговец-Аренда-Время", MenuSizes.OneLine, "\u10DF"),
 
                 new Panel(Arrays.asList(
                     new Button(0, 20, "Установить цену", "Установить цену аренды за 1 день",
@@ -149,7 +147,7 @@ public class TraderWindow {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
                             var trader = getTraderFromTitle(title);
-                            if (trader != null) player.openInventory(getPricesWindow(player, trader));
+                            if (trader != null) getPricesWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
                     new Button(3, 23, "Установить процент", "Установить процент с прибыли торговца",
@@ -157,7 +155,7 @@ public class TraderWindow {
                             var player = (Player)event.getWhoClicked();
                             var title  = event.getView().getTitle();
                             var trader = getTraderFromTitle(title);
-                            if (trader != null) player.openInventory(getMarginWindow(player, trader));
+                            if (trader != null) getMarginWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
                     new Button(6, 26, "Занять", "Занять торговца бесплатно",
@@ -170,7 +168,7 @@ public class TraderWindow {
                             rantTrader(trader, 1, player);
                             player.sendMessage("Торговец успешно занят!");
                         }, Material.GOLD_INGOT, 7000)
-                ), "ნТорговец-Владелец"),
+                ), "Торговец-Владелец", MenuSizes.ThreeLines, "\u10DC"),
 
                 new Panel(Arrays.asList(
                     new Slider(Arrays.asList(
@@ -200,7 +198,7 @@ public class TraderWindow {
                             var player = (Player)event.getWhoClicked();
                             player.closeInventory();
                         }, Material.GOLD_INGOT, 7000)
-                ), "ოТорговец-Цена"),
+                ), "Торговец-Цена", MenuSizes.ThreeLines, "\u10DD"),
 
                 new Panel(Arrays.asList(
                     new Slider(Arrays.asList(
@@ -228,7 +226,7 @@ public class TraderWindow {
                             var player = (Player)event.getWhoClicked();
                             player.closeInventory();
                         }, Material.GOLD_INGOT, 7000)
-                ), "პТорговец-Процент"),
+                ), "Торговец-Процент", MenuSizes.ThreeLines, "\u10DE"),
 
                 new Panel(Arrays.asList(
                     new Button(0, 21, "Купить", "",
@@ -265,7 +263,7 @@ public class TraderWindow {
                                 }
                             }
 
-                            player.openInventory(getWindow(player, trader));
+                            getWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
                         new Button(5, 26, "Отмена", "",
@@ -274,28 +272,25 @@ public class TraderWindow {
                                 var title  = event.getView().getTitle();
                                 var trader = getTraderFromTitle(title);
 
-                                if (trader != null) player.openInventory(getWindow(player, trader));
+                                if (trader != null) getWindow(player, trader);
                             }, Material.GOLD_INGOT, 7000)
-                ), "მТорговец-Покупка")
+                ), "Торговец-Покупка", MenuSizes.ThreeLines, "\u10DB")
             ));
 
-    public static Inventory getWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 9 * trader.Level, Component.text("ლТорговец-Ассортимент " + trader.getNPC().getId()));
-        for (var i = 0; i < trader.Storage.size(); i++)
-            window.setItem(i, trader.Storage.get(i));
-
-        return window;
+    public static void getWindow(Player player, Trader trader) {
+        TraderWindow.TraderMenu.getPanel("Торговец-Ассортимент").getViewWith(
+                player,
+                "Торговец-Ассортимент " + trader.getNPC().getId(),
+                List.of(new ItemArea(0, 26, trader.Storage, null))
+        );
     }
 
-    public static Inventory getOwnerWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 27, Component.text("ტТорговец-Управление " + trader.getNPC().getId()));
-        TraderMenu.getPanel("ტТорговец-Управление").place(window);
-        return window;
+    public static void getOwnerWindow(Player player, Trader trader) {
+        TraderWindow.TraderMenu.getPanel("Торговец-Управление").getView(player, "Торговец-Управление " + trader.getNPC().getId());
     }
 
-    public static Inventory getRanterWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 27, Component.text("უТорговец-Аренда " + trader.getNPC().getId()));
-        TraderMenu.getPanel("უТорговец-Аренда").place(window, Arrays.asList(
+    public static void getRanterWindow(Player player, Trader trader) {
+        TraderMenu.getPanel("Торговец-Аренда").getView(player, "Торговец-Аренда " + trader.getNPC().getId(), Arrays.asList(
             Arrays.asList(
                 "Окно аренды торговца. Цена за день: ",
                 trader.Cost + Cash.currencySigh
@@ -307,45 +302,42 @@ public class TraderWindow {
         ), Arrays.asList(
             "Арендовать", "НДС города:"
         ));
-
-        return window;
     }
 
-    public static Inventory getExtendedRantedWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 9, Component.text("ჟТорговец-Аренда-Время " + trader.getNPC().getId()));
+    public static void getExtendedRantedWindow(Player player, Trader trader) {
+        var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = 0; i < 9; i++) //TODO: DATA MODEL
-            window.setItem(i, new Item((i + 1) + " дней", trader.Cost * (i + 1) + Cash.currencySigh, Material.PAPER, 1, 17000));
+            components.add(
+                    new LittleButton(i,
+                            (i + 1) + " дней",
+                            trader.Cost * (i + 1) + Cash.currencySigh,
+                            null, Material.PAPER, 17000)
+            );
 
-        return window;
+        TraderMenu.getPanel("Торговец-Аренда-Время").getViewWith(
+                player,
+                "Торговец-Аренда-Время " + trader.getNPC().getId(),
+                components);
     }
 
-    public static Inventory getMayorWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 27, Component.text("ნТорговец-Владелец " + trader.getNPC().getId()));
-        TraderMenu.getPanel("ნТорговец-Владелец").place(window);
-
-        return window;
+    public static void getMayorWindow(Player player, Trader trader) {
+        TraderMenu.getPanel("Торговец-Владелец").getView(player, "Торговец-Владелец " + trader.getNPC().getId());
     }
 
-    public static Inventory getPricesWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 27, Component.text("ოТорговец-Цена " + trader.getNPC().getId()));
-        TraderMenu.getPanel("ოТорговец-Цена").place(window);
-
-        return window;
+    public static void getPricesWindow(Player player, Trader trader) {
+        TraderMenu.getPanel("Торговец-Цена").getView(player, "Торговец-Цена " + trader.getNPC().getId());
     }
 
-    public static Inventory getMarginWindow(Player player, Trader trader) {
-        var window = Bukkit.createInventory(player, 27, Component.text("პТорговец-Процент " + trader.getNPC().getId()));
-        TraderMenu.getPanel("პТорговец-Процент").place(window);
-
-        return window;
+    public static void getMarginWindow(Player player, Trader trader) {
+        TraderMenu.getPanel("Торговец-Процент").getView(player, "Торговец-Процент " + trader.getNPC().getId());
     }
 
-    public static Inventory getAcceptWindow(Player player, ItemStack item, Trader trader) {
-        var window = Bukkit.createInventory(player, 27, Component.text("მТорговец-Покупка " + trader.getNPC().getId()));
-        window.setItem(13, item);
-        TraderMenu.getPanel("მТорговец-Покупка").place(window);
-
-        return window;
+    public static void getAcceptWindow(Player player, ItemStack item, Trader trader) {
+        TraderMenu.getPanel("Торговец-Покупка").getViewWith(
+                player,
+                "Торговец-Покупка " + trader.getNPC().getId(),
+                List.of(new Icon(13, item.getName(), String.join("\n", item.getLoreLines()), item.getType()))
+        );
     }
 
     public static Trader getTraderFromTitle(String name) {

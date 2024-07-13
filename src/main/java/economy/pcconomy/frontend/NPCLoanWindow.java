@@ -34,7 +34,7 @@ public class NPCLoanWindow {
             new Button(0, 21, "Взять кредит", "Взять кредит у банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    NPCLoanWindow.LoanMenu.getPanel("სКредит-Банк-Взятие").getView(player);
+                    NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие").getView(player);
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(5, 26, "Погасить кредит", "Погасить кредит банка",
@@ -43,7 +43,7 @@ public class NPCLoanWindow {
                     Loan.payOffADebt(player, PcConomy.GlobalBank.getBank());
                     player.closeInventory();
                 }, Material.GOLD_INGOT, 7000)
-        ), "გКредит-Банк", MenuSizes.ThreeLines),
+        ), "Кредит-Банк", MenuSizes.ThreeLines, "\u10D2"),
 
         new Panel(Arrays.asList(
             new Slider(Arrays.asList(
@@ -52,7 +52,7 @@ public class NPCLoanWindow {
                 "20 дн.", "30 дн.", "40 дн.", "50 дн.", "60 дн.", "70 дн.", "80 дн.", "90 дн.", "100 дн."
             ), "Размер", "Время выплаты",
                 (event) -> {
-                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("სКредит-Банк-Взятие");
+                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие");
                     var bar = loanPanel.getBars("Размер кредита");
                     var player = (Player)event.getWhoClicked();
                     var value = 0;
@@ -87,7 +87,7 @@ public class NPCLoanWindow {
             ),
                 (event) -> {
                     var player    = (Player) event.getWhoClicked();
-                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("სКредит-Банк-Взятие");
+                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Банк-Взятие");
                     var durSlider = loanPanel.getSliders("Время выплаты").getChose(event);
                     var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().get(0).split(" ")[0]);
                     var agreement = event.getCurrentItem().getLoreLines().get(1);
@@ -102,10 +102,10 @@ public class NPCLoanWindow {
                         }
                     }
                 })
-        ), "სКредит-Банк-Взятие", MenuSizes.ThreeLines)
+        ), "Кредит-Банк-Взятие", MenuSizes.ThreeLines, "\u10E1")
     ));
 
     public static void generateWindow(Player player) {
-        LoanMenu.getPanel("გКредит-Банк").getView(player);
+        LoanMenu.getPanel("Кредит-Банк").getView(player);
     }
 }

@@ -50,12 +50,12 @@ public class MayorManagerWindow implements Listener {
                     var inventory = event.getInventory();
 
                     var traderId = Integer.parseInt(Objects.requireNonNull(inventory.getItem(event.getSlot())).getName());
-                    player.openInventory(MayorManagerWindow.generateTradeControls(player, traderId));
+                    MayorManagerWindow.generateTradeControls(player, traderId);
                 }),
 
             new Button(27, 35, "Купить торговца", "Купить нового торговца",
                 (event) -> new Trader().Buy((Player) event.getWhoClicked()))
-        ), "დГород-Торговцы", MenuSizes.FourLines),
+        ), "Город-Торговцы", MenuSizes.FourLines, "\u10D3"),
 
         new Panel(Arrays.asList(
             new Button(0, 20, "Уволить торговца", "Торговец будет уволен",
@@ -95,7 +95,7 @@ public class MayorManagerWindow implements Listener {
                     trader.Level = Math.min(trader.Level + 1, 6);
                     player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
                 }, Material.GOLD_INGOT, 7000)
-        ), "ეГород-Торговцы-Управление", MenuSizes.ThreeLines)
+        ), "Город-Торговцы-Управление", MenuSizes.ThreeLines, "\u10D4")
     ));
 
     public static void generateWindow(Player player) {
@@ -104,16 +104,14 @@ public class MayorManagerWindow implements Listener {
         for (var i = 0; i < Math.min(27, town.getTraders().size()); i++) {
             var trader = CitizensAPI.getNPCRegistry().getById(town.getTraders().get(i)).getOrAddTrait(Trader.class);
             components.add(new Icon(i, town.getTraders().get(i) + "",
-                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost, Material.GOLD_INGOT, 7000)); // TODO: Icons for traders
+                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost, Material.GOLD_INGOT, 7001)); // TODO: Icons for traders
         }
 
-        TraderManager.getPanel("დГород-Торговцы").getViewWith(player, components);
+        TraderManager.getPanel("Город-Торговцы").getViewWith(player, components);
     }
 
-    public static Inventory generateTradeControls(Player player, int traderId) {
-        var window = Bukkit.createInventory(player, 27, Component.text("ეГород-Торговцы-Управление " + traderId));
-        TraderManager.getPanel("ეГород-Торговцы-Управление").place(window);
-        return window;
+    public static void generateTradeControls(Player player, int traderId) {
+        TraderManager.getPanel("Город-Торговцы-Управление").getView(player, "Город-Торговцы-Управление " + traderId);
     }
 
     @EventHandler

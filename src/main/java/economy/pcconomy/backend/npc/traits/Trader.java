@@ -105,15 +105,15 @@ public class Trader extends Trait {
         var player = event.getClicker();
         try {
             if (IsRanted) {
-                if (Owner.equals(player.getUniqueId())) player.openInventory(TraderWindow.getOwnerWindow(player, this));
-                else player.openInventory(TraderWindow.getWindow(player, this));
+                if (Owner.equals(player.getUniqueId())) TraderWindow.getOwnerWindow(player, this);
+                else TraderWindow.getWindow(player, this);
             }
             else {
                 var town = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
                 if (town == null) return;
 
-                if (town.getMayor().getUUID().equals(player.getUniqueId())) player.openInventory(TraderWindow.getMayorWindow(player, this));
-                else player.openInventory(TraderWindow.getRanterWindow(player, this));
+                if (town.getMayor().getUUID().equals(player.getUniqueId())) TraderWindow.getMayorWindow(player, this);
+                else TraderWindow.getRanterWindow(player, this);
             }
         }
         catch (NullPointerException e) {

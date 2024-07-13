@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.Objects;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
+import org.j1sk1ss.menuframework.objects.interactive.components.ItemArea;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
 import com.palmergames.bukkit.towny.TownyAPI;
@@ -18,7 +17,6 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import net.kyori.adventure.text.Component;
 
 
 @ExtensionMethod({Manager.class})
@@ -40,35 +38,28 @@ public class NPCTraderWindow {
                                 if (event.isLeftClick()) {
                                     assert currentItem != null;
                                     town.buyResourceFromStorage(currentItem, player);
-                                    player.openInventory(
-                                        Objects.requireNonNull(
-                                            NPCTraderWindow.generateWindow(
-                                                player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2]))
-                                            )
-                                        )
+                                    NPCTraderWindow.generateWindow(
+                                        player, CitizensAPI.getNPCRegistry().getById(Integer.parseInt(title.split(" ")[2]))
                                     );
                                 } else {
                                     town.generateLocalPrices();
                                     town.sellResource2Storage(player.getInventory().getItemInMainHand(), player);
                                 }
                         })
-                ), "ვМагазин", MenuSizes.SixLines
+                ), "Магазин", MenuSizes.SixLines, "\u10D5"
             )
         )
     );
 
-    public static Inventory generateWindow(Player player, NPC trader) {
+    public static void generateWindow(Player player, NPC trader) {
         var town = GorodkiUniverse.getInstance().getNPCGorod(TownyAPI.getInstance().getTown(trader.getStoredLocation()));
-        if (town == null) return null;
+        if (town == null) return;
 
-        var window = Bukkit.createInventory(
-                player, 54, Component.text("ვМагазин " +
-                Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId())
+        var area = new ItemArea(0, 53, town.getStorage(), null);
+        NpcTradeWindow.getPanel("Магазин").getViewWith(
+                player,
+                Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId(),
+                List.of(area)
         );
-
-        for (var item : town.getStorage())
-            window.addItem(item.setLore(String.join("\n", item.getLoreLines())));
-
-        return window;
     }
 }

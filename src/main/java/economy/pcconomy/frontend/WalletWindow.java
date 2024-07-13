@@ -15,13 +15,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 
-import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
+import org.j1sk1ss.menuframework.objects.interactive.components.Icon;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class WalletWindow implements Listener {
                             wallet.giveWallet(player);
                         }
                     )
-                ), "რКошелёк-Внесение", MenuSizes.OneLine
+                ), "Кошелёк-Внесение", MenuSizes.OneLine, "\u10DB"
             ),
             new Panel(
                 List.of(
@@ -92,43 +93,44 @@ public class WalletWindow implements Listener {
                             wallet.giveWallet(player);
                         }
                     )
-                ), "რКошелёк-Снятие", MenuSizes.OneLine
+                ), "Кошелёк-Снятие", MenuSizes.OneLine, "\u10DB"
             )
         )
     );
 
-    public static Inventory putWindow(Player player, Wallet wallet) {
-        var window = Bukkit.createInventory(player, 9, Component.text("რКошелёк-Внесение"));
+    public static void putWindow(Player player, Wallet wallet) {
+        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк-Внесение"));
         var cashInInventory = Math.min(player.amountOfCashInInventory(true), wallet.getCapacity() - wallet.getAmount());
 
-        var button = new Item("Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, Material.PAPER, 1, 17000);
+        var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
+        var button = new Icon(0, "Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, Material.PAPER, 17000);
         button.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-wallet-value"); // TODO: DATA MODEL
-        window.setItem(0, button);
 
         for (var i = 0; i < 8; i++)
-            if (cashInInventory >= Cash.Denomination.get(i)) printButtons("\n-", window, i);
+            if (cashInInventory >= Cash.Denomination.get(i)) components.add(printButtons("\n-", window, i));
 
-        return window;
+        WalletWindow.getPanel("Кошелёк-Снятие").getViewWith(player, components);
     }
 
-    public static Inventory withdrawWindow(Player player, Wallet wallet) {
-        var window = Bukkit.createInventory(player, 9, Component.text("რКошелёк-Снятие"));
+    public static void withdrawWindow(Player player, Wallet wallet) {
+        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк-Снятие"));
         var cashInWallet = wallet.getAmount();
 
-        var button = new Item("Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.PAPER, 1, 17000);
+        var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
+        var button = new Icon(0, "Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.PAPER, 17000);
         button.setDouble2Container(cashInWallet, "item-wallet-value"); // TODO: DATA MODEL
-        window.setItem(0, button);
+        components.add(button);
 
         for (var i = 0; i < 8; i++)
-            if (cashInWallet >= Cash.Denomination.get(i)) printButtons("\n", window, i);
+            if (cashInWallet >= Cash.Denomination.get(i)) components.add(printButtons("\n", window, i));
 
-        return window;
+        WalletWindow.getPanel("Кошелёк-Снятие").getViewWith(player, components);
     }
 
-    private static void printButtons(String thing, Inventory window, int pos) {
-        var button = new Item("Действия", thing + Cash.Denomination.get(pos) + Cash.currencySigh, Material.PAPER, 1, 17000);
+    private static org.j1sk1ss.menuframework.objects.interactive.Component printButtons(String thing, Inventory window, int pos) {
+        var button = new Icon(pos, "Действия", thing + Cash.Denomination.get(pos) + Cash.currencySigh, Material.PAPER, 17000);
         button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(pos)), "item-wallet-value");
-        window.setItem(pos, button);
+        return button;
     }
 
     @EventHandler
@@ -142,8 +144,8 @@ public class WalletWindow implements Listener {
         var wallet = Wallet.isWallet(item) ? new Wallet(item) : null;
         if (wallet != null) {
             switch (event.getAction()) {
-                case LEFT_CLICK_AIR -> player.openInventory(putWindow(player, wallet));
-                case RIGHT_CLICK_AIR -> player.openInventory(withdrawWindow(player, wallet));
+                case LEFT_CLICK_AIR ->putWindow(player, wallet);
+                case RIGHT_CLICK_AIR -> withdrawWindow(player, wallet);
                 default -> throw new IllegalArgumentException("Unexpected value: " + event.getAction());
             }
 
