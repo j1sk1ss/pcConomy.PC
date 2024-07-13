@@ -9,7 +9,7 @@ import economy.pcconomy.backend.economy.town.towns.Storage;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.*;
 
-import economy.pcconomy.frontend.mayor.MayorManagerWindow;
+import economy.pcconomy.frontend.MayorManagerWindow;
 import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +33,6 @@ public class CommandManager implements CommandExecutor {
         switch (command.getName()) {
             case "take_cash"          -> ((Player)sender).takeCashFromPlayer(Double.parseDouble(args[0]), true);
             case "create_cash"        -> ((Player)sender).giveCashToPlayer(Double.parseDouble(args[0]), true);
-            // case "reload_towns"       -> TownManager.reloadTownObjects();
             case "reload_npc"         -> NpcManager.reloadNPC();
             case "put_cash2bank"      -> PcConomy.GlobalBank.getBank().takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
             case "create_banker"      -> NpcManager.createNPC((Player)sender, new Banker());
@@ -42,21 +41,15 @@ public class CommandManager implements CommandExecutor {
             case "create_npc_trader"  -> NpcManager.createNPC((Player)sender, new NpcTrader());
             case "create_licensor"    -> NpcManager.createNPC((Player)sender, new Licensor());
             case "create_shareholder" -> NpcManager.createNPC((Player) sender, new Shareholder());
-//            case "switch_town2npc"    -> Objects.requireNonNull(TownyAPI.getInstance().getTown(((Player) sender).getLocation())).changeNPCStatus(true);
-//            case "switch_town2player" -> Objects.requireNonNull(TownyAPI.getInstance().getTown(((Player) sender).getLocation())).changeNPCStatus(false);
             
             case "town_menu" -> {
                 if (!Objects.requireNonNull(TownyAPI.getInstance().getTown((Player)sender)).getMayor().getName().equals((sender).getName())) return true;
                 MayorManagerWindow.generateWindow((Player)sender);
             }
 
-//            case "add_trade2town" -> ((NpcTown)UUID.fromString(args[0]).getTown()).Storage
-//                    .addResource(Material.getMaterial(args[1]), Integer.parseInt(args[2]));
-
             case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.getBank().getBudget() + "$\n" +
                         "Global VAT: " + PcConomy.GlobalBank.getBank().getVat() + "%\n" +
                         "Deposit percent: " + PcConomy.GlobalBank.getBank().getDepositPercent() + "%\n" +
-                        // "Registered towns count: " + PcConomy.GlobalTown.Towns.size() + "\n" +
                         "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n");
 
             case "set_day_bank_budget" -> PcConomy.GlobalBank.getBank().setDayWithdrawBudget((Double.parseDouble(args[0])));

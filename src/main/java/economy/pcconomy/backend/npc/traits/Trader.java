@@ -7,7 +7,7 @@ import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
-import economy.pcconomy.frontend.trade.TraderWindow;
+import economy.pcconomy.frontend.TraderWindow;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
@@ -194,7 +194,7 @@ public class Trader extends Trait {
     }
 
     public void Buy(Player buyer) {
-        if (buyer.amountOfCashInInventory(false) < Bank.checkVat(Cost)) return;
+        if (buyer.amountOfCashInInventory(false) < Bank.getValueWithVat(Cost)) return;
 
         var license = PcConomy.GlobalLicense.getLicense(buyer.getUniqueId(), LicenseType.Market);
         if (license == null) return;

@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.loans;
+package economy.pcconomy.frontend;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.economy.credit.Loan;

@@ -1,6 +1,6 @@
 package economy.pcconomy.backend.npc.traits;
 
-import economy.pcconomy.frontend.shareholder.ShareholderWindow;
+import economy.pcconomy.frontend.ShareholderWindow;
 
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;

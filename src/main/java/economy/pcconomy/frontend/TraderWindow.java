@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.trade;
+package economy.pcconomy.frontend;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;

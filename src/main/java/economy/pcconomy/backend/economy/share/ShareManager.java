@@ -52,7 +52,7 @@ public class ShareManager extends Loadable {
             for (var share : prevShares)
                 if (share.isSold()) shares.add(share);
 
-        if (shares.size() > 0) Shares.put(town, shares);
+        if (!shares.isEmpty()) Shares.put(town, shares);
         else Shares.remove(town);
 
         InteractionList.add(town);
@@ -93,7 +93,7 @@ public class ShareManager extends Loadable {
      * @return Average price
      */
     public double getMedianSharePrice(UUID town) {
-        var price = 0;
+        var price = 0d;
         var shares = Shares.get(town);
         for (var share : shares)
             if (!share.isSold()) price += share.getPrice();
@@ -115,15 +115,17 @@ public class ShareManager extends Loadable {
      */
     public void payDividends(UUID town) {
         var townObject = GorodkiUniverse.getInstance().getGorod(town);
-
-        for (var shares : Shares.get(town)) {
-            if (shares.getShareType() == ShareType.Equity) break;
-            if (townObject.getQuarterlyEarnigns() < 0) break;
-
-            var pay = townObject.getQuarterlyEarnigns() * shares.getEquality();
-            townObject.changeBudget(-pay);
-            shares.setRevenue(shares.getRevenue() + pay);
-        }
+        Shares.get(town).parallelStream().forEach((shares) -> {
+            if (shares.getShareType() != ShareType.Equity) {
+                if (townObject.getQuarterlyEarnigns() >= 0) {
+                    synchronized (townObject) {
+                        var pay = townObject.getQuarterlyEarnigns() * shares.getEquality();
+                        townObject.changeBudget(-pay);
+                        shares.setRevenue(shares.getRevenue() + pay);
+                    }
+                }
+            }
+        });
 
         townObject.setQuarterlyEarnigns(0);
     }
@@ -137,8 +139,7 @@ public class ShareManager extends Loadable {
             if (townShares.getShareUUID().equals(share.getShareUUID())) {
                 owner.giveCashToPlayer(PcConomy.GlobalBank.getBank().deleteVAT(townShares.getRevenue()), false);
                 townShares.setRevenue(0);
-
-                return;
+                break;
             }
         }
     }

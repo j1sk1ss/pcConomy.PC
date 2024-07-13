@@ -78,9 +78,9 @@ public class LicenseManager extends Loadable {
 
         player.takeCashFromPlayer(price, false);
         PcConomy.GlobalBank.getBank().changeBudget(price);
-        //TODO: DATA MODEL
+
         PcConomy.GlobalLicense.createLicense(new License(player, LocalDateTime.now().plusDays(1), licenseType));
-        new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()).giveItems(player);
+        new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()).giveItems(player); //TODO: DATA MODEL
     }
 
     @Override

@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.npcTrade;
+package economy.pcconomy.frontend;
 
 import java.util.List;
 import java.util.Objects;

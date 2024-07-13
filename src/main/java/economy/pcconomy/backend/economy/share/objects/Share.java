@@ -6,7 +6,9 @@ import economy.pcconomy.backend.economy.bank.Bank;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import net.potolotcraft.gorodki.GorodkiUniverse;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.j1sk1ss.itemmanager.manager.Item;
@@ -79,7 +81,7 @@ public class Share {
      */
     public void buyShare(Player buyer) {
         if (isSold) return;
-        if (Cash.amountOfCashInInventory(buyer, false) >= Bank.checkVat(price)) {
+        if (Cash.amountOfCashInInventory(buyer, false) >= Bank.getValueWithVat(price)) {
             buyer.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
             GorodkiUniverse.getInstance().getGorod(townUUID).changeBudget(price);
 

@@ -15,17 +15,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @ExtensionMethod({Cash.class, Balance.class})
 public class Bank extends Capitalist {
     public Bank() {
-        budget = PcConomy.Config.getDouble("bank.start_budget", 15000d);
+        budget              = PcConomy.Config.getDouble("bank.start_budget", 15000d);
         usefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
         vat                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
         depositPercent      = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
         dayWithdrawBudget   = budget * usefulBudgetPercent;
-        trustCoefficient    = .5d;
+        trustCoefficient    = .05d;
 
         credit = new ArrayList<>();
     }
@@ -89,15 +91,17 @@ public class Bank extends Capitalist {
             Bukkit.getWhitelistedPlayers().parallelStream().forEach((player) -> {
                 if (player.getPlayer() != null) {
                     var amount = (Balance.getBalance(player.getPlayer()) * depositPercent) / 12;
-                    player.getPlayer().giveMoney(amount);
-                    budget -= amount;
+                    if (budget >= amount) {
+                        player.getPlayer().giveMoney(amount);
+                        budget -= amount;
+                    }
                 }
             });
 
         vat                 += (vat * Math.abs(changePercent) / 2) * isRecession;
         usefulBudgetPercent -= usefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
-        depositPercent -= depositPercent * Math.abs(changePercent) / 2 * isRecession;
-        trustCoefficient -= trustCoefficient * Math.abs(changePercent) * isRecession;
+        depositPercent      -= depositPercent * Math.abs(changePercent) / 2 * isRecession;
+        trustCoefficient    -= trustCoefficient * Math.abs(changePercent) * isRecession;
 
         if (isRecession > 0) {
             if (recessionCount++ >= 5) {
@@ -116,15 +120,15 @@ public class Bank extends Capitalist {
      * @return Inflation rate
      */
     public double getAverageInflation() {
-        var count = 0;
-        var bigInflation = 0d;
+        var count = new AtomicInteger();
+        var bigInflation = new AtomicReference<>(0d);
 
-        for (var town : GorodkiUniverse.getInstance().getNPCGorods()) {
-            bigInflation += town.getLocalInflation();
-            count++;
-        }
+        GorodkiUniverse.getInstance().getNPCGorods().parallelStream().forEach((npc) -> {
+            bigInflation.updateAndGet(v -> (v + npc.getLocalInflation()));
+            count.addAndGet(1);
+        });
 
-        return bigInflation / count;
+        return bigInflation.get() / count.get();
     }
 
     /**
@@ -152,7 +156,7 @@ public class Bank extends Capitalist {
      * @param value value
      * @return value with VAT
       */
-    public static double checkVat(double value) {
+    public static double getValueWithVat(double value) {
         return value + value * PcConomy.GlobalBank.getBank().vat;
     }
 

@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.shareholder;
+package economy.pcconomy.frontend;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
@@ -109,7 +109,7 @@ public class ShareholderWindow {
                         return;
                     }
 
-                    if (Bank.checkVat(share.getPrice()) > player.amountOfCashInInventory(false)) return;
+                    if (Bank.getValueWithVat(share.getPrice()) > player.amountOfCashInInventory(false)) return;
                     share.buyShare(player);
                 }, Material.GOLD_INGOT, 7000),
 

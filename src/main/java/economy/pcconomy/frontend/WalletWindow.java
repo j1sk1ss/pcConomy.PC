@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.wallet;
+package economy.pcconomy.frontend;
 
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.Wallet;
@@ -8,6 +8,11 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 
 import org.j1sk1ss.itemmanager.manager.Item;
@@ -22,7 +27,7 @@ import java.util.List;
 
 
 @ExtensionMethod({Manager.class, Cash.class})
-public class WalletWindow {
+public class WalletWindow implements Listener {
     public static MenuWindow WalletWindow = new MenuWindow(
         Arrays.asList(
             new Panel(
@@ -124,5 +129,25 @@ public class WalletWindow {
         var button = new Item("Действия", thing + Cash.Denomination.get(pos) + Cash.currencySigh, Material.PAPER, 1, 17000);
         button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(pos)), "item-wallet-value");
         window.setItem(pos, button);
+    }
+
+    @EventHandler
+    public void onWalletUse(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.LEFT_CLICK_AIR &&
+                event.getAction() != Action.RIGHT_CLICK_AIR) return;
+
+        var player = event.getPlayer();
+        var item = player.getInventory().getItemInMainHand();
+        var wallet = Wallet.isWallet(item) ? new Wallet(item) : null;
+        if (wallet != null) {
+            switch (event.getAction()) {
+                case LEFT_CLICK_AIR -> player.openInventory(putWindow(player, wallet));
+                case RIGHT_CLICK_AIR -> player.openInventory(withdrawWindow(player, wallet));
+                default -> throw new IllegalArgumentException("Unexpected value: " + event.getAction());
+            }
+
+            event.setCancelled(true);
+        }
     }
 }

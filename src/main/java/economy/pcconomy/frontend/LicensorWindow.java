@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.license;
+package economy.pcconomy.frontend;
 
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.license.LicenseManager;

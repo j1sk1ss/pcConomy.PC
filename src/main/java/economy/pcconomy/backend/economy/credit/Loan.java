@@ -81,8 +81,12 @@ public class Loan {
      */
     public static double getSafetyFactor(double amount, int duration, Borrower borrower) {
         var expired = 0;
-        if (borrower == null) return ((duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget()));
-        for (var loan : borrower.CreditHistory) expired += loan.expired;
+        if (borrower == null)
+            return (duration / 100d) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget()));
+
+        for (var loan : borrower.CreditHistory)
+            expired += loan.expired;
+
         return (borrower.CreditHistory.size() + (duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget()));
     }
 

@@ -1,4 +1,4 @@
-package economy.pcconomy.frontend.mayor;
+package economy.pcconomy.frontend;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
@@ -16,6 +16,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -32,11 +36,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static economy.pcconomy.frontend.trade.TraderWindow.getTraderFromTitle;
+import static economy.pcconomy.frontend.TraderWindow.getTraderFromTitle;
 
 
 @ExtensionMethod({Cash.class, Manager.class})
-public class MayorManagerWindow {
+public class MayorManagerWindow implements Listener {
     @SuppressWarnings("deprecation")
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
         new Panel(List.of(
@@ -86,7 +90,7 @@ public class MayorManagerWindow {
 
                     var inventoryAmount = player.amountOfCashInInventory(false);
                     var price = NpcManager.traderCost * trader.Level;
-                    if (Bank.checkVat(price) > inventoryAmount) return;
+                    if (Bank.getValueWithVat(price) > inventoryAmount) return;
 
                     trader.Level = Math.min(trader.Level + 1, 6);
                     player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
@@ -110,5 +114,24 @@ public class MayorManagerWindow {
         var window = Bukkit.createInventory(player, 27, Component.text("ეГород-Торговцы-Управление " + traderId));
         TraderManager.getPanel("ეГород-Торговцы-Управление").place(window);
         return window;
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        var player = (Player)event.getPlayer();
+        var container = player.getPersistentDataContainer();
+        var block = event.getClickedBlock();
+        var key = new NamespacedKey(PcConomy.getPlugin(PcConomy.class), "trader-move");
+
+        if (block == null) return;
+        if (container.has(key, PersistentDataType.INTEGER)) {
+            var id = container.get(key, PersistentDataType.INTEGER);
+            if (id == null) return;
+
+            var trader = NpcManager.getNPC(id);
+            trader.teleport(block.getLocation().add(0, 1, 0), PlayerTeleportEvent.TeleportCause.ENDER_PEARL);
+
+            container.remove(key);
+        }
     }
 }
