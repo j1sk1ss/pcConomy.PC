@@ -27,15 +27,9 @@ import java.util.Objects;
 
 
 // TODO List:
-// 1) Refactoring
-//   1.1) Change project structure V
-//   1.2) Cleanup junk code (If it exists) V
 // 2) Debugging
-//   2.1) Wallet debugging V
 //   2.2) Shares debugging ?
-//   2.3) Money transfer debugging V
 // 3) Load \ Save
-//   3.1) Finish Town adaptor V
 //   3.2) Check save \ loading ?
 // 4) Models
 //   4.1) Set all model data where it needed ?
