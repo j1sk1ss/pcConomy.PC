@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+@Getter
 public class Borrower {
     /**
      * Borrower object that show credit history
@@ -17,6 +18,6 @@ public class Borrower {
         CreditHistory = Collections.singletonList(loan);
     }
 
-    @Getter private final UUID Borrower;
-    @Getter @Setter public List<Loan> CreditHistory;
+    private final UUID Borrower;
+    @Setter public List<Loan> CreditHistory;
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
 public abstract class Loadable {
     /**
      * Saves loadable into .json file

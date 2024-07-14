@@ -44,7 +44,6 @@ public class NpcManager extends Loadable {
      * Update list of available NPC
      */
     public static void reloadNPC() {
-        // Register traits
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
             if (PcConomy.GlobalNPC.Npc.get(npc.getId()) != null)
                 PcConomy.GlobalNPC.Npc.get(npc.getId()).linkToNPC(npc);
@@ -71,7 +70,6 @@ public class NpcManager extends Loadable {
 
     @Override
     public void save(String fileName) throws IOException {
-        // Check all server NPC
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), npc.getOrAddTrait(Trader.class));
 

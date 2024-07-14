@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+@Setter
+@Getter
 public class BankManager extends Loadable {
     public BankManager(Bank bank) {
         Bank = bank;
     }
 
-    @Getter @Setter public Bank Bank;
+    public Bank Bank;
 
     @Override
     public String getName() {

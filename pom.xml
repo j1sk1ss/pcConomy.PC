@@ -165,13 +165,13 @@
         <dependency>
             <groupId>com.github.j1sk1ss</groupId>
             <artifactId>MenuFramework.PC</artifactId>
-            <version>d7c685b635</version>
+            <version>de7883dd8c</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.j1sk1ss</groupId>
             <artifactId>ItemManager.PC</artifactId>
-            <version>ver0.4</version>
+            <version>ver0.5</version>
         </dependency>
 
         <dependency>

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 
+@Getter
 public class License {
     public License(Player owner, LocalDateTime term, LicenseType licenseType) {
         this.term = term.toString();
@@ -14,9 +15,9 @@ public class License {
         this.licenseType = licenseType;
     }
 
-    @Getter private final UUID owner;
-    @Getter private final String term;
-    @Getter private final LicenseType licenseType;
+    private final UUID owner;
+    private final String term;
+    private final LicenseType licenseType;
 
     /**
      * Checks status of license

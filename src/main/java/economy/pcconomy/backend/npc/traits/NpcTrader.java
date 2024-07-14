@@ -23,6 +23,6 @@ public class NpcTrader extends Trait {
         if (!event.getNPC().equals(this.getNPC())) return;
 
         GorodkiUniverse.getInstance().getNPCGorod(TownyAPI.getInstance().getTownUUID(this.getNPC().getStoredLocation())).generateLocalPrices();
-        player.openInventory(Objects.requireNonNull(NPCTraderWindow.generateWindow(player, this.getNPC())));
+        NPCTraderWindow.generateWindow(player, this.getNPC());
     }
 }

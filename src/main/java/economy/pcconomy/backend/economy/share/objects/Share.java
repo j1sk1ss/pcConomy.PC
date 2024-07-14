@@ -18,6 +18,7 @@ import lombok.experimental.ExtensionMethod;
 import java.util.UUID;
 
 
+@Getter
 @ExtensionMethod({Manager.class, Cash.class})
 public class Share {
     public Share(UUID townUUID, ShareType shareType, double price, double equality) {
@@ -42,13 +43,13 @@ public class Share {
         equality  = 0;
     }
 
-    @Getter private final UUID townUUID;
-    @Getter private final UUID shareUUID;
-    @Getter private final ShareType shareType;
-    @Getter @Setter private boolean isSold;
-    @Getter private final double price;
-    @Getter private final double equality;
-    @Getter @Setter private double revenue;
+    private final UUID townUUID;
+    private final UUID shareUUID;
+    private final ShareType shareType;
+    @Setter private boolean isSold;
+    private final double price;
+    private final double equality;
+    @Setter private double revenue;
 
     /**
      * Check if itemStack is shareBody

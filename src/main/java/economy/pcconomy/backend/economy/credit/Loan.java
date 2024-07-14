@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 
+@Getter
 @ExtensionMethod({Balance.class, PlayerManager.class, BorrowerManager.class})
 public class Loan {
     /**
@@ -35,12 +36,12 @@ public class Loan {
         Owner = player.getUniqueId();
     }
 
-    @Getter private final UUID Owner;
-    @Getter @Setter private double amount;
-    @Getter private final double percentage;
-    @Getter private final int duration;
-    @Getter private final double dailyPayment;
-    @Getter @Setter private int expired;
+    private final UUID Owner;
+    @Setter private double amount;
+    private final double percentage;
+    private final int duration;
+    private final double dailyPayment;
+    @Setter private int expired;
 
     /**
      * Add loan to loan owner (Pays starts)
@@ -82,12 +83,13 @@ public class Loan {
     public static double getSafetyFactor(double amount, int duration, Borrower borrower) {
         var expired = 0;
         if (borrower == null)
-            return (duration / 100d) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget()));
+            return Math.abs((duration / 100d) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget())));
 
         for (var loan : borrower.CreditHistory)
             expired += loan.expired;
 
-        return (borrower.CreditHistory.size() + (duration / 100d)) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget()));
+        return Math.abs((borrower.CreditHistory.size() + (duration / 100d))
+                / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget())));
     }
 
     /**
@@ -99,8 +101,8 @@ public class Loan {
      */
     public static boolean isSafeLoan(double loanAmount, int duration, Capitalist loaner, Player borrower) {
         return (getSafetyFactor(loanAmount, duration, borrower.getBorrowerObject()) >= loaner.getTrustCoefficient()
-                && blackTown(borrower.getUniqueId().getCountryMens())
-                && borrower.getPlayerServerDuration() > 100);
+                && !blackTown(borrower.getUniqueId().getCountryMens())
+                && borrower.getPlayerServerDuration() > 0);
     }
 
     /**
@@ -190,6 +192,7 @@ public class Loan {
         var credit   = creditOwner.getCreditList();
         var loan     = getLoan(player, creditOwner);
         var borrower = Bukkit.getPlayer(player).getBorrowerObject();
+        if (loan == null || credit == null) return;
 
         if (borrower != null) {
             borrower.CreditHistory.add(loan);

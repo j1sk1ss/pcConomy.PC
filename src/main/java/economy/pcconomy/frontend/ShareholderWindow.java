@@ -131,7 +131,7 @@ public class ShareholderWindow {
             new Button(0, 20, "Выставить на продажу", "Акции будут выставлены на продажу",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
-                    var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("კАкции-Выставление");
+                    var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
                     var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
                     if (town == null) return;
 
@@ -181,12 +181,12 @@ public class ShareholderWindow {
             ), "Цена", "SliderCost", null),
             new Slider(Arrays.asList(
                 16, 17
-            ), Arrays.asList("Дивиденты", "Доля"), "Тип", "SliderType", null)
+            ), Arrays.asList("Дивиденты", "Доля"), "Тип", "SliderType", null, 17001, 17000, Material.GLASS, Material.PURPLE_WOOL)
         ), "Акции-Выставление", MenuSizes.SixLines, "\u10D9")
     ));
 
     public static void generateWindow(Player player) {
-        ShareHolderMenu.getPanel("ზАкции-Меню").getView(player);
+        ShareHolderMenu.getPanel("Акции-Меню").getView(player);
     }
 
     public static void sharesWindow(Player player, int windowNumber) {

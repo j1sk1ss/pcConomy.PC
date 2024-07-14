@@ -18,16 +18,9 @@ public class TownyListener implements Listener {
      */
     @EventHandler
     public void newDay(NewDayEvent event) {
-        // All plot tax from towny goes to global bank
         TownyAPI.getInstance().getTowns().parallelStream().forEach((town) -> PcConomy.GlobalBank.getBank().changeBudget(town.getPlotTax()));
-
-        // All town invokes new day action
         GorodkiUniverse.getInstance().getNPCGorods().parallelStream().forEach(NPCGorod::newDay);
-
-        // All share owners earn percent from shares
         PcConomy.GlobalShare.newDay();
-
-        // Bank pay deposit and change strategy
         PcConomy.GlobalBank.getBank().newDay();
     }
 }

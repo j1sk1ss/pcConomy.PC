@@ -33,8 +33,6 @@ import java.util.Objects;
 //   3.2) Check save \ loading ?
 // 4) Models
 //   4.1) Set all model data where it needed ?
-// 5) Bank
-//   5.1) Check bank and credit working (Maybe change loan class structure?) ?
 //
 //  P.S. Don't forget about TODO
 
