@@ -6,7 +6,7 @@
 
     <groupId>Economy</groupId>
     <artifactId>pcConomy</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>PcConomy</name>
@@ -25,8 +25,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -88,44 +88,37 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
+            <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.21-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
+            <version>1.7.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.YiC200333</groupId>
             <artifactId>XConomyAPI</artifactId>
-            <version>2.19.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.luckperms</groupId>
-            <artifactId>api</artifactId>
-            <version>5.4</version>
+            <version>2.25.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>towny</artifactId>
-            <version>0.98.5.0</version>
+            <version>0.100.3.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens-main</artifactId>
-            <version>2.0.30-SNAPSHOT</version>
+            <version>2.0.33-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
             <exclusions>
@@ -153,31 +146,35 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>3.5</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
-            <scope>compile</scope>
+            <version>1.18.34</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.j1sk1ss</groupId>
             <artifactId>MenuFramework.PC</artifactId>
-            <version>de7883dd8c</version>
+            <version>ver1.0.7.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.j1sk1ss</groupId>
             <artifactId>ItemManager.PC</artifactId>
             <version>ver0.5</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.Potolotcraft-2-0</groupId>
             <artifactId>Gorodki</artifactId>
             <version>cc1e66d7f0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

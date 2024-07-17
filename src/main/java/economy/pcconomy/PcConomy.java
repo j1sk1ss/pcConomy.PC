@@ -14,6 +14,7 @@ import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
 import economy.pcconomy.frontend.MayorManagerWindow;
 import economy.pcconomy.frontend.WalletWindow;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.CitizensPlugin;
 import net.citizensnpcs.api.trait.TraitInfo;
 
 import org.bukkit.Bukkit;
@@ -38,7 +39,6 @@ import java.util.Objects;
 
 
 public final class PcConomy extends JavaPlugin {
-    
     public static FileConfiguration Config;
     public static NpcManager        GlobalNPC;
     public static BankManager       GlobalBank;
@@ -52,8 +52,19 @@ public final class PcConomy extends JavaPlugin {
     public void onEnable() {
         System.out.print("[PcConomy] Starting PcConomy.\n");
 
-        saveConfig();
-        saveDefaultConfig();
+        var file = new File(getDataFolder() + File.separator + "config.yml");
+        if (file.exists()) saveDefaultConfig();
+        else {
+            try {
+                if (!file.createNewFile()) System.err.println("Error creating config.yml");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            CheckConfig();
+            saveConfig();
+            reloadConfig();
+        }
 
         System.out.print("[PcConomy] Enable plugin config.\n");
 
@@ -107,7 +118,7 @@ public final class PcConomy extends JavaPlugin {
         //      - WalletListener - listen all player actions with wallet object
         //============================================
 
-            for (var listener : Arrays.asList(new TownyListener(), new WalletWindow(), new MayorManagerWindow()))
+            for (var listener : Arrays.asList(new TownyListener(), new WalletWindow(), new MayorManagerWindow(), new NpcManager()))
                 Bukkit.getPluginManager().registerEvents(listener, this);
 
             System.out.print("[PcConomy] Listeners registered.\n");
@@ -135,18 +146,6 @@ public final class PcConomy extends JavaPlugin {
         	new PcConomyPAPI().register();
 
         System.out.print("[PcConomy] PAPI registered.\n");
-        System.out.print("[PcConomy] Traits registered.\n");
-
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Trader.class).withName("trader"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NpcLoaner.class).withName("npcloaner"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(NpcTrader.class).withName("npctrader"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("banker"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Licensor.class).withName("licensor"));
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Shareholder.class).withName("shareholder"));
-
-        System.out.print("[PcConomy] NPC reloading.\n");
-
-        NpcManager.reloadNPC();
     }
 
     @Override
@@ -163,6 +162,14 @@ public final class PcConomy extends JavaPlugin {
                 manager.save(pluginPath + manager.getName());
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void CheckConfig() {
+        if(getConfig().get("Name") == null) {
+            getConfig().set("Name", "Value");
+            saveConfig();
+            reloadConfig();
         }
     }
 }

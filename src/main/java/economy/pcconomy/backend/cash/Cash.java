@@ -151,7 +151,7 @@ public class Cash {
         for (int i = 0; i < Denomination.size(); i++)
             while (amount - Denomination.get(i) >= 0) {
                 amount -= Denomination.get(i);
-                change.set(i, change.get(i) + 1);
+                change.set(i, Integer.valueOf(change.get(i) + 1));
             }
 
         return change;

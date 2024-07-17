@@ -137,7 +137,7 @@ public class Trader extends Trait {
 
                 if (Owner.equals(playerUUID) && Storage.size() < event.getNPC().getOrAddTrait(Trader.class).Level) {
                     player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
-                    chat.put(playerUUID, event.getNPC().getId());
+                    chat.put(playerUUID, (Integer) event.getNPC().getId());
                 }
 
                 return;
@@ -145,7 +145,7 @@ public class Trader extends Trait {
 
             if (Objects.requireNonNull(TownyAPI.getInstance().getTown(HomeTown)).getMayor().getUUID().equals(playerUUID)) {
                 player.sendMessage("Удалить торговца? (д/н)");
-                chat.put(playerUUID, event.getNPC().getId());
+                chat.put(playerUUID, (Integer) event.getNPC().getId());
             }
         } catch (NullPointerException exception) {
             player.sendMessage("Ошибка, мэр города не был найден! (2)");

@@ -124,7 +124,7 @@ public class Bank extends Capitalist {
         var bigInflation = new AtomicReference<>(0d);
 
         GorodkiUniverse.getInstance().getNPCGorods().parallelStream().forEach((npc) -> {
-            bigInflation.updateAndGet(v -> (v + npc.getLocalInflation()));
+            bigInflation.updateAndGet(v -> (Double) (v + npc.getLocalInflation()));
             count.addAndGet(1);
         });
 
