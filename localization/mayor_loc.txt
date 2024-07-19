@@ -1,0 +1,8 @@
+EN_Купить торговца:Buy trader/Buy new trader
+EN_Уволить торговца:Fire trader/Trader will be fired
+EN_Переместить торговца:Change location/Trader will change location
+EN_Улучшить торговца:Upgrade trader/Upgrade capacity of trader (+9 slots)
+RU_Купить торговца:-/-
+RU_Уволить торговца:-/-
+RU_Переместить торговца:-/-
+RU_Улучшить торговца:-/-

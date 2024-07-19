@@ -20,8 +20,4 @@ ui:
   loc4bank: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\bank_loc.txt
   loc4lic: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\license_loc.txt
   loc4mayor: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\mayor_loc.txt
-  loc4loan: default
-  loc4npc_trader: default
-  loc4shareholder: default
-  loc4trader: default
-  loc4wallet: default
+  loc4trader: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\trader_loc.txt

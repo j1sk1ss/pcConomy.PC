@@ -1,0 +1,27 @@
+EN_Перейти в товары:Go to goods/View trader storage
+EN_Забрать все товары:Take all goods/Clean storage
+EN_Забрать прибыль:Take revenue/Take earned revenue
+EN_Окончить аренду:Stop rant/Stop ranting this trader
+EN_Арендовать:Rant/-
+EN_НДС города:Town margin/-
+EN_Установить цену:Set rant price/Set rant price for 1 day
+EN_Установить процент:Set margin/Set your margin
+EN_Занять:Occupy/Occupy this trade by free
+EN_Цена аренды:Rant price/-
+EN_Установить:Set/Set value
+EN_Отмена:Cancel/-
+EN_Купить:Buy/-
+EN_Процент города:Town margin/-
+RU_Перейти в товары:-/-
+RU_Забрать все товары:-/-
+RU_Забрать прибыль:-/-
+RU_Окончить аренду:-/-
+RU_Арендовать:-/-
+RU_НДС города:-/-
+RU_Установить цену:-/-
+RU_Установить процент:-/-
+RU_Занять:-/-
+RU_Цена аренды:-/-
+RU_Установить:-/-
+RU_Отмена:-/-
+RU_Купить:-/-

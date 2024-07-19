@@ -131,10 +131,10 @@ public class ShareholderWindow {
                     var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (town == null) return;
 
-                    var countSlider   = townSharesPanel.getSliders("SliderCount").getChose(event);
-                    var percentSlider = townSharesPanel.getSliders("SliderPercent").getChose(event);
-                    var costSlider    = townSharesPanel.getSliders("SliderCost").getChose(event);
-                    var typeSlider    = townSharesPanel.getSliders("SliderType").getChose(event);
+                    var countSlider   = townSharesPanel.getSliders("Кол-во акций").getChose(event);
+                    var percentSlider = townSharesPanel.getSliders("Процент города").getChose(event);
+                    var costSlider    = townSharesPanel.getSliders("Цена акций").getChose(event);
+                    var typeSlider    = townSharesPanel.getSliders("Тип акций").getChose(event);
 
                     if (costSlider.equals("none") || countSlider.equals("none") || percentSlider.equals("none") || typeSlider.equals("none")) return;
                     PcConomy.GlobalShare.exposeShares(
@@ -162,22 +162,23 @@ public class ShareholderWindow {
                 27, 28, 29, 30, 31, 32, 33, 34, 35
             ), Arrays.asList(
                 "1шт.", "10шт.", "25шт.", "50шт.", "100шт.", "200шт.", "500шт.", "1000шт.", "10000шт."
-            ), "Кол-во", "SliderCount", null),
+            ), "Кол-во", "Кол-во акций", null, 17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
             new Slider(Arrays.asList(
                 36, 37, 38, 39, 40, 41, 42, 43, 44
             ), Arrays.asList(
                 "5%", "15%", "20%", "30%", "40%", "50%", "60%", "70%", "100%"
-            ), "Процент", "SliderPercent", null),
+            ), "Процент города, который будет выставлен на биржу", "Процент города", null,
+                    17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
             new Slider(Arrays.asList(
                 45, 46, 47, 48, 49, 50, 51, 52, 53
             ), Arrays.asList(
                 "100" + Cash.currencySigh, "500" + Cash.currencySigh, "1000" + Cash.currencySigh,
                 "1500" + Cash.currencySigh, "2000" + Cash.currencySigh, "2500" + Cash.currencySigh,
                 "5000" + Cash.currencySigh, "10000" + Cash.currencySigh, "20000" + Cash.currencySigh
-            ), "Цена", "SliderCost", null),
+            ), "Цена одной акции", "Цена акций", null, 17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
             new Slider(Arrays.asList(
                 16, 17
-            ), Arrays.asList("Дивиденты", "Доля"), "Тип", "SliderType", null, 17001, 17000, Material.GLASS, Material.PURPLE_WOOL)
+            ), Arrays.asList("Дивиденты", "Доля"), "Тип", "Тип акций", null, 17001, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT)
         ), "Акции-Выставление", MenuSizes.SixLines, "\u10D9")
     ));
 
