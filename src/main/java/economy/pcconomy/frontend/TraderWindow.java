@@ -8,15 +8,11 @@ import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 
 import lombok.experimental.ExtensionMethod;
-import net.kyori.adventure.text.Component;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
@@ -31,14 +27,13 @@ import java.util.Objects;
 
 @ExtensionMethod({Manager.class, Cash.class})
 public class TraderWindow {
-        @SuppressWarnings("deprecation")
         public static MenuWindow TraderMenu =
             new MenuWindow(Arrays.asList(
                 new Panel(List.of(
                     new ClickArea(0, 53,
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
-                            var title = event.getView().getTitle();
+                            var title = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
                             if (trader == null) return;
 
@@ -54,7 +49,7 @@ public class TraderWindow {
                     new Button(0, 19, "Перейти в товары", "Перейти в товары торговца",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
 
                             if (trader != null) getWindow(player, trader);
@@ -63,7 +58,7 @@ public class TraderWindow {
                     new Button(2, 21, "Забрать все товары", "Забрать выставленные на продажу товары",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
@@ -75,7 +70,7 @@ public class TraderWindow {
                     new Button(4, 23, "Забрать прибыль", "Забрать заработанную прибыль",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
@@ -87,7 +82,7 @@ public class TraderWindow {
                     new Button(6, 26, "Окончить аренду", "Окончить аренду\nПрибыль и товары будут возвращены",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
@@ -106,7 +101,7 @@ public class TraderWindow {
                     new Button(0, 21, "Арендовать", "",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
@@ -124,7 +119,7 @@ public class TraderWindow {
                     new ClickArea(0, 8,
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
-                            var title = event.getView().getTitle();
+                            var title = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
                             if (trader == null) return;
 
@@ -145,7 +140,7 @@ public class TraderWindow {
                     new Button(0, 20, "Установить цену", "Установить цену аренды за 1 день",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
                             if (trader != null) getPricesWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
@@ -153,7 +148,7 @@ public class TraderWindow {
                     new Button(3, 23, "Установить процент", "Установить процент с прибыли торговца",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
                             if (trader != null) getMarginWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
@@ -161,7 +156,7 @@ public class TraderWindow {
                     new Button(6, 26, "Занять", "Занять торговца бесплатно",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
 
                             if (trader == null) return;
@@ -182,11 +177,11 @@ public class TraderWindow {
                     new Button(9, 21, "Установить", "Установить выбранные цены",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
 
                             if (trader == null) return;
-                            var price = TraderWindow.TraderMenu.getPanel("ოТорговец-Цена").getSliders("Цена аренды").getChose(event);
+                            var price = TraderWindow.TraderMenu.getPanel("Торговец-Цена").getSliders("Цена аренды").getChose(event);
                             if (price.equals("none")) return;
 
                             trader.Cost = Double.parseDouble(price.replace(Cash.currencySigh, ""));
@@ -210,7 +205,7 @@ public class TraderWindow {
                     new Button(9, 21, "Установить", "Установить процент наценки товаров",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
-                            var title  = event.getView().getTitle();
+                            var title  = Utils.getInventoryTitle(event);
                             var trader = getTraderFromTitle(title);
                             if (trader == null) return;
 
@@ -232,7 +227,7 @@ public class TraderWindow {
                     new Button(0, 21, "Купить", "",
                         (event) -> {
                             var player     = (Player)event.getWhoClicked();
-                            var title      = event.getView().getTitle();
+                            var title      = Utils.getInventoryTitle(event);
                             var trader     = getTraderFromTitle(title);
                             var inventory  = event.getInventory();
                             var buyingItem = inventory.getItem(13);
@@ -269,7 +264,7 @@ public class TraderWindow {
                         new Button(5, 26, "Отмена", "",
                             (event) -> {
                                 var player = (Player)event.getWhoClicked();
-                                var title  = event.getView().getTitle();
+                                var title  = Utils.getInventoryTitle(event);
                                 var trader = getTraderFromTitle(title);
 
                                 if (trader != null) getWindow(player, trader);

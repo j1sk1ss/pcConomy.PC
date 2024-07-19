@@ -21,7 +21,6 @@ import net.citizensnpcs.api.npc.NPC;
 
 @ExtensionMethod({Manager.class})
 public class NPCTraderWindow {
-    @SuppressWarnings("deprecation")
     public static MenuWindow NpcTradeWindow = new MenuWindow(
         List.of(
             new Panel(
@@ -30,7 +29,7 @@ public class NPCTraderWindow {
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
                             var currentItem = event.getCurrentItem();
-                            var title = event.getView().getTitle();
+                            var title = Utils.getInventoryTitle(event);
                             var town = GorodkiUniverse.getInstance().getNPCGorod(TownyAPI.getInstance().getTown(title.split(" ")[1]));
                             if (town == null) return;
 

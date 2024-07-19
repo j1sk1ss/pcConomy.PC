@@ -9,6 +9,7 @@ import economy.pcconomy.backend.npc.traits.*;
 import lombok.experimental.ExtensionMethod;
 
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.CitizensDisableEvent;
 import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.trait.Trait;
 
@@ -48,6 +49,16 @@ public class NpcManager extends Loadable implements Listener {
         NpcManager.reloadNPC();
     }
 
+    @EventHandler
+    public void SaveNpc(CitizensDisableEvent event) {
+        try {
+            System.out.print("[PcConomy] Traits saving.\n");
+            PcConomy.GlobalNPC.save("plugins\\PcConomy\\" + PcConomy.GlobalNPC.getName());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Create NPC with special trait
      * @param creator Player that create NPC
@@ -65,8 +76,10 @@ public class NpcManager extends Loadable implements Listener {
      */
     public static void reloadNPC() {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
-            if (PcConomy.GlobalNPC.Npc.get(npc.getId()) != null)
+            if (PcConomy.GlobalNPC.Npc.get(npc.getId()) != null) {
                 PcConomy.GlobalNPC.Npc.get(npc.getId()).linkToNPC(npc);
+                continue;
+            }
 
             switch (npc.getName()) {
                 case "npcloaner"   -> npc.addTrait(NpcLoaner.class);
@@ -90,6 +103,7 @@ public class NpcManager extends Loadable implements Listener {
 
     @Override
     public void save(String fileName) throws IOException {
+        Npc.clear();
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
             if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), npc.getOrAddTrait(Trader.class));
 

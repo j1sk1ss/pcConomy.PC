@@ -1,5 +1,6 @@
 package economy.pcconomy.frontend;
 
+import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.license.LicenseManager;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
@@ -33,9 +34,10 @@ public class LicensorWindow {
         new Button(7, 26, "Лицензия на доступ к кредитной истории", LicenseManager.loanHistoryLicensePrice + Cash.currencySigh,
             (event) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
                     LicenseType.LoanHistory, LicenseManager.loanHistoryLicensePrice), Material.GOLD_INGOT, 7000)
-    ), "Мир-Лицензии", MenuSizes.ThreeLines, "\u10D1")));
+    ), "Мир-Лицензии", MenuSizes.ThreeLines, "\u10D1")), "License",
+            new LocalizationManager(PcConomy.Config.getString("ui.loc4lic")));
 
     public static void generateWindow(Player player) {
-        LicenseWindow.getPanel("Мир-Лицензии", "RU").getView(player);
+        LicenseWindow.getPanel("Мир-Лицензии", PcConomy.Config.getString("ui.language", "RU")).getView(player);
     }
 }

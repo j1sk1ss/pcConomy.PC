@@ -15,3 +15,13 @@ town:
   start_useful_budget: 0.35
   start_useful_storage: 0.30
   start_vat: 0.05
+ui:
+  language: EN
+  loc4bank: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\bank_loc.txt
+  loc4lic: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\license_loc.txt
+  loc4mayor: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\mayor_loc.txt
+  loc4loan: default
+  loc4npc_trader: default
+  loc4shareholder: default
+  loc4trader: default
+  loc4wallet: default

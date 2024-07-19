@@ -20,8 +20,6 @@ commands:
   create_shareholder:
     usage: /create_shareholder
     description: create shareholder npc
-  reload_towns:
-    usage: /reload_towns
   put_cash2bank:
     usage: /put_cash2bank [amount]
     description: take moneys from inventory and put it to the bank (Moved to your bank account)
@@ -40,15 +38,9 @@ commands:
   create_licensor:
     usage: /create_licensor
     description: create licensor npc
-  switch_town2npc:
-    usage: /switch_town2npc
-  switch_town2player:
-    usage: /switch_town2player
   town_menu:
     usage: /town_menu
     description: open mayor menu
-  add_trade2town:
-    usage: /add_trade2town [town name] [material] [amount]
   reload_npc:
     usage: /reload_npc
   full_info:

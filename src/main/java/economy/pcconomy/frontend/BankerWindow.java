@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import org.j1sk1ss.itemmanager.manager.Manager;
+import org.j1sk1ss.menuframework.common.LocalizationManager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
@@ -55,7 +56,7 @@ public class BankerWindow {
                         }) // Withdraw
                 ), "Банк", MenuSizes.SixLines, "\u10D0"
             )
-        )
+        ), "Bank", new LocalizationManager(PcConomy.Config.getString("ui.loc4bank"))
     );
 
     public static void generateWindow(Player player) {
@@ -76,8 +77,8 @@ public class BankerWindow {
         components.addAll(balance);
         components.addAll(actions);
         
-        if (inventory == null) BankWindow.getPanel("Банк").getViewWith(player, components);
-        else BankWindow.getPanel("Банк").getViewWith(components, inventory);
+        if (inventory == null) BankWindow.getPanel("Банк", PcConomy.Config.getString("ui.language", "RU")).getViewWith(player, components);
+        else BankWindow.getPanel("Банк", PcConomy.Config.getString("ui.language", "RU")).getViewWith(components, inventory);
     }
 
     // Print action buttons (Default + max-min actions)

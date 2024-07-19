@@ -9,10 +9,8 @@ import economy.pcconomy.backend.npc.traits.Trader;
 
 import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.CitizensAPI;
-import net.kyori.adventure.text.Component;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -20,10 +18,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.persistence.PersistentDataType;
 
 import org.j1sk1ss.itemmanager.manager.Manager;
+import org.j1sk1ss.menuframework.common.LocalizationManager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.Button;
@@ -41,7 +39,6 @@ import static economy.pcconomy.frontend.TraderWindow.getTraderFromTitle;
 
 @ExtensionMethod({Cash.class, Manager.class})
 public class MayorManagerWindow implements Listener {
-    @SuppressWarnings("deprecation")
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
         new Panel(List.of(
             new ClickArea(0, 26, 
@@ -60,7 +57,7 @@ public class MayorManagerWindow implements Listener {
         new Panel(Arrays.asList(
             new Button(0, 20, "Уволить торговца", "Торговец будет уволен",
                 (event) -> {
-                    var title  = event.getView().getTitle();
+                    var title  = Utils.getInventoryTitle(event);
                     var trader = getTraderFromTitle(title);
                     if (trader == null) return;
                     if (trader.IsRanted) return;
@@ -71,7 +68,7 @@ public class MayorManagerWindow implements Listener {
             new Button(3, 23, "Переместить торговца", "Торговец будет перемещён в место вашего клика",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    var title  = event.getView().getTitle();
+                    var title  = Utils.getInventoryTitle(event);
                     var trader = getTraderFromTitle(title);
                     if (trader == null) return;
 
@@ -83,7 +80,7 @@ public class MayorManagerWindow implements Listener {
             new Button(6, 26, "Улучшить торговца", "Торговец будет улучшен (+9 слотов)",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    var title  = event.getView().getTitle();
+                    var title  = Utils.getInventoryTitle(event);
                     var trader = getTraderFromTitle(title);
                     if (trader == null) return;
                     if (trader.Level >= 6) return;
@@ -96,7 +93,7 @@ public class MayorManagerWindow implements Listener {
                     player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
                 }, Material.GOLD_INGOT, 7000)
         ), "Город-Торговцы-Управление", MenuSizes.ThreeLines, "\u10D4")
-    ));
+    ), "Mayor", new LocalizationManager(PcConomy.Config.getString("ui.loc4mayor")));
 
     public static void generateWindow(Player player) {
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
@@ -107,7 +104,7 @@ public class MayorManagerWindow implements Listener {
                 "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost, Material.GOLD_INGOT, 7001)); // TODO: Icons for traders
         }
 
-        TraderManager.getPanel("Город-Торговцы").getViewWith(player, components);
+        TraderManager.getPanel("Город-Торговцы", PcConomy.Config.getString("ui.language", "RU")).getViewWith(player, components);
     }
 
     public static void generateTradeControls(Player player, int traderId) {

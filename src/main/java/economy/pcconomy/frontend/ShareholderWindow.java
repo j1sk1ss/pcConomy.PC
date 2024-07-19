@@ -7,13 +7,10 @@ import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
 import lombok.experimental.ExtensionMethod;
-import net.kyori.adventure.text.Component;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
@@ -27,7 +24,6 @@ import java.util.UUID;
 
 @ExtensionMethod({ Manager.class, Cash.class })
 public class ShareholderWindow {
-    @SuppressWarnings({ "deprecation", "null" })
     public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
             new Button(0, 20, "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
@@ -81,7 +77,7 @@ public class ShareholderWindow {
 
             new Button(45, 48, "Назад", "На одну страницу", 
                 (event) -> {
-                    var page = Integer.parseInt(event.getView().getTitle().split(" ")[1]);
+                    var page = Integer.parseInt(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (page >= 1) {
                         var player = (Player) event.getWhoClicked();
                         ShareholderWindow.sharesWindow(player, page - 1);
@@ -90,7 +86,7 @@ public class ShareholderWindow {
 
             new Button(50, 53, "Вперёд", "На одну страницу", 
                 (event) -> {
-                    var page = Integer.parseInt(event.getView().getTitle().split(" ")[1]);
+                    var page = Integer.parseInt(Utils.getInventoryTitle(event).split(" ")[1]);
                     var player = (Player) event.getWhoClicked();
                     ShareholderWindow.sharesWindow(player, page + 1);
                 }, Material.GOLD_INGOT, 7000)
@@ -100,7 +96,7 @@ public class ShareholderWindow {
             new Button(0, 21, "Купить одну акцию", "",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
-                    var town   = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                    var town   = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     assert town != null;
 
                     var share  = PcConomy.GlobalShare.soldFirstEmptyShare(town.getUUID());
@@ -118,7 +114,7 @@ public class ShareholderWindow {
                     var player = (Player) event.getWhoClicked();
                     if (Share.isShare(player.getInventory().getItemInMainHand())) {
                         var share = new Share(player.getInventory().getItemInMainHand());
-                        var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                        var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
 
                         if (share.getPrice() > GorodkiUniverse.getInstance().getGorod(town).getBudget()) return;
                         share.sellShare(player, player.getInventory().getItemInMainHand());
@@ -132,7 +128,7 @@ public class ShareholderWindow {
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
-                    var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                    var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (town == null) return;
 
                     var countSlider   = townSharesPanel.getSliders("SliderCount").getChose(event);
@@ -155,7 +151,7 @@ public class ShareholderWindow {
             new Button(3, 23, "Снять с продажи", "Акции будут сняты с продажи",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
-                    var town = TownyAPI.getInstance().getTown(event.getView().getTitle().split(" ")[1]);
+                    var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (town == null) return;
 
                     PcConomy.GlobalShare.takeOffShares(town.getUUID());
