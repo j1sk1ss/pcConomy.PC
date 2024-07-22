@@ -275,11 +275,11 @@ public class TraderWindow {
 
     public static void getWindow(Player player, Trader trader) {
         TraderWindow.TraderMenu.getPanel("Торговец-Ассортимент", PcConomy.Config.getString("ui.language", "RU"))
-                .getViewWith(
-                        player,
-                        "Торговец-Ассортимент " + trader.getNPC().getId(),
-                        List.of(new ItemArea(0, 26, trader.Storage, null))
-                );
+            .getViewWith(
+                player,
+                "Торговец-Ассортимент " + trader.getNPC().getId(),
+                List.of(new ItemArea(0, 26, trader.Storage, null))
+            );
     }
 
     public static void getOwnerWindow(Player player, Trader trader) {

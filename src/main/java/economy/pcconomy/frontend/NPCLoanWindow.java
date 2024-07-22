@@ -88,7 +88,7 @@ public class NPCLoanWindow {
                     var player    = (Player) event.getWhoClicked();
                     var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Взятие");
                     var durSlider = loanPanel.getSliders("Время выплаты").getChose(event);
-                    var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().get(0).split(" ")[0]);
+                    var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().getFirst().split(" ")[0]);
                     var agreement = event.getCurrentItem().getLoreLines().get(1);
 
                     if (durSlider.equals("none")) return;
@@ -100,7 +100,7 @@ public class NPCLoanWindow {
                             player.closeInventory();
                         }
                     }
-                })
+                }, 7001, 7002, Material.GOLD_INGOT, Material.GOLD_INGOT)
         ), "Кредит-Взятие", MenuSizes.ThreeLines, "\u10E1")
     ));
 

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static economy.pcconomy.frontend.TraderWindow.getTraderFromTitle;
 
@@ -101,7 +102,9 @@ public class MayorManagerWindow implements Listener {
         for (var i = 0; i < Math.min(27, town.getTraders().size()); i++) {
             var trader = CitizensAPI.getNPCRegistry().getById(town.getTraders().get(i)).getOrAddTrait(Trader.class);
             components.add(new Icon(i, town.getTraders().get(i) + "",
-                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin + "\nRant price: " + trader.Cost, Material.GOLD_INGOT, 7001)); // TODO: Icons for traders
+                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin +
+                        "\nRant price: " + trader.Cost,
+                    Material.GOLD_INGOT, 8000 + ThreadLocalRandom.current().nextInt(0, 7)));
         }
 
         TraderManager.getPanel("Город-Торговцы", PcConomy.Config.getString("ui.language", "RU")).getViewWith(player, components);

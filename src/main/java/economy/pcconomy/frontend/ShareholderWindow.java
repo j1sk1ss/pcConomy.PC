@@ -54,6 +54,7 @@ public class ShareholderWindow {
                     var inventory = player.getInventory().getStorageContents();
 
                     for (var item : inventory) {
+                        if (item == null) continue;
                         if (Share.isShare(item))
                             PcConomy.GlobalShare.cashOutShare(player, new Share(item));
                     }
