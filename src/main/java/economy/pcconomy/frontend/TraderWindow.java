@@ -18,6 +18,8 @@ import org.j1sk1ss.menuframework.common.LocalizationManager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.*;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class TraderWindow {
         public static MenuWindow TraderMenu =
             new MenuWindow(Arrays.asList(
                 new Panel(List.of(
-                    new ClickArea(0, 53,
+                    new ClickArea(new Margin(0, 0, 5, 8),
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
                             var title = Utils.getInventoryTitle(event);
@@ -47,7 +49,7 @@ public class TraderWindow {
                 ), "Торговец-Ассортимент", MenuSizes.ThreeLines, "\u10DA"),
 
                 new Panel(Arrays.asList(
-                    new Button(0, 19, "Перейти в товары", "Перейти в товары торговца",
+                    new Button(new Margin(0, 0, 2, 1), "Перейти в товары", "Перейти в товары торговца",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -56,7 +58,7 @@ public class TraderWindow {
                             if (trader != null) getWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(2, 21, "Забрать все товары", "Забрать выставленные на продажу товары",
+                    new Button(new Margin(0, 2, 2, 1), "Забрать все товары", "Забрать выставленные на продажу товары",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -68,7 +70,7 @@ public class TraderWindow {
                             }
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(4, 23, "Забрать прибыль", "Забрать заработанную прибыль",
+                    new Button(new Margin(0, 4, 2, 1), "Забрать прибыль", "Забрать заработанную прибыль",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -80,7 +82,7 @@ public class TraderWindow {
                             }
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(6, 26, "Окончить аренду", "Окончить аренду\nПрибыль и товары будут возвращены",
+                    new Button(new Margin(0, 6, 2, 1), "Окончить аренду", "Окончить аренду\nПрибыль и товары будут возвращены",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -99,7 +101,7 @@ public class TraderWindow {
                 ), "Торговец-Управление", MenuSizes.ThreeLines, "\u10E2"),
 
                 new Panel(Arrays.asList(
-                    new Button(0, 21, "Арендовать", "",
+                    new Button(new Margin(0, 0, 2, 3), "Арендовать", "",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -113,11 +115,12 @@ public class TraderWindow {
                             }
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(5, 26, "НДС города:", "", null, Material.GOLD_INGOT, 7000)
+                    new Button(new Margin(0, 5, 2, 3), "НДС города:", "",
+                        null, Material.GOLD_INGOT, 7000)
                 ), "Торговец-Аренда", MenuSizes.ThreeLines, "\u10E3"),
 
                 new Panel(List.of(
-                    new ClickArea(0, 8,
+                    new ClickArea(new Margin(0, 0, 0, 8),
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
                             var title = Utils.getInventoryTitle(event);
@@ -138,7 +141,7 @@ public class TraderWindow {
                 ), "Торговец-Аренда-Время", MenuSizes.OneLine, "\u10DF"),
 
                 new Panel(Arrays.asList(
-                    new Button(0, 20, "Установить цену", "Установить цену аренды за 1 день",
+                    new Button(new Margin(0, 0, 2, 2), "Установить цену", "Установить цену аренды за 1 день",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -146,7 +149,7 @@ public class TraderWindow {
                             if (trader != null) getPricesWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(3, 23, "Установить процент", "Установить процент с прибыли торговца",
+                    new Button(new Margin(0, 3, 2, 2), "Установить процент", "Установить процент с прибыли торговца",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -154,7 +157,7 @@ public class TraderWindow {
                             if (trader != null) getMarginWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(6, 26, "Занять", "Занять торговца бесплатно",
+                    new Button(new Margin(0, 6, 2, 2), "Занять", "Занять торговца бесплатно",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -167,15 +170,13 @@ public class TraderWindow {
                 ), "Торговец-Владелец", MenuSizes.ThreeLines, "\u10DC"),
 
                 new Panel(Arrays.asList(
-                    new Slider(Arrays.asList(
-                        0, 1, 2, 3, 4, 5, 6, 7, 8
-                    ), Arrays.asList(
+                    new Slider(new Margin(0, 0, 8, Direction.Horizontal), Arrays.asList(
                         "100" + Cash.currencySigh,  "500" + Cash.currencySigh,   "1000" + Cash.currencySigh,
                         "1500" + Cash.currencySigh, "2000" + Cash.currencySigh,  "2500" + Cash.currencySigh,
                         "5000" + Cash.currencySigh, "10000" + Cash.currencySigh, "20000" + Cash.currencySigh
                     ), "", "Цена аренды", null, 17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
 
-                    new Button(14, 26, "Установить", "Установить выбранные цены",
+                    new Button(new Margin(1, 5, 1, 3), "Установить", "Установить выбранные цены",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -189,7 +190,7 @@ public class TraderWindow {
                             player.sendMessage("Цена установлена!");
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(9, 21, "Отмена", "",
+                    new Button(new Margin(1, 0, 1, 3), "Отмена", "",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             player.closeInventory();
@@ -197,13 +198,11 @@ public class TraderWindow {
                 ), "Торговец-Цена", MenuSizes.ThreeLines, "\u10DD"),
 
                 new Panel(Arrays.asList(
-                    new Slider(Arrays.asList(
-                            0, 1, 2, 3, 4, 5, 6, 7, 8
-                    ), Arrays.asList(
+                    new Slider(new Margin(0, 0, 8, Direction.Horizontal), Arrays.asList(
                             "5%", "10%", "20%", "30%", "40%", "50%", "60%", "90%", "100%"
                     ), "", "Процент города", null, 17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
 
-                    new Button(14, 26, "Установить", "Установить процент наценки товаров",
+                    new Button(new Margin(1, 5, 1, 3), "Установить", "Установить процент наценки товаров",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);
@@ -217,7 +216,7 @@ public class TraderWindow {
                             player.sendMessage("Процент установлен!");
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(9, 21, "Отмена", "",
+                    new Button(new Margin(1, 0, 1, 3), "Отмена", "",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             player.closeInventory();
@@ -225,7 +224,7 @@ public class TraderWindow {
                 ), "Торговец-Процент", MenuSizes.ThreeLines, "\u10DD"),
 
                 new Panel(Arrays.asList(
-                    new Button(0, 21, "Купить", "",
+                    new Button(new Margin(0, 0, 2, 3), "Купить", "",
                         (event) -> {
                             var player     = (Player)event.getWhoClicked();
                             var title      = Utils.getInventoryTitle(event);
@@ -262,14 +261,14 @@ public class TraderWindow {
                             getWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000),
 
-                        new Button(5, 26, "Отмена", "",
-                            (event) -> {
-                                var player = (Player)event.getWhoClicked();
-                                var title  = Utils.getInventoryTitle(event);
-                                var trader = getTraderFromTitle(title);
+                    new Button(new Margin(0, 5, 2, 3), "Отмена", "",
+                        (event) -> {
+                            var player = (Player)event.getWhoClicked();
+                            var title  = Utils.getInventoryTitle(event);
+                            var trader = getTraderFromTitle(title);
 
-                                if (trader != null) getWindow(player, trader);
-                            }, Material.GOLD_INGOT, 7000)
+                            if (trader != null) getWindow(player, trader);
+                        }, Material.GOLD_INGOT, 7000)
                 ), "Торговец-Покупка", MenuSizes.ThreeLines, "\u10DB")
             ), "Trader", new LocalizationManager(PcConomy.Config.getString("ui.loc4trader")));
 
@@ -278,7 +277,7 @@ public class TraderWindow {
             .getViewWith(
                 player,
                 "Торговец-Ассортимент " + trader.getNPC().getId(),
-                List.of(new ItemArea(0, Math.min(9 * trader.Level, 26), trader.Storage, null))
+                List.of(new ItemArea(new Margin(0, 0, trader.Level, 8), trader.Storage, null))
             );
     }
 
@@ -308,7 +307,7 @@ public class TraderWindow {
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = 0; i < 9; i++)
             components.add(
-                    new LittleButton(i,
+                    new LittleButton(new Margin(i, 0, 0),
                             (i + 1) + " дней",
                             trader.Cost * (i + 1) + Cash.currencySigh,
                             null, Material.GOLD_INGOT, 7002)
@@ -339,7 +338,7 @@ public class TraderWindow {
         TraderMenu.getPanel("Торговец-Покупка", PcConomy.Config.getString("ui.language", "RU")).getViewWith(
                 player,
                 "Торговец-Покупка " + trader.getNPC().getId(),
-                List.of(new Icon(13, item.getName(), String.join("\n", item.getLoreLines()), item.getType()))
+                List.of(new Icon(new Margin(13, 0, 0), item.getName(), String.join("\n", item.getLoreLines()), item.getType()))
         );
     }
 

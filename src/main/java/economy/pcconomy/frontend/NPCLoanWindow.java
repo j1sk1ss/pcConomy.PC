@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import lombok.experimental.ExtensionMethod;
 
 import org.j1sk1ss.itemmanager.manager.Manager;
+
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.Bar;
@@ -17,6 +18,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.interactive.components.Slider;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,24 +33,25 @@ public class NPCLoanWindow {
 
     public static final MenuWindow LoanMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
-            new Button(0, 21, "Взять кредит", "Взять кредит у банка",
+            new Button(new Margin(0, 0, 2, 3), "Взять кредит", "Взять кредит у банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
                     NPCLoanWindow.LoanMenu.getPanel("Кредит-Взятие").getView(player);
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(5, 26, "Погасить кредит", "Погасить кредит банка",
+            new Button(new Margin(0, 5, 2, 3), "Погасить кредит", "Погасить кредит банка",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
-                    Loan.payOffADebt(player, PcConomy.GlobalBank.getBank());
+                    var code = Loan.payOffADebt(player, PcConomy.GlobalBank.getBank());
                     player.closeInventory();
+
+                    if (code) player.sendMessage("Кредит был успешно погашен.");
+                    else player.sendMessage("Что-то пошло не так. Может у вас нет денег?");
                 }, Material.GOLD_INGOT, 7000)
         ), "Кредит-Банк", MenuSizes.ThreeLines, "\u10D2"),
 
         new Panel(Arrays.asList(
-            new Slider(Arrays.asList(
-                18, 19, 20, 21, 22, 23, 24, 25, 26
-            ), Arrays.asList(
+            new Slider(new Margin(2, 0, 8, Direction.Horizontal), Arrays.asList(
                 "20 дн.", "30 дн.", "40 дн.", "50 дн.", "60 дн.", "70 дн.", "80 дн.", "90 дн.", "100 дн."
             ), "Размер", "Время выплаты",
                 (event) -> {
@@ -77,9 +80,7 @@ public class NPCLoanWindow {
                     bar.setValue(event.getInventory(), -1, value);
                 }, 17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
 
-            new Bar(Arrays.asList(
-                0, 1, 2, 3, 4, 5, 6, 7, 8
-            ),
+            new Bar(new Margin(0, 0, 8, Direction.Horizontal),
                 Direction.Right, "Размер кредита", "Размер кредита",
                 Arrays.asList(
                 "", "", "", "", "", "", "", "", ""
@@ -98,6 +99,7 @@ public class NPCLoanWindow {
                             loan.addLoan(PcConomy.GlobalBank.getBank());
 
                             player.closeInventory();
+                            player.sendMessage("Вам был выдан кредит в размере: " + loan.getAmount() + Cash.currencySigh);
                         }
                     }
                 }, 7001, 7002, Material.GOLD_INGOT, Material.GOLD_INGOT)

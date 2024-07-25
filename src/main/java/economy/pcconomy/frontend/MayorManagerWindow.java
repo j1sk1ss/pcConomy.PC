@@ -1,6 +1,7 @@
 package economy.pcconomy.frontend;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.bank.Bank;
@@ -8,9 +9,11 @@ import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
 
 import lombok.experimental.ExtensionMethod;
+
 import net.citizensnpcs.api.CitizensAPI;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
+
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -28,6 +31,7 @@ import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
 import org.j1sk1ss.menuframework.objects.interactive.components.Icon;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +46,7 @@ import static economy.pcconomy.frontend.TraderWindow.getTraderFromTitle;
 public class MayorManagerWindow implements Listener {
     public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
         new Panel(List.of(
-            new ClickArea(0, 26, 
+            new ClickArea(new Margin(0, 0, 2, 8),
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
                     var inventory = event.getInventory();
@@ -51,12 +55,12 @@ public class MayorManagerWindow implements Listener {
                     MayorManagerWindow.generateTradeControls(player, traderId);
                 }),
 
-            new Button(27, 35, "Купить торговца", "Купить нового торговца",
+            new Button(new Margin(3, 0, 0, 8), "Купить торговца", "Купить нового торговца",
                 (event) -> new Trader().Buy((Player) event.getWhoClicked()), Material.GOLD_INGOT, 7000)
         ), "Город-Торговцы", MenuSizes.FourLines, "\u10D3"),
 
         new Panel(Arrays.asList(
-            new Button(0, 20, "Уволить торговца", "Торговец будет уволен",
+            new Button(new Margin(0, 0, 2, 2), "Уволить торговца", "Торговец будет уволен",
                 (event) -> {
                     var title  = Utils.getInventoryTitle(event);
                     var trader = getTraderFromTitle(title);
@@ -66,7 +70,7 @@ public class MayorManagerWindow implements Listener {
                     trader.destroy();
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(3, 23, "Переместить торговца", "Торговец будет перемещён в место вашего клика",
+            new Button(new Margin(0, 3, 2, 2), "Переместить торговца", "Торговец будет перемещён в место вашего клика",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
                     var title  = Utils.getInventoryTitle(event);
@@ -82,7 +86,7 @@ public class MayorManagerWindow implements Listener {
 
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(6, 26, "Улучшить торговца", "Торговец будет улучшен (+9 слотов)",
+            new Button(new Margin(0, 6, 2, 2), "Улучшить торговца", "Торговец будет улучшен (+9 слотов)",
                 (event) -> {
                     var player = (Player)event.getWhoClicked();
                     var title  = Utils.getInventoryTitle(event);
@@ -105,7 +109,7 @@ public class MayorManagerWindow implements Listener {
         var town = GorodkiUniverse.getInstance().getGorod(TownyAPI.getInstance().getTown(player));
         for (var i = 0; i < Math.min(27, town.getTraders().size()); i++) {
             var trader = CitizensAPI.getNPCRegistry().getById(town.getTraders().get(i)).getOrAddTrait(Trader.class);
-            components.add(new Icon(i, town.getTraders().get(i) + "",
+            components.add(new Icon(new Margin(i, 0, 0), town.getTraders().get(i) + "",
                 "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin +
                         "\nRant price: " + trader.Cost,
                     Material.GOLD_INGOT, 8000 + ThreadLocalRandom.current().nextInt(0, 7)));

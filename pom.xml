@@ -159,7 +159,7 @@
         <dependency>
             <groupId>com.github.j1sk1ss</groupId>
             <artifactId>MenuFramework.PC</artifactId>
-            <version>b1d71ac45f</version>
+            <version>81d120bd09</version>
             <scope>provided</scope>
         </dependency>
 

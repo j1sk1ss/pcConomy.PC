@@ -134,15 +134,17 @@ public class Loan {
      * @param player Player who close loan
      * @param creditOwner Credit owner
      */
-    public static void payOffADebt(Player player, Capitalist creditOwner) {
+    public static boolean payOffADebt(Player player, Capitalist creditOwner) {
         var loan = getLoan(player.getUniqueId(), creditOwner);
 
-        if (loan == null) return;
-        if (player.solvent(loan.amount)) return;
+        if (loan == null) return false;
+        if (player.solvent(loan.amount)) return false;
 
         player.takeMoney(loan.amount);
         creditOwner.changeBudget(loan.amount);
         destroyLoan(player.getUniqueId(), creditOwner);
+
+        return true;
     }
 
     /**

@@ -17,6 +17,7 @@ import com.palmergames.bukkit.towny.TownyAPI;
 import lombok.experimental.ExtensionMethod;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 
 @ExtensionMethod({Manager.class})
@@ -25,7 +26,7 @@ public class NPCTraderWindow {
         List.of(
             new Panel(
                 List.of(
-                    new ClickArea(0, 53,
+                    new ClickArea(new Margin(0, 0, 4, 8),
                         (event) -> {
                             var player = (Player) event.getWhoClicked();
                             var currentItem = event.getCurrentItem();
@@ -54,7 +55,7 @@ public class NPCTraderWindow {
         var town = GorodkiUniverse.getInstance().getNPCGorod(TownyAPI.getInstance().getTown(trader.getStoredLocation()));
         if (town == null) return;
 
-        var area = new ItemArea(0, 53, town.getStorage(), null);
+        var area = new ItemArea(new Margin(0, 0, 4, 8), town.getStorage(), null);
         NpcTradeWindow.getPanel("Магазин").getViewWith(
                 player,
                 Objects.requireNonNull(TownyAPI.getInstance().getTown(town.getUUID())).getName() + " " + trader.getId(),

@@ -1,20 +1,27 @@
 package economy.pcconomy.frontend;
 
 import com.palmergames.bukkit.towny.TownyAPI;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
+
 import lombok.experimental.ExtensionMethod;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
 import org.j1sk1ss.itemmanager.manager.Manager;
+
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.*;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +33,13 @@ import java.util.UUID;
 public class ShareholderWindow {
     public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
-            new Button(0, 20, "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
+            new Button(new Margin(0, 0, 2, 2), "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     ShareholderWindow.sharesWindow(player, 0);
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(3, 23, "Выставление акций", "Выставление акций города на рынок",
+            new Button(new Margin(0, 3, 2, 2), "Выставление акций", "Выставление акций города на рынок",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(player);
@@ -48,7 +55,7 @@ public class ShareholderWindow {
                         ShareholderWindow.townSharesWindow(player, town.getUUID());
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(6, 26, "Обналичить акции", "Будут обналичены акции в инвенторе игрока",
+            new Button(new Margin(0, 6, 2, 2), "Обналичить акции", "Будут обналичены акции в инвенторе игрока",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var inventory = player.getInventory().getStorageContents();
@@ -63,7 +70,7 @@ public class ShareholderWindow {
         ), "Акции-Меню", MenuSizes.ThreeLines, "\u10D6"),
 
         new Panel(Arrays.asList(
-            new ClickArea(0, 44, 
+            new ClickArea(new Margin(0, 0, 4, 8),
                 (event) -> {
                     var player = (Player)event.getWhoClicked();                
                     var item = event.getCurrentItem();
@@ -76,7 +83,7 @@ public class ShareholderWindow {
                     ShareholderWindow.acceptWindow(player, townId);
                 }),
 
-            new Button(45, 48, "Назад", "На одну страницу", 
+            new Button(new Margin(5, 0, 0, 3), "Назад", "На одну страницу",
                 (event) -> {
                     var page = Integer.parseInt(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (page >= 1) {
@@ -85,7 +92,7 @@ public class ShareholderWindow {
                     }
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(50, 53, "Вперёд", "На одну страницу", 
+            new Button(new Margin(5, 5, 0, 3), "Вперёд", "На одну страницу",
                 (event) -> {
                     var page = Integer.parseInt(Utils.getInventoryTitle(event).split(" ")[1]);
                     var player = (Player) event.getWhoClicked();
@@ -94,7 +101,7 @@ public class ShareholderWindow {
         ), "Акции-Список", MenuSizes.SixLines, "\u10D7"),
 
         new Panel(Arrays.asList(
-            new Button(0, 21, "Купить одну акцию", "",
+            new Button(new Margin(0, 0, 2, 3), "Купить одну акцию", "",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var town   = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
@@ -110,7 +117,7 @@ public class ShareholderWindow {
                     share.buyShare(player);
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(5, 26, "Продать одну акцию", "",
+            new Button(new Margin(0, 5, 2, 3), "Продать одну акцию", "",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     if (Share.isShare(player.getInventory().getItemInMainHand())) {
@@ -125,7 +132,7 @@ public class ShareholderWindow {
         ), "Акции-Города", MenuSizes.ThreeLines, "\u10D8"),
 
         new Panel(Arrays.asList(
-            new Button(0, 20, "Выставить на продажу", "Акции будут выставлены на продажу",
+            new Button(new Margin(0, 0, 2, 2), "Выставить на продажу", "Акции будут выставлены на продажу",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
@@ -149,7 +156,7 @@ public class ShareholderWindow {
                     player.sendMessage("Акции города выставлены на продажу");
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(3, 23, "Снять с продажи", "Акции будут сняты с продажи",
+            new Button(new Margin(0, 3, 2, 2), "Снять с продажи", "Акции будут сняты с продажи",
                 (event) -> {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
@@ -159,27 +166,20 @@ public class ShareholderWindow {
                     player.sendMessage("Акции города сняты с продажы");
                 }, Material.GOLD_INGOT, 7000),
 
-            new Slider(Arrays.asList(
-                27, 28, 29, 30, 31, 32, 33, 34, 35
-            ), Arrays.asList(
+            new Slider(new Margin(3, 0, 8, Direction.Horizontal), Arrays.asList(
                 "1шт.", "10шт.", "25шт.", "50шт.", "100шт.", "200шт.", "500шт.", "1000шт.", "10000шт."
             ), "Кол-во", "Кол-во акций", null, 17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
-            new Slider(Arrays.asList(
-                36, 37, 38, 39, 40, 41, 42, 43, 44
-            ), Arrays.asList(
+            new Slider(new Margin(4, 0, 8, Direction.Horizontal), Arrays.asList(
                 "5%", "15%", "20%", "30%", "40%", "50%", "60%", "70%", "100%"
             ), "Процент города, который будет выставлен на биржу", "Процент города", null,
                     17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
-            new Slider(Arrays.asList(
-                45, 46, 47, 48, 49, 50, 51, 52, 53
-            ), Arrays.asList(
+            new Slider(new Margin(5, 0, 8, Direction.Horizontal), Arrays.asList(
                 "100" + Cash.currencySigh, "500" + Cash.currencySigh, "1000" + Cash.currencySigh,
                 "1500" + Cash.currencySigh, "2000" + Cash.currencySigh, "2500" + Cash.currencySigh,
                 "5000" + Cash.currencySigh, "10000" + Cash.currencySigh, "20000" + Cash.currencySigh
             ), "Цена одной акции", "Цена акций", null, 17000, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT),
-            new Slider(Arrays.asList(
-                16, 17
-            ), Arrays.asList("Дивиденты", "Доля"), "Тип", "Тип акций", null, 17001, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT)
+            new Slider(new Margin(1, 7, 1, Direction.Horizontal),
+                    Arrays.asList("Дивиденты", "Доля"), "Тип", "Тип акций", null, 17001, 7000, Material.GOLD_INGOT, Material.GOLD_INGOT)
         ), "Акции-Выставление", MenuSizes.SixLines, "\u10D9")
     ));
 
@@ -192,13 +192,13 @@ public class ShareholderWindow {
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = windowNumber * 27; i < actions.length; i++)
             for (var j = i; j < i + Math.min(Math.max(actions.length - 27, 1), 27); j++) {
-                var share = PcConomy.GlobalShare.getTownShares((UUID) actions[j]).get(0);
+                var share = PcConomy.GlobalShare.getTownShares((UUID) actions[j]).getFirst();
 
                 var townName = "[удалён]";
                 var town = TownyAPI.getInstance().getTown((UUID) actions[j]);
                 if (town != null) townName = town.getName();
 
-                list.add(new LittleButton(j,
+                list.add(new LittleButton(new Margin(j, 0, 0),
                     "Акции города " + townName,
                     "Цена: " + share.getPrice() + Cash.currencySigh + "\n" +
                     "Доля собственности: " + share.getEquality() + "%\n" +
