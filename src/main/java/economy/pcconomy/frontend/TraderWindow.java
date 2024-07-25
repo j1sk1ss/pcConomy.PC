@@ -274,11 +274,11 @@ public class TraderWindow {
             ), "Trader", new LocalizationManager(PcConomy.Config.getString("ui.loc4trader")));
 
     public static void getWindow(Player player, Trader trader) {
-        TraderWindow.TraderMenu.getPanel("Торговец-Ассортимент", PcConomy.Config.getString("ui.language", "RU"))
+        TraderWindow.TraderMenu.getPanel("Торговец-Ассортимент", PcConomy.Config.getString("ui.language", "RU")).resize(9 * trader.Level)
             .getViewWith(
                 player,
                 "Торговец-Ассортимент " + trader.getNPC().getId(),
-                List.of(new ItemArea(0, 26, trader.Storage, null))
+                List.of(new ItemArea(0, Math.min(9 * trader.Level, 26), trader.Storage, null))
             );
     }
 

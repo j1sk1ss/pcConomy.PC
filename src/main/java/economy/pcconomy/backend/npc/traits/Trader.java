@@ -194,13 +194,17 @@ public class Trader extends Trait {
     }
 
     public void Buy(Player buyer) {
-        if (buyer.amountOfCashInInventory(false) < Bank.getValueWithVat(Cost)) return;
+        if (buyer.amountOfCashInInventory(false) < Bank.getValueWithVat(
+                PcConomy.Config.getDouble("npc.trader_cost", 3500d)
+        )) return;
 
         var license = PcConomy.GlobalLicense.getLicense(buyer.getUniqueId(), LicenseType.Market);
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        buyer.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(Cost), false);
+        buyer.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(
+                PcConomy.Config.getDouble("npc.trader_cost", 3500d)
+        ), false);
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");
         linkToNPC(npc);

@@ -52,7 +52,7 @@ public class MayorManagerWindow implements Listener {
                 }),
 
             new Button(27, 35, "Купить торговца", "Купить нового торговца",
-                (event) -> new Trader().Buy((Player) event.getWhoClicked()))
+                (event) -> new Trader().Buy((Player) event.getWhoClicked()), Material.GOLD_INGOT, 7000)
         ), "Город-Торговцы", MenuSizes.FourLines, "\u10D3"),
 
         new Panel(Arrays.asList(
@@ -74,8 +74,12 @@ public class MayorManagerWindow implements Listener {
                     if (trader == null) return;
 
                     var key = new NamespacedKey(PcConomy.getPlugin(PcConomy.class), "trader-move");
-                    if (!player.getPersistentDataContainer().has(key, PersistentDataType.INTEGER))
+                    if (!player.getPersistentDataContainer().has(key, PersistentDataType.INTEGER)) {
                         player.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, trader.getNPC().getId());
+                        player.closeInventory();
+                        player.sendMessage("[Перемещение] ПКМ по новому месту расположения.");
+                    }
+
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(6, 26, "Улучшить торговца", "Торговец будет улучшен (+9 слотов)",
@@ -93,7 +97,7 @@ public class MayorManagerWindow implements Listener {
                     trader.Level = Math.min(trader.Level + 1, 6);
                     player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
                 }, Material.GOLD_INGOT, 7000)
-        ), "Город-Торговцы-Управление", MenuSizes.ThreeLines, "\u10D4")
+        ), "Торговцы-Управление", MenuSizes.ThreeLines, "\u10D4")
     ), "Mayor", new LocalizationManager(PcConomy.Config.getString("ui.loc4mayor")));
 
     public static void generateWindow(Player player) {
@@ -111,7 +115,7 @@ public class MayorManagerWindow implements Listener {
     }
 
     public static void generateTradeControls(Player player, int traderId) {
-        TraderManager.getPanel("Город-Торговцы-Управление").getView(player, "Город-Торговцы-Управление " + traderId);
+        TraderManager.getPanel("Торговцы-Управление").getView(player, "Торговцы-Управление " + traderId);
     }
 
     @EventHandler

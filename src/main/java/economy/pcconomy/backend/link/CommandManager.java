@@ -48,8 +48,8 @@ public class CommandManager implements CommandExecutor {
             }
 
             case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.getBank().getBudget() + "$\n" +
-                        "Global VAT: " + PcConomy.GlobalBank.getBank().getVat() + "%\n" +
-                        "Deposit percent: " + PcConomy.GlobalBank.getBank().getDepositPercent() + "%\n" +
+                        "Global VAT: " + PcConomy.GlobalBank.getBank().getVat() * 100 + "%\n" +
+                        "Deposit percent: " + PcConomy.GlobalBank.getBank().getDepositPercent() * 100 + "%\n" +
                         "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n");
 
             case "set_day_bank_budget" -> PcConomy.GlobalBank.getBank().setDayWithdrawBudget((Double.parseDouble(args[0])));
