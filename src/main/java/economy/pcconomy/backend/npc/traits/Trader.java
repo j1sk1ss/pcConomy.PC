@@ -1,6 +1,5 @@
 package economy.pcconomy.backend.npc.traits;
 
-import com.google.gson.annotations.Expose;
 import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
@@ -9,6 +8,9 @@ import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
 import economy.pcconomy.frontend.TraderWindow;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -16,8 +18,11 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+
 import net.kyori.adventure.text.TextComponent;
+
 import net.potolotcraft.gorodki.GorodkiUniverse;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -31,7 +36,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 
-// TODO: Fix serialization by Expose (or something like that) or by moving data to another dummy class
 @TraitName("Trader")
 @ExtensionMethod({Manager.class, Cash.class})
 public class Trader extends Trait {
@@ -42,11 +46,25 @@ public class Trader extends Trait {
         SpecialList = new ArrayList<>();
         Margin      = 0d;
         Cost        = 0d;
-        IsRanted    = false;
+        Ranted      = false;
         HomeTown    = null;
         Owner       = null;
         Term        = LocalDateTime.now().toString();
         Level       = 1;
+    }
+
+    public Trader(TraderData data) {
+        super("Trader");
+
+        Storage  = data.getStorage();
+        Revenue  = data.getRevenue();
+        Margin   = data.getMargin();
+        Cost     = data.getCost();
+        Ranted   = data.isRanted();
+        HomeTown = data.getHomeTown();
+        Owner    = data.getOwner();
+        Term     = data.getTerm();
+        Level    = data.getLevel();
     }
 
     public Trader(List<ItemStack> storage, double revenue, double margin, double cost, boolean isRanted,
@@ -57,23 +75,23 @@ public class Trader extends Trait {
         Revenue  = revenue;
         Margin   = margin;
         Cost     = cost;
-        IsRanted = isRanted;
+        Ranted   = isRanted;
         HomeTown = homeTown;
         Owner    = owner;
         Term     = term;
         Level    = level;
     }
 
-    @Expose public List<ItemStack> Storage;
-    @Expose public List<UUID> SpecialList;
-    @Expose public double Revenue;
-    @Expose public double Margin;
-    @Expose public double Cost;
-    @Expose public boolean IsRanted;
-    @Expose public String Term;
-    @Expose public UUID HomeTown;
-    @Expose public UUID Owner;
-    @Expose public int Level;
+    @Getter @Setter private List<ItemStack> Storage;
+    @Getter @Setter private List<UUID> SpecialList;
+    @Getter @Setter private double Revenue;
+    @Getter @Setter private double Margin;
+    @Getter @Setter private double Cost;
+    @Getter @Setter private boolean Ranted;
+    @Getter @Setter private String Term;
+    @Getter @Setter private UUID HomeTown;
+    @Getter @Setter private UUID Owner;
+    @Getter @Setter private int Level;
 
     private transient final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
@@ -92,10 +110,10 @@ public class Trader extends Trait {
         }
 
         // We stole all moneys to town and delete all resources if rant is over
-        if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && IsRanted) {
+        if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && Ranted) {
             GorodkiUniverse.getInstance().getGorod(HomeTown).changeBudget(Revenue);
 
-            IsRanted = false;
+            Ranted = false;
             Owner    = null;
             Revenue  = 0;
             Storage.clear();
@@ -105,7 +123,7 @@ public class Trader extends Trait {
 
         var player = event.getClicker();
         try {
-            if (IsRanted) {
+            if (Ranted) {
                 if (Owner.equals(player.getUniqueId())) TraderWindow.getOwnerWindow(player, this);
                 else TraderWindow.getWindow(player, this);
             }
@@ -130,7 +148,7 @@ public class Trader extends Trait {
         var playerUUID = player.getUniqueId();
 
         try {
-            if (IsRanted) {
+            if (Ranted) {
                 if (Storage.size() >= (event.getNPC().getOrAddTrait(Trader.class).Level * 9)) {
                     player.sendMessage("Склад торговца переполнен!");
                     return;

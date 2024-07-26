@@ -74,9 +74,9 @@ public class CommandManager implements CommandExecutor {
                 for (var trader : CitizensAPI.getNPCRegistry()) {
                     if (trader.hasTrait(Trader.class)) {
                         var trait = trader.getOrAddTrait(Trader.class);
-                        for (var resource : trait.Storage) {
-                            if (!prices.containsKey(resource)) prices.put(resource, (Double) resource.getDoubleFromContainer("item-price"));
-                            else prices.put(resource, (Double) ((prices.get(resource) + resource.getDoubleFromContainer("item-price")) / 2));
+                        for (var resource : trait.getStorage()) {
+                            if (!prices.containsKey(resource)) prices.put(resource, resource.getDoubleFromContainer("item-price"));
+                            else prices.put(resource, ((prices.get(resource) + resource.getDoubleFromContainer("item-price")) / 2));
                         }
                     }
                 }

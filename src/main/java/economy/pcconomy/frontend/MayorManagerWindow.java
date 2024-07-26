@@ -65,7 +65,7 @@ public class MayorManagerWindow implements Listener {
                     var title  = Utils.getInventoryTitle(event);
                     var trader = getTraderFromTitle(title);
                     if (trader == null) return;
-                    if (trader.IsRanted) return;
+                    if (trader.isRanted()) return;
 
                     trader.destroy();
                 }, Material.GOLD_INGOT, 7000),
@@ -92,13 +92,13 @@ public class MayorManagerWindow implements Listener {
                     var title  = Utils.getInventoryTitle(event);
                     var trader = getTraderFromTitle(title);
                     if (trader == null) return;
-                    if (trader.Level >= 6) return;
+                    if (trader.getLevel() >= 6) return;
 
                     var inventoryAmount = player.amountOfCashInInventory(false);
-                    var price = NpcManager.traderCost * trader.Level;
+                    var price = NpcManager.traderCost * trader.getLevel();
                     if (Bank.getValueWithVat(price) > inventoryAmount) return;
 
-                    trader.Level = Math.min(trader.Level + 1, 6);
+                    trader.setLevel(Math.min(trader.getLevel() + 1, 6));
                     player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
                 }, Material.GOLD_INGOT, 7000)
         ), "Торговцы-Управление", MenuSizes.ThreeLines, "\u10D4")
@@ -110,8 +110,8 @@ public class MayorManagerWindow implements Listener {
         for (var i = 0; i < Math.min(27, town.getTraders().size()); i++) {
             var trader = CitizensAPI.getNPCRegistry().getById(town.getTraders().get(i)).getOrAddTrait(Trader.class);
             components.add(new Icon(new Margin(i, 0, 0), town.getTraders().get(i) + "",
-                "Ranted: " + trader.IsRanted + "\nMargin: " + trader.Margin +
-                        "\nRant price: " + trader.Cost,
+                "Ranted: " + trader.isRanted() + "\nMargin: " + trader.getMargin() +
+                        "\nRant price: " + trader.getCost(),
                     Material.GOLD_INGOT, 8000 + ThreadLocalRandom.current().nextInt(0, 7)));
         }
 
