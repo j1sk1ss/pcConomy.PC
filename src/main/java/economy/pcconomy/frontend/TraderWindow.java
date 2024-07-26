@@ -82,7 +82,7 @@ public class TraderWindow {
                             }
                         }, Material.GOLD_INGOT, 7000),
 
-                    new Button(new Margin(0, 6, 2, 1), "Окончить аренду", "Окончить аренду\nПрибыль и товары будут возвращены",
+                    new Button(new Margin(0, 7, 2, 1), "Окончить аренду", "Окончить аренду\nПрибыль и товары будут возвращены",
                         (event) -> {
                             var player = (Player)event.getWhoClicked();
                             var title  = Utils.getInventoryTitle(event);

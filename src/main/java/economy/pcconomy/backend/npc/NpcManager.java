@@ -30,7 +30,7 @@ import java.util.Map;
 
 @ExtensionMethod({Cash.class})
 public class NpcManager extends Loadable implements Listener {
-    public final Map<Integer, Trader> Npc = new Hashtable<>();
+    public Map<Integer, Trader> Npc = new Hashtable<>();
     public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
 
     @EventHandler
@@ -53,7 +53,7 @@ public class NpcManager extends Loadable implements Listener {
     public void SaveNpc(CitizensDisableEvent event) {
         try {
             System.out.print("[PcConomy] Traits saving.\n");
-            PcConomy.GlobalNPC.save("plugins\\PcConomy\\" + PcConomy.GlobalNPC.getName());
+            save("plugins\\PcConomy\\" + getName());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -105,7 +105,9 @@ public class NpcManager extends Loadable implements Listener {
     public void save(String fileName) throws IOException {
         Npc.clear();
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry())
-            if (npc.hasTrait(Trader.class)) Npc.put(npc.getId(), npc.getOrAddTrait(Trader.class));
+            if (npc.hasTrait(Trader.class)) {
+                Npc.put(npc.getId(), npc.getOrAddTrait(Trader.class));
+            }
 
         var writer = new FileWriter(fileName + ".json", false);
         new GsonBuilder()

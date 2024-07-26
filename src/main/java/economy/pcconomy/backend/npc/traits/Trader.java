@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 
+// TODO: Fix serialization by Expose (or something like that) or by moving data to another dummy class
 @TraitName("Trader")
 @ExtensionMethod({Manager.class, Cash.class})
 public class Trader extends Trait {
