@@ -114,6 +114,7 @@ public class BankerWindow {
                 null, Material.GOLD_INGOT,
                 thing.equals("\n-") ? 7001 : 7002
             );
+
             button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(j)), "item-bank-value");
             list.add(button);
         }

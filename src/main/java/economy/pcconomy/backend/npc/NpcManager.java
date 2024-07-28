@@ -12,8 +12,8 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.CitizensDisableEvent;
 import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.trait.Trait;
-
 import net.citizensnpcs.api.trait.TraitInfo;
+
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

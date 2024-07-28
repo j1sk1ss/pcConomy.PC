@@ -56,15 +56,17 @@ public class Trader extends Trait {
     public Trader(TraderData data) {
         super("Trader");
 
-        Storage  = data.getStorage();
-        Revenue  = data.getRevenue();
-        Margin   = data.getMargin();
-        Cost     = data.getCost();
-        Ranted   = data.isRanted();
-        HomeTown = data.getHomeTown();
-        Owner    = data.getOwner();
-        Term     = data.getTerm();
-        Level    = data.getLevel();
+        Storage     = data.getStorage();
+        Revenue     = data.getRevenue();
+        Margin      = data.getMargin();
+        Cost        = data.getCost();
+        Ranted      = data.isRanted();
+        HomeTown    = data.getHomeTown();
+        Owner       = data.getOwner();
+        Term        = data.getTerm();
+        Level       = data.getLevel();
+
+        SpecialList = new ArrayList<>();
     }
 
     public Trader(List<ItemStack> storage, double revenue, double margin, double cost, boolean isRanted,
@@ -80,6 +82,8 @@ public class Trader extends Trait {
         Owner    = owner;
         Term     = term;
         Level    = level;
+
+        SpecialList = new ArrayList<>();
     }
 
     @Getter @Setter private List<ItemStack> Storage;
@@ -93,7 +97,7 @@ public class Trader extends Trait {
     @Getter @Setter private UUID Owner;
     @Getter @Setter private int Level;
 
-    private transient final Dictionary<UUID, Integer> chat = new Hashtable<>();
+    private final Dictionary<UUID, Integer> chat = new Hashtable<>();
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
@@ -113,9 +117,9 @@ public class Trader extends Trait {
         if (LocalDateTime.now().isAfter(LocalDateTime.parse(Term)) && Ranted) {
             GorodkiUniverse.getInstance().getGorod(HomeTown).changeBudget(Revenue);
 
-            Ranted = false;
-            Owner    = null;
-            Revenue  = 0;
+            Ranted  = false;
+            Owner   = null;
+            Revenue = 0;
             Storage.clear();
 
             return;
@@ -154,9 +158,9 @@ public class Trader extends Trait {
                     return;
                 }
 
-                if (Owner.equals(playerUUID) && Storage.size() < event.getNPC().getOrAddTrait(Trader.class).Level) {
+                if (Owner.equals(playerUUID) && Storage.size() < event.getNPC().getOrAddTrait(Trader.class).Level * 9) {
                     player.sendMessage("Напишите свою цену. Учтите наценку города в " + Margin * 100 + "%");
-                    chat.put(playerUUID, (Integer) event.getNPC().getId());
+                    chat.put(playerUUID, event.getNPC().getId());
                 }
 
                 return;
@@ -164,7 +168,7 @@ public class Trader extends Trait {
 
             if (Objects.requireNonNull(TownyAPI.getInstance().getTown(HomeTown)).getMayor().getUUID().equals(playerUUID)) {
                 player.sendMessage("Удалить торговца? (д/н)");
-                chat.put(playerUUID, (Integer) event.getNPC().getId());
+                chat.put(playerUUID, event.getNPC().getId());
             }
         } catch (NullPointerException exception) {
             player.sendMessage("Ошибка, мэр города не был найден! (2)");

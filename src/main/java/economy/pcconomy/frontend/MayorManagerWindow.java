@@ -68,6 +68,7 @@ public class MayorManagerWindow implements Listener {
                     if (trader.isRanted()) return;
 
                     trader.destroy();
+                    event.getWhoClicked().closeInventory();
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(new Margin(0, 3, 2, 2), "Переместить торговца", "Торговец будет перемещён в место вашего клика",

@@ -5,9 +5,6 @@ import economy.pcconomy.backend.cash.Wallet;
 
 import lombok.experimental.ExtensionMethod;
 
-import net.kyori.adventure.text.Component;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 
 import org.j1sk1ss.itemmanager.manager.Manager;
 
@@ -53,10 +49,9 @@ public class WalletWindow implements Listener {
                             if (wallet == null) return;
 
                             player.getInventory().setItemInMainHand(null);
-                            var option = event.getCurrentItem();
+                            var option = event.getInventory().getItem(event.getSlot());
                             if (option == null) return;
 
-                            if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-wallet-value");
 
                             player.takeCashFromPlayer(Math.abs(amount), true);
@@ -85,10 +80,9 @@ public class WalletWindow implements Listener {
                             if (wallet == null) return;
 
                             player.getInventory().setItemInMainHand(null);
-                            var option = event.getCurrentItem();
+                            var option = event.getInventory().getItem(event.getSlot());
                             if (option == null) return;
 
-                            if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-wallet-value");
 
                             player.giveCashToPlayer(Math.abs(amount), true);
@@ -104,48 +98,57 @@ public class WalletWindow implements Listener {
     );
 
     public static void putWindow(Player player, Wallet wallet) {
-        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк-Внесение"));
         var cashInInventory = Math.min(player.amountOfCashInInventory(true), wallet.getCapacity() - wallet.getAmount());
-
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
-        var button = new Icon(new Margin(0, 0,0), "Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, Material.PAPER, 17000);
-        button.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-wallet-value"); // TODO: DATA MODEL
+        var icon = new Icon(
+            new Margin(0, 0,0),
+            "Положить все средства", -cashInInventory + Cash.currencySigh, Material.GOLD_INGOT, 7002
+        );
 
+        icon.setDouble2Container(-cashInInventory, "item-wallet-value");
         for (var i = 0; i < 8; i++)
-            if (cashInInventory >= Cash.Denomination.get(i)) components.add(printButtons("\n-", window, i));
+            if (cashInInventory >= Cash.Denomination.get(i)) components.add(printButtons(-1, i));
 
-        WalletWindow.getPanel("Кошелёк-Снятие").getViewWith(player, components);
+        components.add(icon);
+        WalletWindow.getPanel("Кошелёк-Внесение").getViewWith(player, components);
     }
 
     public static void withdrawWindow(Player player, Wallet wallet) {
-        var window = Bukkit.createInventory(player, 9, Component.text("Кошелёк-Снятие"));
         var cashInWallet = wallet.getAmount();
-
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
-        var button = new Icon(new Margin(0, 0,0), "Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.PAPER, 17000);
-        button.setDouble2Container(cashInWallet, "item-wallet-value"); // TODO: DATA MODEL
-        components.add(button);
+        var icon = new Icon(
+            new Margin(0, 0,0),
+            "Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.GOLD_INGOT, 7001
+        );
 
+        icon.setDouble2Container(cashInWallet, "item-wallet-value");
         for (var i = 0; i < 8; i++)
-            if (cashInWallet >= Cash.Denomination.get(i)) components.add(printButtons("\n", window, i));
+            if (cashInWallet >= Cash.Denomination.get(i)) components.add(printButtons(1, i));
 
+        components.add(icon);
         WalletWindow.getPanel("Кошелёк-Снятие").getViewWith(player, components);
     }
 
-    private static org.j1sk1ss.menuframework.objects.interactive.Component printButtons(String thing, Inventory window, int pos) {
-        var button = new Icon(new Margin(pos, 0,0), "Действия", thing + Cash.Denomination.get(pos) + Cash.currencySigh, Material.PAPER, 17000);
-        button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(pos)), "item-wallet-value");
-        return button;
+    private static org.j1sk1ss.menuframework.objects.interactive.Component printButtons(int positive, int pos) {
+        var icon = new Icon(
+            new Margin(pos, 0,0),
+            "Действия", (positive * Cash.Denomination.get(pos)) + Cash.currencySigh, Material.GOLD_INGOT, 7002
+        );
+
+        icon.setDouble2Container(positive * Cash.Denomination.get(pos), "item-wallet-value");
+        return icon;
     }
 
     @EventHandler
     public void onWalletUse(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (event.getAction() != Action.LEFT_CLICK_AIR &&
-                event.getAction() != Action.RIGHT_CLICK_AIR) return;
+            event.getAction() != Action.RIGHT_CLICK_AIR) return;
 
         var player = event.getPlayer();
         var item = player.getInventory().getItemInMainHand();
+        if (item.getItemMeta() == null) return;
+
         var wallet = Wallet.isWallet(item) ? new Wallet(item) : null;
         if (wallet != null) {
             switch (event.getAction()) {
