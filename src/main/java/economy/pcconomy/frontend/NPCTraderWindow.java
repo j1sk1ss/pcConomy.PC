@@ -27,7 +27,7 @@ public class NPCTraderWindow {
             new Panel(
                 List.of(
                     new ClickArea(new Margin(0, 0, 4, 8),
-                        (event) -> {
+                        (event, menu) -> {
                             var player = (Player) event.getWhoClicked();
                             var currentItem = event.getCurrentItem();
                             var title = Utils.getInventoryTitle(event);

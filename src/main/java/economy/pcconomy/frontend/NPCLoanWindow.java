@@ -34,13 +34,13 @@ public class NPCLoanWindow {
     public static final MenuWindow LoanMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
             new Button(new Margin(0, 0, 2, 3), "Взять кредит", "Взять кредит у банка",
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player)event.getWhoClicked();
-                    NPCLoanWindow.LoanMenu.getPanel("Кредит-Взятие").getView(player);
+                    menu.getPanel("Кредит-Взятие").getView(player);
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(new Margin(0, 5, 2, 3), "Погасить кредит", "Погасить кредит банка",
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player)event.getWhoClicked();
                     var code = Loan.payOffADebt(player, PcConomy.GlobalBank.getBank());
                     player.closeInventory();
@@ -54,9 +54,9 @@ public class NPCLoanWindow {
             new Slider(new Margin(2, 0, 8, Direction.Horizontal), Arrays.asList(
                 "20 дн.", "30 дн.", "40 дн.", "50 дн.", "60 дн.", "70 дн.", "80 дн.", "90 дн.", "100 дн."
             ), "Размер", "Время выплаты",
-                (event) -> {
-                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Взятие");
-                    var bar = loanPanel.getBars("Размер кредита");
+                (event, menu) -> {
+                    var loanPanel = menu.getPanel("Кредит-Взятие");
+                    var bar = loanPanel.getComponent("Размер кредита", Bar.class);
                     var player = (Player)event.getWhoClicked();
                     var value = 0;
                     var options = new ArrayList<String>();
@@ -85,10 +85,10 @@ public class NPCLoanWindow {
                 Arrays.asList(
                 "", "", "", "", "", "", "", "", ""
             ),
-                (event) -> {
+                (event, menu) -> {
                     var player    = (Player) event.getWhoClicked();
-                    var loanPanel = NPCLoanWindow.LoanMenu.getPanel("Кредит-Взятие");
-                    var durSlider = loanPanel.getSliders("Время выплаты").getChose(event);
+                    var loanPanel = menu.getPanel("Кредит-Взятие");
+                    var durSlider = loanPanel.getComponent("Время выплаты", Slider.class).getChose(event);
                     var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().getFirst().split(" ")[0]);
                     var agreement = event.getCurrentItem().getLoreLines().get(1);
 

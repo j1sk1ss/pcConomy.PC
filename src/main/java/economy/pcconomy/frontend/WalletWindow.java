@@ -36,7 +36,7 @@ public class WalletWindow implements Listener {
                 List.of(
                     new ClickArea(
                         new Margin(0, 0, 8, Direction.Horizontal),
-                        (event) -> {
+                        (event, menu) -> {
                             var player = (Player) event.getWhoClicked();
                             var currentItem = player.getInventory().getItemInMainHand();
                             if (currentItem.getAmount() > 1 && Wallet.isWallet(currentItem)) {
@@ -67,7 +67,7 @@ public class WalletWindow implements Listener {
                 List.of(
                     new ClickArea(
                         new Margin(0, 0, 8, Direction.Horizontal),
-                        (event) -> {
+                        (event, menu) -> {
                             var player = (Player) event.getWhoClicked();
                             var currentItem = player.getInventory().getItemInMainHand();
                             if (currentItem.getAmount() > 1 && Wallet.isWallet(currentItem)) {

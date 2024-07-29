@@ -34,13 +34,13 @@ public class ShareholderWindow {
     public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
             new Button(new Margin(0, 0, 2, 2), "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
                     ShareholderWindow.sharesWindow(player, 0);
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(new Margin(0, 3, 2, 2), "Выставление акций", "Выставление акций города на рынок",
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(player);
                     if (town != null) {
@@ -56,7 +56,7 @@ public class ShareholderWindow {
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(new Margin(0, 6, 2, 2), "Обналичить акции", "Будут обналичены акции в инвенторе игрока",
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
                     var inventory = player.getInventory().getStorageContents();
 
@@ -71,7 +71,7 @@ public class ShareholderWindow {
 
         new Panel(Arrays.asList(
             new ClickArea(new Margin(0, 0, 4, 8),
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player)event.getWhoClicked();                
                     var item = event.getCurrentItem();
                     if (item == null) return;
@@ -84,7 +84,7 @@ public class ShareholderWindow {
                 }),
 
             new Button(new Margin(5, 0, 0, 3), "Назад", "На одну страницу",
-                (event) -> {
+                (event, menu) -> {
                     var page = Integer.parseInt(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (page >= 1) {
                         var player = (Player) event.getWhoClicked();
@@ -93,7 +93,7 @@ public class ShareholderWindow {
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(new Margin(5, 5, 0, 3), "Вперёд", "На одну страницу",
-                (event) -> {
+                (event, menu) -> {
                     var page = Integer.parseInt(Utils.getInventoryTitle(event).split(" ")[1]);
                     var player = (Player) event.getWhoClicked();
                     ShareholderWindow.sharesWindow(player, page + 1);
@@ -101,8 +101,8 @@ public class ShareholderWindow {
         ), "Акции-Список", MenuSizes.SixLines, "\u10D7"),
 
         new Panel(Arrays.asList(
-            new Button(new Margin(0, 0, 2, 3), "Купить одну акцию", "",
-                (event) -> {
+            new Button(new Margin(0, 5, 2, 3), "Купить одну акцию", "",
+                (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
                     var town   = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     assert town != null;
@@ -117,8 +117,8 @@ public class ShareholderWindow {
                     share.buyShare(player);
                 }, Material.GOLD_INGOT, 7000),
 
-            new Button(new Margin(0, 5, 2, 3), "Продать одну акцию", "",
-                (event) -> {
+            new Button(new Margin(0, 0, 2, 3), "Продать одну акцию", "",
+                (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
                     if (Share.isShare(player.getInventory().getItemInMainHand())) {
                         var share = new Share(player.getInventory().getItemInMainHand());
@@ -133,18 +133,19 @@ public class ShareholderWindow {
 
         new Panel(Arrays.asList(
             new Button(new Margin(0, 0, 2, 2), "Выставить на продажу", "Акции будут выставлены на продажу",
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
-                    var townSharesPanel = ShareholderWindow.ShareHolderMenu.getPanel("Акции-Выставление");
+                    var townSharesPanel = menu.getPanel("Акции-Выставление");
                     var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (town == null) return;
 
-                    var countSlider   = townSharesPanel.getSliders("Кол-во акций").getChose(event);
-                    var percentSlider = townSharesPanel.getSliders("Процент города").getChose(event);
-                    var costSlider    = townSharesPanel.getSliders("Цена акций").getChose(event);
-                    var typeSlider    = townSharesPanel.getSliders("Тип акций").getChose(event);
+                    var countSlider   = townSharesPanel.getComponent("Кол-во акций", Slider.class).getChose(event);
+                    var percentSlider = townSharesPanel.getComponent("Процент города", Slider.class).getChose(event);
+                    var costSlider    = townSharesPanel.getComponent("Цена акций", Slider.class).getChose(event);
+                    var typeSlider    = townSharesPanel.getComponent("Тип акций", Slider.class).getChose(event);
 
-                    if (costSlider.equals("none") || countSlider.equals("none") || percentSlider.equals("none") || typeSlider.equals("none")) return;
+                    if (costSlider.equals(Slider.SliderNone) || countSlider.equals(Slider.SliderNone) ||
+                            percentSlider.equals(Slider.SliderNone) || typeSlider.equals(Slider.SliderNone)) return;
                     PcConomy.GlobalShare.exposeShares(
                             town.getUUID(),
                             Double.parseDouble(costSlider.replace(Cash.currencySigh, "")),
@@ -157,7 +158,7 @@ public class ShareholderWindow {
                 }, Material.GOLD_INGOT, 7000),
 
             new Button(new Margin(0, 3, 2, 2), "Снять с продажи", "Акции будут сняты с продажи",
-                (event) -> {
+                (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (town == null) return;

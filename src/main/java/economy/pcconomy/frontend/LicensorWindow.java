@@ -22,19 +22,19 @@ import java.util.List;
 public class LicensorWindow {
     public static final MenuWindow LicenseWindow = new MenuWindow(List.of(new Panel(Arrays.asList(
         new Button(new Margin(0, 0, 2, 1), "Лицензия на создание торговой зоны",LicenseManager.marketLicensePrice + Cash.currencySigh,
-            (event) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
+            (event, menu) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
                     LicenseType.Market, LicenseManager.marketLicensePrice), Material.GOLD_INGOT, 7000),
 
         new Button(new Margin(0, 2, 2, 1), "Лицензия на торговую деятельность", LicenseManager.tradeLicensePrice + Cash.currencySigh,
-            (event) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
+            (event, menu) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
                     LicenseType.Trade, LicenseManager.tradeLicensePrice), Material.GOLD_INGOT, 7000),
 
         new Button(new Margin(0, 5, 2, 1), "Лицензия на кредитную деятельность", LicenseManager.loanLicensePrice + Cash.currencySigh,
-            (event) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
+            (event, menu) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
                     LicenseType.Loan, LicenseManager.loanLicensePrice), Material.GOLD_INGOT, 7000),
 
         new Button(new Margin(0, 7, 2, 1), "Лицензия на доступ к кредитной истории", LicenseManager.loanHistoryLicensePrice + Cash.currencySigh,
-            (event) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
+            (event, menu) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
                     LicenseType.LoanHistory, LicenseManager.loanHistoryLicensePrice), Material.GOLD_INGOT, 7000)
     ), "Мир-Лицензии", MenuSizes.ThreeLines, "\u10D1")), "License",
             new LocalizationManager(PcConomy.Config.getString("ui.loc4lic")));
