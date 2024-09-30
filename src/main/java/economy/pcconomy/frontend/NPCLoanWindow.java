@@ -89,7 +89,7 @@ public class NPCLoanWindow {
                     var player    = (Player) event.getWhoClicked();
                     var loanPanel = menu.getPanel("Кредит-Взятие");
                     var durSlider = loanPanel.getComponent("Время выплаты", Slider.class).getChose(event);
-                    var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().getFirst().split(" ")[0]);
+                    var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().get(0).split(" ")[0]);
                     var agreement = event.getCurrentItem().getLoreLines().get(1);
 
                     if (durSlider.equals("none")) return;

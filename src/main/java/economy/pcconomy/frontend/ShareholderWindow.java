@@ -193,7 +193,7 @@ public class ShareholderWindow {
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = windowNumber * 27; i < actions.length; i++)
             for (var j = i; j < i + Math.min(Math.max(actions.length - 27, 1), 27); j++) {
-                var share = PcConomy.GlobalShare.getTownShares((UUID) actions[j]).getFirst();
+                var share = PcConomy.GlobalShare.getTownShares((UUID) actions[j]).get(0);
 
                 var townName = "[удалён]";
                 var town = TownyAPI.getInstance().getTown((UUID) actions[j]);

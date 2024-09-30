@@ -35,7 +35,7 @@ public class Wallet {
      * @param wallet Wallet itemStack
      */
     public Wallet(ItemStack wallet) {
-        Amount   = Double.parseDouble(wallet.getLoreLines().getFirst().split(" ")[0]);
+        Amount   = Double.parseDouble(wallet.getLoreLines().get(0).split(" ")[0]);
         Level    = Integer.parseInt(wallet.getLoreLines().get(1).split(" ")[1]);
         Capacity = Level * 500d;
         Body     = wallet;
