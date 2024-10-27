@@ -152,7 +152,7 @@ public class WalletWindow implements Listener {
         var wallet = Wallet.isWallet(item) ? new Wallet(item) : null;
         if (wallet != null) {
             switch (event.getAction()) {
-                case LEFT_CLICK_AIR ->putWindow(player, wallet);
+                case LEFT_CLICK_AIR -> putWindow(player, wallet);
                 case RIGHT_CLICK_AIR -> withdrawWindow(player, wallet);
                 default -> throw new IllegalArgumentException("Unexpected value: " + event.getAction());
             }

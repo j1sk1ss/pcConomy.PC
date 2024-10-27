@@ -27,7 +27,7 @@ import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 @ExtensionMethod({Manager.class, Cash.class})
 public class BankerWindow {
-    public static MenuWindow BankWindow = new MenuWindow(
+    private static final MenuWindow BankWindow = new MenuWindow(
         List.of(
             new Panel(
                 Arrays.asList(
@@ -64,7 +64,7 @@ public class BankerWindow {
         regenerateWindow(player, null);
     }
 
-    public static void regenerateWindow(Player player, Inventory inventory) {
+    private static void regenerateWindow(Player player, Inventory inventory) {
         var enableBalance   = PcConomy.GlobalBank.getBank().getDayWithdrawBudget();
         var playerBalance   = Balance.getBalance(player);
         var cashInInventory = player.amountOfCashInInventory(false);
@@ -129,23 +129,17 @@ public class BankerWindow {
             var currentChar = charArray[i - 9];
             if (currentChar == 'E') {
                 list.add(
-                    new Icon(
-                        new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7014
-                    )
+                    new Icon(new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7014)
                 );
             }
             else if (currentChar == '.') {
                 list.add(
-                    new Icon(
-                        new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7013
-                    )
+                    new Icon(new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7013)
                 );
             }
             else {
                 list.add(
-                    new Icon(
-                        new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7003 + Character.getNumericValue(currentChar)
-                    )
+                    new Icon(new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7003 + Character.getNumericValue(currentChar))
                 );
             }
         }

@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.UUID;
 
 
-@Setter
-@Getter
+/**
+ * This class designed for storing complex data of Trait class
+ */
+@Setter @Getter
 public class TraderData {
     public TraderData(Trader trader) {
         Storage     = trader.getStorage();
@@ -24,9 +26,10 @@ public class TraderData {
         Level       = trader.getLevel();
     }
 
-    public TraderData(List<ItemStack> storage, List<UUID> specialList, double revenue,
-                      double margin, double cost, boolean isRanted, String term,
-                      UUID home, UUID owner, int level) {
+    public TraderData(
+            List<ItemStack> storage, List<UUID> specialList, double revenue, double margin, double cost,
+            boolean isRanted, String term, UUID home, UUID owner, int level
+    ) {
         Storage     = storage;
         SpecialList = specialList;
         Revenue     = revenue;

@@ -1,10 +1,12 @@
 package economy.pcconomy.backend.cash;
 
 import lombok.experimental.ExtensionMethod;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
 import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 
@@ -56,7 +58,7 @@ public class Cash {
      * @return ItemStack object
      */
     public static ItemStack createCashObject(double amount, int count) {
-        var cashBody = new Item(currencyName, "" + amount + currencySigh, Material.PAPER, count, 17000); //TODO: DATA MODEL
+        var cashBody = new Item(currencyName, amount + currencySigh, Material.PAPER, count, 17000); //TODO: DATA MODEL
         cashBody.setDouble2Container(amount, "cash-value");
         return cashBody;
     }
@@ -151,7 +153,7 @@ public class Cash {
         for (int i = 0; i < Denomination.size(); i++)
             while (amount - Denomination.get(i) >= 0) {
                 amount -= Denomination.get(i);
-                change.set(i, Integer.valueOf(change.get(i) + 1));
+                change.set(i, change.get(i) + 1);
             }
 
         return change;

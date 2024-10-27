@@ -27,7 +27,7 @@ import java.util.*;
 
 @ExtensionMethod({Manager.class, Cash.class})
 public class TraderWindow {
-        public static MenuWindow TraderMenu =
+        private static final MenuWindow TraderMenu =
             new MenuWindow(Arrays.asList(
                 new Panel(List.of(
                     new ClickArea(new Margin(0, 0, 5, 8),
@@ -300,43 +300,9 @@ public class TraderWindow {
             );
     }
 
-    public static void getExtendedRantedWindow(Player player, Trader trader) {
-        var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
-        for (var i = 0; i < 9; i++)
-            components.add(
-                new LittleButton(new Margin(i, 0, 0),
-                    (i + 1) + " дней",
-                    trader.getCost() * (i + 1) + Cash.currencySigh,
-                    null, Material.GOLD_INGOT, 7000)
-            );
-
-        TraderMenu.getPanel("Торговец-Время-Аренда", PcConomy.Config.getString("ui.language", "RU")).getViewWith(
-            player,
-            "Торговец-Время-Аренда " + trader.getNPC().getId(),
-            components);
-    }
-
     public static void getMayorWindow(Player player, Trader trader) {
         TraderMenu.getPanel("Торговец-Владелец", PcConomy.Config.getString("ui.language", "RU"))
             .getView(player, "Торговец-Владелец " + trader.getNPC().getId());
-    }
-
-    public static void getPricesWindow(Player player, Trader trader) {
-        TraderMenu.getPanel("Торговец-Цена", PcConomy.Config.getString("ui.language", "RU"))
-            .getView(player, "Торговец-Цена " + trader.getNPC().getId());
-    }
-
-    public static void getMarginWindow(Player player, Trader trader) {
-        TraderMenu.getPanel("Торговец-Процент", PcConomy.Config.getString("ui.language", "RU"))
-            .getView(player, "Торговец-Процент " + trader.getNPC().getId());
-    }
-
-    public static void getAcceptWindow(Player player, ItemStack item, Trader trader) {
-        TraderMenu.getPanel("Торговец-Покупка", PcConomy.Config.getString("ui.language", "RU")).getViewWith(
-            player,
-            "Торговец-Покупка " + trader.getNPC().getId(),
-            List.of(new Icon(new Margin(13, 0, 0), item))
-        );
     }
 
     public static Trader getTraderFromTitle(String name) {
@@ -348,7 +314,41 @@ public class TraderWindow {
         }
     }
 
-    public static void rantTrader(Trader trader, int days, Player ranter) {
+    private static void getExtendedRantedWindow(Player player, Trader trader) {
+        var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
+        for (var i = 0; i < 9; i++)
+            components.add(
+                    new LittleButton(new Margin(i, 0, 0),
+                            (i + 1) + " дней",
+                            trader.getCost() * (i + 1) + Cash.currencySigh,
+                            null, Material.GOLD_INGOT, 7000)
+            );
+
+        TraderMenu.getPanel("Торговец-Время-Аренда", PcConomy.Config.getString("ui.language", "RU")).getViewWith(
+                player,
+                "Торговец-Время-Аренда " + trader.getNPC().getId(),
+                components);
+    }
+
+    private static void getPricesWindow(Player player, Trader trader) {
+        TraderMenu.getPanel("Торговец-Цена", PcConomy.Config.getString("ui.language", "RU"))
+            .getView(player, "Торговец-Цена " + trader.getNPC().getId());
+    }
+
+    private static void getMarginWindow(Player player, Trader trader) {
+        TraderMenu.getPanel("Торговец-Процент", PcConomy.Config.getString("ui.language", "RU"))
+            .getView(player, "Торговец-Процент " + trader.getNPC().getId());
+    }
+
+    private static void getAcceptWindow(Player player, ItemStack item, Trader trader) {
+        TraderMenu.getPanel("Торговец-Покупка", PcConomy.Config.getString("ui.language", "RU")).getViewWith(
+            player,
+            "Торговец-Покупка " + trader.getNPC().getId(),
+            List.of(new Icon(new Margin(13, 0, 0), item))
+        );
+    }
+
+    private static void rantTrader(Trader trader, int days, Player ranter) {
         trader.setOwner(ranter.getUniqueId());
         trader.setRanted(true);
         trader.setTerm(LocalDateTime.now().plusDays(days).toString());

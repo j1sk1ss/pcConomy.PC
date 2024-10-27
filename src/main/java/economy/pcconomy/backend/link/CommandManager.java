@@ -47,26 +47,15 @@ public class CommandManager implements CommandExecutor {
                 MayorManagerWindow.generateWindow((Player)sender);
             }
 
-            case "full_info" -> sender.sendMessage("Bank budget: " + PcConomy.GlobalBank.getBank().getBudget() + "$\n" +
+            case "full_info" -> sender.sendMessage(
+                    "Bank budget: " + PcConomy.GlobalBank.getBank().getBudget() + "$\n" +
                         "Global VAT: " + PcConomy.GlobalBank.getBank().getVat() * 100 + "%\n" +
                         "Deposit percent: " + PcConomy.GlobalBank.getBank().getDepositPercent() * 100 + "%\n" +
-                        "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n");
+                        "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n"
+            );
 
             case "set_day_bank_budget" -> PcConomy.GlobalBank.getBank().setDayWithdrawBudget((Double.parseDouble(args[0])));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
-            case "shares_rate" -> {
-                StringBuilder message = new StringBuilder();
-                for (var town : PcConomy.GlobalShare.Shares.keySet())
-                    if (TownyAPI.getInstance().getTown(town) != null)
-                        message.append(
-                                Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName()
-                        ).append(": ").append(
-                                PcConomy.GlobalShare.getMedianSharePrice(town) / PcConomy.GlobalShare.getTownShares(town).size()
-                        ).append(Cash.currencySigh);
-
-                sender.sendMessage(message.toString());
-            }
-
             case "global_market_prices" -> {
                 StringBuilder message = new StringBuilder();
                 var prices = new HashMap<ItemStack, Double>();

@@ -2,6 +2,8 @@ name: PcConomy
 version: '${project.version}'
 main: economy.pcconomy.PcConomy
 api-version: '1.20'
+prefix: PcConomy
+depend: [ MenuFramework ]
 authors: [ j1sk1ss ]
 description: Main economy plugin for Potolot Craft made by j1sk1ss
 website: https://potolotcraft.net

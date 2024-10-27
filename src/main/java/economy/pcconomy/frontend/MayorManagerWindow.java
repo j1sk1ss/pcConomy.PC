@@ -44,7 +44,7 @@ import static economy.pcconomy.frontend.TraderWindow.getTraderFromTitle;
 
 @ExtensionMethod({Cash.class, Manager.class})
 public class MayorManagerWindow implements Listener {
-    public static MenuWindow TraderManager = new MenuWindow(Arrays.asList(
+    private static final MenuWindow TraderManager = new MenuWindow(Arrays.asList(
         new Panel(List.of(
             new ClickArea(new Margin(0, 0, 2, 8),
                 (event, menu) -> {
@@ -119,7 +119,7 @@ public class MayorManagerWindow implements Listener {
         TraderManager.getPanel("Город-Торговцы", PcConomy.Config.getString("ui.language", "RU")).getViewWith(player, components);
     }
 
-    public static void generateTradeControls(Player player, int traderId) {
+    private static void generateTradeControls(Player player, int traderId) {
         TraderManager.getPanel("Торговцы-Управление").getView(player, "Торговцы-Управление " + traderId);
     }
 

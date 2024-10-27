@@ -22,16 +22,12 @@ import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 
 @ExtensionMethod({Manager.class})
 public class NPCLoanWindow {
-    private final static int countOfAmountSteps = 9;
-    private final static List<Integer> durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
-
-    public static final MenuWindow LoanMenu = new MenuWindow(Arrays.asList(
+    private static final MenuWindow LoanMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
             new Button(new Margin(0, 0, 2, 3), "Взять кредит", "Взять кредит у банка",
                 (event, menu) -> {
@@ -55,6 +51,9 @@ public class NPCLoanWindow {
                 "20 дн.", "30 дн.", "40 дн.", "50 дн.", "60 дн.", "70 дн.", "80 дн.", "90 дн.", "100 дн."
             ), "Размер", "Время выплаты",
                 (event, menu) -> {
+                    var durationSteps = Arrays.asList(20, 30, 40, 50, 60, 70, 80, 90, 100);
+                    var countOfAmountSteps = 9;
+
                     var loanPanel = menu.getPanel("Кредит-Взятие");
                     var bar = loanPanel.getComponent("Размер кредита", Bar.class);
                     var player = (Player)event.getWhoClicked();

@@ -101,7 +101,7 @@ public class Loan {
      */
     public static boolean isSafeLoan(double loanAmount, int duration, Capitalist loaner, Player borrower) {
         return (getSafetyFactor(loanAmount, duration, borrower.getBorrowerObject()) >= loaner.getTrustCoefficient()
-                && !blackTown(borrower.getUniqueId().getCountryMens())
+                && !blackTown(borrower.getCountryMens())
                 && borrower.getPlayerServerDuration() > 0);
     }
 
@@ -110,9 +110,9 @@ public class Loan {
      * @param uuids UUID of players from town
      * @return Status of town
      */
-    public static boolean blackTown(List<UUID> uuids) {
-        return uuids.parallelStream().anyMatch(uuid -> {
-            var loan = getLoan(uuid, PcConomy.GlobalBank.getBank());
+    public static boolean blackTown(List<Player> uuids) {
+        return uuids.parallelStream().anyMatch(player -> {
+            var loan = getLoan(player.getUniqueId(), PcConomy.GlobalBank.getBank());
             return loan != null && loan.expired > 5;
         });
     }

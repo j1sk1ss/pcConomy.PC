@@ -148,9 +148,7 @@ public class Wallet {
         var wallets = getWallets(player);
         var cashAmount = Math.abs(amount);
 
-        for (var wallet : wallets)
-            wallet.takeWallet(player);
-
+        for (var wallet : wallets) wallet.takeWallet(player);
         for (var wallet : wallets) {
             if (cashAmount <= 0) break;
 
@@ -159,9 +157,7 @@ public class Wallet {
             wallet.giveWallet(player);
         }
 
-        for (var wallet : wallets)
-            wallet.giveWallet(player);
-
+        for (var wallet : wallets) wallet.giveWallet(player);
         return cashAmount;
     }
 }

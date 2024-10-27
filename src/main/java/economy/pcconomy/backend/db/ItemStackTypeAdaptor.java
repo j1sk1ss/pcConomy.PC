@@ -2,6 +2,7 @@ package economy.pcconomy.backend.db;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
@@ -14,8 +15,7 @@ public class ItemStackTypeAdaptor implements JsonSerializer<ConfigurationSeriali
     final Type objectStringMapType = new TypeToken<Map<String, Object>>() {}.getType();
 
     @Override
-    public ConfigurationSerializable deserialize(JsonElement json, Type typeOfT,
-            JsonDeserializationContext context) throws JsonParseException {
+    public ConfigurationSerializable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final Map<String, Object> map = new LinkedHashMap<>();
 
         for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {

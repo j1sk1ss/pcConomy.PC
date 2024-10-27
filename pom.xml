@@ -6,7 +6,7 @@
 
     <groupId>Economy</groupId>
     <artifactId>pcConomy</artifactId>
-    <version>2.2-LTS</version>
+    <version>2.3</version>
     <packaging>jar</packaging>
 
     <name>PcConomy</name>

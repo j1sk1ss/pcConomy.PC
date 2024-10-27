@@ -22,7 +22,7 @@ import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
 @ExtensionMethod({Manager.class})
 public class NPCTraderWindow {
-    public static MenuWindow NpcTradeWindow = new MenuWindow(
+    private static final MenuWindow NpcTradeWindow = new MenuWindow(
         List.of(
             new Panel(
                 List.of(

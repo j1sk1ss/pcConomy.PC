@@ -31,7 +31,7 @@ import java.util.UUID;
 
 @ExtensionMethod({ Manager.class, Cash.class })
 public class ShareholderWindow {
-    public static MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
+    private static final MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
             new Button(new Margin(0, 0, 2, 2), "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
                 (event, menu) -> {
@@ -44,7 +44,7 @@ public class ShareholderWindow {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(player);
                     if (town != null) {
-                        if (PcConomy.GlobalShare.InteractionList.contains(town.getUUID())) {
+                        if (PcConomy.GlobalShare.getInteractionList().contains(town.getUUID())) {
                             player.sendMessage("Ваш город уже работал с акциями сегодня");
                             return;
                         }
@@ -188,8 +188,8 @@ public class ShareholderWindow {
         ShareHolderMenu.getPanel("Акции-Меню").getView(player);
     }
 
-    public static void sharesWindow(Player player, int windowNumber) {
-        var actions = PcConomy.GlobalShare.Shares.keySet().toArray();
+    private static void sharesWindow(Player player, int windowNumber) {
+        var actions = PcConomy.GlobalShare.getShares().keySet().toArray();
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = windowNumber * 27; i < actions.length; i++)
             for (var j = i; j < i + Math.min(Math.max(actions.length - 27, 1), 27); j++) {
@@ -210,11 +210,11 @@ public class ShareholderWindow {
         ShareHolderMenu.getPanel("Акции-Список").getViewWith(player, "Акции-Список " + windowNumber, list);
     }
 
-    public static void acceptWindow(Player player, UUID town) {
+    private static void acceptWindow(Player player, UUID town) {
         ShareHolderMenu.getPanel("Акции-Города").getView(player, "Акции-Города " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName());
     }
 
-    public static void townSharesWindow(Player player, UUID town) {
+    private static void townSharesWindow(Player player, UUID town) {
         ShareHolderMenu.getPanel("Акции-Выставление").getView(player, "Акции-Выставление " + Objects.requireNonNull(TownyAPI.getInstance().getTown(town)).getName());
     }
 }

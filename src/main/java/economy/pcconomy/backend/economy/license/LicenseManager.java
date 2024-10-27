@@ -1,16 +1,19 @@
 package economy.pcconomy.backend.economy.license;
 
+import org.bukkit.entity.Player;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.economy.license.objects.License;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
 
-import org.bukkit.entity.Player;
+import lombok.Getter;
+import lombok.experimental.ExtensionMethod;
+
 import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 
-import lombok.experimental.ExtensionMethod;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +23,10 @@ import java.util.UUID;
 
 @ExtensionMethod({Manager.class, Cash.class})
 public class LicenseManager extends Loadable {
-    public final static double marketLicensePrice      = PcConomy.Config.getDouble("license.market_license_price", 2400d);
-    public final static double tradeLicensePrice       = PcConomy.Config.getDouble("license.trade_license_price", 650d);
-    public final static double loanLicensePrice        = PcConomy.Config.getDouble("license.loan_license_price", 3500d);
-    public final static double loanHistoryLicensePrice = PcConomy.Config.getDouble("license.loan_history_license_price", 1200d);
+    @Getter private static final double marketLicensePrice      = PcConomy.Config.getDouble("license.market_license_price", 2400d);
+    @Getter private static final double tradeLicensePrice       = PcConomy.Config.getDouble("license.trade_license_price", 650d);
+    @Getter private static final double loanLicensePrice        = PcConomy.Config.getDouble("license.loan_license_price", 3500d);
+    @Getter private static final double loanHistoryLicensePrice = PcConomy.Config.getDouble("license.loan_history_license_price", 1200d);
 
     private static final Map<LicenseType, String> licenseTypes = Map.of(
         LicenseType.Trade, "Лицензия на ведение торговой деятельности",
@@ -32,7 +35,7 @@ public class LicenseManager extends Loadable {
         LicenseType.LoanHistory, "Лицензия на доступ к кредитной истории"
     );
 
-    public final List<License> Licenses = new ArrayList<>();
+    private final List<License> Licenses = new ArrayList<>();
 
     /**
      * Creates new license
@@ -40,17 +43,6 @@ public class LicenseManager extends Loadable {
      */
     public void createLicense(License license) {
         Licenses.add(license);
-    }
-
-    /**
-     * Gets license of player
-     * @param player Player that should be checked
-     * @return License body
-     */
-    public List<License> getLicenses(Player player) {
-        var list = new ArrayList<License>();
-        for (var lic : Licenses) if (lic.getOwner().equals(player.getUniqueId())) list.add(lic);
-        return list;
     }
 
     /**

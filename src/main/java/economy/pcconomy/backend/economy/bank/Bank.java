@@ -41,7 +41,7 @@ public class Bank extends Capitalist {
     @Getter private final List<Loan> credit;
 
     private double previousBudget = budget;
-    private int recessionCount    = 0;
+    private int recessionCount = 0;
 
     /**
      * Give cash from bank player`s balance to player`s inventory
