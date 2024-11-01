@@ -2,6 +2,7 @@ package economy.pcconomy.backend.db;
 
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,4 +45,14 @@ public abstract class Loadable {
      * @return name
      */
     public abstract String getName();
+
+    /**
+     * Check if File is Empty
+     * @param file File
+     * @return True or false
+     */
+    public static boolean isFileEmpty(File file) {
+        if (!file.exists()) return true;
+        return file.length() == 0;
+    }
 }

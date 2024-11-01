@@ -36,10 +36,9 @@ public class LicensorWindow {
         new Button(new Margin(0, 7, 2, 1), "Лицензия на доступ к кредитной истории", LicenseManager.getLoanHistoryLicensePrice() + Cash.currencySigh,
             (event, menu) -> LicenseManager.giveLicenseToPlayer((Player)event.getWhoClicked(),
                     LicenseType.LoanHistory, LicenseManager.getLoanHistoryLicensePrice()), Material.GOLD_INGOT, 7000)
-    ), "Мир-Лицензии", MenuSizes.ThreeLines, "\u10D1")), "License",
-            new LocalizationManager(PcConomy.Config.getString("ui.loc4lic")));
+    ), "Мир-Лицензии", MenuSizes.ThreeLines, "\u10D1")), "License");
 
     public static void generateWindow(Player player) {
-        LicenseWindow.getPanel("Мир-Лицензии", PcConomy.Config.getString("ui.language", "RU")).getView(player);
+        LicenseWindow.getPanel("Мир-Лицензии").getView(player);
     }
 }

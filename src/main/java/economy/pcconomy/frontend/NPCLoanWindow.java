@@ -85,21 +85,29 @@ public class NPCLoanWindow {
                 "", "", "", "", "", "", "", "", ""
             ),
                 (event, menu) -> {
-                    var player    = (Player) event.getWhoClicked();
-                    var loanPanel = menu.getPanel("Кредит-Взятие");
-                    var durSlider = loanPanel.getComponent("Время выплаты", Slider.class).getChose(event);
-                    var value     = Double.parseDouble(Objects.requireNonNull(event.getCurrentItem()).getLoreLines().get(0).split(" ")[0]);
-                    var agreement = event.getCurrentItem().getLoreLines().get(1);
+                    try {
+                        var option = event.getCurrentItem();
+                        if (option == null) return;
 
-                    if (durSlider.equals("none")) return;
-                    if (agreement.contains("Банк одобрит данный займ")) {
-                        if (!PcConomy.GlobalBank.getBank().getCredit().contains(Loan.getLoan(player.getUniqueId(), PcConomy.GlobalBank.getBank()))) {
-                            var loan = Loan.createLoan(value, Integer.parseInt(durSlider.split(" ")[0]), player);
-                            loan.addLoan(PcConomy.GlobalBank.getBank());
+                        var player = (Player) event.getWhoClicked();
+                        var loanPanel = menu.getPanel("Кредит-Взятие");
+                        var durSlider = loanPanel.getComponent("Время выплаты", Slider.class).getChose(event);
+                        var value = Double.parseDouble(Objects.requireNonNull(option).getLoreLines().get(0).split(" ")[0]);
+                        var agreement = option.getLoreLines().get(1);
 
-                            player.closeInventory();
-                            player.sendMessage("Вам был выдан кредит в размере: " + loan.getAmount() + Cash.currencySigh);
+                        if (durSlider.equals("none")) return;
+                        if (agreement.contains("Банк одобрит данный займ")) {
+                            if (!PcConomy.GlobalBank.getBank().getCredit().contains(Loan.getLoan(player.getUniqueId(), PcConomy.GlobalBank.getBank()))) {
+                                var loan = Loan.createLoan(value, Integer.parseInt(durSlider.split(" ")[0]), player);
+                                loan.addLoan(PcConomy.GlobalBank.getBank());
+
+                                player.closeInventory();
+                                player.sendMessage("Вам был выдан кредит в размере: " + loan.getAmount() + Cash.currencySigh);
+                            }
                         }
+                    }
+                    catch (Exception e) {
+                        System.out.println("Something went wrong: " + e.getMessage());
                     }
                 }, 7001, 7002, Material.GOLD_INGOT, Material.GOLD_INGOT)
         ), "Кредит-Взятие", MenuSizes.ThreeLines, "\u10E1")

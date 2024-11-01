@@ -1,22 +1,23 @@
 package economy.pcconomy.backend.economy.bank;
 
-import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.Capitalist;
-import economy.pcconomy.backend.economy.credit.Loan;
-import economy.pcconomy.backend.cash.Cash;
-
-import economy.pcconomy.backend.cash.Balance;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.ExtensionMethod;
 
-import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
+import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.economy.Capitalist;
+import economy.pcconomy.backend.economy.credit.Loan;
+import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.backend.cash.Balance;
+
+import net.potolotcraft.gorodki.GorodkiUniverse;
 
 
 @ExtensionMethod({Cash.class, Balance.class})
@@ -29,6 +30,9 @@ public class Bank extends Capitalist {
         dayWithdrawBudget   = budget * usefulBudgetPercent;
         trustCoefficient    = 2d;
 
+        previousBudget = budget;
+        recessionCount = 0;
+
         credit = new ArrayList<>();
     }
 
@@ -40,8 +44,8 @@ public class Bank extends Capitalist {
     @Setter private double trustCoefficient;
     @Getter private final List<Loan> credit;
 
-    private double previousBudget = budget;
-    private int recessionCount = 0;
+    private double previousBudget;
+    private int recessionCount;
 
     /**
      * Give cash from bank player`s balance to player`s inventory
@@ -53,7 +57,7 @@ public class Bank extends Capitalist {
         if (player.solvent(amount)) return;
 
         player.takeMoney(amount);
-        player.giveCashToPlayer(amount, false);
+        player.giveCashToPlayer(amount, true);
 
         budget -= amount;
         dayWithdrawBudget -= amount;
@@ -65,9 +69,9 @@ public class Bank extends Capitalist {
      * @param player Player that will lose cash
      */
     public void takeCashFromPlayer(double amount, Player player) {
-        if (amount > player.amountOfCashInInventory(false)) return;
+        if (amount > player.amountOfCashInInventory(true)) return;
 
-        player.takeCashFromPlayer(amount, false);
+        player.takeCashFromPlayer(amount, true);
         player.giveMoney(amount);
 
         budget += amount;
@@ -84,7 +88,11 @@ public class Bank extends Capitalist {
     @Override
     public void newDay() {
         var changePercent = (budget - previousBudget) / previousBudget;
+        if (changePercent < -100) changePercent = -100;
+        else if (changePercent > 100) changePercent = 100;
+
         var isRecession  = (changePercent <= 0 || getAverageInflation() > 0) ? 1 : -1;
+        System.out.println("Bank newDay() invoked. Change percent: " + changePercent + ", recession status: " + isRecession);
 
         Loan.takePercentFromBorrowers(this);
         if (isRecession < 0 && depositPercent > 0)
@@ -98,10 +106,10 @@ public class Bank extends Capitalist {
                 }
             });
 
-        vat                 += (vat * Math.abs(changePercent) / 2) * isRecession;
+        vat += (vat * Math.abs(changePercent) / 2) * isRecession;
         usefulBudgetPercent -= usefulBudgetPercent * Math.abs(changePercent) / 2 * isRecession;
-        depositPercent      -= depositPercent * Math.abs(changePercent) / 2 * isRecession;
-        trustCoefficient    -= trustCoefficient * Math.abs(changePercent) * isRecession;
+        depositPercent -= depositPercent * Math.abs(changePercent) / 2 * isRecession;
+        trustCoefficient -= trustCoefficient * Math.abs(changePercent) * isRecession;
 
         if (isRecession > 0) {
             if (recessionCount++ >= 5) {
@@ -124,7 +132,7 @@ public class Bank extends Capitalist {
         var bigInflation = new AtomicReference<>(0d);
 
         GorodkiUniverse.getInstance().getNPCGorods().parallelStream().forEach((npc) -> {
-            bigInflation.updateAndGet(v -> (Double) (v + npc.getLocalInflation()));
+            bigInflation.updateAndGet(v -> (v + npc.getLocalInflation()));
             count.addAndGet(1);
         });
 

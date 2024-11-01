@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import org.j1sk1ss.itemmanager.manager.Manager;
-import org.j1sk1ss.menuframework.common.LocalizationManager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
 import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
@@ -40,7 +39,7 @@ public class BankerWindow {
                             if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-bank-value");
 
-                            PcConomy.GlobalBank.getBank().takeCashFromPlayer(Math.abs(amount), player);
+                            PcConomy.GlobalBank.getBank().takeCashFromPlayer(amount, player);
                             BankerWindow.regenerateWindow(player, event.getInventory());
                         }), // Put
                     new ClickArea(new Margin(4, 5, 1, 3),
@@ -57,7 +56,7 @@ public class BankerWindow {
                         }) // Withdraw
                 ), "Банк", MenuSizes.SixLines, "\u10D0"
             )
-        ), "Bank", new LocalizationManager(PcConomy.Config.getString("ui.loc4bank"))
+        ), "Bank"
     );
 
     public static void generateWindow(Player player) {
@@ -67,7 +66,7 @@ public class BankerWindow {
     private static void regenerateWindow(Player player, Inventory inventory) {
         var enableBalance   = PcConomy.GlobalBank.getBank().getDayWithdrawBudget();
         var playerBalance   = Balance.getBalance(player);
-        var cashInInventory = player.amountOfCashInInventory(false);
+        var cashInInventory = player.amountOfCashInInventory(true);
         var textBalance     = playerBalance + "";
         var charArray       = textBalance.toCharArray();
 
@@ -78,8 +77,8 @@ public class BankerWindow {
         components.addAll(balance);
         components.addAll(actions);
         
-        if (inventory == null) BankWindow.getPanel("Банк", PcConomy.Config.getString("ui.language", "RU")).getViewWith(player, components);
-        else BankWindow.getPanel("Банк", PcConomy.Config.getString("ui.language", "RU")).getViewWith(components, inventory);
+        if (inventory == null) BankWindow.getPanel("Банк").getViewWith(player, components);
+        else BankWindow.getPanel("Банк").getViewWith(components, inventory);
     }
 
     // Print action buttons (Default + max-min actions)
@@ -93,7 +92,7 @@ public class BankerWindow {
         } 
 
         var putMax = new LittleButton(new Margin(4, 0), "Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, null, Material.GOLD_INGOT, 7001);
-        putMax.setDouble2Container(Double.parseDouble("\n-" + cashInInventory), "item-bank-value");
+        putMax.setDouble2Container(cashInInventory, "item-bank-value");
         list.add(putMax);        
         
         for (var i = 0; i < 8; i++) {
@@ -115,7 +114,7 @@ public class BankerWindow {
                 thing.equals("\n-") ? 7001 : 7002
             );
 
-            button.setDouble2Container(Double.parseDouble(thing + Cash.Denomination.get(j)), "item-bank-value");
+            button.setDouble2Container(Cash.Denomination.get(j), "item-bank-value");
             list.add(button);
         }
 

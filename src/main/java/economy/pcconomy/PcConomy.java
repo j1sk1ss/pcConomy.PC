@@ -1,5 +1,6 @@
 package economy.pcconomy;
 
+import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.bank.BankManager;
 import economy.pcconomy.backend.economy.credit.BorrowerManager;
@@ -28,8 +29,6 @@ import java.util.Objects;
 //   2.2) Shares debugging ?
 // 3) Load \ Save
 //   3.2) Check save \ loading ?
-// 4) Models
-//   4.1) Set all model data where it needed ?
 //
 //  P.S. Don't forget about TODO
 
@@ -42,7 +41,7 @@ public final class PcConomy extends JavaPlugin {
     public static LicenseManager    GlobalLicense;
     public static ShareManager      GlobalShare;
     
-    private final String pluginPath = "plugins\\PcConomy\\";
+    private final String pluginPath = "plugins" + File.separator + "PcConomy" + File.separator;
     private PcConomy instance;
 
     @Override
@@ -74,15 +73,15 @@ public final class PcConomy extends JavaPlugin {
         //============================================
 
             try {
-                if (new File(pluginPath + "npc_data.json").exists())
+                if (!Loadable.isFileEmpty(new File(pluginPath + "npc_data.json")))
                     GlobalNPC = GlobalNPC.load(pluginPath + "npc_data", NpcManager.class);
-                if (new File(pluginPath + "bank_data.json").exists())
+                if (!Loadable.isFileEmpty(new File(pluginPath + "bank_data.json")))
                     GlobalBank = GlobalBank.load(pluginPath + "bank_data", BankManager.class);
-                if (new File(pluginPath + "license_data.json").exists())
+                if (!Loadable.isFileEmpty(new File(pluginPath + "license_data.json")))
                     GlobalLicense = GlobalLicense.load(pluginPath + "license_data", LicenseManager.class);
-                if (new File(pluginPath + "shares_data.json").exists())
+                if (!Loadable.isFileEmpty(new File(pluginPath + "shares_data.json")))
                     GlobalShare = GlobalShare.load(pluginPath + "shares_data", ShareManager.class);
-                if (new File(pluginPath + "borrowers_data.json").exists())
+                if (!Loadable.isFileEmpty(new File(pluginPath + "borrowers_data.json")))
                     GlobalBorrower = GlobalBorrower.load(pluginPath + "borrowers_data", BorrowerManager.class);
             } catch (IOException error) {
                 System.out.println(error.getMessage());
@@ -114,7 +113,7 @@ public final class PcConomy extends JavaPlugin {
             var command_manager = new CommandManager();
             for (var command : Arrays.asList("take_cash", "create_cash", "put_cash2bank",
                     "create_banker", "create_npc_loaner", "create_trader", "create_npc_trader", "create_licensor",
-                    "town_menu", "reload_npc", "full_info", "set_day_bank_budget",
+                    "town_menu", "reload_npc", "full_info", "set_day_bank_budget", "bank_new_day",
                     "create_wallet", "create_shareholder", "shares_rate", "global_market_prices"))
                 Objects.requireNonNull(getCommand(command)).setExecutor(command_manager);
 
@@ -136,9 +135,7 @@ public final class PcConomy extends JavaPlugin {
     }
 
     public PcConomy getInstance() {
-        if (instance == null)
-            instance = new PcConomy();
-
+        if (instance == null) instance = new PcConomy();
         return instance;
     }
 
@@ -150,7 +147,10 @@ public final class PcConomy extends JavaPlugin {
             for (var manager : Arrays.asList(GlobalBank, GlobalBorrower, GlobalLicense, GlobalShare))
                 manager.save(pluginPath + manager.getName());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("IO exception" + e.getMessage());
+        }
+        catch (Exception e) {
+            System.out.println("Unhandled exception:" + e.getMessage());
         }
     }
 }

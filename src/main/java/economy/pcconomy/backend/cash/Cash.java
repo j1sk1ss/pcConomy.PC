@@ -58,7 +58,7 @@ public class Cash {
      * @return ItemStack object
      */
     public static ItemStack createCashObject(double amount, int count) {
-        var cashBody = new Item(currencyName, amount + currencySigh, Material.PAPER, count, 17000); //TODO: DATA MODEL
+        var cashBody = new Item(currencyName, amount + currencySigh, Material.PAPER, count, 20000 + (int)amount);
         cashBody.setDouble2Container(amount, "cash-value");
         return cashBody;
     }
@@ -80,7 +80,11 @@ public class Cash {
      */
     public static double getAmountFromCash(List<ItemStack> money) {
         var amount = 0.0;
-        for (var item : money) if (isCash(item)) amount += getAmountFromCash(item);
+        for (var item : money) {
+            if (isCash(item))
+                amount += getAmountFromCash(item);
+        }
+
         return amount;
     }
 
@@ -91,7 +95,11 @@ public class Cash {
      */
     public static List<ItemStack> getCashFromInventory(PlayerInventory inventory) {
         var moneys = new ArrayList<ItemStack>();
-        for (var item : inventory) if (isCash(item)) moneys.add(item);
+        for (var item : inventory) {
+            if (isCash(item))
+                moneys.add(item);
+        }
+
         return moneys;
     }
 
@@ -116,7 +124,8 @@ public class Cash {
     public static boolean isCash(ItemStack item) {
         if (item == null) return false;
         if (item.getItemMeta() == null) return false;
-        return item.getDoubleFromContainer("cash-value") != -1;
+        if (item.getType() != Material.PAPER) return false;
+        return item.getDoubleFromContainer("cash-value") != -1.0;
     }
 
     /**
@@ -126,6 +135,7 @@ public class Cash {
      * @param ignoreWallet Ignoring of wallet status
      */
     public static void giveCashToPlayer(Player player, double amount, boolean ignoreWallet) {
+        System.out.println("Try to give cash to player: " + player.getName() + ", amount: " + amount);
         getChangeInCash(getChange(ignoreWallet ? amount : player.changeCashInWallets(amount))).giveItems(player);
     }
 
@@ -136,6 +146,7 @@ public class Cash {
      * @param ignoreWallet Ignoring wallet status
      */
     public static void takeCashFromPlayer(Player player, double amount, boolean ignoreWallet) {
+        System.out.println("Try to take cash from player: " + player.getName() + ", amount: " + amount);
         var playerCashAmount = amountOfCashInInventory(player, ignoreWallet);
         if (playerCashAmount < amount) return;
 

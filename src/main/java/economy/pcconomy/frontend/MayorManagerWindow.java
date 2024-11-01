@@ -103,7 +103,7 @@ public class MayorManagerWindow implements Listener {
                     player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
                 }, Material.GOLD_INGOT, 7000)
         ), "Торговцы-Управление", MenuSizes.ThreeLines, "\u10D4")
-    ), "Mayor", new LocalizationManager(PcConomy.Config.getString("ui.loc4mayor")));
+    ), "Mayor");
 
     public static void generateWindow(Player player) {
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
@@ -116,7 +116,7 @@ public class MayorManagerWindow implements Listener {
                     Material.GOLD_INGOT, 8000 + ThreadLocalRandom.current().nextInt(0, 7)));
         }
 
-        TraderManager.getPanel("Город-Торговцы", PcConomy.Config.getString("ui.language", "RU")).getViewWith(player, components);
+        TraderManager.getPanel("Город-Торговцы").getViewWith(player, components);
     }
 
     private static void generateTradeControls(Player player, int traderId) {

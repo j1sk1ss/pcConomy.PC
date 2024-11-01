@@ -5,54 +5,57 @@ api-version: '1.20'
 prefix: PcConomy
 depend: [ MenuFramework ]
 authors: [ j1sk1ss ]
-description: Main economy plugin for Potolot Craft made by j1sk1ss
+description: "Main economy plugin for Potolot Craft made by j1sk1ss"
 website: https://potolotcraft.net
 
 
 commands:
   take_cash:
-    usage: /take_cash [amount]
-    description: take cash from inventory (Without bank)
+    usage: "/take_cash [amount]"
+    description: "take cash from inventory (Without bank)"
   create_cash:
-    usage: /create_cash [amount]
-    description: create cash and put to inventory (Without bank)
+    usage: "/create_cash [amount]"
+    description: "create cash and put to inventory (Without bank)"
   create_wallet:
-    usage: /create_wallet
-    description: create empty wallet
+    usage: "/create_wallet"
+    description: "create empty wallet"
   create_shareholder:
-    usage: /create_shareholder
-    description: create shareholder npc
+    usage: "/create_shareholder"
+    description: "create shareholder npc"
   put_cash2bank:
-    usage: /put_cash2bank [amount]
-    description: take moneys from inventory and put it to the bank (Moved to your bank account)
+    usage: "/put_cash2bank [amount]"
+    description: "take moneys from inventory and put it to the bank (Moved to your bank account)"
   create_banker:
-    usage: /create_banker
-    description: create banker npc
+    usage: "/create_banker"
+    description: "create banker npc"
   create_npc_loaner:
-    usage: /create_npc_loaner
-    description: create loaner npc
+    usage: "/create_npc_loaner"
+    description: "create loaner npc"
   create_trader:
-    usage: /create_trader
-    description: create trader npc (Trading between players)
+    usage: "/create_trader"
+    description: "create trader npc (Trading between players)"
   create_npc_trader:
-    usage: /create_npc_trader
-    description: create trader npc (Trading between players and npc towns)
+    usage: "/create_npc_trader"
+    description: "create trader npc (Trading between players and npc towns)"
   create_licensor:
-    usage: /create_licensor
-    description: create licensor npc
+    usage: "/create_licensor"
+    description: "create licensor npc"
   town_menu:
-    usage: /town_menu
-    description: open mayor menu
+    usage: "/town_menu"
+    description: "open mayor menu"
   reload_npc:
-    usage: /reload_npc
+    usage: "/reload_npc"
   full_info:
-    usage: /full_info
+    usage: "/full_info"
   set_day_bank_budget:
-    usage: /set_day_bank_budget [amount]
-    description: set budget that`s can be used by players in global bank
+    usage: "/set_day_bank_budget [amount]"
+    description: "<debug function> set budget that`s can be used by players in global bank"
   shares_rate:
-    usage: /shares_rate
-    description: get summary prices for all shares on market
+    usage: "/shares_rate"
+    description: "get summary prices for all shares on market"
   global_market_prices:
-    usage: /global_market_prices
-    description: get summary prices of goods
+    usage: "/global_market_prices"
+    description: "get summary prices of goods"
+  bank_new_day:
+    usage: "/bank_new_day"
+    description: "<debug function> Invoke newDay() method"

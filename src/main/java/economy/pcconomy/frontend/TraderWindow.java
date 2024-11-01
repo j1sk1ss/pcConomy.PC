@@ -273,7 +273,7 @@ public class TraderWindow {
                             if (trader != null) getWindow(player, trader);
                         }, Material.GOLD_INGOT, 7000)
                 ), "Торговец-Покупка", MenuSizes.ThreeLines, "\u10DB")
-            ), "Trader", new LocalizationManager(PcConomy.Config.getString("ui.loc4trader")));
+            ), "Trader");
 
     public static void getWindow(Player player, Trader trader) {
         TraderWindow.TraderMenu.getPanel("Торговец-Ассортимент", PcConomy.Config.getString("ui.language", "RU")).resize(9 * trader.getLevel())
@@ -301,8 +301,7 @@ public class TraderWindow {
     }
 
     public static void getMayorWindow(Player player, Trader trader) {
-        TraderMenu.getPanel("Торговец-Владелец", PcConomy.Config.getString("ui.language", "RU"))
-            .getView(player, "Торговец-Владелец " + trader.getNPC().getId());
+        TraderMenu.getPanel("Торговец-Владелец").getView(player, "Торговец-Владелец " + trader.getNPC().getId());
     }
 
     public static Trader getTraderFromTitle(String name) {
@@ -324,24 +323,22 @@ public class TraderWindow {
                             null, Material.GOLD_INGOT, 7000)
             );
 
-        TraderMenu.getPanel("Торговец-Время-Аренда", PcConomy.Config.getString("ui.language", "RU")).getViewWith(
+        TraderMenu.getPanel("Торговец-Время-Аренда").getViewWith(
                 player,
                 "Торговец-Время-Аренда " + trader.getNPC().getId(),
                 components);
     }
 
     private static void getPricesWindow(Player player, Trader trader) {
-        TraderMenu.getPanel("Торговец-Цена", PcConomy.Config.getString("ui.language", "RU"))
-            .getView(player, "Торговец-Цена " + trader.getNPC().getId());
+        TraderMenu.getPanel("Торговец-Цена").getView(player, "Торговец-Цена " + trader.getNPC().getId());
     }
 
     private static void getMarginWindow(Player player, Trader trader) {
-        TraderMenu.getPanel("Торговец-Процент", PcConomy.Config.getString("ui.language", "RU"))
-            .getView(player, "Торговец-Процент " + trader.getNPC().getId());
+        TraderMenu.getPanel("Торговец-Процент").getView(player, "Торговец-Процент " + trader.getNPC().getId());
     }
 
     private static void getAcceptWindow(Player player, ItemStack item, Trader trader) {
-        TraderMenu.getPanel("Торговец-Покупка", PcConomy.Config.getString("ui.language", "RU")).getViewWith(
+        TraderMenu.getPanel("Торговец-Покупка").getViewWith(
             player,
             "Торговец-Покупка " + trader.getNPC().getId(),
             List.of(new Icon(new Margin(13, 0, 0), item))

@@ -54,6 +54,7 @@ public class CommandManager implements CommandExecutor {
                         "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n"
             );
 
+            case "bank_new_day"        -> PcConomy.GlobalBank.getBank().newDay();
             case "set_day_bank_budget" -> PcConomy.GlobalBank.getBank().setDayWithdrawBudget((Double.parseDouble(args[0])));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "global_market_prices" -> {
