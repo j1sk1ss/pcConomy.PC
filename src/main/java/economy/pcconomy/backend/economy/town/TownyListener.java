@@ -1,14 +1,14 @@
 package economy.pcconomy.backend.economy.town;
 
-import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.event.*;
+import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 import net.potolotcraft.gorodki.GorodkiUniverse;
 import net.potolotcraft.gorodki.objects.goroda.NPCGorod;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 
 public class TownyListener implements Listener {

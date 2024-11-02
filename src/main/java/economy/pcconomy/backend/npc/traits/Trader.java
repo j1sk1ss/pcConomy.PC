@@ -4,29 +4,27 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
+import economy.pcconomy.frontend.TraderWindow;
 import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
-import economy.pcconomy.frontend.TraderWindow;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.NPCLeftClickEvent;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
-
 import net.kyori.adventure.text.TextComponent;
-
 import net.potolotcraft.gorodki.GorodkiUniverse;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.j1sk1ss.itemmanager.manager.Manager;

@@ -6,9 +6,9 @@ import economy.pcconomy.backend.cash.Balance;
 
 import lombok.experimental.ExtensionMethod;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,11 +17,11 @@ import org.bukkit.inventory.Inventory;
 import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
-import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
-import org.j1sk1ss.menuframework.objects.interactive.components.Icon;
-import org.j1sk1ss.menuframework.objects.interactive.components.LittleButton;
-import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
+import org.j1sk1ss.menuframework.objects.interactive.components.Icon;
+import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
+import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
+import org.j1sk1ss.menuframework.objects.interactive.components.LittleButton;
 
 
 @ExtensionMethod({Manager.class, Cash.class})
@@ -67,7 +67,7 @@ public class BankerWindow {
         var enableBalance   = PcConomy.GlobalBank.getBank().getDayWithdrawBudget();
         var playerBalance   = Balance.getBalance(player);
         var cashInInventory = player.amountOfCashInInventory(true);
-        var textBalance     = playerBalance + "";
+        var textBalance     = (Math.round(playerBalance * 100d) / 100d) + "";
         var charArray       = textBalance.toCharArray();
 
         var balance = printBalance(charArray, textBalance);
@@ -78,7 +78,10 @@ public class BankerWindow {
         components.addAll(actions);
         
         if (inventory == null) BankWindow.getPanel("Банк").getViewWith(player, components);
-        else BankWindow.getPanel("Банк").getViewWith(components, inventory);
+        else {
+            for (int i = 9; i < 27; i++) inventory.setItem(i, null);
+            BankWindow.getPanel("Банк").getViewWith(components, inventory);
+        }
     }
 
     // Print action buttons (Default + max-min actions)
@@ -86,12 +89,12 @@ public class BankerWindow {
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
 
         if (playerBalance < enableBalance) {
-            var withdrawMax = new LittleButton(new Margin(4, 5), "Снять максимум", "\n" + Math.round(playerBalance * 100) / 100 + Cash.currencySigh, null, Material.GOLD_INGOT, 7002);
-            withdrawMax.setDouble2Container(Math.round(playerBalance * 100d) / 100d, "item-bank-value");
+            var withdrawMax = new LittleButton(new Margin(4, 5), "Снять максимум", "\n" + (Math.round(playerBalance * 100d) / 100d) + Cash.currencySigh, null, Material.GOLD_INGOT, 7002);
+            withdrawMax.setDouble2Container(playerBalance, "item-bank-value");
             list.add(withdrawMax);  
         } 
 
-        var putMax = new LittleButton(new Margin(4, 0), "Положить все средства", "\n-" + cashInInventory + Cash.currencySigh, null, Material.GOLD_INGOT, 7001);
+        var putMax = new LittleButton(new Margin(4, 0), "Положить все средства", "\n-" + (Math.round(cashInInventory * 100d) / 100d) + Cash.currencySigh, null, Material.GOLD_INGOT, 7001);
         putMax.setDouble2Container(cashInInventory, "item-bank-value");
         list.add(putMax);        
         

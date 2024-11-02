@@ -8,25 +8,22 @@ import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
 
-import lombok.experimental.ExtensionMethod;
-
-import net.potolotcraft.gorodki.GorodkiUniverse;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
+import lombok.experimental.ExtensionMethod;
 import org.j1sk1ss.itemmanager.manager.Manager;
+import net.potolotcraft.gorodki.GorodkiUniverse;
 
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 import org.j1sk1ss.menuframework.objects.interactive.components.*;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
-import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
-import java.util.ArrayList;
+import java.util.UUID;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.UUID;
+import java.util.ArrayList;
 
 
 @ExtensionMethod({ Manager.class, Cash.class })

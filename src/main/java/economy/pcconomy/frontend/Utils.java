@@ -1,10 +1,9 @@
 package economy.pcconomy.frontend;
 
-import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.event.inventory.InventoryEvent;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 
 public class Utils {

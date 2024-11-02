@@ -1,16 +1,16 @@
 package economy.pcconomy.backend.economy.share;
 
+import lombok.Getter;
+import lombok.experimental.ExtensionMethod;
+
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.economy.share.objects.Share;
 import economy.pcconomy.backend.economy.share.objects.ShareType;
-import lombok.Getter;
-import lombok.experimental.ExtensionMethod;
 
-import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.entity.Player;
-
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import java.util.*;
 
 

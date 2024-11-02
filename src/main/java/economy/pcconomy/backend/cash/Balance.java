@@ -1,9 +1,10 @@
 package economy.pcconomy.backend.cash;
 
-import me.yic.xconomy.api.XConomyAPI;
 import org.bukkit.entity.Player;
+import me.yic.xconomy.api.XConomyAPI;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 public class Balance {
@@ -22,10 +23,10 @@ public class Balance {
      * Check is player have moneys
      * @param value Value
      * @param player Player
-     * @return Status
+     * @return return true, if player have enough moneys
      */
     public static boolean solvent(Player player, double value) {
-        return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(value)) < 0;
+        return xConomyAPI.getPlayerData(player.getUniqueId()).getBalance().compareTo(new BigDecimal(value).setScale(2, RoundingMode.HALF_DOWN)) >= 0;
     }
 
     /**
@@ -34,7 +35,7 @@ public class Balance {
      * @param player Player that will take this amount
      */
     public static void giveMoney(Player player, double amount) {
-        xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), true);
+        xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount).setScale(2, RoundingMode.HALF_DOWN), true);
     }
 
     /**
@@ -42,8 +43,9 @@ public class Balance {
      * @param amount Amount of taken money
      * @param player Player that will lose moneys
      */
-    public static void takeMoney(Player player, double amount) {
-        if (solvent(player, amount)) return;
-        xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount), false);
+    public static boolean takeMoney(Player player, double amount) {
+        if (!solvent(player, amount)) return false;
+        xConomyAPI.changePlayerBalance(player.getUniqueId(), player.getName(), new BigDecimal(amount).setScale(2, RoundingMode.HALF_DOWN), false);
+        return true;
     }
 }

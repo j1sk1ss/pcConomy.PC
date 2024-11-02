@@ -2,9 +2,9 @@ package economy.pcconomy.backend.economy;
 
 import economy.pcconomy.backend.economy.credit.Loan;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 
 public abstract class Capitalist {

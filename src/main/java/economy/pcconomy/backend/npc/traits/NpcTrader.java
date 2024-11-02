@@ -1,14 +1,12 @@
 package economy.pcconomy.backend.npc.traits;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import economy.pcconomy.frontend.NPCTraderWindow;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
+import org.bukkit.event.EventHandler;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
+import com.palmergames.bukkit.towny.TownyAPI;
 import net.potolotcraft.gorodki.GorodkiUniverse;
-import org.bukkit.event.EventHandler;
-
-import java.util.Objects;
+import economy.pcconomy.frontend.NPCTraderWindow;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 
 @TraitName("NPCTrader")

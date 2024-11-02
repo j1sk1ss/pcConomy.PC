@@ -6,23 +6,21 @@ import economy.pcconomy.backend.cash.Cash;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
 import lombok.experimental.ExtensionMethod;
-
 import org.j1sk1ss.itemmanager.manager.Manager;
 
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
 import org.j1sk1ss.menuframework.objects.interactive.components.Bar;
-import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.interactive.components.Slider;
-import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
-import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
+import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.ArrayList;
 
 
 @ExtensionMethod({Manager.class})

@@ -1,12 +1,12 @@
 package economy.pcconomy.backend.economy.credit;
 
-import economy.pcconomy.PcConomy;
-
-import economy.pcconomy.backend.db.Loadable;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
+import economy.pcconomy.PcConomy;
+import economy.pcconomy.backend.db.Loadable;
+
 import java.util.List;
+import java.util.ArrayList;
 
 
 public class BorrowerManager extends Loadable {

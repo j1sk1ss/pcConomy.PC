@@ -1,28 +1,27 @@
 package economy.pcconomy.frontend;
 
-import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.economy.license.objects.LicenseType;
+import com.palmergames.bukkit.towny.TownyAPI;
 import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.npc.traits.Trader;
+import economy.pcconomy.backend.economy.license.objects.LicenseType;
 
 import lombok.experimental.ExtensionMethod;
 
-import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.j1sk1ss.itemmanager.manager.Manager;
-import org.j1sk1ss.menuframework.common.LocalizationManager;
+import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 import org.j1sk1ss.menuframework.objects.interactive.components.*;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Direction;
-import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 
-import java.time.LocalDateTime;
 import java.util.*;
+import java.time.LocalDateTime;
 
 
 @ExtensionMethod({Manager.class, Cash.class})

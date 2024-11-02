@@ -1,11 +1,11 @@
 package economy.pcconomy.backend.economy;
 
-import com.palmergames.bukkit.towny.TownyAPI;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
+import com.palmergames.bukkit.towny.TownyAPI;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 
 public class PlayerManager {

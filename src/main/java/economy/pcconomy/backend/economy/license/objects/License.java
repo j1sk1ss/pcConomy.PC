@@ -3,8 +3,8 @@ package economy.pcconomy.backend.economy.license.objects;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 
 @Getter

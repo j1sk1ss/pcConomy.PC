@@ -3,21 +3,21 @@ package economy.pcconomy.frontend;
 import java.util.List;
 import java.util.Objects;
 
-import net.potolotcraft.gorodki.GorodkiUniverse;
 import org.bukkit.entity.Player;
+import lombok.experimental.ExtensionMethod;
+import com.palmergames.bukkit.towny.TownyAPI;
+import net.potolotcraft.gorodki.GorodkiUniverse;
+
 import org.j1sk1ss.itemmanager.manager.Manager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
-import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
-import org.j1sk1ss.menuframework.objects.interactive.components.ItemArea;
-import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
-
-import com.palmergames.bukkit.towny.TownyAPI;
-
-import lombok.experimental.ExtensionMethod;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
+import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
+import org.j1sk1ss.menuframework.objects.interactive.components.ItemArea;
+import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
+
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.CitizensAPI;
 
 
 @ExtensionMethod({Manager.class})

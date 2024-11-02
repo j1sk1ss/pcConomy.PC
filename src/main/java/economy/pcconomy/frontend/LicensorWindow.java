@@ -1,6 +1,5 @@
 package economy.pcconomy.frontend;
 
-import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.economy.license.LicenseManager;
 import economy.pcconomy.backend.economy.license.objects.LicenseType;
@@ -8,15 +7,14 @@ import economy.pcconomy.backend.economy.license.objects.LicenseType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import org.j1sk1ss.menuframework.common.LocalizationManager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
-import org.j1sk1ss.menuframework.objects.interactive.components.Button;
-import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
 import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
+import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
+import org.j1sk1ss.menuframework.objects.interactive.components.Button;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Arrays;
 
 
 public class LicensorWindow {

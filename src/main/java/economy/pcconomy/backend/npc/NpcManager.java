@@ -1,31 +1,31 @@
 package economy.pcconomy.backend.npc;
 
-import com.google.gson.GsonBuilder;
 import economy.pcconomy.PcConomy;
+import com.google.gson.GsonBuilder;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.db.ItemStackTypeAdaptor;
+import lombok.experimental.ExtensionMethod;
 import economy.pcconomy.backend.db.Loadable;
 import economy.pcconomy.backend.npc.traits.*;
-import lombok.experimental.ExtensionMethod;
+import economy.pcconomy.backend.db.ItemStackTypeAdaptor;
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.CitizensDisableEvent;
-import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
+import net.citizensnpcs.api.event.CitizensDisableEvent;
+import net.citizensnpcs.api.event.CitizensEnableEvent;
 
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import java.util.Map;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Hashtable;
-import java.util.Map;
 
 
 @ExtensionMethod({Cash.class})

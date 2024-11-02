@@ -1,27 +1,27 @@
 package economy.pcconomy;
 
 import economy.pcconomy.backend.db.Loadable;
+import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.economy.bank.Bank;
+import economy.pcconomy.backend.link.CommandManager;
 import economy.pcconomy.backend.economy.bank.BankManager;
-import economy.pcconomy.backend.economy.credit.BorrowerManager;
 import economy.pcconomy.backend.economy.share.ShareManager;
 import economy.pcconomy.backend.economy.town.TownyListener;
-import economy.pcconomy.backend.economy.license.LicenseManager;
-import economy.pcconomy.backend.link.CommandManager;
-import economy.pcconomy.backend.npc.NpcManager;
 import economy.pcconomy.backend.placeholderapi.PcConomyPAPI;
+import economy.pcconomy.backend.economy.credit.BorrowerManager;
+import economy.pcconomy.backend.economy.license.LicenseManager;
 
-import economy.pcconomy.frontend.MayorManagerWindow;
 import economy.pcconomy.frontend.WalletWindow;
+import economy.pcconomy.frontend.MayorManagerWindow;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.io.IOException;
 
 
 // TODO List:

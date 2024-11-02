@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.j1sk1ss.itemmanager.manager.Item;
 import org.j1sk1ss.itemmanager.manager.Manager;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 
 @ExtensionMethod({Manager.class})

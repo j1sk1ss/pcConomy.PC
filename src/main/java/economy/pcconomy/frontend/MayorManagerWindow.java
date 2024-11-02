@@ -4,39 +4,36 @@ import com.palmergames.bukkit.towny.TownyAPI;
 
 import economy.pcconomy.PcConomy;
 import economy.pcconomy.backend.cash.Cash;
-import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.npc.NpcManager;
+import economy.pcconomy.backend.economy.bank.Bank;
 import economy.pcconomy.backend.npc.traits.Trader;
 
 import lombok.experimental.ExtensionMethod;
-
 import net.citizensnpcs.api.CitizensAPI;
-
 import net.potolotcraft.gorodki.GorodkiUniverse;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.persistence.PersistentDataType;
 
 import org.j1sk1ss.itemmanager.manager.Manager;
-import org.j1sk1ss.menuframework.common.LocalizationManager;
 import org.j1sk1ss.menuframework.objects.MenuSizes;
 import org.j1sk1ss.menuframework.objects.MenuWindow;
-import org.j1sk1ss.menuframework.objects.interactive.components.Button;
-import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
+import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
 import org.j1sk1ss.menuframework.objects.interactive.components.Icon;
 import org.j1sk1ss.menuframework.objects.interactive.components.Panel;
-import org.j1sk1ss.menuframework.objects.nonInteractive.Margin;
+import org.j1sk1ss.menuframework.objects.interactive.components.Button;
+import org.j1sk1ss.menuframework.objects.interactive.components.ClickArea;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static economy.pcconomy.frontend.TraderWindow.getTraderFromTitle;

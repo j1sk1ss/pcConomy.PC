@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.Capitalist;
-import economy.pcconomy.backend.economy.credit.Loan;
 import economy.pcconomy.backend.cash.Cash;
 import economy.pcconomy.backend.cash.Balance;
+import economy.pcconomy.backend.economy.Capitalist;
+import economy.pcconomy.backend.economy.credit.Loan;
 
 import net.potolotcraft.gorodki.GorodkiUniverse;
 
@@ -54,13 +54,13 @@ public class Bank extends Capitalist {
      */
     public void giveCash2Player(double amount, Player player) {
         if (amount >= dayWithdrawBudget) return;
-        if (player.solvent(amount)) return;
+        if (!player.solvent(amount)) return;
 
-        player.takeMoney(amount);
-        player.giveCashToPlayer(amount, true);
-
-        budget -= amount;
-        dayWithdrawBudget -= amount;
+        if (player.takeMoney(amount)) {
+            player.giveCashToPlayer(amount, true);
+            budget -= amount;
+            dayWithdrawBudget -= amount;
+        }
     }
 
     /**
@@ -68,14 +68,17 @@ public class Bank extends Capitalist {
      * @param amount Amount of taken cash
      * @param player Player that will lose cash
      */
-    public void takeCashFromPlayer(double amount, Player player) {
-        if (amount > player.amountOfCashInInventory(true)) return;
+    public boolean takeCashFromPlayer(double amount, Player player) {
+        if (amount > player.amountOfCashInInventory(true)) return false;
 
-        player.takeCashFromPlayer(amount, true);
-        player.giveMoney(amount);
+        if (player.takeCashFromPlayer(amount, true)) {
+            player.giveMoney(amount);
+            budget += amount;
+            dayWithdrawBudget += amount;
+            return true;
+        }
 
-        budget += amount;
-        dayWithdrawBudget += amount;
+        return false;
     }
 
     /**

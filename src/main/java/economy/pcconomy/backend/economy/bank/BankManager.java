@@ -1,8 +1,8 @@
 package economy.pcconomy.backend.economy.bank;
 
-import economy.pcconomy.backend.db.Loadable;
 import lombok.Getter;
 import lombok.Setter;
+import economy.pcconomy.backend.db.Loadable;
 
 
 @Setter

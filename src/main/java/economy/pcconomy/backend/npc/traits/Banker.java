@@ -1,10 +1,10 @@
 package economy.pcconomy.backend.npc.traits;
 
-import economy.pcconomy.frontend.BankerWindow;
-import net.citizensnpcs.api.event.NPCRightClickEvent;
+import org.bukkit.event.EventHandler;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
-import org.bukkit.event.EventHandler;
+import economy.pcconomy.frontend.BankerWindow;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 
 @TraitName("Banker")

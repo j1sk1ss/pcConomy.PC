@@ -1,19 +1,19 @@
 package economy.pcconomy.backend.economy.credit;
 
 import economy.pcconomy.PcConomy;
-import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.cash.Balance;
+import economy.pcconomy.backend.economy.Capitalist;
 import economy.pcconomy.backend.economy.PlayerManager;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.ExtensionMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import lombok.experimental.ExtensionMethod;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
+import java.util.Objects;
 
 
 @Getter
@@ -138,7 +138,7 @@ public class Loan {
         var loan = getLoan(player.getUniqueId(), creditOwner);
 
         if (loan == null) return false;
-        if (player.solvent(loan.amount)) return false;
+        if (!player.solvent(loan.amount)) return false;
 
         player.takeMoney(loan.amount);
         creditOwner.changeBudget(loan.amount);
@@ -160,7 +160,7 @@ public class Loan {
                 return;
             }
 
-            if (owner.solvent(loan.dailyPayment)) {
+            if (!owner.solvent(loan.dailyPayment)) {
                 loan.expired += 1;
                 continue;
             }
