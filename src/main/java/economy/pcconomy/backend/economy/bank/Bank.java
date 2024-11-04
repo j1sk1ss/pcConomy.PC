@@ -23,10 +23,10 @@ import net.potolotcraft.gorodki.GorodkiUniverse;
 @ExtensionMethod({Cash.class, Balance.class})
 public class Bank extends Capitalist {
     public Bank() {
-        budget              = PcConomy.Config.getDouble("bank.start_budget", 15000d);
-        usefulBudgetPercent = PcConomy.Config.getDouble("bank.start_useful_budget", .25d);
-        vat                 = PcConomy.Config.getDouble("bank.start_VAT", .1d);
-        depositPercent      = PcConomy.Config.getDouble("bank.start_deposit_percent", .05d);
+        budget              = PcConomy.getInstance().config.getDouble("bank.start_budget", 15000d);
+        usefulBudgetPercent = PcConomy.getInstance().config.getDouble("bank.start_useful_budget", .25d);
+        vat                 = PcConomy.getInstance().config.getDouble("bank.start_VAT", .1d);
+        depositPercent      = PcConomy.getInstance().config.getDouble("bank.start_deposit_percent", .05d);
         dayWithdrawBudget   = budget * usefulBudgetPercent;
         trustCoefficient    = 2d;
 
@@ -52,15 +52,18 @@ public class Bank extends Capitalist {
      * @param amount Amount of given cash
      * @param player Player that will take cash
      */
-    public void giveCash2Player(double amount, Player player) {
-        if (amount >= dayWithdrawBudget) return;
-        if (!player.solvent(amount)) return;
+    public boolean giveCash2Player(double amount, Player player) {
+        if (amount >= dayWithdrawBudget) return false;
+        if (!player.solvent(amount)) return false;
 
         if (player.takeMoney(amount)) {
             player.giveCashToPlayer(amount, true);
             budget -= amount;
             dayWithdrawBudget -= amount;
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -168,7 +171,7 @@ public class Bank extends Capitalist {
      * @return value with VAT
       */
     public static double getValueWithVat(double value) {
-        return value + value * PcConomy.GlobalBank.getBank().vat;
+        return value + value * PcConomy.getInstance().bankManager.getBank().vat;
     }
 
     @Override

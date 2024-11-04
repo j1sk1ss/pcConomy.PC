@@ -106,7 +106,7 @@ public class TraderWindow {
                             var trader = getTraderFromTitle(title);
 
                             if (trader != null) {
-                                var playerTradeLicense = PcConomy.GlobalLicense.getLicense(player.getUniqueId(), LicenseType.Trade);
+                                var playerTradeLicense = PcConomy.getInstance().licenseManager.getLicense(player.getUniqueId(), LicenseType.Trade);
                                 if (playerTradeLicense == null) return;
                                 if (!playerTradeLicense.isOverdue())
                                     getExtendedRantedWindow(player, trader);
@@ -275,7 +275,7 @@ public class TraderWindow {
             ), "Trader");
 
     public static void getWindow(Player player, Trader trader) {
-        TraderWindow.TraderMenu.getPanel("Торговец-Ассортимент", PcConomy.Config.getString("ui.language", "RU")).resize(9 * trader.getLevel())
+        TraderWindow.TraderMenu.getPanel("Торговец-Ассортимент", PcConomy.getInstance().config.getString("ui.language", "RU")).resize(9 * trader.getLevel())
             .getViewWith(
                 player,
                 "Торговец-Ассортимент " + trader.getNPC().getId(),
@@ -284,12 +284,12 @@ public class TraderWindow {
     }
 
     public static void getOwnerWindow(Player player, Trader trader) {
-        TraderWindow.TraderMenu.getPanel("Торговец-Управление", PcConomy.Config.getString("ui.language", "RU"))
+        TraderWindow.TraderMenu.getPanel("Торговец-Управление", PcConomy.getInstance().config.getString("ui.language", "RU"))
                 .getView(player, "Торговец-Управление " + trader.getNPC().getId());
     }
 
     public static void getRanterWindow(Player player, Trader trader) {
-        TraderMenu.getPanel("Торговец-Аренда", PcConomy.Config.getString("ui.language", "RU"))
+        TraderMenu.getPanel("Торговец-Аренда", PcConomy.getInstance().config.getString("ui.language", "RU"))
             .getView(player, "Торговец-Аренда " + trader.getNPC().getId(),
                 Map.of(
                 "Арендовать", List.of("Окно аренды торговца. Цена за день: " + trader.getCost() + Cash.currencySigh

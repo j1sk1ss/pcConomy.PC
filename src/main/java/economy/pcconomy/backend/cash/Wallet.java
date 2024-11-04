@@ -48,7 +48,7 @@ public class Wallet {
     @Getter private final int Level;
     private final ItemStack Body;
 
-    private static final int walletDataModel = 17050; //TODO: DATA MODEL
+    private static final int walletDataModel = 17050;
 
     /**
      * Give this wallet to player

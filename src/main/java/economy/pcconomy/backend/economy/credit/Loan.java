@@ -61,7 +61,7 @@ public class Loan {
      * @return Percent of this loan
      */
     public static double getPercent(double amount, double duration) {
-        return Math.round((PcConomy.GlobalBank.getBank().getDayWithdrawBudget() / (amount * duration)) * 1000d) / 1000d;
+        return Math.round((PcConomy.getInstance().bankManager.getBank().getDayWithdrawBudget() / (amount * duration)) * 1000d) / 1000d;
     }
 
     /**
@@ -83,13 +83,13 @@ public class Loan {
     public static double getSafetyFactor(double amount, int duration, Borrower borrower) {
         var expired = 0;
         if (borrower == null)
-            return Math.abs((duration / 100d) / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget())));
+            return Math.abs((duration / 100d) / (expired + (amount / PcConomy.getInstance().bankManager.getBank().getDayWithdrawBudget())));
 
         for (var loan : borrower.CreditHistory)
             expired += loan.expired;
 
         return Math.abs((borrower.CreditHistory.size() + (duration / 100d))
-                / (expired + (amount / PcConomy.GlobalBank.getBank().getDayWithdrawBudget())));
+                / (expired + (amount / PcConomy.getInstance().bankManager.getBank().getDayWithdrawBudget())));
     }
 
     /**
@@ -102,7 +102,7 @@ public class Loan {
     public static boolean isSafeLoan(double loanAmount, int duration, Capitalist loaner, Player borrower) {
         return (getSafetyFactor(loanAmount, duration, borrower.getBorrowerObject()) >= loaner.getTrustCoefficient()
                 && !blackTown(borrower.getCountryMens())
-                && borrower.getPlayerServerDuration() > 0);
+                && borrower.getPlayerServerDuration() > 100);
     }
 
     /**
@@ -112,7 +112,7 @@ public class Loan {
      */
     public static boolean blackTown(List<Player> uuids) {
         return uuids.parallelStream().anyMatch(player -> {
-            var loan = getLoan(player.getUniqueId(), PcConomy.GlobalBank.getBank());
+            var loan = getLoan(player.getUniqueId(), PcConomy.getInstance().bankManager.getBank());
             return loan != null && loan.expired > 5;
         });
     }
@@ -199,7 +199,7 @@ public class Loan {
         if (borrower != null) {
             borrower.CreditHistory.add(loan);
             borrower.setBorrowerObject();
-        } else PcConomy.GlobalBorrower.borrowers.add(new Borrower(Objects.requireNonNull(Bukkit.getPlayer(player)), loan));
+        } else PcConomy.getInstance().borrowerManager.borrowers.add(new Borrower(Objects.requireNonNull(Bukkit.getPlayer(player)), loan));
 
         credit.remove(getLoan(player, creditOwner));
     }

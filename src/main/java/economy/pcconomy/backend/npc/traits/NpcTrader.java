@@ -20,7 +20,12 @@ public class NpcTrader extends Trait {
         var player = event.getClicker();
         if (!event.getNPC().equals(this.getNPC())) return;
 
-        GorodkiUniverse.getInstance().getNPCGorod(TownyAPI.getInstance().getTownUUID(this.getNPC().getStoredLocation())).generateLocalPrices();
-        NPCTraderWindow.generateWindow(player, this.getNPC());
+        try {
+            GorodkiUniverse.getInstance().getNPCGorod(TownyAPI.getInstance().getTownUUID(this.getNPC().getStoredLocation())).generateLocalPrices();
+            NPCTraderWindow.generateWindow(player, this.getNPC());
+        }
+        catch (Exception e) {
+            player.sendMessage("Я вообще ничего не понимаю! Где я?");
+        }
     }
 }

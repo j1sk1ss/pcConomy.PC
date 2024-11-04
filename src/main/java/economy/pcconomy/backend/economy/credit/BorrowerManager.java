@@ -18,7 +18,7 @@ public class BorrowerManager extends Loadable {
      * @return Borrower object
      */
     public static Borrower getBorrowerObject(Player player) {
-        for (var borrower : PcConomy.GlobalBorrower.borrowers)
+        for (var borrower : PcConomy.getInstance().borrowerManager.borrowers)
             if (borrower.getBorrower().equals(player.getUniqueId())) return borrower;
 
         return null;
@@ -29,9 +29,9 @@ public class BorrowerManager extends Loadable {
      * @param borrowerObject New borrower object
      */
     public static void setBorrowerObject(Borrower borrowerObject) {
-        for (var borrower = 0; borrower < PcConomy.GlobalBorrower.borrowers.size(); borrower++)
-            if (PcConomy.GlobalBorrower.borrowers.get(borrower).getBorrower().equals(borrowerObject.getBorrower()))
-                PcConomy.GlobalBorrower.borrowers.set(borrower, borrowerObject);
+        for (var borrower = 0; borrower < PcConomy.getInstance().borrowerManager.borrowers.size(); borrower++)
+            if (PcConomy.getInstance().borrowerManager.borrowers.get(borrower).getBorrower().equals(borrowerObject.getBorrower()))
+                PcConomy.getInstance().borrowerManager.borrowers.set(borrower, borrowerObject);
     }
 
     @Override

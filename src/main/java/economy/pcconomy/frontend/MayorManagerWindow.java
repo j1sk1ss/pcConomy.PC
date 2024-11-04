@@ -43,6 +43,12 @@ import static economy.pcconomy.frontend.TraderWindow.getTraderFromTitle;
 public class MayorManagerWindow implements Listener {
     private static final MenuWindow TraderManager = new MenuWindow(Arrays.asList(
         new Panel(List.of(
+            /*
+            ============================================
+            Mayor manager window click handler.
+            In this window, user can manage npc-traders and buy a new one.
+            ============================================
+             */
             new ClickArea(new Margin(0, 0, 2, 8),
                 (event, menu) -> {
                     var player = (Player)event.getWhoClicked();
@@ -53,10 +59,16 @@ public class MayorManagerWindow implements Listener {
                 }),
 
             new Button(new Margin(3, 0, 0, 8), "Купить торговца", "Купить нового торговца",
-                (event, menu) -> new Trader().Buy((Player) event.getWhoClicked()), Material.GOLD_INGOT, 7000)
+                (event, menu) -> new Trader().buy((Player) event.getWhoClicked()), Material.GOLD_INGOT, 7000)
         ), "Город-Торговцы", MenuSizes.FourLines, "\u10D3"),
 
         new Panel(Arrays.asList(
+            /*
+            ============================================
+            Mayor npc-trader manager window click handler.
+            In this window, user can manage npc-trader.
+            ============================================
+             */
             new Button(new Margin(0, 0, 2, 2), "Уволить торговца", "Торговец будет уволен",
                 (event, menu) -> {
                     var title  = Utils.getInventoryTitle(event);
@@ -97,7 +109,7 @@ public class MayorManagerWindow implements Listener {
                     if (Bank.getValueWithVat(price) > inventoryAmount) return;
 
                     trader.setLevel(Math.min(trader.getLevel() + 1, 6));
-                    player.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
+                    player.takeCashFromPlayer(PcConomy.getInstance().bankManager.getBank().addVAT(price), false);
                 }, Material.GOLD_INGOT, 7000)
         ), "Торговцы-Управление", MenuSizes.ThreeLines, "\u10D4")
     ), "Mayor");
@@ -125,7 +137,7 @@ public class MayorManagerWindow implements Listener {
         var player = (Player)event.getPlayer();
         var container = player.getPersistentDataContainer();
         var block = event.getClickedBlock();
-        var key = new NamespacedKey(PcConomy.getPlugin(PcConomy.class), "trader-move");
+        var key = new NamespacedKey(PcConomy.getInstance(), "trader-move");
 
         if (block == null) return;
         if (container.has(key, PersistentDataType.INTEGER)) {

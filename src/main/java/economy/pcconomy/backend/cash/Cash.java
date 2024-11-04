@@ -1,5 +1,6 @@
 package economy.pcconomy.backend.cash;
 
+import economy.pcconomy.PcConomy;
 import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.Material;
@@ -18,31 +19,31 @@ public class Cash {
     /**
      * Currency name that will be used in all plugin
      */
-    public final static String currencyName = "Алеф";
+    public final static String currencyName = PcConomy.getInstance().getConfig().getString("currency.name.raw", "Алеф");
 
     /**
      * Currency sigh that will be used in all plugin
      */
-    public final static String currencySigh = "$";
+    public final static String currencySigh = PcConomy.getInstance().getConfig().getString("currency.sigh", "$");
 
     /**
      * Declination of currency name
      */
     private static final HashMap<String, String> currencyNameCases = new HashMap<>();
     static {
-        currencyNameCases.put("is", "Алеф");
-        currencyNameCases.put("rs", "Алефа");
-        currencyNameCases.put("ds", "Алефу");
-        currencyNameCases.put("vs", "Алеф");
-        currencyNameCases.put("ts", "Алефом");
-        currencyNameCases.put("ps", "Алефе");
+        currencyNameCases.put("is", PcConomy.getInstance().getConfig().getString("currency.name.is", "Алеф"));
+        currencyNameCases.put("rs", PcConomy.getInstance().getConfig().getString("currency.name.rs", "Алефа"));
+        currencyNameCases.put("ds", PcConomy.getInstance().getConfig().getString("currency.name.ds", "Алефу"));
+        currencyNameCases.put("vs", PcConomy.getInstance().getConfig().getString("currency.name.vs", "Алеф"));
+        currencyNameCases.put("ts", PcConomy.getInstance().getConfig().getString("currency.name.ts", "Алефом"));
+        currencyNameCases.put("ps", PcConomy.getInstance().getConfig().getString("currency.name.ps", "Алефе"));
 
-        currencyNameCases.put("ip", "Алефы");
-        currencyNameCases.put("rp", "Алефов");
-        currencyNameCases.put("dp", "Алефам");
-        currencyNameCases.put("vp", "Алефы");
-        currencyNameCases.put("tp", "Алефами");
-        currencyNameCases.put("pp", "Алефах");
+        currencyNameCases.put("ip", PcConomy.getInstance().getConfig().getString("currency.name.ip", "Алефы"));
+        currencyNameCases.put("rp", PcConomy.getInstance().getConfig().getString("currency.name.rp", "Алефов"));
+        currencyNameCases.put("dp", PcConomy.getInstance().getConfig().getString("currency.name.dp", "Алефам"));
+        currencyNameCases.put("vp", PcConomy.getInstance().getConfig().getString("currency.name.vp", "Алефы"));
+        currencyNameCases.put("tp", PcConomy.getInstance().getConfig().getString("currency.name.tp", "Алефами"));
+        currencyNameCases.put("pp", PcConomy.getInstance().getConfig().getString("currency.name.pp", "Алефах"));
     }
 
     /**
@@ -51,6 +52,24 @@ public class Cash {
     public static final List<Double> Denomination =
         Arrays.asList(5000.0, 2000.0, 1000.0, 500.0, 200.0, 100.0, 50.0, 10.0, 1.0, 0.5, 0.1, 0.05, 0.01);
 
+    public static final Map<Double, Integer> CashModelData;
+    static {
+        CashModelData = new HashMap<>();
+        CashModelData.put(5000d, 20000);
+        CashModelData.put(2000d, 20001);
+        CashModelData.put(1000d, 20002);
+        CashModelData.put(500d, 20003);
+        CashModelData.put(200d, 20004);
+        CashModelData.put(100d, 20005);
+        CashModelData.put(50d, 20006);
+        CashModelData.put(10d, 20007);
+        CashModelData.put(1d, 20008);
+        CashModelData.put(.5d, 20009);
+        CashModelData.put(.1d, 20010);
+        CashModelData.put(.05d, 20011);
+        CashModelData.put(.01d, 20012);
+    }
+
     /**
      * Creates itemStack object
      * @param amount Amount of cash object
@@ -58,7 +77,8 @@ public class Cash {
      * @return ItemStack object
      */
     public static ItemStack createCashObject(double amount, int count) {
-        var cashBody = new Item(currencyName, amount + currencySigh, Material.PAPER, count, 20000 + (int)amount);
+        assert currencyName != null;
+        var cashBody = new Item(currencyName, amount + currencySigh, Material.PAPER, count, CashModelData.get(amount));
         cashBody.setDouble2Container(amount, "cash-value");
         return cashBody;
     }

@@ -99,16 +99,14 @@ public class Trader extends Trait {
 
     @EventHandler
     public void onClick(NPCRightClickEvent event) {
-        if (!event.getNPC().equals(this.getNPC())) return;
+        if (!event.getNPC().equals(getNPC())) return;
         if (HomeTown == null) {
-            var storedTown = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
+            var storedTown = TownyAPI.getInstance().getTown(getNPC().getStoredLocation());
             if (storedTown != null) HomeTown = storedTown.getUUID();
             else {
                 event.getClicker().sendMessage("Что я здесь забыл?");
-                HomeTown = null;
+                return;
             }
-
-            return;
         }
 
         // We stole all moneys to town and delete all resources if rant is over
@@ -130,7 +128,7 @@ public class Trader extends Trait {
                 else TraderWindow.getWindow(player, this);
             }
             else {
-                var town = TownyAPI.getInstance().getTown(this.getNPC().getStoredLocation());
+                var town = TownyAPI.getInstance().getTown(getNPC().getStoredLocation());
                 if (town == null) return;
 
                 if (town.getMayor().getUUID().equals(player.getUniqueId())) TraderWindow.getMayorWindow(player, this);
@@ -211,20 +209,21 @@ public class Trader extends Trait {
     }
 
     public void destroy() {
-        this.getNPC().destroy();
+        GorodkiUniverse.getInstance().getGorod(TownyAPI.getInstance().getTownUUID(getNPC().getStoredLocation())).getTraders().remove(Integer.valueOf(getNPC().getId()));
+        getNPC().destroy();
     }
 
-    public void Buy(Player buyer) {
+    public void buy(Player buyer) {
         if (buyer.amountOfCashInInventory(false) < Bank.getValueWithVat(
-                PcConomy.Config.getDouble("npc.trader_cost", 3500d)
+                PcConomy.getInstance().config.getDouble("npc.trader_cost", 3500d)
         )) return;
 
-        var license = PcConomy.GlobalLicense.getLicense(buyer.getUniqueId(), LicenseType.Market);
+        var license = PcConomy.getInstance().licenseManager.getLicense(buyer.getUniqueId(), LicenseType.Market);
         if (license == null) return;
         if (license.isOverdue()) return;
 
-        buyer.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(
-                PcConomy.Config.getDouble("npc.trader_cost", 3500d)
+        buyer.takeCashFromPlayer(PcConomy.getInstance().bankManager.getBank().addVAT(
+                PcConomy.getInstance().config.getDouble("npc.trader_cost", 3500d)
         ), false);
 
         var npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Trader");

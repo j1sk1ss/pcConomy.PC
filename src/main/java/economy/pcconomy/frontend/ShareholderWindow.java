@@ -30,6 +30,11 @@ import java.util.ArrayList;
 public class ShareholderWindow {
     private static final MenuWindow ShareHolderMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
+            /*
+            ============================================
+            Shareholder main window.
+            ============================================
+             */
             new Button(new Margin(0, 0, 2, 2), "Покупка/продажа акций", "Покупка и продажа акций городов на рынке",
                 (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
@@ -41,7 +46,7 @@ public class ShareholderWindow {
                     var player = (Player) event.getWhoClicked();
                     var town = TownyAPI.getInstance().getTown(player);
                     if (town != null) {
-                        if (PcConomy.GlobalShare.getInteractionList().contains(town.getUUID())) {
+                        if (PcConomy.getInstance().shareManager.getInteractionList().contains(town.getUUID())) {
                             player.sendMessage("Ваш город уже работал с акциями сегодня");
                             return;
                         }
@@ -60,13 +65,18 @@ public class ShareholderWindow {
                     for (var item : inventory) {
                         if (item == null) continue;
                         if (Share.isShare(item))
-                            PcConomy.GlobalShare.cashOutShare(player, new Share(item));
+                            PcConomy.getInstance().shareManager.cashOutShare(player, new Share(item));
                     }
                 }, Material.GOLD_INGOT, 7000)
 
         ), "Акции-Меню", MenuSizes.ThreeLines, "\u10D6"),
 
         new Panel(Arrays.asList(
+            /*
+            ============================================
+            Shareholder list of shares.
+            ============================================
+             */
             new ClickArea(new Margin(0, 0, 4, 8),
                 (event, menu) -> {
                     var player = (Player)event.getWhoClicked();                
@@ -98,13 +108,19 @@ public class ShareholderWindow {
         ), "Акции-Список", MenuSizes.SixLines, "\u10D7"),
 
         new Panel(Arrays.asList(
+            /*
+            ============================================
+            Buy share window.
+            Window, where player can buy one share.
+            ============================================
+             */
             new Button(new Margin(0, 5, 2, 3), "Купить одну акцию", "",
                 (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
                     var town   = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     assert town != null;
 
-                    var share  = PcConomy.GlobalShare.soldFirstEmptyShare(town.getUUID());
+                    var share  = PcConomy.getInstance().shareManager.soldFirstEmptyShare(town.getUUID());
                     if (share == null) {
                         player.sendMessage("Акции данного города не доступны к покупке (6)");
                         return;
@@ -129,6 +145,12 @@ public class ShareholderWindow {
         ), "Акции-Города", MenuSizes.ThreeLines, "\u10D8"),
 
         new Panel(Arrays.asList(
+            /*
+            ============================================
+            Shareholder expose window.
+            In this window, mayor can expose shares of town.
+            ============================================
+             */
             new Button(new Margin(0, 0, 2, 2), "Выставить на продажу", "Акции будут выставлены на продажу",
                 (event, menu) -> {
                     var player = (Player) event.getWhoClicked();
@@ -143,7 +165,7 @@ public class ShareholderWindow {
 
                     if (costSlider.equals(Slider.SliderNone) || countSlider.equals(Slider.SliderNone) ||
                             percentSlider.equals(Slider.SliderNone) || typeSlider.equals(Slider.SliderNone)) return;
-                    PcConomy.GlobalShare.exposeShares(
+                    PcConomy.getInstance().shareManager.exposeShares(
                             town.getUUID(),
                             Double.parseDouble(costSlider.replace(Cash.currencySigh, "")),
                             Integer.parseInt(countSlider.replace("шт.", "")),
@@ -160,7 +182,7 @@ public class ShareholderWindow {
                     var town = TownyAPI.getInstance().getTown(Utils.getInventoryTitle(event).split(" ")[1]);
                     if (town == null) return;
 
-                    PcConomy.GlobalShare.takeOffShares(town.getUUID());
+                    PcConomy.getInstance().shareManager.takeOffShares(town.getUUID());
                     player.sendMessage("Акции города сняты с продажы");
                 }, Material.GOLD_INGOT, 7000),
 
@@ -186,11 +208,11 @@ public class ShareholderWindow {
     }
 
     private static void sharesWindow(Player player, int windowNumber) {
-        var actions = PcConomy.GlobalShare.getShares().keySet().toArray();
+        var actions = PcConomy.getInstance().shareManager.getShares().keySet().toArray();
         var list = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         for (var i = windowNumber * 27; i < actions.length; i++)
             for (var j = i; j < i + Math.min(Math.max(actions.length - 27, 1), 27); j++) {
-                var share = PcConomy.GlobalShare.getTownShares((UUID) actions[j]).get(0);
+                var share = PcConomy.getInstance().shareManager.getTownShares((UUID) actions[j]).get(0);
 
                 var townName = "[удалён]";
                 var town = TownyAPI.getInstance().getTown((UUID) actions[j]);

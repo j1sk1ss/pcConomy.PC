@@ -16,8 +16,24 @@ town:
   start_useful_storage: 0.30
   start_vat: 0.05
 ui:
-  language: EN
-  loc4bank: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\bank_loc.txt
-  loc4lic: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\license_loc.txt
-  loc4mayor: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\mayor_loc.txt
-  loc4trader: C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\trader_loc.txt
+  language: "EN"
+  loc4bank: "C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\bank_loc.txt"
+  loc4lic: "C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\license_loc.txt"
+  loc4mayor: "C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\mayor_loc.txt"
+  loc4trader: "C:\Users\j1sk1ss\Desktop\pServer\plugins\MenuFramework\trader_loc.txt"
+currency:
+  name:
+    raw: "Алеф"
+    is: "Алеф"
+    rs: "Алефа"
+    ds: "Алефу"
+    vs: "Алеф"
+    ts: "Алефом"
+    ps: "Алефе"
+    ip: "Алефы"
+    rp: "Алефов"
+    dp: "Алефам"
+    vp: "Алефы"
+    tp: "Алефами"
+    pp: "Алефах"
+  sigh: "$"

@@ -31,7 +31,7 @@ import java.util.Hashtable;
 @ExtensionMethod({Cash.class})
 public class NpcManager extends Loadable implements Listener {
     public Map<Integer, TraderData> Npc = new Hashtable<>();
-    public static final double traderCost = PcConomy.Config.getDouble("npc.trader_cost", 1500d);
+    public static final double traderCost = PcConomy.getInstance().config.getDouble("npc.trader_cost", 1500d);
 
     @EventHandler
     public void RegisterNpc(CitizensEnableEvent event) {
@@ -76,8 +76,8 @@ public class NpcManager extends Loadable implements Listener {
      */
     public static void reloadNPC() {
         for (net.citizensnpcs.api.npc.NPC npc: CitizensAPI.getNPCRegistry()) {
-            if (PcConomy.GlobalNPC.Npc.get(npc.getId()) != null) {
-                var trader = new Trader(PcConomy.GlobalNPC.Npc.get(npc.getId()));
+            if (PcConomy.getInstance().npcManager.Npc.get(npc.getId()) != null) {
+                var trader = new Trader(PcConomy.getInstance().npcManager.Npc.get(npc.getId()));
                 trader.linkToNPC(npc);
                 npc.addTrait(trader);
                 continue;

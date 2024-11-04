@@ -83,7 +83,7 @@ public class Share {
     public void buyShare(Player buyer) {
         if (isSold) return;
         if (Cash.amountOfCashInInventory(buyer, false) >= Bank.getValueWithVat(price)) {
-            buyer.takeCashFromPlayer(PcConomy.GlobalBank.getBank().addVAT(price), false);
+            buyer.takeCashFromPlayer(PcConomy.getInstance().bankManager.getBank().addVAT(price), false);
             GorodkiUniverse.getInstance().getGorod(townUUID).changeBudget(price);
 
             isSold = true;
@@ -104,7 +104,7 @@ public class Share {
         }
 
         if (currentTown.getBudget() >= price) {
-            seller.giveCashToPlayer(PcConomy.GlobalBank.getBank().deleteVAT(price), false);
+            seller.giveCashToPlayer(PcConomy.getInstance().bankManager.getBank().deleteVAT(price), false);
             currentTown.changeBudget(-price);
 
             isSold = false;

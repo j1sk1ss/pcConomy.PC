@@ -27,6 +27,11 @@ import java.util.ArrayList;
 public class NPCLoanWindow {
     private static final MenuWindow LoanMenu = new MenuWindow(Arrays.asList(
         new Panel(Arrays.asList(
+            /*
+            ============================================
+            NPC-loaner main menu.
+            ============================================
+             */
             new Button(new Margin(0, 0, 2, 3), "Взять кредит", "Взять кредит у банка",
                 (event, menu) -> {
                     var player = (Player)event.getWhoClicked();
@@ -36,7 +41,7 @@ public class NPCLoanWindow {
             new Button(new Margin(0, 5, 2, 3), "Погасить кредит", "Погасить кредит банка",
                 (event, menu) -> {
                     var player = (Player)event.getWhoClicked();
-                    var code = Loan.payOffADebt(player, PcConomy.GlobalBank.getBank());
+                    var code = Loan.payOffADebt(player, PcConomy.getInstance().bankManager.getBank());
                     player.closeInventory();
 
                     if (code) player.sendMessage("Кредит был успешно погашен.");
@@ -45,6 +50,11 @@ public class NPCLoanWindow {
         ), "Кредит-Банк", MenuSizes.ThreeLines, "\u10D2"),
 
         new Panel(Arrays.asList(
+            /*
+            ============================================
+            NPC-loaner take loan window.
+            ============================================
+             */
             new Slider(new Margin(2, 0, 8, Direction.Horizontal), Arrays.asList(
                 "20 дн.", "30 дн.", "40 дн.", "50 дн.", "60 дн.", "70 дн.", "80 дн.", "90 дн.", "100 дн."
             ), "Размер", "Время выплаты",
@@ -59,12 +69,12 @@ public class NPCLoanWindow {
                     var options = new ArrayList<String>();
 
                     for (var i = 0; i < countOfAmountSteps; i++) {
-                        var maxLoanSize = PcConomy.GlobalBank.getBank().getDayWithdrawBudget() * 2;
-                        var isSafe = Loan.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), PcConomy.GlobalBank.getBank(), player);
+                        var maxLoanSize = PcConomy.getInstance().bankManager.getBank().getDayWithdrawBudget() * 2;
+                        var isSafe = Loan.isSafeLoan(maxLoanSize / (9 - i), durationSteps.get((8 - i)), PcConomy.getInstance().bankManager.getBank(), player);
                         var val = Math.round(maxLoanSize / (countOfAmountSteps - i) * 100) / 100 + " " + Cash.currencySigh;
                         var opt = "Банк не одобрит данный займ";
 
-                        if (isSafe && !PcConomy.GlobalBank.getBank().getBorrowers().contains(player.getUniqueId())) {
+                        if (isSafe && !PcConomy.getInstance().bankManager.getBank().getBorrowers().contains(player.getUniqueId())) {
                             opt = "Банк одобрит данный займ\nПроцент: " +
                                     (Math.round(Loan.getPercent(maxLoanSize / (countOfAmountSteps - i), durationSteps.get((8 - i))) * 100) * 100d) / 100d + "%";
                             value = i;
@@ -95,9 +105,9 @@ public class NPCLoanWindow {
 
                         if (durSlider.equals("none")) return;
                         if (agreement.contains("Банк одобрит данный займ")) {
-                            if (!PcConomy.GlobalBank.getBank().getCredit().contains(Loan.getLoan(player.getUniqueId(), PcConomy.GlobalBank.getBank()))) {
+                            if (!PcConomy.getInstance().bankManager.getBank().getCredit().contains(Loan.getLoan(player.getUniqueId(), PcConomy.getInstance().bankManager.getBank()))) {
                                 var loan = Loan.createLoan(value, Integer.parseInt(durSlider.split(" ")[0]), player);
-                                loan.addLoan(PcConomy.GlobalBank.getBank());
+                                loan.addLoan(PcConomy.getInstance().bankManager.getBank());
 
                                 player.closeInventory();
                                 player.sendMessage("Вам был выдан кредит в размере: " + loan.getAmount() + Cash.currencySigh);

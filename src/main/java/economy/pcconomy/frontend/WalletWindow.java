@@ -101,8 +101,7 @@ public class WalletWindow implements Listener {
         var cashInInventory = Math.min(player.amountOfCashInInventory(true), wallet.getCapacity() - wallet.getAmount());
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         var icon = new Icon(
-            new Margin(0, 0,0),
-            "Положить все средства", -cashInInventory + Cash.currencySigh, Material.GOLD_INGOT, 7002
+            new Margin(0, 0,0), "Положить все средства", -cashInInventory + Cash.currencySigh, Material.GOLD_INGOT, 7002
         );
 
         icon.setDouble2Container(-cashInInventory, "item-wallet-value");
@@ -117,8 +116,7 @@ public class WalletWindow implements Listener {
         var cashInWallet = wallet.getAmount();
         var components = new ArrayList<org.j1sk1ss.menuframework.objects.interactive.Component>();
         var icon = new Icon(
-            new Margin(0, 0,0),
-            "Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.GOLD_INGOT, 7001
+            new Margin(0, 0,0), "Снять максимум", "\n" + Math.round(cashInWallet) + Cash.currencySigh, Material.GOLD_INGOT, 7001
         );
 
         icon.setDouble2Container(cashInWallet, "item-wallet-value");
@@ -131,8 +129,7 @@ public class WalletWindow implements Listener {
 
     private static org.j1sk1ss.menuframework.objects.interactive.Component printButtons(int positive, int pos) {
         var icon = new Icon(
-            new Margin(pos, 0,0),
-            "Действия", (positive * Cash.Denomination.get(pos)) + Cash.currencySigh, Material.GOLD_INGOT, 7002
+            new Margin(pos, 0,0), "Действия", (positive * Cash.Denomination.get(pos)) + Cash.currencySigh, Material.GOLD_INGOT, 7002
         );
 
         icon.setDouble2Container(positive * Cash.Denomination.get(pos), "item-wallet-value");

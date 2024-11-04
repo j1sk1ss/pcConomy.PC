@@ -34,7 +34,7 @@ public class CommandManager implements CommandExecutor {
             case "take_cash"          -> ((Player)sender).takeCashFromPlayer(Double.parseDouble(args[0]), true);
             case "create_cash"        -> ((Player)sender).giveCashToPlayer(Double.parseDouble(args[0]), true);
             case "reload_npc"         -> NpcManager.reloadNPC();
-            case "put_cash2bank"      -> PcConomy.GlobalBank.getBank().takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
+            case "put_cash2bank"      -> PcConomy.getInstance().bankManager.getBank().takeCashFromPlayer(Double.parseDouble(args[0]), (Player)sender);
             case "create_banker"      -> NpcManager.createNPC((Player)sender, new Banker());
             case "create_npc_loaner"  -> NpcManager.createNPC((Player)sender, new NpcLoaner());
             case "create_trader"      -> NpcManager.createNPC((Player)sender, new Trader());
@@ -48,14 +48,14 @@ public class CommandManager implements CommandExecutor {
             }
 
             case "full_info" -> sender.sendMessage(
-                    "Bank budget: " + PcConomy.GlobalBank.getBank().getBudget() + "$\n" +
-                        "Global VAT: " + PcConomy.GlobalBank.getBank().getVat() * 100 + "%\n" +
-                        "Deposit percent: " + PcConomy.GlobalBank.getBank().getDepositPercent() * 100 + "%\n" +
-                        "Borrowers count: " + PcConomy.GlobalBorrower.borrowers.size() + "\n"
+                    "Bank budget: " + PcConomy.getInstance().bankManager.getBank().getBudget() + "$\n" +
+                        "Global VAT: " + PcConomy.getInstance().bankManager.getBank().getVat() * 100 + "%\n" +
+                        "Deposit percent: " + PcConomy.getInstance().bankManager.getBank().getDepositPercent() * 100 + "%\n" +
+                        "Borrowers count: " + PcConomy.getInstance().borrowerManager.borrowers.size() + "\n"
             );
 
-            case "bank_new_day"        -> PcConomy.GlobalBank.getBank().newDay();
-            case "set_day_bank_budget" -> PcConomy.GlobalBank.getBank().setDayWithdrawBudget((Double.parseDouble(args[0])));
+            case "bank_new_day"        -> PcConomy.getInstance().bankManager.getBank().newDay();
+            case "set_day_bank_budget" -> PcConomy.getInstance().bankManager.getBank().setDayWithdrawBudget((Double.parseDouble(args[0])));
             case "create_wallet"       -> new Wallet().giveWallet((Player) sender);
             case "global_market_prices" -> {
                 StringBuilder message = new StringBuilder();

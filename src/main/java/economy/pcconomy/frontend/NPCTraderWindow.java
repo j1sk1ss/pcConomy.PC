@@ -25,6 +25,11 @@ public class NPCTraderWindow {
     private static final MenuWindow NpcTradeWindow = new MenuWindow(
         List.of(
             new Panel(
+            /*
+            ============================================
+            NPC-trader main window.
+            ============================================
+             */
                 List.of(
                     new ClickArea(new Margin(0, 0, 4, 8),
                         (event, menu) -> {

@@ -12,50 +12,52 @@ website: https://potolotcraft.net
 commands:
   take_cash:
     usage: "/take_cash [amount]"
-    description: "take cash from inventory (Without bank)"
+    description: "<DEBUG> Take cash from inventory (Without bank)."
   create_cash:
     usage: "/create_cash [amount]"
-    description: "create cash and put to inventory (Without bank)"
+    description: "<DEBUG> Create cash and put to inventory (Without bank)."
   create_wallet:
     usage: "/create_wallet"
-    description: "create empty wallet"
+    description: "<DEBUG> Create empty wallet."
   create_shareholder:
     usage: "/create_shareholder"
-    description: "create shareholder npc"
+    description: "<DEBUG> Create shareholder npc."
   put_cash2bank:
     usage: "/put_cash2bank [amount]"
-    description: "take moneys from inventory and put it to the bank (Moved to your bank account)"
+    description: "<DEBUG> Take moneys from inventory and put it to the bank (Moved to your bank account)."
   create_banker:
     usage: "/create_banker"
-    description: "create banker npc"
+    description: "<DEBUG> Create banker npc."
   create_npc_loaner:
     usage: "/create_npc_loaner"
-    description: "create loaner npc"
+    description: "<DEBUG> Create loaner npc."
   create_trader:
     usage: "/create_trader"
-    description: "create trader npc (Trading between players)"
+    description: "<DEBUG> Create trader npc (Trading between players)."
   create_npc_trader:
     usage: "/create_npc_trader"
-    description: "create trader npc (Trading between players and npc towns)"
+    description: "<DEBUG> Create trader npc (Trading between players and npc towns)."
   create_licensor:
     usage: "/create_licensor"
-    description: "create licensor npc"
+    description: "<DEBUG> Create licensor npc."
   town_menu:
     usage: "/town_menu"
-    description: "open mayor menu"
+    description: "<DEBUG> Open mayor menu."
   reload_npc:
     usage: "/reload_npc"
+    description: "<DEBUG> Reload NPC."
   full_info:
     usage: "/full_info"
+    description: "<DEBUG> Get bank full."
   set_day_bank_budget:
     usage: "/set_day_bank_budget [amount]"
-    description: "<debug function> set budget that`s can be used by players in global bank"
+    description: "<DEBUG> Set budget that`s can be used by players in global bank."
   shares_rate:
     usage: "/shares_rate"
-    description: "get summary prices for all shares on market"
+    description: "<DEBUG> Get summary prices for all shares on market."
   global_market_prices:
     usage: "/global_market_prices"
-    description: "get summary prices of goods"
+    description: "<DEBUG> Get summary prices of goods."
   bank_new_day:
     usage: "/bank_new_day"
-    description: "<debug function> Invoke newDay() method"
+    description: "<DEBUG> Invoke newDay() method."

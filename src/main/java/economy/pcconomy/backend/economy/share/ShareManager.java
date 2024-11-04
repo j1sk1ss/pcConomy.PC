@@ -125,7 +125,7 @@ public class ShareManager extends Loadable {
     public void cashOutShare(Player owner, Share share) {
         for (var townShares : Shares.get(share.getTownUUID())) {
             if (townShares.getShareUUID().equals(share.getShareUUID())) {
-                owner.giveCashToPlayer(PcConomy.GlobalBank.getBank().deleteVAT(townShares.getRevenue()), false);
+                owner.giveCashToPlayer(PcConomy.getInstance().bankManager.getBank().deleteVAT(townShares.getRevenue()), false);
                 townShares.setRevenue(0);
                 break;
             }

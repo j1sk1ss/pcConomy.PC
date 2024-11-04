@@ -23,10 +23,10 @@ import java.time.LocalDateTime;
 
 @ExtensionMethod({Manager.class, Cash.class})
 public class LicenseManager extends Loadable {
-    @Getter private static final double marketLicensePrice      = PcConomy.Config.getDouble("license.market_license_price", 2400d);
-    @Getter private static final double tradeLicensePrice       = PcConomy.Config.getDouble("license.trade_license_price", 650d);
-    @Getter private static final double loanLicensePrice        = PcConomy.Config.getDouble("license.loan_license_price", 3500d);
-    @Getter private static final double loanHistoryLicensePrice = PcConomy.Config.getDouble("license.loan_history_license_price", 1200d);
+    @Getter private static final double marketLicensePrice      = PcConomy.getInstance().config.getDouble("license.market_license_price", 2400d);
+    @Getter private static final double tradeLicensePrice       = PcConomy.getInstance().config.getDouble("license.trade_license_price", 650d);
+    @Getter private static final double loanLicensePrice        = PcConomy.getInstance().config.getDouble("license.loan_license_price", 3500d);
+    @Getter private static final double loanHistoryLicensePrice = PcConomy.getInstance().config.getDouble("license.loan_history_license_price", 1200d);
 
     private static final Map<LicenseType, String> licenseTypes = Map.of(
         LicenseType.Trade, "Лицензия на ведение торговой деятельности",
@@ -65,13 +65,13 @@ public class LicenseManager extends Loadable {
     public static void giveLicenseToPlayer(Player player, LicenseType licenseType, double price) {
         if (player.amountOfCashInInventory(false) < price) return;
 
-        if (PcConomy.GlobalLicense.getLicense(player.getUniqueId(), licenseType) != null)
-            PcConomy.GlobalLicense.Licenses.remove(PcConomy.GlobalLicense.getLicense(player.getUniqueId(), licenseType));
+        if (PcConomy.getInstance().licenseManager.getLicense(player.getUniqueId(), licenseType) != null)
+            PcConomy.getInstance().licenseManager.Licenses.remove(PcConomy.getInstance().licenseManager.getLicense(player.getUniqueId(), licenseType));
 
         player.takeCashFromPlayer(price, false);
-        PcConomy.GlobalBank.getBank().changeBudget(price);
+        PcConomy.getInstance().bankManager.getBank().changeBudget(price);
 
-        PcConomy.GlobalLicense.createLicense(new License(player, LocalDateTime.now().plusDays(1), licenseType));
+        PcConomy.getInstance().licenseManager.createLicense(new License(player, LocalDateTime.now().plusDays(1), licenseType));
         new Item("Лицензия", licenseTypes.get(licenseType) + "\nВыдана: " + player.getName()).giveItems(player); //TODO: DATA MODEL
     }
 

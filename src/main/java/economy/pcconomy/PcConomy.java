@@ -34,15 +34,14 @@ import java.io.IOException;
 
 
 public final class PcConomy extends JavaPlugin {
-    public static FileConfiguration Config;
-    public static NpcManager        GlobalNPC;
-    public static BankManager       GlobalBank;
-    public static BorrowerManager   GlobalBorrower;
-    public static LicenseManager    GlobalLicense;
-    public static ShareManager      GlobalShare;
+    public FileConfiguration config;
+    public NpcManager npcManager;
+    public BankManager bankManager;
+    public BorrowerManager borrowerManager;
+    public LicenseManager licenseManager;
+    public ShareManager shareManager;
     
     private final String pluginPath = "plugins" + File.separator + "PcConomy" + File.separator;
-    private PcConomy instance;
 
     @Override
     public void onEnable() {
@@ -57,12 +56,12 @@ public final class PcConomy extends JavaPlugin {
         //  Init global objects
         //============================================
 
-            Config         = PcConomy.getPlugin(PcConomy.class).getConfig();
-            GlobalNPC      = new NpcManager();
-            GlobalBank     = new BankManager(new Bank());
-            GlobalBorrower = new BorrowerManager();
-            GlobalLicense  = new LicenseManager();
-            GlobalShare    = new ShareManager();
+            config = this.getConfig();
+            npcManager = new NpcManager();
+            bankManager = new BankManager(new Bank());
+            borrowerManager = new BorrowerManager();
+            licenseManager = new LicenseManager();
+            shareManager = new ShareManager();
 
             System.out.print("[PcConomy] Initializing global managers.\n");
 
@@ -74,15 +73,15 @@ public final class PcConomy extends JavaPlugin {
 
             try {
                 if (!Loadable.isFileEmpty(new File(pluginPath + "npc_data.json")))
-                    GlobalNPC = GlobalNPC.load(pluginPath + "npc_data", NpcManager.class);
+                    npcManager = npcManager.load(pluginPath + "npc_data", NpcManager.class);
                 if (!Loadable.isFileEmpty(new File(pluginPath + "bank_data.json")))
-                    GlobalBank = GlobalBank.load(pluginPath + "bank_data", BankManager.class);
+                    bankManager = bankManager.load(pluginPath + "bank_data", BankManager.class);
                 if (!Loadable.isFileEmpty(new File(pluginPath + "license_data.json")))
-                    GlobalLicense = GlobalLicense.load(pluginPath + "license_data", LicenseManager.class);
+                    licenseManager = licenseManager.load(pluginPath + "license_data", LicenseManager.class);
                 if (!Loadable.isFileEmpty(new File(pluginPath + "shares_data.json")))
-                    GlobalShare = GlobalShare.load(pluginPath + "shares_data", ShareManager.class);
+                    shareManager = shareManager.load(pluginPath + "shares_data", ShareManager.class);
                 if (!Loadable.isFileEmpty(new File(pluginPath + "borrowers_data.json")))
-                    GlobalBorrower = GlobalBorrower.load(pluginPath + "borrowers_data", BorrowerManager.class);
+                    borrowerManager = borrowerManager.load(pluginPath + "borrowers_data", BorrowerManager.class);
             } catch (IOException error) {
                 System.out.println(error.getMessage());
             }
@@ -134,9 +133,8 @@ public final class PcConomy extends JavaPlugin {
         saveData();
     }
 
-    public PcConomy getInstance() {
-        if (instance == null) instance = new PcConomy();
-        return instance;
+    public static PcConomy getInstance() {
+        return getPlugin(PcConomy.class);
     }
 
     /**
@@ -144,7 +142,7 @@ public final class PcConomy extends JavaPlugin {
      */
     private void saveData() {
         try {
-            for (var manager : Arrays.asList(GlobalBank, GlobalBorrower, GlobalLicense, GlobalShare))
+            for (var manager : Arrays.asList(bankManager, borrowerManager, licenseManager, shareManager))
                 manager.save(pluginPath + manager.getName());
         } catch (IOException e) {
             System.out.println("IO exception" + e.getMessage());

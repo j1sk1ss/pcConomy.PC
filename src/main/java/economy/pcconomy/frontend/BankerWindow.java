@@ -32,6 +32,11 @@ public class BankerWindow {
                 Arrays.asList(
                     new ClickArea(new Margin(4, 0, 1, 3),
                         (event, menu) -> {
+                        /*
+                        ============================================
+                        Banker put action handler
+                        ============================================
+                         */
                             var player = (Player) event.getWhoClicked();
                             var option = event.getCurrentItem();
                             if (option == null) return;
@@ -39,11 +44,18 @@ public class BankerWindow {
                             if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-bank-value");
 
-                            PcConomy.GlobalBank.getBank().takeCashFromPlayer(amount, player);
+                            if (!PcConomy.getInstance().bankManager.getBank().takeCashFromPlayer(amount, player))
+                                player.sendMessage("Увы, временно мы не можем удовлетворить ваш запрос.");
+
                             BankerWindow.regenerateWindow(player, event.getInventory());
-                        }), // Put
+                        }),
                     new ClickArea(new Margin(4, 5, 1, 3),
                         (event, menu) -> {
+                        /*
+                        ============================================
+                        Banker withdraw action handler
+                        ============================================
+                         */
                             var player = (Player) event.getWhoClicked();
                             var option = event.getCurrentItem();
                             if (option == null) return;
@@ -51,9 +63,11 @@ public class BankerWindow {
                             if (option.getLoreLines().size() < 2) return;
                             var amount = option.getDoubleFromContainer("item-bank-value");
 
-                            PcConomy.GlobalBank.getBank().giveCash2Player(amount, player);
+                            if (!PcConomy.getInstance().bankManager.getBank().giveCash2Player(amount, player))
+                                player.sendMessage("Увы, временно мы не можем удовлетворить ваш запрос.");
+
                             BankerWindow.regenerateWindow(player, event.getInventory());
-                        }) // Withdraw
+                        })
                 ), "Банк", MenuSizes.SixLines, "\u10D0"
             )
         ), "Bank"
@@ -64,7 +78,7 @@ public class BankerWindow {
     }
 
     private static void regenerateWindow(Player player, Inventory inventory) {
-        var enableBalance   = PcConomy.GlobalBank.getBank().getDayWithdrawBudget();
+        var enableBalance   = PcConomy.getInstance().bankManager.getBank().getDayWithdrawBudget();
         var playerBalance   = Balance.getBalance(player);
         var cashInInventory = player.amountOfCashInInventory(true);
         var textBalance     = (Math.round(playerBalance * 100d) / 100d) + "";
@@ -79,7 +93,7 @@ public class BankerWindow {
         
         if (inventory == null) BankWindow.getPanel("Банк").getViewWith(player, components);
         else {
-            for (int i = 9; i < 27; i++) inventory.setItem(i, null);
+            for (int i = 9; i < 54; i++) inventory.setItem(i, null);
             BankWindow.getPanel("Банк").getViewWith(components, inventory);
         }
     }
@@ -130,19 +144,13 @@ public class BankerWindow {
         for (var i = 9; i < Math.min(charArray.length + 9, 27); i++) {
             var currentChar = charArray[i - 9];
             if (currentChar == 'E') {
-                list.add(
-                    new Icon(new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7014)
-                );
+                list.add(new Icon(new Margin(i, 0, 0), "Баланс", textBalance + Cash.currencySigh, Material.GOLD_INGOT, 7014));
             }
             else if (currentChar == '.') {
-                list.add(
-                    new Icon(new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7013)
-                );
+                list.add(new Icon(new Margin(i, 0, 0), "Баланс", textBalance + Cash.currencySigh, Material.GOLD_INGOT, 7013));
             }
             else {
-                list.add(
-                    new Icon(new Margin(i, 0, 0), "Баланс", textBalance, Material.GOLD_INGOT, 7003 + Character.getNumericValue(currentChar))
-                );
+                list.add(new Icon(new Margin(i, 0, 0), "Баланс", textBalance + Cash.currencySigh, Material.GOLD_INGOT, 7003 + Character.getNumericValue(currentChar)));
             }
         }
 
