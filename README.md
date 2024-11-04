@@ -2,7 +2,7 @@
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover1.png)
 # PcConomy plugin
 ## Main info:
-This is a plugin for minecraft [1.20.1](https://www.minecraft.net/ru-ru/updates/trails-and-tales) version. 
+This is a plugin for minecraft [1.20.4](https://www.minecraft.net/ru-ru/updates/trails-and-tales) version. 
 
 A few words about: This plugin realise 
 market economy in minecraft. And yes - it`s all... But let me more explain
@@ -14,8 +14,6 @@ how he works in next part of **ReadMe**.
 > XConomy </br>
 > Vault </br>
 > Citizens </br>
-> LuckPerms </br>
-> Denizen </br>
 > Towny </br>
 > ApacheMathLib </br>
 > MenuFramework.PC </br>
@@ -29,28 +27,29 @@ In few words: we have bank, town and player objects. And any of them can do many
 ----------------------------------------
 **Player actions list**
 - Take loan from bank (NPC) loaner
-- Take loan from Player (Player`s town) loaner
-- Deposit cash into bank
-- Withdraw cash from bank
-- Rent traders and sell resources in Players`s town *Needs license*
-- Create traders in own town (Set price of trader and margin) *Needs license*
-- Create loaners in own town *Needs license*
-- Buy resources from ranted traders
-- Buy and sell resources in NPC towns
-- Sell town shares
+- Take loan from Player (Player`s town) loaner.
+- Deposit cash into bank.
+- Withdraw cash from bank.
+- Rent traders and sell resources in Players`s town *Needs license*.
+- Create traders in own town (Set price of trader and margin) *Needs license*.
+- Create loaners in own town *Needs license*. <WIP>
+- Buy resources from ranted traders.
+- Buy and sell resources in NPC towns.
+- Sell town shares.
+- Create own currency for trade unions like EU. <WIP>
 ----------------------------------------
 **NPC town actions list**
-- Dynamically change resource price
-- Create resources
-- Use resources
+- Dynamically change resource price.
+- Create resources.
+- Use resources.
 ----------------------------------------
 **Bank actions list**
-- Change taxes
-- Change VAT
-- Change maximum of loan
-- Give loans
-- Change maximum of available deposit
-- Sell licenses
+- Change taxes.
+- Change VAT.
+- Change maximum of loan.
+- Give loans.
+- Change maximum of available deposit.
+- Sell licenses.
 ----------------------------------------
 ## More about AFK trading:
 ![Alt Text](https://github.com/j1sk1ss/pcConomy.PC/blob/master/cover3.png)
@@ -78,15 +77,9 @@ After all steps u can set rant price, town margin and leave trader for finding c
 | /take_cash [Amount]                                | Take cash from player`s inventory           |
 | /create_cash [Amount]                              | Create cash                                 |
 | /put_cash2bank [Amount]                            | Put cash from inventory to bank             |
-| /reload_towns                                      | Reload and save towns                       |
-| /save_data                                         | Save plugin data                            |
-| /switch_town2npc                                   | Switch player`s town into NPC town          |
-| /switch_town2player                                | Switch npc`s town into player town          |
 | /town_menu                                         | Open mayor menu                             |
-| /add_trade2town [Town name] [Resource] [Amount]    | Add new trade resource into NPC town        |
 | /reload_npc                                        | Reload and save NPC                         |
 | /full_info                                         | Get all info of plugin                      |
-| /transfer_share [Town name] [Count] [New owner]    | Transfer ownership of share                 |
 | /shares_rate                                       | Shares prices                               |
 | /global_market_prices                              | Market prices between NPC traders           |
 
